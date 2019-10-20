@@ -108,10 +108,6 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
           **kwignored):
     """CNN for multi-frequency and multi-channel data - uses 2D convolutions.
     
-    Useful for predicting on time-frequency representations of song data, obtained by
-    for isntance wavelet or spectrogram transformations 
-    (time x frequencies x channels or time x channels x frequencies).
-    
     Args:
         nb_freq ([type]): [description]
         nb_classes ([type]): [description]
@@ -163,7 +159,7 @@ def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
         batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
         **kwignored):
-    """Fully convolutional network for 2D inputs (e.g. time x nb_channels)
+    """[summary]
     
     Args:
         nb_freq ([type]): [description]
@@ -212,11 +208,7 @@ def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
           nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
           batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
           **kwignored):
-    """Fully convolutional network that accepts 2D inputs.
-    
-    Useful for predicting on time-frequency representations of song data, obtained by
-    for isntance wavelet or spectrogram transformations 
-    (time x frequencies x channels or time x channels x frequencies).
+    """[summary]
     
     Args:
         nb_freq ([type]): [description]
@@ -262,9 +254,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
             **kwignored):
-    """Transformer network (a.k.a. temporal convolutional network). Only takes 1D inputs (e.g. time x channels)
-    
-    Note: requires custom fork from https://github.com/postpop/keras-tcn
+    """Create TCN network.
 
     Args:
         nb_freq (int): [description]
@@ -292,8 +282,8 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
     # # TCN(nb_filters=64, kernel_size=2, nb_stacks=1, dilations=[1, 2, 4, 8, 16, 32], padding='causal',
     # # use_skip_connections=True, dropout_rate=0.0, return_sequences=True, activation='linear', name='tcn', kernel_initializer='he_normal', use_batch_norm=False)
     # x = tcn.TCN(nb_filters, kernel_size, nb_conv, dilations, padding, use_skip_connections, dropout_rate, return_sequences, activation, )(input_layer)
-    x = tcn_layer.TCN(nb_filters, kernel_size, nb_conv, dilations, activation,
-                      use_skip_connections, padding, dropout_rate, return_sequences)(input_layer)
+    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations, activation=activation,
+                      use_skip_connections=use_skip_connections, padding=padding, dropout_rate=dropout_rate, return_sequences=return_sequences)(input_layer)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
     output_layer = x
