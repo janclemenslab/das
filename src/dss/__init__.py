@@ -4,3 +4,4 @@ from . import train
 from . import predict
 from . import pulse_utils
 from . import models
+from . import utils_plot
