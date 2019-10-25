@@ -6,6 +6,7 @@ import numpy as np
 # import dss.utils as ut
 import sklearn.metrics
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
+import keras
 import defopt
 import pandas as pd
 import os
@@ -15,36 +16,47 @@ from . import data, models, utils, predict
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
+# HACK https://github.com/uchicago-cs/deepdish/issues/36
+dd.io.hdf5io._pandas = False
 
-# this should not be here...
-def predict_evaluate(model, test_gen, verbose=2):
+
+# this function should not be here...
+def predict_evaluate(model: keras.models.Model, test_gen, return_x: bool = True, verbose: int = 2):
     """[summary]
 
     Args:
         model ([type]): [description]
         test_gen ([type]): [description]
+        no_x (bool): Whether unrolling should also return x. May results in very large matrices, Defaults to True.
         verbose (int): [description]. Defaults to 2.
 
     Returns:
         [type]: [description]
     """
-    y_pred = model.predict_generator(test_gen.for_prediction(), verbose=verbose)
-    x_test, y_test = test_gen.unroll(merge_batches=True)  # make this AudioSequence.method
-    
+    try:
+        y_pred = model.predict_generator(test_gen.for_prediction(), verbose=verbose, workers=4, use_multiprocessing=True)
+    except ValueError:
+        logging.warning('Predict generator requires (x,y) or (x,y,weights) pairs - retrying with the full generator.')
+        y_pred = model.predict_generator(test_gen, verbose=verbose, workers=4, use_multiprocessing=True)
+    x_test, y_test = test_gen.unroll(return_x, merge_batches=True)  # make this AudioSequence.method
+
     # reshape from [batches, nb_hist, ...] to [time, ...]
-    x_test = data.unpack_batches(x_test, test_gen.data_padding)
+    if return_x:
+        x_test = data.unpack_batches(x_test, test_gen.data_padding)
     y_test = data.unpack_batches(y_test, test_gen.data_padding)
     y_pred = data.unpack_batches(y_pred, test_gen.data_padding)
-    
+
     # trim to ensure equal length
     min_len = min(len(y_test), len(y_pred))
-    x_test = x_test[:min_len]
+    if return_x:
+        x_test = x_test[:min_len]
     y_test = y_test[:min_len]
     y_pred = y_pred[:min_len]
 
     return x_test, y_test, y_pred
 
 
+# this function should not be here...
 def evaluate(labels_test, labels_pred, class_names):
     """[summary]
 
@@ -56,11 +68,12 @@ def evaluate(labels_test, labels_pred, class_names):
     Returns:
         [type]: [description]
     """
+    nb_classes = len(np.unique(labels_test))
     conf_mat = pd.DataFrame(data=sklearn.metrics.confusion_matrix(labels_test, labels_pred),
-                            columns=['true ' + p for p in class_names],
-                            index=['pred ' + p for p in class_names])
+                            columns=['true ' + p for p in class_names[:nb_classes]],
+                            index=['pred ' + p for p in class_names[:nb_classes]])
 
-    report = sklearn.metrics.classification_report(labels_test, labels_pred, target_names=class_names)
+    report = sklearn.metrics.classification_report(labels_test, labels_pred, target_names=class_names[:nb_classes])
     return conf_mat, report
 
 
@@ -70,7 +83,7 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
           loss: str = 'categorical_crossentropy', nb_stacks: int = 2, with_y_hist: bool = True,
           keep_intermediates: bool = False, fraction_data: float = 1.0, ignore_boundaries: bool = False):
     """[summary]
-    
+
     Args:
         model_name (str): [description]. Defaults to 'tcn_seq'.
         nb_filters (int): [description]. Defaults to 16.
@@ -98,8 +111,8 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
         return_sequences = True
         stride = nb_hist
         y_offset = 0
+        sample_weight_mode = 'temporal'
         if ignore_boundaries:
-            sample_weight_mode = 'temporal'
             stride = stride - kernel_size
             data_padding = int(np.ceil(kernel_size / 2))
     else:  # classification
@@ -111,17 +124,18 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
     params = locals()
     logging.info('loading data')
     x_train, y_train, x_val, y_val, x_test, y_test, *_ = data.load_data(data_dir)
-
+    print(y_train.shape)
     # HACK TO MAKE THIS WORK WITH pre-processed (multi-frequency), single-channel data
     compute_power = False
     if 'tcn' in model_name and 'coefs' in data_dir:
+        print('tcn coefs')
         compute_power = True
 
-    if fraction_data < 1.0:  # train on a subset    
+    if fraction_data < 1.0:  # train on a subset
         logging.info('Using {} of data for validation and validation.'.format(fraction_data))
         # min_nb_samples makes sure the generator contains at least one full batch
-        x_train, y_train = data.sub_range((x_train, y_train), fraction_data, min_nb_samples=nb_hist * (batch_size+2), seed=1)
-        x_val, y_val = data.sub_range((x_val, y_val), fraction_data, min_nb_samples=nb_hist * (batch_size+2), seed=1)
+        x_train, y_train = data.sub_range((x_train, y_train), fraction_data, min_nb_samples=nb_hist * (batch_size + 2), seed=1)
+        x_val, y_val = data.sub_range((x_val, y_val), fraction_data, min_nb_samples=nb_hist * (batch_size + 2), seed=1)
 
     class_names = ("nix", "pulse", "sine")
     if mode == 1:  # [NIX, PULSE]
@@ -149,7 +163,7 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
     # save_name = 'res.all/20190801_070823'
     # model = utils.load_model(save_name, models.model_dict, from_epoch=False)
     logging.info(model.summary())
-
+    dd.io._pandas = False
     save_name = '{0}/{1}'.format(save_dir, time.strftime('%Y%m%d_%H%M%S'))
     utils.save_params(params, save_name)
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
@@ -159,14 +173,13 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
     else:
         checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
-
     # TRAIN NETWORK
     logging.info('start training')
     parallel_model = models.ModelMGPU(model, gpus=2)
     fit_hist = parallel_model.fit_generator(
         data_gen,
         epochs=400,
-        steps_per_epoch=min(len(data_gen) * 10, 1000),
+        steps_per_epoch=min(len(data_gen) * 100, 1000),
         verbose=2,
         validation_data=val_gen,
         callbacks=[ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
@@ -193,7 +206,8 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
     logging.info(conf_mat)
     logging.info(report)
 
-    logging.info('saving')
+    save_filename = "{0}_results.h5".format(save_name)
+    logging.info('saving to ' + save_filename + '.')
     d = {'fit_hist': fit_hist.history,
          'confusion_matrix': conf_mat,
          'classification_report': report,
@@ -204,7 +218,7 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
          'labels_pred': labels_pred,
          }
 
-    dd.io.save("{0}_results.h5".format(save_name), d)
+    dd.io.save(save_filename, d)
 
 
 if __name__ == '__main__':
