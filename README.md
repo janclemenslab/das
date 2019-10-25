@@ -3,6 +3,8 @@
 ## Installation
 Install all dependencies
 ```shell
+conda create -n dss python=3.7
+source activate dss
 conda install keras numpy scikit-learn scipy scikit-image tensorflow-gpu pandas h5py yaml pywavelets matplotlib seaborn
 conda install peakutils deepdish -c conda-forge
 pip install defopt
