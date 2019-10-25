@@ -9,9 +9,6 @@ import skimage.util.shape
 import scipy.signal
 import scipy.ndimage
 import h5py
-import matplotlib.pyplot as plt
-from matplotlib_scalebar.scalebar import ScaleBar
-import matplotlib_scalebar
 
 
 class LossHistory(keras.callbacks.Callback):
@@ -43,7 +40,7 @@ class LossHistory(keras.callbacks.Callback):
 
 def save_model(model, file_trunk, weights_ext='_weights.h5', architecture_ext='_arch.yaml'):
     """Save model weights and architecture to separate files.
-    
+
     Args:
         model ([type]): [description]
         file_trunk ([type]): [description]
@@ -105,14 +102,14 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
 
 def load_model_from_params(file_trunk, models_dict, weights_ext='_weights.h5', params_ext='_params.yaml', compile=True):
     """Load model weights and architecture from separate files.
-    
+
     Args:
         file_trunk ([type]): [description]
         models_dict ([type]): [description]
         weights_ext (str, optional): [description]. Defaults to '_weights.h5'.
         params_ext (str, optional): [description]. Defaults to '_params.yaml'.
         compile (bool, optional): [description]. Defaults to True.
-    
+
     Returns:
         [type]: [description]
     """
@@ -187,7 +184,7 @@ def smooth_labels(labels, pulse_times, s0=None, s1=None, buf=50):
         [type]: [description]
     """
     pulse_times = pulse_times.T
-    if s0 is None: 
+    if s0 is None:
         condition = np.concatenate((pulse_times < s1 - buf - 1, pulse_times > s0 + buf + 1), axis=0)
         within_range_pulses = np.all(condition, axis=0)
         pulse_times = pulse_times[within_range_pulses, 0] - s0
@@ -203,14 +200,14 @@ def smooth_labels(labels, pulse_times, s0=None, s1=None, buf=50):
 
 def running_fun(x, fun, winlen, stride=1, window=None):
     """[summary]
-    
+
     Args:
         x ([type]): [description]
         fun ([type]): [description]
         winlen ([type]): [description]
         stride (int, optional): [description]. Defaults to 1.
         window ([type], optional): [description]. Defaults to None.
-    
+
     Returns:
         [type]: [description]
     """
@@ -248,20 +245,19 @@ def cwt(dta, scales=range(8, 150, 2), wavelet_name='cmor1.5-1.0', stack_imre=Tru
     return coef
 
 
-
 def merge_channels(data, sampling_rate, max_filter_len=101, passband=(25, 1500)):
     """Merge multi-channel recording into a single channel based in max amplitude. 
-    
+
     Args:
         data ([type]): [time, channels]
         sampling_rate ([type]): Hz
         max_filter_len (int, optional): in samples. Defaults to 101.
         passband (tuple, optional): (fmin, fmax) Hz. Defaults to (25, 1500).
-    
+
     Returns:
         merged channels [time, 1]
     """
-    # TODO Should use segmentation data (y_pred?) to make sure we get all song 
+    # TODO Should use segmentation data (y_pred?) to make sure we get all song
     # remove all nan/inf data
     mask = ~np.isfinite(data)
     data[mask] = np.interp(np.flatnonzero(mask), np.flatnonzero(~mask), data[~mask])
@@ -272,70 +268,37 @@ def merge_channels(data, sampling_rate, max_filter_len=101, passband=(25, 1500))
     sng_max = scipy.ndimage.maximum_filter1d(np.abs(data), size=max_filter_len, axis=0)
     loudest_channel = np.argmax(sng_max, axis=-1)
     # get linear index and merge channels
-    idx = np.ravel_multi_index((np.arange(sng_max.shape[0]),loudest_channel), data.shape)
+    idx = np.ravel_multi_index((np.arange(sng_max.shape[0]), loudest_channel), data.shape)
     data_merged_max = data.ravel()[idx]
     data_merged_max = data_merged_max[:, np.newaxis]  # shape needs to be [nb_samples, 1]
     return data_merged_max
 
 
-def scalebar(length, dx=1, units='', label=None, axis=None, location='lower right', frameon=False, **kwargs):
-    """Add scalebar to axis.
-    
-    Usage:
-        plt.subplot(122)
-        plt.plot([0,1,2,3], [1,4,2,5])
-        add_scalebar(0.5, 'femtoseconds', label='duration', location='lower right’)
-    
-    Args:
-        length (float): Length of the scalebar in units of axis ticks - length of 1.0 corresponds to spacing between to major x-ticks
-        dx (int, optional): Scale factor for length. E.g. if scale factor is 10, the scalebar of length 1.0 will span 10 ticks. Defaults to 1.
-        units (str, optional): Unit label (e.g. 'milliseconds'). Defaults to ''.
-        label (str, optional): Title for scale bar (e.g. 'Duration'). Defaults to None.
-        axis (matplotlib.axes.Axes, optional): Axes to add scalebar to. Defaults to None (currently active axis - plt.gca()).
-        location (str, optional): Where in the axes to put the scalebar (upper/lower/'', left/right/center). Defaults to 'lower right'.
-        frameon (bool, optional): Add background (True) or not (False). Defaults to False.
-        kwargs: location=None, pad=None, border_pad=None, sep=None,
-                frameon=None, color=None, box_color=None, box_alpha=None,
-                scale_loc=None, label_loc=None, font_properties=None,
-                label_formatter=None, animated=False):
-    
-    Returns:
-        Handle to scalebar object
-    """
+class Timer:
 
-    if axis is None:
-        axis = plt.gca()
+    def __init__(self, verbose=False):
+        self.verbose = verbose
+        self.start = None
+        self.end = None
+        self.elapsed = None
 
-    if 'dimension' not in kwargs:
-        kwargs['dimension'] = matplotlib_scalebar.dimension._Dimension(units)
+    def __enter__(self):
+        self.start = time.perf_counter()
+        return self
 
-    scalebar = ScaleBar(dx=dx, units=units, label=label, fixed_value=length, location=location, frameon=frameon, **kwargs)
-    axis.add_artist(scalebar)
-    return scalebar
+    def __exit__(self, *args):
+        self.end = time.perf_counter()
+        self.elapsed = self.end - self.start
+        if self.verbose:
+            print(self)
 
-
-def remove_axes(axis=None, all=False):
-    """Remove top & left border around plot or all axes & ticks.
-    
-    Args:
-        axis (matplotlib.axes.Axes, optional): Axes to modify. Defaults to None (currently active axis - plt.gca()).
-        all (bool, optional): Remove all axes & ticks (True) or top & left border only (False). Defaults to False.
-    """
-    if axis is None:
-        axis = plt.gca()
-
-    # Hide the right and top spines
-    axis.spines['right'].set_visible(False)
-    axis.spines['top'].set_visible(False)
-    # Only show ticks on the left and bottom spines
-    axis.yaxis.set_ticks_position('left')
-    axis.xaxis.set_ticks_position('bottom')
-
-    if all:
-        # Hide the left and bottom spines
-        axis.spines['left'].set_visible(False)
-        axis.spines['bottom'].set_visible(False)
-        # Remove all tick labels
-        axis.yaxis.set_ticks([])
-        axis.xaxis.set_ticks([])
-            
+    def __str__(self):
+        if self.start is None:
+            s = "Timer not started yet."
+        elif self.end is None:
+            s = "Timer still running."
+        elif self.elapsed is not None:
+            s = f'Time elapsed {self.elapsed:1.2f} seconds.'
+        else:
+            s = "Timer in unexpected state."
+        return s
