@@ -5,8 +5,9 @@ import deepdish as dd
 import numpy as np
 # import dss.utils as ut
 import sklearn.metrics
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
-import keras
+import tensorflow.keras as keras
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
+# import keras
 import defopt
 import pandas as pd
 import os
@@ -175,8 +176,9 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
 
     # TRAIN NETWORK
     logging.info('start training')
-    parallel_model = models.ModelMGPU(model, gpus=2)
-    fit_hist = parallel_model.fit_generator(
+    # parallel_model = models.ModelMGPU(model, gpus=2)
+    # fit_hist = parallel_model.fit_generator(
+    fit_hist = model.fit_generator(
         data_gen,
         epochs=400,
         steps_per_epoch=min(len(data_gen) * 100, 1000),

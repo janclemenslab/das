@@ -1,6 +1,6 @@
 """Defines the network architectures."""
-import keras
-import keras.layers as kl
+import tensorflow.keras as keras
+import tensorflow.keras.layers as kl
 import numpy as np
 from typing import List
 import logging
