@@ -23,3 +23,4 @@ cd deepsongsegmenter
 pip install -e .
 ```
 
+Use the [tf2](https://github.com/janclemenslab/deepsongsegmenter/tree/tf2) branch and the corresponding [tf2 branch of keras-tcn](https://github.com/postpop/keras-tcn/tree/tf2). Not thoroughly tested but runs and seems to reproduce the predictions of models trains with the old tf1.x.
