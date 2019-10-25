@@ -201,43 +201,49 @@ class AudioSequence(keras.utils.Sequence):
             self.y_offset = int(y_offset)
         
         # ignore padding samples at beginning and end of x_hist to avoid boundary conditions problems
-        if self.data_padding > 0:
+        if self.with_y_hist:
             self.weights = np.ones((self.batch_size, self.x_hist))
-            self.weights[:, :self.data_padding] = 0
-            self.weights[:, -self.data_padding:] = 0
+            if self.data_padding > 0:
+                self.weights[:, :self.data_padding] = 0
+                self.weights[:, -self.data_padding:] = 0
         else:
-            self.weights = None
+            self.weights = np.ones((self.batch_size,))
 
     def for_prediction(self):
-        """returns variant of the AudioSequence that yields only x-data."""
+        """returns variant of the AudioSequence that only returns x-data."""
         gen = copy.copy(self)
         gen.with_y = False
         return gen
 
-    def unroll(self, merge_batches=True):
-        """Unroll the generator.
-        
+    def unroll(self, return_x=True, merge_batches=True):
+        """[summary]
+
         Args:
-            merge_batches (bool, optional): If True, will reshape unrolled data to [time, ...], 
-                                            otherwise will be [batches, x_hist, ...]. Defaults to True.
-        
+            return_x=True
+            merge_batches=True
+
         Returns:
-            Unrolled generator - either as
+            [type]: [description]
+            (xx, yy), (None, yy) or (xx,)
         """
         # TODO make this work with classification (vs. prediction) - need to ignore self.x_hist
-        xx = np.zeros((len(self), self.batch_size, self.x_hist, self.nb_channels))
+        xx = None
+        if return_x:
+            xx = np.zeros((len(self), self.batch_size, self.x_hist, self.nb_channels))
         if self.with_y_hist:
             yy = np.zeros((len(self), self.batch_size, self.x_hist, self.nb_classes)) if self.with_y else None
         else:
             yy = np.zeros((len(self), self.batch_size, self.nb_classes)) if self.with_y else None
 
         for cnt, gen_output in enumerate(self):
-            xx[cnt, ...] = gen_output[0]
+            if return_x:
+                xx[cnt, ...] = gen_output[0]
             if self.with_y:
                 yy[cnt, ...] = gen_output[1]
 
         if merge_batches:
-            xx = xx.reshape((len(self) * self.batch_size, self.x_hist, self.nb_channels))
+            if return_x:        
+                xx = xx.reshape((len(self) * self.batch_size, self.x_hist, self.nb_channels))
             if self.with_y_hist:
                 yy = yy.reshape((len(self) * self.batch_size, self.x_hist, self.nb_classes)) if self.with_y else None
             else:
@@ -305,11 +311,11 @@ class AudioSequence(keras.utils.Sequence):
                 batch_y[cnt, ...] = tmp_y
 
         if self.with_y:
-            out = [batch_x, batch_y]
-            if self.data_padding:
-                out.append(self.weights)
+            out = (batch_x, batch_y)
+            if self.data_padding > 0:
+                out = (batch_x, batch_y, self.weights)
         else:
-            out = [batch_x, ]
+            out = (batch_x, )
         return out
 
     def _merge_labels(self, tmp):
