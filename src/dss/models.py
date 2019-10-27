@@ -18,39 +18,6 @@ def register_as_model(func):
     return func
 
 
-class ModelMGPU(keras.models.Model):
-    """Convert keras model to run on multiple GPUs.
-
-    from here: https://github.com/keras-team/keras/issues/2436#issuecomment-354882296
-    could also try: https://github.com/keras-team/keras/issues/11253#issuecomment-458788861
-    """
-
-    def __init__(self, ser_model: keras.models.Model, gpus: int):
-        """Make multi-GPU model from simple keras Model.
-        
-        Args:
-            ser_model (keras.models.Model): The single-cpu/gpu keras model.
-            gpus (int): Number of GPUs to init the multi-GPU model for.
-        """
-        try:
-            pmodel = keras.utils.multi_gpu_model(ser_model, gpus)
-            pmodel.compile(ser_model.optimizer, loss=ser_model.loss)
-        except ValueError:
-            logging.info('Could not create multi GPU model. Will train on single GPU.', exc_info=False)
-            pmodel = ser_model
-        self.__dict__.update(pmodel.__dict__)
-        self._smodel = ser_model
-
-    def __getattribute__(self, attrname):
-        """Override load and save methods to be used from the serial-model. The
-        serial-model holds references to the weights in the multi-gpu model.
-        """
-        if 'load' in attrname or 'save' in attrname:
-            return getattr(self._smodel, attrname)
-
-        return super(ModelMGPU, self).__getattribute__(attrname)
-
-
 @register_as_model
 def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",

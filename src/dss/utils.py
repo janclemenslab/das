@@ -169,7 +169,7 @@ def load_from(filename, datasets):
         data = {dataset: f[dataset][:] for dataset in datasets}
     return data
 
-
+# move to .data?
 def smooth_labels(labels, pulse_times, s0=None, s1=None, buf=50):
     """[summary]
 
@@ -244,7 +244,7 @@ def cwt(dta, scales=range(8, 150, 2), wavelet_name='cmor1.5-1.0', stack_imre=Tru
         coef = np.absolute(coef)
     return coef
 
-
+# move elsewhere - don't need thos here
 def merge_channels(data, sampling_rate, max_filter_len=101, passband=(25, 1500)):
     """Merge multi-channel recording into a single channel based in max amplitude. 
 

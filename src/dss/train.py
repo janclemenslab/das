@@ -176,8 +176,6 @@ def train(*, model_name: str = 'tcn_seq', nb_filters: int = 16, kernel_size: int
 
     # TRAIN NETWORK
     logging.info('start training')
-    # parallel_model = models.ModelMGPU(model, gpus=2)
-    # fit_hist = parallel_model.fit_generator(
     fit_hist = model.fit_generator(
         data_gen,
         epochs=400,

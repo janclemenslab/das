@@ -27,7 +27,7 @@ def events_to_trace(event_times, event_duration: int = 60, trace_duration: int =
     trace[:,0] = 1 - trace[:,1]  # 0 index is p(no event)
     return trace
 
-
+# move elsewhere
 def make_training_data(x, y, save_dir: str, x_test=None, y_test=None, random_split: bool = False, val_fraction: float = 0.05):
     """[summary]
     
@@ -56,7 +56,7 @@ def make_training_data(x, y, save_dir: str, x_test=None, y_test=None, random_spl
         np.save(save_dir + '/x_test.npy', x_test)
         np.save(save_dir + '/y_test.npy', y_test)
     
-
+# move elsewhere
 def load_data(data_dir='../dat.preprocessed'):
     """Load train/val/test data.
 
