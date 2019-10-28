@@ -5,7 +5,7 @@ import numpy as np
 from typing import List
 import logging
 try:
-    import tcn as tcn_layer
+    import dss.tcn as tcn_layer
 except ImportError:
     logging.warning('Could not import TCN layer.')
 
