@@ -1,12 +1,12 @@
-# Keras TCN
+forked a while ago from [https://github.com/philipperemy/keras-tcn]().
 
-The tf2.0 version does not require keras anymore since it uses tf.keras
-Manually install tensorflow or tensorflow-gpu 2.0:
-```
-conda install tensorflow>=2
-conda install tensorflow-gpu>=2
-pip install git+https://github.com/postpop/keras-tcn
-```
+Changes:
+- uses `tensorflow.keras`, removes dependency on `keras`
+- only one conv blocks per residual block (original now uses two)
+- kept `norm_relu` activation
+
+Original `README.md`:
+# Keras TCN
 
 *Keras Temporal Convolutional Network*
 
