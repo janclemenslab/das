@@ -2,11 +2,9 @@
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
 from typing import List
-import logging
-try:
-    from . import tcn as tcn_layer
-except ImportError:
-    logging.warning('Could not import TCN layer.')
+from . import tcn as tcn_layer
+from kapre.time_frequency import Spectrogram
+from kapre.utils import AmplitudeToDB
 
 
 model_dict = dict()
@@ -361,8 +359,6 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
-        from kapre.time_frequency import Spectrogram
-        from kapre.utils import AmplitudeToDB
         out = Spectrogram(n_dft=64, n_hop=2**nb_pre_conv,
                           return_decibel_spectrogram=True, power_spectrogram=1.0,
                           trainable_kernel=True, name='trainable_stft', image_data_format='channels_last')(out)
