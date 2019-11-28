@@ -1,137 +1,183 @@
 """Code for training and evaluating networks."""
-import time
 import logging
 import numpy as np
-import defopt
-import pandas as pd
-import os
-from glob import glob
-import h5py
-import deepdish as dd
-
-from . import data, models, train, utils, pulse_utils, predict
+from . import utils, data, models, event_utils
 
 
-def probabilities(model, test_gen, verbose=1):
-    y_pred = model.predict_generator(test_gen.for_prediction(), verbose=verbose)    
-    # reshape from [batches, nb_hist, ...] to [time, ...]
-    y_pred = data.unpack_batches(y_pred, test_gen.data_padding)    
+def predict_probabililties(x, model, params, verbose=None):
+    """[summary]
+
+    Args:
+        x ([samples, ...]): [description]
+        model (tf.keras.Model): [description]
+        params ([type]): [description]
+        verbose (int, optional): Verbose level for predict_generator (see tf.keras docs). Defaults to None.
+
+    Returns:
+        y_pred - output of network for each sample
+    """
+    pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
+    y_pred = model.predict(pred_gen, verbose=verbose)  # run the network
+    y_pred = data.unpack_batches(y_pred, pred_gen.data_padding)  # reshape from [batches, nb_hist, ...] to [time, ...]
     return y_pred
 
 
-def labels_from_probabilities(probability):
-    """[summary]
-    
+def labels_from_probabilities(probabilities, threshold=None):
+    """Convert class-wise probabilities into labels.
+
     Args:
-        probability ([type]): [description]
-    
+        probabilities ([type]): [samples, classes] or [samples, ]
+        threshold (float, Optional): Argmax over all classes (Default, 2D - corresponds to 1/nb_classes or 0.5 if 1D).
+                                     If float, each class probability is compared to the threshold.
+                                     First class to cross threshold wins.
+                                     If no class crosses threshold label will default to the first class.
     Returns:
-        [type]: [description]
+        labels [samples,] - index of "winning" dimension for each sample
     """
-    labels = np.argmax(probability, axis=1)
+    if probabilities.ndim == 1:
+        if threshold is None:
+            threshold = 0.5
+        labels = (probabilities > threshold).astype(np.intp)
+    elif probabilities.ndim == 2:
+        if threshold is None:
+            labels = np.argmax(probabilities, axis=1)
+        else:
+            labels = np.argmax(probabilities > threshold, axis=1)
+    else:
+        raise ValueError(f'Probabilities have to many dimensions ({probabilities.ndim}). Can only be 1D or 2D.')
+
     return labels
 
 
-def run(data_name: str, model_save_name: str):
-    # load model
-    params = utils.load_params(model_save_name)
-    model = utils.load_model(model_save_name, models.model_dict, from_epoch=False)
+def predict_segments(class_probabilities, samplerate=1, segment_dims=None, segment_names=None,
+                     segment_thres=0.5, segment_minlen=None, segment_fillgap=None):
+    """[summary]
 
-    # load h5 data
-    with h5py.File(data_name, 'r') as f:
-        data = f['samples'][:]
-        sampling_rate = 10000  # read this from the file!
-    
-    # merge recording channels
-    song_merged = utils.merge_channels(data, sampling_rate)
+    Args:
+        class_probabilities ([type]): [description]
+        samplerate [float, optional): Hz
+        segement_dims ([type], optional): [description]. Defaults to None.
+        segment_names ([type], optional): [description]. Defaults to None.
+        segment_thres (float, optional): [description]. Defaults to 0.5.
+        segment_minlen ([type], optional): seconds [description]. Defaults to None.
+        segment_fillgap ([type], optional): seconds [description]. Defaults to None.
 
-    # make generator
-    pred_gen = data.AudioSequence(x=data, y=None, batch_size=32, shuffle=False, **params)
-    # predict
-    song_probabilities = probabilities(model, pred_gen, verbose=1)
-    song_labels = labels_from_probabilities(song_probabilities)
+    Returns:
+        dict['segmentnames']['denselabels-samples'/'onsets'/'offsets'/'probabilities']
 
-    # detect pulses
-    tol = 100
-    try: 
-        pulse_pred_index = params['class_names'].index('pulse')
-    except ValueError:
-        print('THIS MODEL DOES NOT PREDICT PULSES.')
-        pulse_pred_index = None
+    """
+    if segment_dims is None:
+        nb_classes = class_probabilities.shape[1]
+        segment_dims = range(nb_classes)
 
-    if pulse_pred_index is not None:
-        pulsetimes_pred, pulsetimes_pred_confidence = pulse_utils.detect_pulses(song_probabilities[:,pulse_pred_index], thres=0.7, min_dist=tol)
-        # d, nn_pred_pulse, nn_true_pulse, nn_dist = dss.pulse_utils.eval_pulse_times(pulsetimes_true, pulsetimes_pred, tol)
+    if segment_names is None:
+        segment_names = segment_dims
 
-        # extract pulse shapes
-        win_hw = 100
-        pulseshapes_pred = pulse_utils.get_pulseshapes(pulsetimes_pred + win_hw, song_merged, win_hw)
-        pulsenorm_pred = np.linalg.norm(np.abs(pulseshapes_pred[50:-50,:]), axis=0)
-        pulseshapes_pred = np.apply_along_axis(pulse_utils.normalize_pulse, axis=-1, arr=pulseshapes_pred.T).T
-    # assemble everything into dict/xarray
+    # cleanup
+    segments = dict()
+    if len(segment_dims):
+        for segment_dim, segment_name in zip(segment_dims, segment_names):
+            segments[segment_name] = dict()
+            segments[segment_name]['index'] = segment_dim
+            prob = class_probabilities[:, segment_dim]
+            segments[segment_name]['probabilities'] = prob
+            labels = labels_from_probabilities(prob, segment_thres)
+            if segment_fillgap is not None:
+                labels = fill_gaps(labels, segment_fillgap * samplerate)
+            if segment_minlen is not None:
+                labels = remove_short(labels, segment_minlen * samplerate)
+            segments[segment_name]['samples'] = labels
 
-
-def eval(save_name: str):
-    logging.info('Evaluating model {}.'.format(save_name))
-    params = utils.load_params(save_name)
-    print(params)
-
-    # load data
-    _, _, _, _, x_test0, y_test0, song_test, pulse_times_test = data.load_data(params['data_dir'])
-
-    try:
-        datasets = utils.load_from(save_name + '_results.h5', ['x_test', 'y_test', 'y_pred'])
-        x_test, y_test, y_pred = [datasets[key] for key in ['x_test', 'y_test', 'y_pred']]  # unpack dict items to vars
-        logging.info('   loading test data.')
-    except OSError:
-        model = utils.load_model(save_name, models.model_dict, from_epoch=False)
-        logging.info('   loading model and predicting test data.')
-        test_gen = data.AudioSequence(x_test0, y_test0, shuffle=False, **params)
-        x_test, y_test, y_pred = train.predict_evaluate(model, test_gen)
-
-    logging.info('   evaluating')
-    labels_test = predict.labels_from_probabilities(y_test)
-    labels_pred = predict.labels_from_probabilities(y_pred)
-    conf_mat, report = train.evaluate(labels_test, labels_pred, params['class_names'][:2])
-
-    logging.info(conf_mat)
-    logging.info(report)
-
-    # logging.info('   evaluating pulses.')
-    # try:
-    #     pulse_pred_index = params['class_names'].index('pulse')
-    # except ValueError:
-    #     print('THIS MODEL DOES NOT PREDICT PULSES.')
-    #     pulse_pred_index = None
-    #     d = None
-
-    # if pulse_pred_index is not None:
-    #     tol = 100
-    #     pulsetimes_true = np.unique(np.sort(pulse_times_test.copy()))
-    #     pulsetimes_true = pulsetimes_true[pulsetimes_true<song_test.shape[0]]
-
-    #     pulsetimes_pred, pulsetimes_pred_confidence = pulse_utils.detect_pulses(song_probabilities[:,pulse_pred_index], thres=0.7, min_dist=tol)
-    #     d, nn_pred_pulse, nn_true_pulse, nn_dist = dss.pulse_utils.eval_pulse_times(pulsetimes_true, pulsetimes_pred, tol)
-
-    #     # # extract pulse shapes
-    #     # win_hw = 100
-    #     # pulseshapes_pred = pulse_utils.get_pulseshapes(pulsetimes_pred + win_hw, song_merged, win_hw)
-    #     # pulsenorm_pred = np.linalg.norm(np.abs(pulseshapes_pred[50:-50,:]), axis=0)
-    #     # pulseshapes_pred = np.apply_along_axis(pulse_utils.normalize_pulse, axis=-1, arr=pulseshapes_pred.T).T
-
-    logging.info('   saving results.')
-    d = {'fit_hist': [],
-         'confusion_matrix': conf_mat,
-         'classification_report': report,
-         # 'x_test': x_test,
-         'y_test': y_test,
-         'y_pred': y_pred,
-         'labels_test': labels_test,
-         'labels_pred': labels_pred,
-         }
-
-    dd.io.save("{0}_results.h5".format(save_name), d)
+            segments[segment_name]['onsets_seconds'] = np.where(np.diff(np.insert(labels, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
+            segments[segment_name]['offsets_seconds'] = np.where(np.diff(np.append(labels, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
+            segments[segment_name]['durations_seconds'] = segments[segment_name]['offsets_seconds'] - segments[segment_name]['onsets_seconds']
+    return segments
 
 
-if __name__ == "__main__":
-    defopt.run(run)
+def predict_events(class_probabilities, samplerate=1,
+                   event_dims=None, event_names=None,
+                   event_thres=0.5, event_dist=100):
+    """[summary]
+
+    Args:
+        class_probabilities ([type]): [samples, classes][description]
+        samplerate (float, optional): Hz
+        event_dims ([type], optional): [description]. Defaults to range(nb_classes).
+        event_names ([type], optional): [description]. Defaults to event_dims.
+        event_thres (float, optional): [description]. Defaults to 0.5.
+        event_dist (int, optional): [description]. seconds Defaults to 0.01 seconds (10ms).
+
+    Raises:
+        ValueError: [description]
+
+    Returns:
+        dict['eventnames']['seconds'/'probabilities']
+    """
+    if event_dims is None:
+        nb_classes = class_probabilities.shape[1]
+        event_dims = range(nb_classes)
+
+    if event_names is None:
+        event_names = event_dims
+
+    events = dict()
+    if len(event_dims):
+        for event_dim, event_name in zip(event_dims, event_names):
+            events[event_name] = dict()
+            events[event_name]['index'] = event_dim
+            events[event_name]['seconds'], events[event_name]['probabilities'] = event_utils.detect_events(
+                                                                          class_probabilities[:, event_dim],
+                                                                          thres=event_thres, min_dist=event_dist * samplerate)
+            events[event_name]['seconds'] = events[event_name]['seconds'].astype(np.float) / samplerate
+    return events
+
+
+def predict(x, model_save_name, verbose=None, batch_size=None):
+    """[summary]
+
+    Args:
+        x ([type]): [description]
+        model_save_name ([type]): [description]
+        verbose ([type], optional): [description]. Defaults to None.
+        batch_size (int, optional): Override batch_size specified during training. Large batch sizes lead to loss of samples since only complete batches are used.
+
+    Raises:
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+
+    event_thres = 0.5
+    event_dist = 0.01  # seconds = 10ms
+
+    segment_thres = 0.5
+    segment_minlen = None
+    segment_fillgap = None
+
+    model, params = utils.load_model_and_params(model_save_name)
+    samplerate = params['samplerate_y_Hz']
+
+    if model.input_shape[2:] != x.shape[1:]:
+        raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
+
+    if batch_size is not None:
+        params['batch_size'] = batch_size
+
+    class_probabilities = predict_probabililties(x, model, params, verbose)
+
+    segment_dims = np.where([val == 'segment' for val in params['class_types']])[0]
+    segment_names = [params['class_names'][segment_dim] for segment_dim in segment_dims]
+    segments = predict_segments(class_probabilities, samplerate,
+                                segment_dims, segment_names,
+                                segment_thres, segment_minlen, segment_fillgap)
+    segments['samplerate_Hz'] = samplerate
+
+    event_dims = np.where([val == 'event' for val in params['class_types']])[0]
+    event_names = [params['class_names'][event_dim] for event_dim in event_dims]
+    events = predict_events(class_probabilities, samplerate,
+                            event_dims, event_names,
+                            event_thres, event_dist)
+    events['samplerate_Hz'] = samplerate
+
+    return events, segments, class_probabilities

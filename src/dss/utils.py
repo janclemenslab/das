@@ -1,14 +1,12 @@
 """General utilities"""
-import keras
+import tensorflow.keras as keras
 import logging
 import time
 import numpy as np
 import yaml
-import pywt
-import skimage.util.shape
-import scipy.signal
-import scipy.ndimage
 import h5py
+from . import kapre
+from . import models
 
 
 class LossHistory(keras.callbacks.Callback):
@@ -92,7 +90,8 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
         model_ext = '_model.h5'
 
     try:
-        model = keras.models.load_model(file_trunk + model_ext)
+        model = keras.models.load_model(file_trunk + model_ext,
+                                        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram})
     except SystemError:
         logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights into it.', exc_info=False)
         logging.debug('', exc_info=True)
@@ -154,6 +153,13 @@ def load_params(file_trunk, params_ext='_params.yaml'):
     return params
 
 
+def load_model_and_params(model_save_name):
+    # load parameters and model
+    params = load_params(model_save_name)
+    model = load_model(model_save_name, models.model_dict, from_epoch=False)
+    return model, params
+
+
 def load_from(filename, datasets):
     """Load datasets from h5 file.
 
@@ -168,110 +174,6 @@ def load_from(filename, datasets):
     with h5py.File(filename, 'r') as f:
         data = {dataset: f[dataset][:] for dataset in datasets}
     return data
-
-
-def smooth_labels(labels, pulse_times, s0=None, s1=None, buf=50):
-    """[summary]
-
-    Args:
-        labels ([type]): [description]
-        pulse_times ([type]): [description]
-        s0 ([type]): [description]
-        s1 ([type]): [description]
-        buf (int, optional): [description]. Defaults to 50.
-
-        Returns:
-        [type]: [description]
-    """
-    pulse_times = pulse_times.T
-    if s0 is None:
-        condition = np.concatenate((pulse_times < s1 - buf - 1, pulse_times > s0 + buf + 1), axis=0)
-        within_range_pulses = np.all(condition, axis=0)
-        pulse_times = pulse_times[within_range_pulses, 0] - s0
-    labels[:, 1] = 0
-    for stp in range(-buf, buf):
-        labels[np.uintp(pulse_times + stp), 1] = 1
-
-    labels[labels[:, 1] == 1, 0] = 0  # pulse excludes sine
-    labels[labels[:, 1] == 1, 2] = 0  # pulse excludes silence
-    labels[np.sum(labels, axis=1) == 0, 0] = 1
-    return labels
-
-
-def running_fun(x, fun, winlen, stride=1, window=None):
-    """[summary]
-
-    Args:
-        x ([type]): [description]
-        fun ([type]): [description]
-        winlen ([type]): [description]
-        stride (int, optional): [description]. Defaults to 1.
-        window ([type], optional): [description]. Defaults to None.
-
-    Returns:
-        [type]: [description]
-    """
-    if len(x.shape) == 1:
-        x = x[..., np.newaxis]
-    X = skimage.util.shape.view_as_windows(x, [winlen, 1], [stride, 1])[..., 0]
-    if window is not None:
-        X = X * window
-    y = fun(X, axis=2)
-    return y
-
-
-def cwt(dta, scales=range(8, 150, 2), wavelet_name='cmor1.5-1.0', stack_imre=True, power_only=False):
-    """Cont Wvlt Trsfrm.
-
-    Args:
-        dta: [T,]
-        scales=range(8, 150, 2)
-        wavelet_name='cmor1.5-1.0'
-        stack_imre=True
-        power_only=False (stack_imre is ignored if power_only is True)
-    """
-    # frequencies = pywt.scale2frequency(wavelet_name, scales ) / dt
-    # logging.info(f'freq range {np.min(frequencies):1.1f}-{np.max(frequencies):1.1f}Hz')
-    if dta.ndim == 2:
-        dta = dta[:, 0]
-    coef, _ = pywt.cwt(dta, scales, wavelet_name)
-    if stack_imre and not power_only:
-        coef = np.concatenate((np.real(coef.T), np.imag(coef.T)), axis=1)
-    else:
-        coef = coef.T
-
-    if power_only:
-        coef = np.absolute(coef)
-    return coef
-
-
-def merge_channels(data, sampling_rate, max_filter_len=101, passband=(25, 1500)):
-    """Merge multi-channel recording into a single channel based in max amplitude. 
-
-    Args:
-        data ([type]): [time, channels]
-        sampling_rate ([type]): Hz
-        max_filter_len (int, optional): in samples. Defaults to 101.
-        passband (tuple, optional): (fmin, fmax) Hz. Defaults to (25, 1500).
-
-    Returns:
-        merged channels [time, 1]
-    """
-    # TODO Should use segmentation data (y_pred?) to make sure we get all song
-    # remove all nan/inf data
-    mask = ~np.isfinite(data)
-    data[mask] = np.interp(np.flatnonzero(mask), np.flatnonzero(~mask), data[~mask])
-    # band-pass filter out noise on each channel
-    b, a = scipy.signal.butter(6, passband, btype='bandpass', fs=sampling_rate)
-    data = scipy.signal.filtfilt(b, a, data, axis=0, method='pad')
-    # find loudest channel in 101-sample windows
-    sng_max = scipy.ndimage.maximum_filter1d(np.abs(data), size=max_filter_len, axis=0)
-    loudest_channel = np.argmax(sng_max, axis=-1)
-    # get linear index and merge channels
-    idx = np.ravel_multi_index((np.arange(sng_max.shape[0]), loudest_channel), data.shape)
-    data_merged_max = data.ravel()[idx]
-    data_merged_max = data_merged_max[:, np.newaxis]  # shape needs to be [nb_samples, 1]
-    return data_merged_max
 
 
 class Timer:
