@@ -32,7 +32,7 @@ There are four tutorial notebooks that illustrate all steps required for going f
 - [Prepare training data](tutorials/1_prepare_data.ipynb)
 - [Train the network](tutorials/2_training.ipynb)
 - Evaluate the network and fine tune inference parameters for predicting [events like Drosophila song pulses](tutorials/3a_evaluate_events.ipynb) or [segments like Drosophila sine song or bird song syllables](tutorials/3b_evaluate_segments.ipynb)
-- [Inference on new data](4_inference.ipynb)
+- [Inference on new data](tutorials/4_inference.ipynb)
 
 ## Acknowledgements
 The following packages were modified and integrated into dss.
