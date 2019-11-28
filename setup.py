@@ -17,7 +17,7 @@ setup(name='deepsongsegmenter',
       license='MIT',
       packages=find_packages('src'),
       package_dir={'': 'src'},
-      install_requires=['numpy>=1.8.0', 'tensorflow>=2.0', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
+      install_requires=['numpy>=1.8.0', 'tensorflow-auto-detect>=2.0', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
                         'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib', 'matplotlib_scalebar'],
       include_package_data=True,
       zip_safe=False
