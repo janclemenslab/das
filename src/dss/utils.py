@@ -5,7 +5,7 @@ import time
 import numpy as np
 import yaml
 import h5py
-import kapre
+from . import kapre
 from . import models
 
 
