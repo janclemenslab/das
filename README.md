@@ -5,24 +5,30 @@ Install all dependencies
 ```shell
 conda create -n dss "python>=3.7,<3.8"
 conda activate dss
+conda install "tensorflow>=2.0"
+pip install git+https://github.com/janclemenslab/deepsongsegmenter
+```
+(replace "tensorflow>=2.0" with "tensorflow-gpu>=2.0" if you want to use the GPU)
+
+Troubleshooting:
+- Pip install straight into a vanilla env failed on my mac due to zarr - I had to first manually install zarr using `conda install zarr`.
+- [tensorflow-auto-detect](https://pypi.org/project/tensorflow-auto-detect/) could be used to automatically select the right tensorflow variant (CPU/GPU) but does as of Nov 2019 not work support tf2.0.
+- You can also manually install all dependencies (replace "tensorflow>=2.0" with "tensorflow-gpu>=2.0" if you want to use the GPU):
+```shell
 conda install "numpy>=1.8.0" scikit-learn scipy scikit-image "tensorflow>=2.0" pandas h5py yaml pywavelets librosa matplotlib seaborn tqdm jupyterlab
 conda install peakutils -c conda-forge
 pip install flammkuchen defopt matplotlib-scalebar
 ```
-Important: If you want to use the GPU replace `tensorflow>=2.0` with `tensorflow-gpu>=2.0` in the above command.
-
-Finally, install _DSS_ itself:
+- the notebooks have a couple extra deps:
 ```shell
-pip install git+https://github.com/janclemenslab/deepsongsegmenter@tf2
-```
-or if you want to develop, clone the repo
-```shell
-git clone https://github.com/janclemenslab/deepsongsegmenter.git
-cd deepsongsegmenter
-pip install -e .
+conda install jupyterlab ipython tqdm ipywidgets -y
+pip install
 ```
 
-Use the [tf2](https://github.com/janclemenslab/deepsongsegmenter/tree/tf2) branch and the corresponding [tf2 branch of keras-tcn](https://github.com/postpop/keras-tcn/tree/tf2). Not thoroughly tested but runs and seems to reproduce the predictions of models trained with the old tf1.x.
+## Docs
+- [How to train](doc/training.md)
+- [How to predict](doc/predict.md)
+- [Data schema](doc/data.md)
 
 ## Acknowledgements
 The following packages were modified and integrated into dss.
@@ -30,8 +36,3 @@ The following packages were modified and integrated into dss.
 - Trainable STFT layer: [kapre](https://github.com/keunwoochoi/kapre)
 
 See the module directories for the original READMEs.
-
-## Docs
-- [How to train](doc/training.md)
-- [How to predict](doc/predict.md)
-- [Data schema](doc/data.md)
