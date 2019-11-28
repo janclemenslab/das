@@ -10,9 +10,9 @@ from glob import glob
 from . import data, models, utils, predict, io, evaluate
 
 
-def train(*, model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 3,
+def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 3,
           nb_conv: int = 3, nb_hist: int = 1024, batch_norm: bool = True,
-          data_dir: str = '../dat.song', save_dir: str = './', verbose: int = 2,
+          save_dir: str = './', verbose: int = 2,
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
           fraction_data: float = 1.0, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0):
