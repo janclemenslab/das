@@ -76,7 +76,7 @@ class AudioSequence(keras.utils.Sequence):
             data_padding (int, optional): if > 0, will set weight of as many samples at start and end of nb_hist window to zero. Defaults to 0.
             first_sample (int): 0
             last_sample (int): None - last_sample in x, otherwise last_sample
-            output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1(every sample).
+            output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1 (every sample).
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -153,8 +153,7 @@ class AudioSequence(keras.utils.Sequence):
 
     def __len__(self):
         """Number of batches."""
-        # return int(max(0, np.floor((self.nb_samples - 2 * self.x_hist) / (self.stride * self.batch_size))))
-        return int(max(0, np.floor((self.nb_samples) / (self.stride * self.batch_size))))
+        return int(max(0, np.floor((self.nb_samples - ((self.stride*(self.batch_size-1)) + self.x_hist)) / (self.stride * (self.batch_size))) + 1))
 
     def __str__(self):
         string = ['AudioSequence with {} batches each with {} items.\n'.format(len(self), self.batch_size),
