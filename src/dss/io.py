@@ -2,7 +2,7 @@
 Load data for training/testing.
 See doc/data.md for a description of the data schema.
 """
-import numpy as np
+import os.path
 from . import npy_dir
 
 
@@ -53,6 +53,8 @@ def load(location, x_suffix='', y_suffix=''):
     Returns:
         dict-like complying with data schema defined above
     """
+
+    location = os.path.normpath(location)  # remove trailing path separators
     if location.endswith('.zarr'):
         import zarr
         data = zarr.open(location, mode='r')
