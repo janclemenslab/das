@@ -6,11 +6,6 @@ import os.path
 from . import npy_dir
 
 
-class Dict(dict):
-    """Wrap dict in class so we can attach attrs to it."""
-    pass
-
-
 def _select(data, x_suffix, y_suffix):
     for lvl in ['test', 'val', 'train']:
         if lvl in data:
@@ -35,7 +30,7 @@ def _select(data, x_suffix, y_suffix):
 
 def _to_dict(data):
     "Convert dict-like zarr or h5 store `data` to python dictionary."
-    d = Dict()
+    d = npy_dir.Dict()
     d.attrs = dict(data.attrs)  # cast to dict since data.attrs are read-only for zarr stores
     for key_top in data.keys():
         d[key_top] = dict()
