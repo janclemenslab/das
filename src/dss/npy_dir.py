@@ -24,16 +24,25 @@ from glob import glob
 
 class Dict(dict):
     """Wrap dict in class so we can attach attrs to it."""
-    pass
+    def __str__(self):
+        out = f'Data:\n'
+        for top_key in self.keys():
+            out = out + f'   {top_key}:\n'
+            for key, val in self[top_key].items():
+                out = out + f'      {key}: {val.shape}\n'
+        out = out + f'\nAttributes:\n'
+        for key, val in self.attrs.items():
+            out = out + f'    {key}: {val}\n'
+        return out
 
 
 def load(location, memmap_dirs=['train']):
     """Load hierarchy of npy files into dict of dicts.
-    
+
     Args:
         location ([type]): [description]
         memmap_dirs (list, optional): [description]. Defaults to ['train'].
-    
+
     Returns:
         dict: [description]
     """
@@ -65,10 +74,10 @@ def load(location, memmap_dirs=['train']):
 
 def save(location, data):
     """Save nested dict in data to location as a directory with npy files dir.
-    
+
     Args:
         location ([type]): [description]
-        data ([type]): [description]    
+        data ([type]): [description]
     """
     def path_to_key(path):
         key = os.path.splitext(os.path.basename(path))[0]
