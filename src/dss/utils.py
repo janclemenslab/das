@@ -99,7 +99,7 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
     return model
 
 
-def load_model_from_params(file_trunk, models_dict, weights_ext='_weights.h5', params_ext='_params.yaml', compile=True):
+def load_model_from_params(file_trunk, model_dict, weights_ext='_weights.h5', params_ext='_params.yaml', compile=True):
     """Load model weights and architecture from separate files.
 
     Args:
@@ -113,7 +113,7 @@ def load_model_from_params(file_trunk, models_dict, weights_ext='_weights.h5', p
         [type]: [description]
     """
     params = load_params(file_trunk, params_ext)
-    model = models_dict[params['model_name']](**params)  # get the model - calls the function that generates a model with parameters
+    model = model_dict[params['model_name']](**params)  # get the model - calls the function that generates a model with parameters
     model.load_weights(file_trunk + weights_ext)
     if compile:
         # Compile with random standard optimizer and loss so we can use the model for prediction
