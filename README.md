@@ -5,10 +5,11 @@
 ```shell
 conda create -n dss "python>=3.7,<3.8"
 conda activate dss
-conda install "tensorflow>=2.0"
-pip install git+https://github.com/janclemenslab/deepsongsegmenter
+pip install -e git+https://github.com/janclemenslab/deepsongsegmenter#egg=deepsongsegmenter[cpu]
 ```
-Replace `"tensorflow>=2.0"` with `"tensorflow-gpu>=2.0"` if you want to use the GPU
+Replace `[cpu]` at the end of the last command with `[gpu]` if you want to use the GPU. By default (without any `[...]` in the last command) tensorflow will no be installed - do this to avoid conflict with already installed cpu or gpu versions of tensorflow.
+
+Local install: `pip install -e ".[cpu]"` or `".[gpu]"`.
 
 To use the tutorial notebooks, you need to install a couple of extra dependencies:
 ```shell
@@ -18,9 +19,9 @@ conda install jupyterlab ipython tqdm ipywidgets -y
 Troubleshooting:
 - Pip install straight into a vanilla env failed on my mac due to zarr - I had to first manually install zarr using `conda install zarr`.
 - [tensorflow-auto-detect](https://pypi.org/project/tensorflow-auto-detect/) could be used to automatically select the right tensorflow variant (CPU/GPU) but does as of Nov 2019 not support tf2.0.
-- You can also manually install all dependencies (again, replace `"tensorflow>=2.0"` with `"tensorflow-gpu>=2.0"` if you want to use the GPU):
+- You can also manually install all dependencies (replace `"tensorflow>=2.0"` with `"tensorflow-gpu>=2.0"` if you want to use the GPU):
 ```shell
-conda install "numpy>=1.8.0" scikit-learn scipy scikit-image "tensorflow>=2.0" pandas h5py yaml pywavelets librosa matplotlib seaborn
+conda install "numpy>=1.8.0" scikit-learn scipy scikit-image "tensorflow>=2.0" pandas h5py yaml pywavelets librosa matplotlib seaborn pytables
 conda install peakutils -c conda-forge
 pip install flammkuchen defopt matplotlib-scalebar
 ```
