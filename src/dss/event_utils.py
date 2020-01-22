@@ -71,7 +71,7 @@ def match_events(eventindices_true, eventindices_pred, tol=100):
 
     # flag those that have no nearby event
     nearest_event = np.ma.masked_array(nearest_event, mask=nearest_dist > tol)
-    if len(eventindices_true)==0:
+    if len(eventindices_true) == 0:
         nearest_event.mask = True  # all detections are false positives
     else:
         # flag doublettes - keep only nearest
@@ -108,9 +108,8 @@ def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
 
     d = dict()
     d['FP'] = np.sum(nearest_pred_event.mask)  # pred events that have no nearby true event (or there is another pred event nearer to the true event)
-    # d['TP'] = len(nearest_pred_event.compressed())
     d['TP'] = len(nearest_pred_event[np.isfinite(nearest_dist)].compressed())
-    d['FN'] = max(0, np.sum(nearest_true_event.mask))  # - np.sum(nearest_pred_event.mask))#len(nearest_pred_event.compressed()))
+    d['FN'] = max(0, np.sum(nearest_true_event.mask))
 
     if d['FP'] == 0:  # if there are no false positives (even for no detections), then precision is 1.0
         d['precision'] = 1.0
@@ -119,7 +118,7 @@ def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
     else:
         d['precision'] = d['TP'] / (d['TP'] + d['FP'])
 
-    if d['FN'] == 0:  # if there are no false positives (even for all detections), the recall is 1.0
+    if d['FN'] == 0:  # if there are no false negatives (even for no detections), the recall is 1.0 (?!)
         d['recall'] = 1.0
     elif d['TP'] + d['FN'] == 0:
         d['recall'] = 0
