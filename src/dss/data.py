@@ -21,6 +21,7 @@ def unpack_batches(x, padding=0):
 
 
 def get_data_from_gen(data_gen):
+    # PREPEND data_padding samples of zeros/nans so we match len(x)? and postpend nans to match len(x) as well?
     x, y = data_gen.unroll(return_x=True, merge_batches=True)
     # reshape from [batches, nb_hist, ...] to [time, ...]
     x = unpack_batches(x, data_gen.data_padding)
@@ -184,7 +185,8 @@ class AudioSequence(keras.utils.Sequence):
         if self.shuffle:
             pts = np.random.randint(self.first_sample / self.stride, (self.last_sample - self.x_hist - 1) / self.stride, self.batch_size)
         else:
-            pts = range(self.first_sample + idx * self.batch_size, (idx + 1) * self.batch_size, 1)
+            pts = range(int(self.first_sample/self.stride) + idx * self.batch_size,
+                        int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)
 
         for cnt, bat in enumerate(pts):
             batch_x[cnt, ...] = self.x[bat * self.stride:bat * self.stride + self.x_hist, ...]
