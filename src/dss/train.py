@@ -14,7 +14,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           nb_conv: int = 3, nb_hist: int = 1024, batch_norm: bool = True,
           save_dir: str = './', verbose: int = 2,
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
-          fraction_data: float = 1.0, ignore_boundaries: bool = False,
+          fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0):
     """[summary]
 
@@ -32,6 +32,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         with_y_hist (bool): [description]. Defaults to True.
         nb_epoch (int): Defaults to 400.
         fraction_data (float): [description]. Defaults to 1.0.
+        seed (int): Seed for selecting random subsets of the data. Defaults to None (no seed).
         ignore_boundaries (bool): [description]. Defaults to False.
         x_suffix (str): ... Defaults to '' (will use 'x')
         y_suffix (str): ... Defaults to '' (will use 'y')
@@ -62,11 +63,14 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
-    if fraction_data < 1.0:  # train on a subset
-        logging.info('Using {} of data for validation and validation.'.format(fraction_data))
+    if fraction_data is not None:  # train on a subset
+        if fraction_data > 1.0:  # seconds
+            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / d.attrs['samplerate_x_Hz']} of the training data.")
+            fraction_data = fraction_data / d.attrs['samplerate_x_Hz']
+        logging.info(f"Using {fraction_data} of data for training and validation.")
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=1)
-        first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=1)
+        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
     else:
         first_sample_train, last_sample_train = 0, None
         first_sample_val, last_sample_val = 0, None
@@ -103,7 +107,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     # TRAIN NETWORK
     logging.info('start training')
-    fit_hist = model.fit_generator(
+    fit_hist = model.fit(
         data_gen,
         epochs=nb_epoch,
         steps_per_epoch=min(len(data_gen) * 100, 1000),
@@ -119,8 +123,6 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     model.load_weights(checkpoint_save_name)
 
     logging.info('predicting')
-    # x_test, y_test, y_pred = predict.predict_with_y(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
-    # evaluate.evaluate_probabilities(x, y, model, params, verbose=None)
     x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
                                                              model=model, params=params)
 
