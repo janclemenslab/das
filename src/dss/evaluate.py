@@ -9,25 +9,31 @@ from .event_utils import evaluate_eventtimes
 
 
 # to segment_utils
-def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: bool = False):
-    """[summary]
+def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: bool = False,
+                      report_as_dict: bool = False, labels=None):
+    """
+
 
     Args:
-        labels_test ([type]): [description]
-        labels_pred ([type]): [description]
+        labels_test (List): [nb_samples,]
+        labels_pred (List): [nb_samples,]
         class_names ([type]): [description]
+        confmat_as_pandas (bool, optional): [description]. Defaults to False.
+        report_as_dict (bool, optional): [description]. Defaults to False.
+        labels ([type], optional): [description]. Defaults to None.
 
     Returns:
         [type]: [description]
     """
-    # nb_classes = len(np.unique(labels_test))
     conf_mat = sklearn.metrics.confusion_matrix(labels_test, labels_pred)
     if confmat_as_pandas:
         conf_mat = pd.DataFrame(data=conf_mat,
                                 columns=['true ' + p for p in class_names],
                                 index=['pred ' + p for p in class_names])
-
-    report = sklearn.metrics.classification_report(labels_test, labels_pred, target_names=class_names)#[:nb_classes])
+    if labels is None:
+        labels = np.arange(len(class_names))
+    report = sklearn.metrics.classification_report(labels_test, labels_pred, labels=labels,
+                                                   target_names=class_names, output_dict=report_as_dict, digits=3)
     return conf_mat, report
 
 
@@ -77,7 +83,6 @@ def evaluate(x, y, model_savename):
 
     eval_gen = data.AudioSequence(x, y, shuffle=False, **params)
     x, y = data.get_data_from_gen(eval_gen)
-
     # eval_segments(segments)
     # eval_events(events)
 
