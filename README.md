@@ -21,8 +21,8 @@ Troubleshooting:
 - [tensorflow-auto-detect](https://pypi.org/project/tensorflow-auto-detect/) could be used to automatically select the right tensorflow variant (CPU/GPU) but does as of Nov 2019 not support tf2.0.
 - You can also manually install all dependencies (replace `"tensorflow>=2.0"` with `"tensorflow-gpu>=2.0"` if you want to use the GPU):
 ```shell
-conda install "numpy>=1.8.0" scikit-learn scipy scikit-image "tensorflow>=2.0" pandas h5py yaml pywavelets librosa matplotlib seaborn pytables
-conda install peakutils -c conda-forge
+conda install "numpy>=1.8.0" scikit-learn scipy scikit-image "tensorflow>=2.0" pandas h5py yaml pywavelets matplotlib seaborn zarr
+conda install librosa peakutils -c conda-forge
 pip install flammkuchen defopt matplotlib-scalebar
 ```
 
