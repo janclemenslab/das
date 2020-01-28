@@ -62,8 +62,6 @@ def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name='FCN')
-
-   
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
                   loss=loss, sample_weight_mode=sample_weight_mode)
     return model
@@ -116,8 +114,7 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Dense(nb_classes, activation='relu')(out)
     out = kl.Activation("softmax")(out)
 
-    model = keras.models.Model(inp, out, name='CNN2D')
-    
+    model = keras.models.Model(inp, out, name='CNN2D')    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
                   loss=loss, sample_weight_mode=sample_weight_mode)
     return model
