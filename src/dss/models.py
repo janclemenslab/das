@@ -1,6 +1,7 @@
 """Defines the network architectures."""
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
+from tensorflow.keras.callbacks import ReduceLROnPlateau
 from typing import List
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
@@ -396,6 +397,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
              use_skip_connections: bool = True, return_sequences: bool = True,
              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
              nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+             reduce_lr: bool = False, 
              **kwignored):
     """Create TCN network with trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -445,6 +447,10 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
+    
+    if reduce_lr:
+        callbacks = [ReduceLROnPlateau(verbose=1)]
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model

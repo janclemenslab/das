@@ -15,7 +15,8 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           save_dir: str = './', verbose: int = 2,
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
-          x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0):
+          x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
+          learning_rate: float = None, reduce_lr: bool = False):
     """[summary]
 
     Args:
@@ -37,6 +38,8 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         x_suffix (str): ... Defaults to '' (will use 'x')
         y_suffix (str): ... Defaults to '' (will use 'y')
         nb_pre_conv (int): adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN - useful for reducing the sampling rate for USV. Defaults to 0 (no frontend).
+        learning_rate (float): learning rate of the model. Defaults to None (values set in the model def)
+        reduce_lr (bool): reduce learning rate on plateau
     """
 
     # FIXME THIS IS NOT GREAT:
@@ -59,6 +62,11 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
 
     params = locals()
+
+    # remove learning rate param if not set so the value from the model def is used
+    if params['learning_rate'] is None:
+        del params['learning_rate']
+
     logging.info('loading data')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
