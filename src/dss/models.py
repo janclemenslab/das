@@ -21,7 +21,7 @@ def _register_as_model(func):
 def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
         batch_norm=False, return_sequences=False, sample_weight_mode: str = None,
-        learning_rate: float = 0.0001,
+        learning_rate: float = 0.0001, reduce_lr: bool = False, 
         **kwignored):
     """CNN for single-frequency and multi-channel data - uses 1D convolutions.
 
@@ -37,6 +37,7 @@ def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
         batch_norm (bool, optional): [description]. Defaults to False.
         return_sequences (bool, optional): [description]. Defaults to False.
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Raises:
@@ -63,8 +64,14 @@ def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name='FCN')
+
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model
 
 
@@ -72,7 +79,7 @@ def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
 def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
           nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
           batch_norm=False, return_sequences=False, sample_weight_mode: str = None,
-          learning_rate: float = 0.0001,
+          learning_rate: float = 0.0001, reduce_lr: bool = False,        
           **kwignored):
     """CNN for multi-frequency and multi-channel data - uses 2D convolutions.
 
@@ -88,6 +95,7 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
         batch_norm (bool, optional): [description]. Defaults to False.
         return_sequences (bool, optional): [description]. Defaults to False.
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Raises:
@@ -116,8 +124,14 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name='CNN2D')
+    
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model
 
 
@@ -125,7 +139,7 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
 def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
         batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
-        learning_rate: float = 0.0001,
+        learning_rate: float = 0.0001, reduce_lr: bool = False,
         **kwignored):
     """[summary]
 
@@ -141,6 +155,7 @@ def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
         batch_norm (bool, optional): [description]. Defaults to False.
         return_sequences (bool, optional): [description]. Defaults to True.
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -166,8 +181,15 @@ def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name='FCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
+    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), 
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
+    
     return model
 
 
@@ -175,7 +197,7 @@ def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
 def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
           nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
           batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
-          learning_rate: float = 0.0005,
+          learning_rate: float = 0.0005, reduce_lr: bool = False,
           **kwignored):
     """[summary]
 
@@ -191,6 +213,7 @@ def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
         batch_norm (bool, optional): [description]. Defaults to False.
         return_sequences (bool, optional): [description]. Defaults to True.
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -212,7 +235,13 @@ def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name='CNN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss)
+    
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
+    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), 
+                  loss=loss, callbacks=callbacks)
     return model
 
 
@@ -222,7 +251,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0001,
+            nb_pre_conv: int = 0, learning_rate: float = 0.0001, reduce_lr: bool = False,
             **kwignored):
     """Create TCN network.
 
@@ -241,6 +270,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         dropout_rate (float, optional): [description]. Defaults to 0.00.
         padding (str, optional): [description]. Defaults to 'same'.
         nb_pre_conv (int, optional): number of conv-relu-batchnorm-maxpool2 blocks before the TCN - useful for reducing the sample rate. Defaults to 0
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -261,8 +291,14 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
+    
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model
 
 
@@ -278,7 +314,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+            nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True, reduce_lr: bool = False,
             **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -301,6 +337,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
         learning_rate (float, optional) Defaults to 0.0005
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference .
                                    Defaults to True.
@@ -326,8 +363,14 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
+    
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model
 
 
@@ -337,7 +380,7 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
               dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
               use_skip_connections: bool = True, return_sequences: bool = True,
               dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-              nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+              nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True, reduce_lr: bool = False,
               **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -360,6 +403,7 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
         learning_rate (float, optional) Defaults to 0.0005
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference .
                                    Defaults to True.
@@ -385,8 +429,14 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
+    
+    callbacks = []
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+                  loss=loss, sample_weight_mode=sample_weight_mode,
+                  callbacks=callbacks)
     return model
 
 
@@ -419,6 +469,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
         learning_rate (float, optional) Defaults to 0.0005
+        reduce_lr (bool, optional): reduce learning rate on plateau. Defaults to False, 
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference.
                                    Defaults to True.
@@ -448,8 +499,10 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
     
+    callbacks = []
     if reduce_lr:
-        callbacks = [ReduceLROnPlateau(verbose=1)]
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
                   loss=loss, sample_weight_mode=sample_weight_mode,
                   callbacks=callbacks)
