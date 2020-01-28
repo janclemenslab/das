@@ -3,7 +3,7 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 import defopt
 from glob import glob
 

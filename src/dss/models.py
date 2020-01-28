@@ -1,7 +1,6 @@
 """Defines the network architectures."""
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
-from tensorflow.keras.callbacks import ReduceLROnPlateau
 from typing import List
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
