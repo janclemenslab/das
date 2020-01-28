@@ -113,6 +113,13 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
+
+    
+    callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
+                 EarlyStopping(monitor='val_loss', patience=20),]
+    if reduce_lr:
+        callbacks.append([ReduceLROnPlateau(verbose=1)])
+    
     # TRAIN NETWORK
     logging.info('start training')
     fit_hist = model.fit(
@@ -121,9 +128,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         steps_per_epoch=min(len(data_gen) * 100, 1000),
         verbose=verbose,
         validation_data=val_gen,
-        callbacks=[ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-                   EarlyStopping(monitor='val_loss', patience=20),
-                   ],
+        callbacks=callbacks,
     )
 
     # TEST
