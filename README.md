@@ -5,7 +5,7 @@
 ```shell
 conda create -n dss "python>=3.7,<3.8"
 conda activate dss
-pip install -e git+https://github.com/janclemenslab/deepsongsegmenter#egg=deepsongsegmenter[cpu]
+pip install git+https://github.com/janclemenslab/deepsongsegmenter#egg=deepsongsegmenter[cpu]
 ```
 Replace `[cpu]` at the end of the last command with `[gpu]` if you want to use the GPU. By default (without any `[...]` in the last command) tensorflow will no be installed - do this to avoid conflict with already installed cpu or gpu versions of tensorflow.
 
