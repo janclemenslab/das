@@ -68,6 +68,6 @@ def get_pulseshapes(pulsecenters, song, win_hw):
     for cnt, p in enumerate(pulsecenters):
         t0 = int(p - 2 * win_hw)
         t1 = int(p + 0 * win_hw)
-        if t0 >= 0 and t1 < song.shape[0]:
+        if t0 > 0 and t1 < song.shape[0]:
             pulseshapes[:, cnt] = song[t0:t1, 0].copy()
     return pulseshapes
