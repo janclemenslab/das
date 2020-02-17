@@ -73,9 +73,10 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     if fraction_data is not None:  # train on a subset
         if fraction_data > 1.0:  # seconds
-            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / d.attrs['samplerate_x_Hz']} of the training data.")
-            fraction_data = fraction_data / d.attrs['samplerate_x_Hz']
-        logging.info(f"Using {fraction_data} of data for training and validation.")
+            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
+            fraction_data = fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz'])
+        else:
+            logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
         first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
         first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
@@ -112,8 +113,6 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
 
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
-
-
     
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
