@@ -74,7 +74,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     if fraction_data is not None:  # train on a subset
         if fraction_data > 1.0:  # seconds
             logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
-            fraction_data = np.min(fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0)
+            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         else:
             logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
