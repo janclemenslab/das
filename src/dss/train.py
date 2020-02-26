@@ -94,7 +94,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     logging.info('preparing data')
     data_gen = data.AudioSequence(d['train']['x'], d['train']['y'], shuffle=True,
-                                  first_sample=first_sample_train, last_sample=last_sample_train,
+                                  first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=100,
                                   **params)
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'], shuffle=False,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
@@ -113,18 +113,18 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
 
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
-    
+
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(verbose=1))
-    
+
     # TRAIN NETWORK
     logging.info('start training')
     fit_hist = model.fit(
         data_gen,
         epochs=nb_epoch,
-        steps_per_epoch=min(len(data_gen) * 100, 1000),
+        steps_per_epoch=min(len(data_gen), 1000),
         verbose=verbose,
         validation_data=val_gen,
         callbacks=callbacks,

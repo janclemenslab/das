@@ -57,7 +57,7 @@ class AudioSequence(keras.utils.Sequence):
 
     def __init__(self, x, y=None, batch_size=32, shuffle=True, nb_hist=1, y_offset=None, stride=1,
                  cut_trailing_dim=False, with_y_hist=False, data_padding=0,
-                 first_sample=0, last_sample=None, output_stride=1,
+                 first_sample=0, last_sample=None, output_stride=1, nb_repeats=1,
                  **kwargs):
         """[summary]
 
@@ -78,6 +78,7 @@ class AudioSequence(keras.utils.Sequence):
             first_sample (int): 0
             last_sample (int): None - last_sample in x, otherwise last_sample
             output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1 (every sample).
+            nb_repeats (int): Number of repeats before the dataset runs out of data. Defaults to 1 (no repeats).
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -85,6 +86,7 @@ class AudioSequence(keras.utils.Sequence):
         self.first_sample = first_sample
         self.last_sample = self.x.shape[0] if last_sample is None else last_sample
         self.nb_samples = self.last_sample - self.first_sample
+        self.nb_repeats = nb_repeats
         self.output_stride = output_stride
         self.with_y = False if self.y is None else True
         if self.with_y:
@@ -154,7 +156,7 @@ class AudioSequence(keras.utils.Sequence):
 
     def __len__(self):
         """Number of batches."""
-        return int(max(0, np.floor((self.nb_samples - ((self.stride*(self.batch_size-1)) + self.x_hist)) / (self.stride * (self.batch_size))) + 1))
+        return int(self.nb_repeats * max(0, np.floor((self.nb_samples - ((self.stride*(self.batch_size-1)) + self.x_hist)) / (self.stride * (self.batch_size))) + 1))
 
     def __str__(self):
         string = ['AudioSequence with {} batches each with {} items.\n'.format(len(self), self.batch_size),
