@@ -52,7 +52,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         y_offset = 0
         sample_weight_mode = 'temporal'
         if ignore_boundaries:
-            data_padding = int(np.ceil(kernel_size / 2 * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
+            data_padding = int(np.ceil(kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
             stride = stride - 2 * data_padding
     else:  # classification
         return_sequences = False
