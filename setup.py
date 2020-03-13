@@ -22,5 +22,6 @@ setup(name='deepsongsegmenter',
                         'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
                         'matplotlib_scalebar', 'peakutils', 'tensorflow==2.1'],
       include_package_data=True,
-      zip_safe=False
+      zip_safe=False,
+      entry_points = { 'console_scripts': ['dss-train=dss.train:main'],}
      )
