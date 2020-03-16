@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib_scalebar
 from matplotlib.backends.backend_pdf import PdfPages
-
+import numpy as np
 
 def scalebar(length, dx=1, units='', label=None, axis=None, location='lower right', frameon=False, **kwargs):
     """Add scalebar to axis.
@@ -11,7 +11,7 @@ def scalebar(length, dx=1, units='', label=None, axis=None, location='lower righ
     Usage:
         plt.subplot(122)
         plt.plot([0,1,2,3], [1,4,2,5])
-        add_scalebar(0.5, 'femtoseconds', label='duration', location='lower right’)
+        scalebar(0.5, 'femtoseconds', label='duration', location='lower right’)
 
     Args:
         length (float): Length of the scalebar in units of axis ticks - length of 1.0 corresponds to spacing between to major x-ticks
@@ -66,6 +66,65 @@ def remove_axes(axis=None, all=False):
         axis.yaxis.set_ticks([])
         axis.xaxis.set_ticks([])
 
+
+
+import string
+from itertools import cycle
+
+def label_axes(fig=None, labels=None, loc=None, **kwargs):
+    """
+    Walks through axes and labels each.
+
+    kwargs are collected and passed to `annotate`
+
+    Parameters
+    ----------
+    fig : Figure
+         Figure object to work on
+
+    labels : iterable or None
+        iterable of strings to use to label the axes.
+        If None, lower case letters are used.
+
+    loc : len=2 tuple of floats
+        Where to put the label in axes-fraction units
+    """
+    if fig is None:
+        fig = plt.gcf()
+
+    if labels is None:
+        labels = string.ascii_uppercase
+
+    if 'size' not in kwargs:
+        kwargs['size'] = 13
+
+    if 'weight' not in kwargs:
+        kwargs['weight'] = 'bold'
+    # re-use labels rather than stop labeling
+    labels = cycle(labels)
+    if loc is None:
+        loc = (-0.2, .9)
+    for ax, lab in zip(fig.axes, labels):
+        ax.annotate(lab, xy=loc,
+                    xycoords='axes fraction',
+                    **kwargs)
+
+def downsample_plot(x,y, ds=20):
+    """Reduces complexity of exported pdfs w/o impairing visual appearance.
+
+    Modified from pyqtgraph - downsampleMethod=peak.
+    Keeps peaks so the envelope of the waveform is preserved.
+    """
+    n = len(x) // ds
+    x1 = np.empty((n,2))
+    x1[:] = x[:n*ds:ds,np.newaxis]
+    x0 = x1.reshape(n*2)
+    y1 = np.empty((n,2))
+    y2 = y[:n*ds].reshape((n, ds))
+    y1[:,0] = y2.max(axis=1)
+    y1[:,1] = y2.min(axis=1)
+    y0 = y1.reshape(n*2)
+    return x0, y0
 
 class Pdf:
     """Thin wrapper around Autosaving variant"""
