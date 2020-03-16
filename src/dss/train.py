@@ -161,7 +161,9 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     fl.save(save_filename, d)
 
-
-if __name__ == '__main__':
+def main():
     logging.basicConfig(level=logging.INFO)
     defopt.run(train)
+
+if __name__ == '__main__':
+    main()
