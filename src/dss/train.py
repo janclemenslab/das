@@ -117,7 +117,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
     if reduce_lr:
-        callbacks.append(ReduceLROnPlateau(verbose=1))
+        callbacks.append(ReduceLROnPlateau(patience=5, verbose=1))
 
     # TRAIN NETWORK
     logging.info('start training')
