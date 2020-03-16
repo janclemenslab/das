@@ -64,10 +64,28 @@ def pulse_freq(pulse, fftlen=1000, sampling_rate=10000, mean_subtract=True):
 
 
 def get_pulseshapes(pulsecenters, song, win_hw):
+    """[summary]
+
+    In case of multi-channel recordings, will return the shape for the loudest channel.
+
+    Args:
+        pulsecenters ([type]): [description]
+        song ([type]): samples x channels
+        win_hw ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
     pulseshapes = np.zeros((2 * win_hw, len(pulsecenters)))
+    nb_channels = song.shape[1]
     for cnt, p in enumerate(pulsecenters):
         t0 = int(p - 2 * win_hw)
         t1 = int(p + 0 * win_hw)
         if t0 > 0 and t1 < song.shape[0]:
-            pulseshapes[:, cnt] = song[t0:t1, 0].copy()
+            if nb_channels > 1:
+                tmp = song[t0:t1, :]
+                loudest_channel = np.argmax(np.max(tmp, axis=0))
+                pulseshapes[:, cnt] = tmp[:, loudest_channel].copy()
+            else:
+                pulseshapes[:, cnt] = song[t0:t1, 0].copy()
     return pulseshapes
