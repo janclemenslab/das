@@ -42,8 +42,9 @@ def labels_from_probabilities(probabilities, threshold=None):
         if threshold is None:
             labels = np.argmax(probabilities, axis=1)
         else:
-            probabilities[probabilities < threshold] = 0
-            labels = np.argmax(probabilities > threshold, axis=1)
+            thresholded_probabilities = probabilities.copy()
+            thresholded_probabilities[thresholded_probabilities < threshold] = 0
+            labels = np.argmax(thresholded_probabilities > threshold, axis=1)
     else:
         raise ValueError(f'Probabilities have to many dimensions ({probabilities.ndim}). Can only be 1D or 2D.')
 
