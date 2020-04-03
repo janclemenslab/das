@@ -68,7 +68,7 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
 
     logging.info('preparing data')
     data_gen = data.AudioSequence(d['train']['x'], d['train']['y'], shuffle=True,
-                                  first_sample=first_sample_train, last_sample=last_sample_train,
+                                  first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=100,
                                   **params)
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'], shuffle=False,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
@@ -117,7 +117,7 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
     fit_hist = model.fit(
         data_gen,
         epochs=nb_epoch,
-        steps_per_epoch=min(len(data_gen) * 100, 1000),
+        steps_per_epoch=min(len(data_gen), 1000),
         verbose=verbose,
         validation_data=val_gen,
         callbacks=[ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
