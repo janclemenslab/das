@@ -23,7 +23,8 @@ def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: 
         labels ([type], optional): [description]. Defaults to None.
 
     Returns:
-        [type]: [description]
+        conf_mat
+        report
     """
     conf_mat = sklearn.metrics.confusion_matrix(labels_test, labels_pred)
     if confmat_as_pandas:
