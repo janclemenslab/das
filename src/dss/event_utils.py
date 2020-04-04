@@ -90,7 +90,7 @@ def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
 
     Args:
         eventtimes_true ([type]): in seconds
-        eventtimes_pred ([type]): in seconds[description]
+        eventtimes_pred ([type]): in seconds
         samplerate (float): in Hz
         tol (int, optional): in seconds [description]. Defaults to 0.01 seconds.
 
