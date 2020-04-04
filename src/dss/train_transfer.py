@@ -4,7 +4,7 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
@@ -18,8 +18,9 @@ from . import data, models, utils, predict, io, evaluate
 
 def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
           verbose: int = 2, nb_epoch: int = 400, fraction_data=None, seed: int = None,
-          freeze: bool = False, reshape_output: bool = False):
-    """[summary]
+          freeze: bool = False, reshape_output: bool = False, learning_rate: float = 0.0001,
+          reduce_lr: bool = False):
+    """Transfer learning - load existing network and train with new data
 
     Args:
         load_name (str): old model to load.
@@ -32,6 +33,8 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
         seed (int): Random seed for selecting subsets of the data. Defaults to None (no seed).
         freeze (bool): freeze TCN layers of the pre-trained network
         reshape_output (bool): reshape output layers of the pre-trained network to match new data
+        learning_rate (float): lr
+        reduce_lr (bool): reduce learning rate
     """
 
     params_given = locals()
@@ -62,7 +65,7 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
                    'first_sample_train': first_sample_train, 'last_sample_train': last_sample_train,
                    'first_sample_val': first_sample_val, 'last_sample_val': last_sample_val,
                    })
-    logging.info('Parameters:')
+    # logging.info('Parameters:')
     # logging.info(params)
 
 
@@ -80,29 +83,29 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
 
 
     nb_classes = d['train']['y'].shape[1]
-    learning_rate = 0.005
-    sample_weight_mode = params['sample_weight_mode']
-    nb_pre_conv = params['nb_pre_conv']
-    learning_rate: float = 0.0005
-    upsample = True
-    loss = 'categorical_crossentropy'
+    if freeze or nb_classes != model.output_shape[-1]:
 
-    new_model = keras.Model(model.inputs, model.layers[-4].output)
-    # freeze layers
-    if freeze:
-        for layer in new_model.layers:
-           if 'conv1d' not in layer.name:
-               layer.trainable = False
+        sample_weight_mode = params['sample_weight_mode']
+        nb_pre_conv = params['nb_pre_conv']
+        upsample = True
+        loss = 'categorical_crossentropy'
 
-    x = new_model.output
-    x = kl.Dense(nb_classes, name='dense_new')(x)
-    x = kl.Activation('softmax', name='activation_new')(x)
-    if nb_pre_conv > 0 and upsample:
-       x = kl.UpSampling1D(size=2**nb_pre_conv, name='upsampling_new')(x)
-    output_layer = x
-    model = keras.models.Model(new_model.inputs, output_layer, name='TCN_new')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                 loss=loss, sample_weight_mode=sample_weight_mode)
+        new_model = keras.Model(model.inputs, model.layers[-4].output)
+        # freeze layers
+        if freeze:
+            for layer in new_model.layers:
+                if 'conv1d' not in layer.name:
+                    layer.trainable = False
+
+        x = new_model.output
+        x = kl.Dense(nb_classes, name='dense_new')(x)
+        x = kl.Activation('softmax', name='activation_new')(x)
+        if nb_pre_conv > 0 and upsample:
+            x = kl.UpSampling1D(size=2**nb_pre_conv, name='upsampling_new')(x)
+        output_layer = x
+        model = keras.models.Model(new_model.inputs, output_layer, name='TCN_new')
+        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+                      loss=loss, sample_weight_mode=sample_weight_mode)
 
 
     logging.info(model.summary())
@@ -112,6 +115,11 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
 
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
+    callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
+                 EarlyStopping(monitor='val_loss', patience=20),]
+    if reduce_lr:
+        callbacks.append(ReduceLROnPlateau(patience=5, verbose=1))
+
     # TRAIN NETWORK
     logging.info('start training')
     fit_hist = model.fit(
@@ -120,9 +128,7 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
         steps_per_epoch=min(len(data_gen), 1000),
         verbose=verbose,
         validation_data=val_gen,
-        callbacks=[ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-                   EarlyStopping(monitor='val_loss', patience=20),
-                   ],
+        callbacks=callbacks,
     )
 
     # TEST
