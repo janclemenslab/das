@@ -55,9 +55,10 @@ class AudioSequence(keras.utils.Sequence):
         ...
     """
 
-    def __init__(self, x, y=None, batch_size=32, shuffle=True, nb_hist=1, y_offset=None, stride=1,
-                 cut_trailing_dim=False, with_y_hist=False, data_padding=0,
+    def __init__(self, x, y=None, batch_size=32, shuffle=True, nb_hist=1, y_offset=None,
+                 stride=1, cut_trailing_dim=False, with_y_hist=False, data_padding=0,
                  first_sample=0, last_sample=None, output_stride=1, nb_repeats=1,
+                 shuffle_subset=None,
                  **kwargs):
         """[summary]
 
@@ -79,6 +80,7 @@ class AudioSequence(keras.utils.Sequence):
             last_sample (int): None - last_sample in x, otherwise last_sample
             output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1 (every sample).
             nb_repeats (int): Number of repeats before the dataset runs out of data. Defaults to 1 (no repeats).
+            shuffle_subset (float): Fraction of batches to use - only works if shuffle=True
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -100,6 +102,12 @@ class AudioSequence(keras.utils.Sequence):
         self.x_hist = nb_hist
         self.with_y_hist = with_y_hist
         self.data_padding = data_padding
+
+        s0 = self.first_sample / self.stride,
+        s1 = (self.last_sample - self.x_hist - 1) / self.stride
+        self.allowed_batches = np.arange(s0, s1)  # choose from all existing batches
+        if self.shuffle_subset is not None:  # only choose from a fixed subset of existing batches
+            self.allowed_batches = np.random.choice(self.allowed_batches, len(self.allowed_batches)* self.shuffle_subset)
 
         if y_offset is None:
             self.y_offset = int(self.x_hist / 2)
@@ -185,7 +193,8 @@ class AudioSequence(keras.utils.Sequence):
                 batch_y = np.zeros((self.batch_size, self.nb_classes), dtype=self.y.dtype)
 
         if self.shuffle:
-            pts = np.random.randint(self.first_sample / self.stride, (self.last_sample - self.x_hist - 1) / self.stride, self.batch_size)
+            # pts = np.random.randint(self.first_sample / self.stride, (self.last_sample - self.x_hist - 1) / self.stride, self.batch_size)
+            pts = np.random.choice(self.allowed_batches, self.batch_size)
         else:
             pts = range(int(self.first_sample/self.stride) + idx * self.batch_size,
                         int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)

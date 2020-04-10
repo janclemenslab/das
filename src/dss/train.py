@@ -72,12 +72,14 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
-    if fraction_data is not None and not batch_level_subsampling:  # train on a subset
+    if fraction_data is not None:
         if fraction_data > 1.0:  # seconds
             logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         else:
             logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
+
+    if not batch_level_subsampling:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
         first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
         first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
@@ -94,23 +96,23 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     logging.info(params)
 
     logging.info('preparing data')
-    data_gen = data.AudioSequence(d['train']['x'], d['train']['y'], shuffle=True,
+    if fraction_data is not None and batch_level_subsampling:  # train on a subset
+        np.random.seed(seed)
+        shuffle_subset = fraction_data
+    else:
+        shuffle_subset = None
+
+    data_gen = data.AudioSequence(d['train']['x'], d['train']['y'],
+                                  shuffle=True, shuffle_subset=shuffle_subset,
                                   first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=100,
                                   **params)
-    val_gen = data.AudioSequence(d['val']['x'], d['val']['y'], shuffle=False,
+    val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
+                                 shuffle=True, shuffle_subset=shuffle_subset,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
                                  **params)
 
-    if fraction_data is not None and batch_level_subsampling:  # train on a subset
-        if fraction_data > 1.0:  # seconds
-            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
-            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
-        else:
-            logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
-        logging.info(f"Choosing {fraction_data:1.4f} subset from the train and val data_gens.")
-        np.random.seed(seed)
-        data_gen = data_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
-        val_gen = val_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
+        # data_gen = data_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
+        # val_gen = val_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
 
     logging.info('Training data:')
     logging.info(data_gen)
