@@ -79,7 +79,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         else:
             logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
 
-    if not batch_level_subsampling:  # train on a subset
+    if fraction_data is not None and not batch_level_subsampling:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
         first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
         first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
