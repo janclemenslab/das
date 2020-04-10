@@ -103,7 +103,7 @@ class AudioSequence(keras.utils.Sequence):
         self.with_y_hist = with_y_hist
         self.data_padding = data_padding
 
-        s0 = self.first_sample / self.stride,
+        s0 = self.first_sample / self.stride
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
         self.allowed_batches = np.arange(s0, s1)  # choose from all existing batches
         if self.shuffle_subset is not None:  # only choose from a fixed subset of existing batches
