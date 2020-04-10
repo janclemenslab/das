@@ -99,15 +99,16 @@ class AudioSequence(keras.utils.Sequence):
         self.batch_size = batch_size
         self.stride = stride
         self.shuffle = shuffle
+        self.shuffle_subset = shuffle_subset
         self.x_hist = nb_hist
         self.with_y_hist = with_y_hist
         self.data_padding = data_padding
 
         s0 = self.first_sample / self.stride
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
-        self.allowed_batches = np.arange(s0, s1)  # choose from all existing batches
+        self.allowed_batches = np.arange(s0, s1, dtype=np.uintp)  # choose from all existing batches
         if self.shuffle_subset is not None:  # only choose from a fixed subset of existing batches
-            self.allowed_batches = np.random.choice(self.allowed_batches, len(self.allowed_batches)* self.shuffle_subset)
+            self.allowed_batches = np.random.choice(self.allowed_batches, int(len(self.allowed_batches) * self.shuffle_subset))
 
         if y_offset is None:
             self.y_offset = int(self.x_hist / 2)
@@ -200,13 +201,13 @@ class AudioSequence(keras.utils.Sequence):
                         int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)
 
         for cnt, bat in enumerate(pts):
-            batch_x[cnt, ...] = self.x[bat * self.stride:bat * self.stride + self.x_hist, ...]
+            batch_x[cnt, ...] = self.x[int(bat * self.stride):int(bat * self.stride + self.x_hist), ...]
 
             if self.with_y:
                 if self.with_y_hist:
-                    batch_y[cnt, ...] = self.y[bat * self.stride:bat * self.stride + self.x_hist:self.output_stride, ...]
+                    batch_y[cnt, ...] = self.y[int(bat * self.stride):int(bat * self.stride + self.x_hist):self.output_stride, ...]
                 else:
-                    batch_y[cnt, ...] = self.y[bat * self.stride + self.y_offset, ...]
+                    batch_y[cnt, ...] = self.y[int(bat * self.stride + self.y_offset), ...]
 
         if self.with_y:
             out = (batch_x, batch_y)
