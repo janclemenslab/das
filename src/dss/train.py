@@ -16,7 +16,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
-          learning_rate: float = None, reduce_lr: bool = False):
+          learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False):
     """[summary]
 
     Args:
@@ -40,6 +40,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         nb_pre_conv (int): adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN - useful for reducing the sampling rate for USV. Defaults to 0 (no frontend).
         learning_rate (float): learning rate of the model. Defaults to None (values set in the model def)
         reduce_lr (bool): reduce learning rate on plateau
+        batch_level_subsampling (bool): if true fraction data will select random subset of shuffled batches, otherwise will select a continuous chunk of the recording
     """
 
     # FIXME THIS IS NOT GREAT:
@@ -71,7 +72,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
-    if fraction_data is not None:  # train on a subset
+    if fraction_data is not None and not batch_level_subsampling:  # train on a subset
         if fraction_data > 1.0:  # seconds
             logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
@@ -99,6 +100,18 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'], shuffle=False,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
                                  **params)
+
+    if fraction_data is not None and batch_level_subsampling:  # train on a subset
+        if fraction_data > 1.0:  # seconds
+            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
+            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
+        else:
+            logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
+        logging.info(f"Choosing {fraction_data:1.4f} subset from the train and val data_gens.")
+        np.random.seed(seed)
+        data_gen = data_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
+        val_gen = val_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
+
     logging.info('Training data:')
     logging.info(data_gen)
     logging.info('Validation data:')
