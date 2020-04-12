@@ -108,7 +108,9 @@ class AudioSequence(keras.utils.Sequence):
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
         self.allowed_batches = np.arange(s0, s1, dtype=np.uintp)  # choose from all existing batches
         if self.shuffle_subset is not None:  # only choose from a fixed subset of existing batches
-            self.allowed_batches = np.random.choice(self.allowed_batches, int(len(self.allowed_batches) * self.shuffle_subset))
+            self.allowed_batches = np.random.choice(self.allowed_batches,
+                                                    size=int(len(self.allowed_batches) * self.shuffle_subset),
+                                                    replace=False)
 
         if y_offset is None:
             self.y_offset = int(self.x_hist / 2)
@@ -195,7 +197,9 @@ class AudioSequence(keras.utils.Sequence):
 
         if self.shuffle:
             # pts = np.random.randint(self.first_sample / self.stride, (self.last_sample - self.x_hist - 1) / self.stride, self.batch_size)
-            pts = np.random.choice(self.allowed_batches, self.batch_size)
+            pts = np.random.choice(self.allowed_batches,
+                                   size=self.batch_size,
+                                   replace=False)
         else:
             pts = range(int(self.first_sample/self.stride) + idx * self.batch_size,
                         int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)
