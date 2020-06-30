@@ -141,3 +141,182 @@ class Pdf:
         if self.autosave:
             self.pdf.savefig(**self.savefig_kws)
         self.pdf.__exit__(exc_type, exc_val, exc_tb)
+
+
+# from https://gist.github.com/thesamovar/52dbbb3a58a73c590d54c34f5f719bac
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+def panel_specs(layout, fig=None):
+    """
+    ```
+    layout = '''
+    AAB
+    AA.
+    .DD
+    '''
+    fig = plt.figure(figsize=(10, 7))
+    axes, spec = panels(layout, fig=fig)
+    spec.set_width_ratios([1, 3, 1])
+    label_panels(axes, letters='ABD')
+    plt.tight_layout()
+    ```
+
+    Args:
+        layout ([type]): [description]
+        fig ([type], optional): [description]. Defaults to None.
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    # default arguments
+    if fig is None:
+        fig = plt.gcf()
+    # format and sanity check grid
+    lines = layout.split('\n')
+    lines = [line.strip() for line in lines if line.strip()]
+    linewidths = set(len(line) for line in lines)
+    if len(linewidths)>1:
+        raise ValueError('Invalid layout (all lines must have same width)')
+    width = linewidths.pop()
+    height = len(lines)
+    panel_letters = set(c for line in lines for c in line)-set('.')
+    # find bounding boxes for each panel
+    panel_grid = {}
+    for letter in panel_letters:
+        left = min(x for x in range(width) for y in range(height) if lines[y][x]==letter)
+        right = 1+max(x for x in range(width) for y in range(height) if lines[y][x]==letter)
+        top = min(y for x in range(width) for y in range(height) if lines[y][x]==letter)
+        bottom = 1+max(y for x in range(width) for y in range(height) if lines[y][x]==letter)
+        panel_grid[letter] = (left, right, top, bottom)
+        # check that this layout is consistent, i.e. all squares are filled
+        valid = all(lines[y][x]==letter for x in range(left, right) for y in range(top, bottom))
+        if not valid:
+            raise ValueError('Invalid layout (not all square)')
+    # build axis specs
+    gs = gridspec.GridSpec(ncols=width, nrows=height, figure=fig)
+    specs = {}
+    for letter, (left, right, top, bottom) in panel_grid.items():
+        specs[letter] = gs[top:bottom, left:right]
+    return specs, gs
+
+def panels(layout, fig=None):
+    # default arguments
+    if fig is None:
+        fig = plt.gcf()
+    specs, gs = panel_specs(layout, fig=fig)
+    for letter, spec in specs.items():
+        axes[letter] = fig.add_subplot(spec)
+    return axes, gs
+
+def label_panel(ax, letter, *, prefix='', postfix='.', spaces=6, pad=10, fontsize=18):
+    ax.set_title(prefix+letter+postfix+' '*spaces, loc='left', pad=pad,
+                 fontdict={'horizontalalignment': 'right',
+                           'fontsize': fontsize})
+
+def label_panels(axes, letters=None, *, prefix='', postfix='.', spaces=6, pad=10, fontsize=18):
+    if letters is None:
+        letters = axes.keys()
+    for letter in letters:
+        ax = axes[letter]
+        label_panel(ax, letter, prefix=prefix, postfix=postfix, spaces=spaces, pad=pad, fontsize=fontsize)
+
+
+
+import matplotlib.legend as mlegend
+from matplotlib.patches import Rectangle
+# from https://stackoverflow.com/a/60345118/2301098
+def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **kwargs):
+    """
+    Place a table legend on the axes.
+
+    Creates a legend where the labels are not directly placed with the artists,
+    but are used as row and column headers, looking like this:
+
+    title_label   | col_labels[1] | col_labels[2] | col_labels[3]
+    -------------------------------------------------------------
+    row_labels[1] |
+    row_labels[2] |              <artists go there>
+    row_labels[3] |
+
+
+    Parameters
+    ----------
+
+    ax : `matplotlib.axes.Axes`
+        The artist that contains the legend table, i.e. current axes instant.
+
+    col_labels : list of str, optional
+        A list of labels to be used as column headers in the legend table.
+        `len(col_labels)` needs to match `ncol`.
+
+    row_labels : list of str, optional
+        A list of labels to be used as row headers in the legend table.
+        `len(row_labels)` needs to match `len(handles) // ncol`.
+
+    title_label : str, optional
+        Label for the top left corner in the legend table.
+
+    ncol : int
+        Number of columns.
+
+
+    Other Parameters
+    ----------------
+
+    Refer to `matplotlib.legend.Legend` for other parameters.
+
+    """
+    #################### same as `matplotlib.axes.Axes.legend` #####################
+    handles, labels, extra_args, kwargs = mlegend._parse_legend_args([ax], *args, **kwargs)
+    if len(extra_args):
+        raise TypeError('legend only accepts two non-keyword arguments')
+
+    if col_labels is None and row_labels is None:
+        ax.legend_ = mlegend.Legend(ax, handles, labels, **kwargs)
+        ax.legend_._remove_method = ax._remove_legend
+        return ax.legend_
+    #################### modifications for table legend ############################
+    else:
+        ncol = kwargs.pop('ncol')
+        handletextpad = kwargs.pop('handletextpad', 0 if col_labels is None else -2)
+        title_label = [title_label]
+
+        # blank rectangle handle
+        extra = [Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)]
+
+        # empty label
+        empty = [""]
+
+        # number of rows infered from number of handles and desired number of columns
+        nrow = len(handles) // ncol
+
+        # organise the list of handles and labels for table construction
+        if col_labels is None:
+            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (nrow, len(row_labels))
+            leg_handles = extra * nrow
+            leg_labels  = row_labels
+        elif row_labels is None:
+            assert ncol == len(col_labels), "ncol = %s, but should be equal to len(col_labels) = %s." % (ncol, len(col_labels))
+            leg_handles = []
+            leg_labels  = []
+        else:
+            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (nrow, len(row_labels))
+            assert ncol == len(col_labels), "ncol = %s, but should be equal to len(col_labels) = %s." % (ncol, len(col_labels))
+            leg_handles = extra + extra * nrow
+            leg_labels  = title_label + row_labels
+        for col in range(ncol):
+            if col_labels is not None:
+                leg_handles += extra
+                leg_labels  += [col_labels[col]]
+            leg_handles += handles[col*nrow:(col+1)*nrow]
+            leg_labels  += empty * nrow
+
+        # Create legend
+        ax.legend_ = mlegend.Legend(ax, leg_handles, leg_labels, ncol=ncol+int(row_labels is not None), handletextpad=handletextpad, **kwargs)
+        ax.legend_._remove_method = ax._remove_legend
+        return ax.legend_
