@@ -5,8 +5,10 @@
 ```shell
 conda create -n dss python=3.7
 conda activate dss
+conda install zarr
 pip install git+https://github.com/janclemenslab/deepsongsegmenter
 ```
+The manual install of zarr is required in some windows systems since it the pip package fails to build.
 
 The tutorial notebooks have extra dependencies:
 ```shell
