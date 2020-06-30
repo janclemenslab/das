@@ -4,6 +4,33 @@ import numpy as np
 from . import utils, data, models, event_utils
 
 
+def fill_gaps(sine_pred, gap_dur=100):
+    onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
+    offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
+    if len(onsets) and len(offsets):
+        onsets = onsets[onsets<offsets[-1]]
+        offsets = offsets[offsets>onsets[0]]
+        durations = offsets - onsets
+        for idx, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
+            if idx>0 and offsets[idx-1]>onsets[idx]-gap_dur:
+                sine_pred[offsets[idx-1]:onsets[idx]+1] = 1
+    return sine_pred
+
+
+def remove_short(sine_pred, min_len=100):
+    # remove too short sine songs
+    onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
+    offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
+    if len(onsets) and len(offsets):
+        onsets = onsets[onsets<offsets[-1]]
+        offsets = offsets[offsets>onsets[0]]
+        durations = offsets - onsets
+        for cnt, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
+            if duration<min_len:
+                sine_pred[onset:offset+1] = 0
+    return sine_pred
+
+
 def predict_probabililties(x, model, params, verbose=None):
     """[summary]
 
@@ -134,14 +161,25 @@ def predict_events(class_probabilities, samplerate=1,
     return events
 
 
-def predict(x, model_save_name, verbose=None, batch_size=None):
+def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_size: int = None,
+            event_thres: float = 0.5, event_dist: float = 0.01,
+            segment_thres: float = 0.5, segment_minlen: float = None,
+            segment_fillgap: float = None):
     """[summary]
 
     Args:
-        x ([type]): [description]
-        model_save_name ([type]): [description]
-        verbose ([type], optional): [description]. Defaults to None.
-        batch_size (int, optional): Override batch_size specified during training. Large batch sizes lead to loss of samples since only complete batches are used.
+        x (np.array_equal): [description]
+        model_save_name (str): [description]
+        verbose (int, optional): [description]. Defaults to None.
+        batch_size (int, optional): Override batch_size specified during training.
+                                    Large batch sizes lead to loss of samples
+                                    since only complete batches are used.
+                                    Defaults to None.
+        event_thres (float, optional): [description]. Defaults to 0.5.
+        event_dist (float, optional): (in seconds). Defaults to 0.01 seconds.
+        segment_thres (float, optional): [description]. Defaults to 0.5.
+        segment_minlen (float, optional): [description]. Defaults to None.
+        segment_fillgap (float, optional): [description]. Defaults to None.
 
     Raises:
         ValueError: [description]
@@ -149,14 +187,6 @@ def predict(x, model_save_name, verbose=None, batch_size=None):
     Returns:
         [type]: [description]
     """
-
-    event_thres = 0.5
-    event_dist = 0.01  # seconds = 10ms
-
-    segment_thres = 0.5
-    segment_minlen = None
-    segment_fillgap = None
-
     model, params = utils.load_model_and_params(model_save_name)
     samplerate = params['samplerate_y_Hz']
 
