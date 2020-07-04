@@ -68,6 +68,9 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     if params['learning_rate'] is None:
         del params['learning_rate']
 
+    if '_multi' in model_name:
+        params['unpack_channels'] = True
+
     logging.info('loading data')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
@@ -76,7 +79,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         if fraction_data > 1.0:  # seconds
             logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
-        else:
+        elif fraction_data < 1.0:
             logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
 
     if fraction_data is not None and not batch_level_subsampling:  # train on a subset
@@ -107,7 +110,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
                                   first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=100,
                                   **params)
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
-                                 shuffle=True, shuffle_subset=shuffle_subset,
+                                 shuffle=False, shuffle_subset=shuffle_subset,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
                                  **params)
 

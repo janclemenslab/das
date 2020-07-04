@@ -68,8 +68,7 @@ def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal
 
     original_x = x
     conv = Conv1D(filters=nb_filters, kernel_size=kernel_size,
-                  dilation_rate=i, padding=padding,
-                  name=name + '_dilated_conv_%d_tanh_s%d' % (i, s))(x)
+                  dilation_rate=i, padding=padding)(x)
     if activation == 'norm_relu':
         x = Activation('relu')(conv)
         x = Lambda(channel_normalization)(x)
@@ -78,7 +77,7 @@ def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal
     else:
         x = Activation(activation)(conv)
 
-    x = SpatialDropout1D(dropout_rate, name=name + '_spatial_dropout1d_%d_s%d_%f' % (i, s, dropout_rate))(x)
+    x = SpatialDropout1D(dropout_rate)(x)
 
     # 1x1 conv.
     x = Convolution1D(nb_filters, 1, padding='same')(x)
@@ -146,12 +145,12 @@ class TCN:
         if self.dilations is None:
             self.dilations = [1, 2, 4, 8, 16, 32]
         x = inputs
-        x = Convolution1D(self.nb_filters, 1, padding=self.padding, name=self.name + '_initial_conv')(x)
+        x = Convolution1D(self.nb_filters, 1, padding=self.padding)(x)
         skip_connections = []
         for s in range(self.nb_stacks):
             for i in self.dilations:
                 x, skip_out = residual_block(x, s, i, self.activation, self.nb_filters,
-                                             self.kernel_size, self.padding, self.dropout_rate, name=self.name)
+                                             self.kernel_size, self.padding, self.dropout_rate)
                 skip_connections.append(skip_out)
         if self.use_skip_connections:
             x = keras.layers.add(skip_connections)
