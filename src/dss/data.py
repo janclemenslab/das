@@ -150,7 +150,10 @@ class AudioSequence(keras.utils.Sequence):
 
         for cnt, gen_output in enumerate(self):
             if return_x:
-                xx[cnt, ...] = gen_output[0]
+                if self.unpack_channels:
+                    xx[cnt, ...] = np.concatenate(gen_output[0], axis=-1)
+                else:
+                    xx[cnt, ...] = gen_output[0]
             if self.with_y:
                 yy[cnt, ...] = gen_output[1]
 
