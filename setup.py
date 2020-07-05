@@ -20,7 +20,7 @@ setup(name='deepsongsegmenter',
       package_dir={'': 'src'},
       install_requires=['numpy', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
                         'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
-                        'matplotlib_scalebar', 'peakutils', 'tensorflow==2.1'],
+                        'matplotlib_scalebar', 'peakutils', 'tensorflow>=2.1'],
       include_package_data=True,
       zip_safe=False,
       entry_points = { 'console_scripts': ['dss-train=dss.train:main'],}
