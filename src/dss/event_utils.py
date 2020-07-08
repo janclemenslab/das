@@ -1,6 +1,7 @@
 """Utilities for handling events."""
 import numpy as np
 import peakutils
+from typing import Iterable
 
 
 def find_nearest(array, values):
@@ -83,6 +84,28 @@ def match_events(eventindices_true, eventindices_pred, tol=100):
                 nearest_event.mask[hits] = True
 
     return nearest_event.astype(np.uintp), nearest_dist
+
+
+def event_interval_filter(events: Iterable, event_dist_min: float = 0, event_dist_max: float = np.inf) -> Iterable:
+    """[summary]
+
+    Args:
+        events (Iterable): Iterable (list, np.array) of event times in seconds.
+        event_dist_min (float, optional): [description]. Defaults to 0 second.
+        event_dist_max (float, optional): [description]. Defaults to np.inf seconds.
+
+    Returns:
+        good_event_indices (Iterable): indices of events to keep `events[good_event_indices]`.
+    """
+
+    ipi_pre = np.diff(events, prepend=np.inf)
+    ipi_post = np.diff(events, append=np.inf)
+
+    ipi_too_long = np.logical_and(ipi_pre>event_dist_max, ipi_post>event_dist_max)
+    ipi_too_short = np.logical_or(ipi_pre<event_dist_min, ipi_post<event_dist_min)
+    good_event_indices = ~np.logical_or(ipi_too_long, ipi_too_short)
+
+    return good_event_indices
 
 
 def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
