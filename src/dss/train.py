@@ -3,7 +3,7 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 import defopt
 from glob import glob
 
@@ -16,7 +16,8 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
-          learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False):
+          learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False,
+          tensorboard: bool = False):
     """[summary]
 
     Args:
@@ -41,6 +42,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         learning_rate (float): learning rate of the model. Defaults to None (values set in the model def)
         reduce_lr (bool): reduce learning rate on plateau
         batch_level_subsampling (bool): if true fraction data will select random subset of shuffled batches, otherwise will select a continuous chunk of the recording
+        tensorboard (bool): whether to write tensorboard logs to save_dir Defaults to False.
     """
 
     # FIXME THIS IS NOT GREAT:
@@ -136,6 +138,9 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
                  EarlyStopping(monitor='val_loss', patience=20),]
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=5, verbose=1))
+
+    if tensorboard:
+        callbacks.append(TensorBoard(log_dir=save_dir))
 
     # TRAIN NETWORK
     logging.info('start training')
