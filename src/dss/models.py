@@ -223,7 +223,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0001,
+            nb_pre_conv: int = 0, learning_rate: float = 0.0001, out_activation: str = 'softmax',
             **kwignored):
     """Create TCN network.
 
@@ -242,7 +242,8 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         dropout_rate (float, optional): [description]. Defaults to 0.00.
         padding (str, optional): [description]. Defaults to 'same'.
         nb_pre_conv (int, optional): number of conv-relu-batchnorm-maxpool2 blocks before the TCN - useful for reducing the sample rate. Defaults to 0
-        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
+        out_activation (str, optional): activation type for the output. Defaults to 'softmax'.
+        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ignored
 
     Returns:
         [keras.models.Model]: Compiled TCN network model.
@@ -257,7 +258,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations, activation=activation,
                       use_skip_connections=use_skip_connections, padding=padding, dropout_rate=dropout_rate, return_sequences=return_sequences)(out)
     x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
+    x = kl.Activation(out_activation)(x)
     if nb_pre_conv > 0:
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x

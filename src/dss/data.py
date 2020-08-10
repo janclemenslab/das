@@ -58,7 +58,7 @@ class AudioSequence(keras.utils.Sequence):
     def __init__(self, x, y=None, batch_size=32, shuffle=True, nb_hist=1, y_offset=None,
                  stride=1, cut_trailing_dim=False, with_y_hist=False, data_padding=0,
                  first_sample=0, last_sample=None, output_stride=1, nb_repeats=1,
-                 shuffle_subset=None, unpack_channels=False,
+                 shuffle_subset=None, unpack_channels=False, mask_input=None,
                  **kwargs):
         """[summary]
 
@@ -83,6 +83,7 @@ class AudioSequence(keras.utils.Sequence):
             shuffle_subset (float): Fraction of batches to use - only works if shuffle=True
             unpack_channels (bool): For multi-channel models with single-channel preprocessing -
                                     unpack [nb_hist, nb_channels] -> [nb_channels * [nb_hist, 1]]
+            mask_input (int): halfwidth of the number of central samples to mask. Defaults to None (no masking).
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -106,7 +107,7 @@ class AudioSequence(keras.utils.Sequence):
         self.with_y_hist = with_y_hist
         self.data_padding = data_padding
         self.unpack_channels = unpack_channels
-
+        self.mask_input = mask_input
         s0 = self.first_sample / self.stride
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
         self.allowed_batches = np.arange(s0, s1, dtype=np.uintp)  # choose from all existing batches
@@ -211,7 +212,7 @@ class AudioSequence(keras.utils.Sequence):
                         int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)
 
         for cnt, bat in enumerate(pts):
-            batch_x[cnt, ...] = self.x[int(bat * self.stride):int(bat * self.stride + self.x_hist), ...]
+            batch_x[cnt, ...] = self.x[int(bat * self.stride):int(bat * self.stride + self.x_hist), ...].copy()
 
             if self.with_y:
                 if self.with_y_hist:
@@ -220,6 +221,10 @@ class AudioSequence(keras.utils.Sequence):
                     batch_y[cnt, ...] = self.y[int(bat * self.stride + self.y_offset), ...]
         if self.unpack_channels:
             batch_x = [batch_x[..., chn][..., np.newaxis] for chn in range(batch_x.shape[-1])]
+
+        # "mask" input
+        if self.mask_input is not None:
+            batch_x[:, int(batch_x.shape[1]/2 - self.mask_input):int(batch_x.shape[1]/2 + self.mask_input), :] = 0
 
         if self.with_y:
             out = (batch_x, batch_y)
