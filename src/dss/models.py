@@ -465,7 +465,7 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
               dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
               learning_rate: float = 0.0005,
               **kwignored):
-    """Create TCN network with TCN layer as pre-processing and downsampling frontend.
+    """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
 
     Args:
         nb_freq (int): [description]
@@ -487,16 +487,21 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     Returns:
         [keras.models.Model]: Compiled TCN network model.
     """
-    channel_model = tcn_layer.TCN(nb_filters=16, kernel_size=16, nb_stacks=1, dilations=dilations,
+
+    # !!!!!!!!!!!!!!!
+    activation = 'relu'
+    # !!!!!!!!!!!!!!
+
+
+    channel_model = tcn_layer.TCN_new(nb_filters=16, kernel_size=16, nb_stacks=1, dilations=dilations,
                                   activation=activation, use_skip_connections=use_skip_connections, padding=padding,
                                   dropout_rate=dropout_rate, return_sequences=return_sequences)#, name='channel')
-
+    # breakpoint()
     # define the per-channel model
     nb_channels = nb_freq
     channels_in = []
     for chan in range(nb_channels):
         channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
-
     # channel model will be shared, weights and all
     channels_out = []
     for chan in channels_in:
@@ -515,4 +520,5 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     model = keras.models.Model(channels_in, output_layer, name='TCN')
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
                   loss=loss, sample_weight_mode=sample_weight_mode)
+    # breakpoint()
     return model
