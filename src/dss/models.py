@@ -488,21 +488,17 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         [keras.models.Model]: Compiled TCN network model.
     """
 
-    # !!!!!!!!!!!!!!!
-    # activation = 'relu'
-    # !!!!!!!!!!!!!!
 
-
-    channel_model = tcn_layer.TCN_new(nb_filters=16, kernel_size=16, nb_stacks=1, dilations=dilations,
-                                  activation='relu', use_skip_connections=use_skip_connections, padding=padding,
-                                  dropout_rate=dropout_rate, return_sequences=return_sequences)#, name='channel')
-    # breakpoint()
     # define the per-channel model
     nb_channels = nb_freq
     channels_in = []
     for chan in range(nb_channels):
         channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
+
     # channel model will be shared, weights and all
+    channel_model = tcn_layer.TCN_new(nb_filters=32, kernel_size=32, nb_stacks=3, dilations=dilations,
+                                      activation='relu', use_skip_connections=use_skip_connections, padding=padding,
+                                      dropout_rate=dropout_rate, return_sequences=return_sequences)#, name='channel')
     channels_out = []
     for chan in channels_in:
         channels_out.append(channel_model(chan))
@@ -520,5 +516,4 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     model = keras.models.Model(channels_in, output_layer, name='TCN')
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
                   loss=loss, sample_weight_mode=sample_weight_mode)
-    # breakpoint()
     return model
