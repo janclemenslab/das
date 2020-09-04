@@ -489,12 +489,12 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     """
 
     # !!!!!!!!!!!!!!!
-    activation = 'relu'
+    # activation = 'relu'
     # !!!!!!!!!!!!!!
 
 
     channel_model = tcn_layer.TCN_new(nb_filters=16, kernel_size=16, nb_stacks=1, dilations=dilations,
-                                  activation=activation, use_skip_connections=use_skip_connections, padding=padding,
+                                  activation='relu', use_skip_connections=use_skip_connections, padding=padding,
                                   dropout_rate=dropout_rate, return_sequences=return_sequences)#, name='channel')
     # breakpoint()
     # define the per-channel model
