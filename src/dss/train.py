@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 import defopt
 from glob import glob
 
-from . import data, models, utils, predict, io, evaluate, timeseries
+from . import data, models, utils, predict, io, evaluate  #, timeseries
 
 
 def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 3,
