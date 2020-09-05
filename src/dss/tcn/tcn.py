@@ -4,8 +4,8 @@ import tensorflow.keras as keras
 from tensorflow.keras import optimizers
 # from tensorflow.keras.engine.topology import Layer  #only used for type annotations
 from tensorflow.keras.layers import Activation, Lambda
-from tensorflow.keras.layers import Conv1D, SpatialDropout1D
-from tensorflow.keras.layers import Convolution1D, Dense, Layer
+from tensorflow.keras.layers import Conv1D, SpatialDropout1D, SeparableConv1D
+from tensorflow.keras.layers import Conv1D, Dense, Layer
 from tensorflow.keras import Input, Model
 
 from typing import List, Tuple
@@ -29,8 +29,7 @@ def channel_normalization(x):
     return out
 
 
-def wave_net_activation(x):
-    # type: (Layer) -> Layer
+def wave_net_activation(x: Layer) -> Layer:
     """This method defines the activation used for WaveNet
 
     described in https://deepmind.com/blog/wavenet-generative-model-raw-audio/
@@ -46,8 +45,9 @@ def wave_net_activation(x):
     return keras.layers.multiply([tanh_out, sigm_out])
 
 
-def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal', dropout_rate=0, name=''):
-    # type: (Layer, int, int, str, int, int, float, str) -> Tuple[Layer, Layer]
+def residual_block(x: Layer, s: int, i: int, activation: str, nb_filters:int ,
+                   kernel_size: int, padding: str = 'causal', use_separable: bool = False,
+                   dropout_rate: float = 0, name: str = '') -> Tuple[Layer, Layer]:
     """Defines the residual block for the WaveNet TCN
 
     Args:
@@ -58,6 +58,7 @@ def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal
         nb_filters: The number of convolutional filters to use in this block
         kernel_size: The size of the convolutional kernel
         padding: The padding used in the convolutional layers, 'same' or 'causal'.
+        use_separable: Use separable convolution
         dropout_rate: Float between 0 and 1. Fraction of the input units to drop.
         name: Name of the model. Useful when having multiple TCN.
 
@@ -67,8 +68,14 @@ def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal
     """
 
     original_x = x
-    conv = Conv1D(filters=nb_filters, kernel_size=kernel_size,
-                  dilation_rate=i, padding=padding)(x)
+
+    if use_separable:
+        conv = SeparableConv1D(filters=nb_filters, kernel_size=kernel_size,
+                    dilation_rate=i, depth_multiplier=4, padding=padding)(x)
+    else:
+        conv = Conv1D(filters=nb_filters, kernel_size=kernel_size,
+                    dilation_rate=i, padding=padding)(x)
+
     if activation == 'norm_relu':
         x = Activation('relu')(conv)
         x = Lambda(channel_normalization)(x)
@@ -80,7 +87,7 @@ def residual_block(x, s, i, activation, nb_filters, kernel_size, padding='causal
     x = SpatialDropout1D(dropout_rate)(x)
 
     # 1x1 conv.
-    x = Convolution1D(nb_filters, 1, padding='same')(x)
+    x = Conv1D(nb_filters, 1, padding='same')(x)
     res_x = keras.layers.add([original_x, x])
     return res_x, x
 
@@ -108,6 +115,7 @@ class TCN:
             nb_stacks : The number of stacks of residual blocks to use.
             activation: The activations to use (norm_relu, wavenet, relu...).
             use_skip_connections: Boolean. If we want to add skip connections from input to each residual block.
+            use_separable: Boolean. Use separable convolutions in each residual block.
             return_sequences: Boolean. Whether to return the last output in the output sequence, or the full sequence.
             padding: The padding to use in the convolutional layers, 'causal' or 'same'.
             dropout_rate: Float between 0 and 1. Fraction of the input units to drop.
@@ -124,6 +132,7 @@ class TCN:
                  dilations=None,
                  activation='norm_relu',
                  use_skip_connections=True,
+                 use_separable=False,
                  padding='causal',
                  dropout_rate=0.0,
                  return_sequences=True,
@@ -133,6 +142,7 @@ class TCN:
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
         self.use_skip_connections = use_skip_connections
+        self.use_separable = use_separable
         self.activation = activation
         self.dilations = dilations
         self.nb_stacks = nb_stacks
@@ -145,12 +155,13 @@ class TCN:
         if self.dilations is None:
             self.dilations = [1, 2, 4, 8, 16, 32]
         x = inputs
-        x = Convolution1D(self.nb_filters, 1, padding=self.padding)(x)
+        x = Conv1D(self.nb_filters, 1, padding=self.padding)(x)
         skip_connections = []
         for s in range(self.nb_stacks):
             for i in self.dilations:
                 x, skip_out = residual_block(x, s, i, self.activation, self.nb_filters,
-                                             self.kernel_size, self.padding, self.dropout_rate)
+                                             self.kernel_size, self.padding,
+                                             self.use_separable, self.dropout_rate)
                 skip_connections.append(skip_out)
         if self.use_skip_connections:
             x = keras.layers.add(skip_connections)

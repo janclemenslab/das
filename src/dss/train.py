@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 import defopt
 from glob import glob
 
-from . import data, models, utils, predict, io, evaluate
+from . import data, models, utils, predict, io, evaluate, timeseries
 
 
 def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 3,
@@ -17,7 +17,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
           learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False,
-          tensorboard: bool = False):
+          tensorboard: bool = False, use_separable: bool = False):
     """[summary]
 
     Args:
@@ -43,6 +43,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         reduce_lr (bool): reduce learning rate on plateau
         batch_level_subsampling (bool): if true fraction data will select random subset of shuffled batches, otherwise will select a continuous chunk of the recording
         tensorboard (bool): whether to write tensorboard logs to save_dir Defaults to False.
+        use_separable (bool): use separable convs in TCN. Defaults to False.
     """
 
     # FIXME THIS IS NOT GREAT:
@@ -109,15 +110,20 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     data_gen = data.AudioSequence(d['train']['x'], d['train']['y'],
                                   shuffle=True, shuffle_subset=shuffle_subset,
-                                  first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=100,
+                                  first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=1,
                                   **params)
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
                                  shuffle=False, shuffle_subset=shuffle_subset,
                                  first_sample=first_sample_val, last_sample=last_sample_val,
                                  **params)
-
-        # data_gen = data_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
-        # val_gen = val_gen[np.random.choice(len(data_gen), int(len(data_gen) * fraction_data))]
+    # data_gen = timeseries.timeseries_dataset_from_array(d['train']['x'], d['train']['y'],
+    #                               sequence_length=params['nb_hist'], sequence_stride=stride,
+    #                               shuffle=True, batch_size=batch_size,
+    #                               start_index=first_sample_train, end_index=last_sample_train)
+    # val_gen = timeseries.timeseries_dataset_from_array(d['val']['x'], d['val']['y'],
+    #                              sequence_length=params['nb_hist'], sequence_stride=stride,
+    #                              shuffle=False, batch_size=batch_size,
+    #                              start_index=first_sample_val, end_index=last_sample_val)
 
     logging.info('Training data:')
     logging.info(data_gen)

@@ -4,7 +4,7 @@ from typing import List
 from tensorflow.keras import backend as K, Model, Input, optimizers
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Activation, SpatialDropout1D, Lambda
-from tensorflow.keras.layers import Layer, Conv1D, Dense, BatchNormalization, LayerNormalization
+from tensorflow.keras.layers import Layer, Conv1D, SeparableConv1D, Dense, BatchNormalization, LayerNormalization
 
 
 def is_power_of_two(num: int):
@@ -49,6 +49,7 @@ class ResidualBlock(Layer):
                  kernel_initializer: str = 'he_normal',
                  use_batch_norm: bool = False,
                  use_layer_norm: bool = False,
+                 use_separable: bool = False,
                  **kwargs):
         """Defines the residual block for the WaveNet TCN
 
@@ -64,6 +65,7 @@ class ResidualBlock(Layer):
             kernel_initializer: Initializer for the kernel weights matrix (Conv1D).
             use_batch_norm: Whether to use batch normalization in the residual layers or not.
             use_layer_norm: Whether to use layer normalization in the residual layers or not.
+            use_separable: Whether to use separabel conv1d.
             kwargs: Any initializers for Layer class.
         """
 
@@ -75,6 +77,7 @@ class ResidualBlock(Layer):
         self.dropout_rate = dropout_rate
         self.use_batch_norm = use_batch_norm
         self.use_layer_norm = use_layer_norm
+        self.use_separable = use_separable
         self.kernel_initializer = kernel_initializer
         self.layers = []
         self.layers_outputs = []
@@ -102,15 +105,17 @@ class ResidualBlock(Layer):
             self.layers = []
             self.res_output_shape = input_shape
 
+            ConvThis = SeparableConv1D if self.use_separable else Conv1D
+
             for k in range(1):
                 name = 'conv1D_{}'.format(k)
                 with K.name_scope(name):  # name scope used to make sure weights get unique names
-                    self._add_and_activate_layer(Conv1D(filters=self.nb_filters,
-                                                        kernel_size=self.kernel_size,
-                                                        dilation_rate=self.dilation_rate,
-                                                        padding=self.padding,
-                                                        name=name,
-                                                        kernel_initializer=self.kernel_initializer))
+                    self._add_and_activate_layer(ConvThis(filters=self.nb_filters,
+                                                          kernel_size=self.kernel_size,
+                                                          dilation_rate=self.dilation_rate,
+                                                          padding=self.padding,
+                                                          name=name,
+                                                          kernel_initializer=self.kernel_initializer))
 
                 # with K.name_scope('norm_{}'.format(k)):
                 #     if self.use_batch_norm:
@@ -199,6 +204,7 @@ class TCN(Layer):
             dropout_rate: Float between 0 and 1. Fraction of the input units to drop.
             kernel_initializer: Initializer for the kernel weights matrix (Conv1D).
             use_batch_norm: Whether to use batch normalization in the residual layers or not.
+            use_separable: Whether to use separable convolution in the residual layers or not.
             kwargs: Any other arguments for configuring parent class Layer. For example "name=str", Name of the model.
                     Use unique names when using multiple TCN.
 
@@ -219,6 +225,7 @@ class TCN(Layer):
                  kernel_initializer='he_normal',
                  use_batch_norm=False,
                  use_layer_norm=False,
+                 use_separable=False,
                  **kwargs):
 
         self.return_sequences = return_sequences
@@ -233,6 +240,7 @@ class TCN(Layer):
         self.kernel_initializer = kernel_initializer
         self.use_batch_norm = use_batch_norm
         self.use_layer_norm = use_layer_norm
+        self.use_separable = use_separable
         self.skip_connections = []
         self.residual_blocks = []
         self.layers_outputs = []
@@ -278,6 +286,7 @@ class TCN(Layer):
                                                           dropout_rate=self.dropout_rate,
                                                           use_batch_norm=self.use_batch_norm,
                                                           use_layer_norm=self.use_layer_norm,
+                                                          use_separable=self.use_separable,
                                                           kernel_initializer=self.kernel_initializer,
                                                           name='residual_block_{}'.format(len(self.residual_blocks))))
                 # build newest residual block

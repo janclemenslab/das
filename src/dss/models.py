@@ -224,6 +224,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
             nb_pre_conv: int = 0, learning_rate: float = 0.0001, out_activation: str = 'softmax',
+            use_separable: bool = False,
             **kwignored):
     """Create TCN network.
 
@@ -243,6 +244,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         padding (str, optional): [description]. Defaults to 'same'.
         nb_pre_conv (int, optional): number of conv-relu-batchnorm-maxpool2 blocks before the TCN - useful for reducing the sample rate. Defaults to 0
         out_activation (str, optional): activation type for the output. Defaults to 'softmax'.
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ignored
 
     Returns:
@@ -256,7 +258,8 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations, activation=activation,
-                      use_skip_connections=use_skip_connections, padding=padding, dropout_rate=dropout_rate, return_sequences=return_sequences)(out)
+                      use_skip_connections=use_skip_connections, padding=padding, dropout_rate=dropout_rate, return_sequences=return_sequences,
+                      use_separable=use_separable)(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation(out_activation)(x)
     if nb_pre_conv > 0:
@@ -282,6 +285,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
             nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+            use_separable: bool = False,
             **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -307,6 +311,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference .
                                    Defaults to True.
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -317,12 +322,14 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
     if nb_pre_conv > 0:
         out = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_pre_conv, dilations=dilations,
                             activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                            dropout_rate=dropout_rate, return_sequences=return_sequences, name='frontend')(out)
+                            dropout_rate=dropout_rate, return_sequences=return_sequences,
+                            use_separable=use_separable, name='frontend')(out)
         out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
                       activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences)(out)
+                      dropout_rate=dropout_rate, return_sequences=return_sequences,
+                      use_separable=use_separable)(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
     if nb_pre_conv > 0 and upsample:
@@ -342,6 +349,7 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
               use_skip_connections: bool = True, return_sequences: bool = True,
               dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
               nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+              use_separable: bool = False,
               **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -367,6 +375,7 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference .
                                    Defaults to True.
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -377,12 +386,14 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     if nb_pre_conv > 0:
         out = tcn_layer.TCN(nb_filters=32, kernel_size=3, nb_stacks=1, dilations=dilations,
                             activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                            dropout_rate=dropout_rate, return_sequences=return_sequences, name='frontend')(out)
+                            dropout_rate=dropout_rate, return_sequences=return_sequences,
+                            use_separable=use_separable, name='frontend')(out)
         out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
                       activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences)(out)
+                      dropout_rate=dropout_rate, return_sequences=return_sequences,
+                      use_separable=use_separable)(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
     if nb_pre_conv > 0 and upsample:
@@ -402,6 +413,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
              use_skip_connections: bool = True, return_sequences: bool = True,
              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
              nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+             use_separable: bool = False,
              **kwignored):
     """Create TCN network with trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -426,6 +438,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference.
                                    Defaults to True.
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -444,7 +457,8 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
                       activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences)(out)
+                      dropout_rate=dropout_rate, return_sequences=return_sequences,
+                      use_separable=use_separable)(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
     if nb_pre_conv > 0 and upsample:
@@ -463,7 +477,7 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
               dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
               use_skip_connections: bool = True, return_sequences: bool = True,
               dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-              learning_rate: float = 0.0005,
+              learning_rate: float = 0.0005, use_separable: bool = False,
               **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
 
@@ -482,6 +496,7 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         dropout_rate (float, optional): [description]. Defaults to 0.00.
         padding (str, optional): [description]. Defaults to 'same'.
         learning_rate (float, optional) Defaults to 0.0005
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -498,7 +513,8 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     # channel model will be shared, weights and all
     channel_model = tcn_layer.TCN_new(nb_filters=32, kernel_size=32, nb_stacks=3, dilations=dilations,
                                       activation='relu', use_skip_connections=use_skip_connections, padding=padding,
-                                      dropout_rate=dropout_rate, return_sequences=return_sequences)#, name='channel')
+                                      dropout_rate=dropout_rate, return_sequences=return_sequences,
+                                      use_separable=use_separable)#, name='channel')
     channels_out = []
     for chan in channels_in:
         channels_out.append(channel_model(chan))
@@ -507,7 +523,8 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
                       activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences, name='merge')(out)
+                      dropout_rate=dropout_rate, return_sequences=return_sequences, name='merge',
+                      use_separable=use_separable)(out)
 
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
