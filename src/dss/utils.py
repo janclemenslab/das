@@ -6,6 +6,7 @@ import numpy as np
 import yaml
 import h5py
 from . import kapre
+from . import tcn
 from . import models
 
 
@@ -91,7 +92,8 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
 
     try:
         model = keras.models.load_model(file_trunk + model_ext,
-                                        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram})
+                                        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
+                                                        'TCN': tcn.tcn_new.TCN})
     except SystemError:
         logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights into it.', exc_info=False)
         logging.debug('', exc_info=True)
