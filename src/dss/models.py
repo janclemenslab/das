@@ -511,7 +511,7 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
 
     # channel model will be shared, weights and all
-    channel_model = tcn_layer.TCN_new(nb_filters=32, kernel_size=32, nb_stacks=2, dilations=dilations,
+    channel_model = tcn_layer.TCN_new(nb_filters=16, kernel_size=16, nb_stacks=2, dilations=dilations,
                                       activation='relu', use_skip_connections=use_skip_connections, padding=padding,
                                       dropout_rate=dropout_rate, return_sequences=return_sequences,
                                       use_separable=use_separable)#, name='channel')
