@@ -142,7 +142,15 @@ class TCN:
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
         self.use_skip_connections = use_skip_connections
-        self.use_separable = use_separable
+
+        try:
+            len(use_separable)
+        except TypeError:
+            use_separable = [use_separable] * nb_stacks
+
+        if len(use_separable) < nb_stacks:
+            use_separable = use_separable * nb_stacks
+        self.use_separable = use_separable # use_separable
         self.activation = activation
         self.dilations = dilations
         self.nb_stacks = nb_stacks
@@ -161,7 +169,7 @@ class TCN:
             for i in self.dilations:
                 x, skip_out = residual_block(x, s, i, self.activation, self.nb_filters,
                                              self.kernel_size, self.padding,
-                                             self.use_separable, self.dropout_rate)
+                                             self.use_separable[s], self.dropout_rate)
                 skip_connections.append(skip_out)
         if self.use_skip_connections:
             x = keras.layers.add(skip_connections)

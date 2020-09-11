@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 import defopt
 from glob import glob
-
+from typing import List
 from . import data, models, utils, predict, io, evaluate  #, timeseries
 
 
@@ -17,7 +17,8 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
           learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False,
-          tensorboard: bool = False, use_separable: bool = False):
+          tensorboard: bool = False, use_separable: List[bool] = False,
+          pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2):
     """[summary]
 
     Args:
@@ -43,8 +44,11 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         reduce_lr (bool): reduce learning rate on plateau
         batch_level_subsampling (bool): if true fraction data will select random subset of shuffled batches, otherwise will select a continuous chunk of the recording
         tensorboard (bool): whether to write tensorboard logs to save_dir Defaults to False.
-        use_separable (bool): use separable convs in TCN. Defaults to False.
-    """
+        use_separable: use separable convs in TCN. Defaults to False.
+        pre_nb_filters (int): [description]. Defaults to 16.
+        pre_kernel_size (int): [description]. Defaults to 3.
+        pre_nb_conv (int): [description]. Defaults to 3.
+        """
 
     # FIXME THIS IS NOT GREAT:
     batch_size = 32

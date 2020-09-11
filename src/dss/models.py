@@ -478,6 +478,7 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
               use_skip_connections: bool = True, return_sequences: bool = True,
               dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
               learning_rate: float = 0.0005, use_separable: bool = False,
+              pre_kernel_size: int = 16, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
               **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
 
@@ -497,7 +498,12 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         padding (str, optional): [description]. Defaults to 'same'.
         learning_rate (float, optional) Defaults to 0.0005
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
+        nb_pre_conv (int, optional): If >0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.
+                                     Useful for speeding up training by reducing the sample rate early in the network.
+                                     Defaults to 0 (no downsampling)
+        pre_nb_filters, pre_kernelsize, pre_nb_conv
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
+
 
     Returns:
         [keras.models.Model]: Compiled TCN network model.
@@ -511,10 +517,16 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
 
     # channel model will be shared, weights and all
-    channel_model = tcn_layer.TCN_new(nb_filters=16, kernel_size=16, nb_stacks=2, dilations=dilations,
+    channel_model = tcn_layer.TCN_new(nb_filters=pre_nb_filters, kernel_size=pre_kernel_size, nb_stacks=pre_nb_conv, dilations=dilations,
                                       activation='relu', use_skip_connections=use_skip_connections, padding=padding,
                                       dropout_rate=dropout_rate, return_sequences=return_sequences,
                                       use_separable=use_separable)#, name='channel')
+    # if nb_pre_conv > 0:
+    #     out = tcn_layer.TCN(nb_filters=32, kernel_size=3, nb_stacks=1, dilations=dilations,
+    #                         activation=activation, use_skip_connections=use_skip_connections, padding=padding,
+    #                         dropout_rate=dropout_rate, return_sequences=return_sequences,
+    #                         use_separable=use_separable, name='frontend')(out)
+    #     out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
     channels_out = []
     for chan in channels_in:
         channels_out.append(channel_model(chan))
