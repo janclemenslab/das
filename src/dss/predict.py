@@ -201,8 +201,8 @@ def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_
     model, params = utils.load_model_and_params(model_save_name)
     samplerate = params['samplerate_y_Hz']
 
-    if model.input_shape[2:] != x.shape[1:]:
-        raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
+    # if model.input_shape[2:] != x.shape[1:]:
+    #     raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
 
     if batch_size is not None:
         params['batch_size'] = batch_size
