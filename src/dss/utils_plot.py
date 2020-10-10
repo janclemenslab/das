@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib_scalebar
+import matplotlib as mpl
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 
@@ -41,7 +42,7 @@ def scalebar(length, dx=1, units='', label=None, axis=None, location='lower righ
     return scalebar
 
 
-def remove_axes(axis=None, all=False):
+def remove_axes(axis=None, all=False, which='tblr'):
     """Remove top & left border around plot or all axes & ticks.
 
     Args:
@@ -52,6 +53,7 @@ def remove_axes(axis=None, all=False):
         axis = plt.gca()
 
     # Hide the right and top spines
+
     axis.spines['right'].set_visible(False)
     axis.spines['top'].set_visible(False)
     # Only show ticks on the left and bottom spines
@@ -64,6 +66,31 @@ def remove_axes(axis=None, all=False):
         axis.spines['bottom'].set_visible(False)
         # Remove all tick labels
         axis.yaxis.set_ticks([])
+        axis.xaxis.set_ticks([])
+
+
+def despine(which='tr', axis=None):
+
+    sides = {'t': 'top', 'b': 'bottom', 'l': 'left', 'r': 'right'}
+
+    if axis is None:
+        axis = plt.gca()
+
+    # Hide the spines
+    for side in which:
+        axis.spines[sides[side]].set_visible(False)
+
+    # Hide the tick marks and labels
+    if 'r' in which:
+        axis.yaxis.set_ticks_position('left')
+
+    if 't' in which:
+        axis.xaxis.set_ticks_position('bottom')
+
+    if 'l' in which:
+        axis.yaxis.set_ticks([])
+
+    if 'b' in which:
         axis.xaxis.set_ticks([])
 
 
@@ -98,8 +125,8 @@ def label_axes(fig=None, labels=None, loc=None, **kwargs):
     if 'size' not in kwargs:
         kwargs['size'] = 13
 
-    if 'weight' not in kwargs:
-        kwargs['weight'] = 'bold'
+    # if 'weight' not in kwargs:
+    #     kwargs['weight'] = 'bold'
     # re-use labels rather than stop labeling
     labels = cycle(labels)
     if loc is None:
@@ -108,6 +135,7 @@ def label_axes(fig=None, labels=None, loc=None, **kwargs):
         ax.annotate(lab, xy=loc,
                     xycoords='axes fraction',
                     **kwargs)
+
 
 def downsample_plot(x,y, ds=20):
     """Reduces complexity of exported pdfs w/o impairing visual appearance.
@@ -126,20 +154,35 @@ def downsample_plot(x,y, ds=20):
     y0 = y1.reshape(n*2)
     return x0, y0
 
+
 class Pdf:
     """Thin wrapper around Autosaving variant"""
 
-    def __init__(self, savename, autosave=True, **savefig_kws):
+    def __init__(self, savename, autosave=True, style=None, **savefig_kws):
+        """[summary]
+
+        Args:
+            savename ([type]): [description]
+            autosave (bool, optional): [description]. Defaults to True.
+            style ([type], optional): [description]. Defaults to None.
+        """
         self.pdf = PdfPages(savename)
         self.autosave = autosave
+        self.style = style
+        self.orig = None
         self.savefig_kws = savefig_kws
 
     def __enter__(self):
+        if self.style is not None:
+            self.orig = mpl.rcParams.copy()
+            mpl.style.use(self.style)
         self.pdf.__enter__()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.autosave:
             self.pdf.savefig(**self.savefig_kws)
+        if self.orig is not None:
+            dict.update(mpl.rcParams, self.orig)
         self.pdf.__exit__(exc_type, exc_val, exc_tb)
 
 
