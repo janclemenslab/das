@@ -2,6 +2,33 @@
 import numpy as np
 
 
+def fill_gaps(sine_pred, gap_dur=100):
+    onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
+    offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
+    if len(onsets) and len(offsets):
+        onsets = onsets[onsets<offsets[-1]]
+        offsets = offsets[offsets>onsets[0]]
+        durations = offsets - onsets
+        for idx, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
+            if idx>0 and offsets[idx-1]>onsets[idx]-gap_dur:
+                sine_pred[offsets[idx-1]:onsets[idx]+1] = 1
+    return sine_pred
+
+
+def remove_short(sine_pred, min_len=100):
+    # remove too short sine songs
+    onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
+    offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
+    if len(onsets) and len(offsets):
+        onsets = onsets[onsets<offsets[-1]]
+        offsets = offsets[offsets>onsets[0]]
+        durations = offsets - onsets
+        for cnt, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
+            if duration<min_len:
+                sine_pred[onset:offset+1] = 0
+    return sine_pred
+
+
 # def levenshtein(source, target):
 #     """Levenshstein (edit) distance
 
