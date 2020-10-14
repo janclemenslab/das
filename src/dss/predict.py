@@ -85,9 +85,9 @@ def predict_segments(class_probabilities, samplerate=1, segment_dims=None, segme
             segments[segment_name]['probabilities'] = prob
             labels = labels_from_probabilities(prob, segment_thres)
             if segment_fillgap is not None:
-                labels = fill_gaps(labels, segment_fillgap * samplerate)
+                labels = segment_utils.fill_gaps(labels, segment_fillgap * samplerate)
             if segment_minlen is not None:
-                labels = remove_short(labels, segment_minlen * samplerate)
+                labels = segment_utils.remove_short(labels, segment_minlen * samplerate)
             segments[segment_name]['samples'] = labels
 
             segments[segment_name]['onsets_seconds'] = np.where(np.diff(np.insert(labels, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
