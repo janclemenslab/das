@@ -94,7 +94,7 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
         model = keras.models.load_model(file_trunk + model_ext,
                                         custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
                                                         'TCN': tcn.tcn_new.TCN})
-    except SystemError:
+    except (SystemError, ValueError):
         logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights into it.', exc_info=False)
         logging.debug('', exc_info=True)
         model = load_model_from_params(file_trunk_params, model_dict, weights_ext, compile=compile)
