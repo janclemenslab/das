@@ -98,7 +98,7 @@ def predict_segments(class_probabilities, samplerate=1, segment_dims=None, segme
 
 def predict_events(class_probabilities, samplerate=1,
                    event_dims=None, event_names=None,
-                   event_thres=0.5, event_dist=100,
+                   event_thres=0.5, events_offset=0, event_dist=100,
                    event_dist_min: float = 0, event_dist_max: float = np.inf):
     """[summary]
 
@@ -108,6 +108,7 @@ def predict_events(class_probabilities, samplerate=1,
         event_dims ([type], optional): [description]. Defaults to range(nb_classes).
         event_names ([type], optional): [description]. Defaults to event_dims.
         event_thres (float, optional): [description]. Defaults to 0.5.
+        events_offset (float, optional): . Defaults to 0 seconds.
         event_dist (float, optional): minimal distance between events for detection (in seconds). Defaults to 100 seconds.
         event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
         event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to inf seconds.
@@ -134,6 +135,8 @@ def predict_events(class_probabilities, samplerate=1,
                                                                           class_probabilities[:, event_dim],
                                                                           thres=event_thres, min_dist=event_dist * samplerate)
             events[event_name]['seconds'] = events[event_name]['seconds'].astype(np.float) / samplerate
+            events[event_name]['seconds'] += events_offset
+
             good_event_indices = event_utils.event_interval_filter(events[event_name]['seconds'],
                                                                    event_dist_min, event_dist_max)
             events[event_name]['seconds'] = events[event_name]['seconds'][good_event_indices]
@@ -180,6 +183,8 @@ def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_
     if batch_size is not None:
         params['batch_size'] = batch_size
 
+    events_offset = params['data_padding'] / samplerate
+
     class_probabilities = predict_probabililties(x, model, params, verbose)
 
     segment_dims = np.where([val == 'segment' for val in params['class_types']])[0]
@@ -193,7 +198,7 @@ def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_
     event_names = [params['class_names'][event_dim] for event_dim in event_dims]
     events = predict_events(class_probabilities, samplerate,
                             event_dims, event_names,
-                            event_thres, event_dist,
+                            event_thres, events_offset, event_dist,
                             event_dist_min, event_dist_max)
 
 
