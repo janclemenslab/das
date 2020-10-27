@@ -2,7 +2,7 @@ forked a while ago from [https://github.com/philipperemy/keras-tcn]().
 
 Changes:
 - uses `tensorflow.keras`, removes dependency on `keras`
-- only one conv blocks per residual block (original now uses two)
+- only one conv block per residual block (original now uses two)
 - kept `norm_relu` activation
 
 Original `README.md`:
