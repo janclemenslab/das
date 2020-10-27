@@ -1,10 +1,16 @@
 import numpy as np
 import zarr
+from typing import List, Iterable, Mapping
+import pandas as pd
+import scipy.signal
+import logging
 
 
 def init_store(nb_channels, nb_classes, samplerate=None,
+               make_single_class_datasets=False,
                class_names=None, class_types=None,
-               store_type=zarr.DictStore, store_name='store.zarr', chunk_len=1_000_000):
+               store_type=zarr.DictStore, store_name='store.zarr',
+               chunk_len=1_000_000):
     """[summary]
 
     Args:
@@ -36,12 +42,15 @@ def init_store(nb_channels, nb_classes, samplerate=None,
     for target in ['train', 'val', 'test']:
         root.empty(name=f'{target}/x', shape=(0, nb_channels), chunks=(chunk_len, nb_channels), dtype=np.float16)
         root.empty(name=f'{target}/y', shape=(0, nb_classes), chunks=(chunk_len, nb_classes), dtype=np.float16)
-        root.empty(name=f'{target}/eventtimes', shape=(0, nb_classes), chunks=(1_000,), dtype=np.float)
+        # root.empty(name=f'{target}/eventtimes', shape=(0, nb_classes), chunks=(1_000,), dtype=np.float)
+        if make_single_class_datasets:
+            for class_name in class_names[1:]:
+                root.empty(name=f'{target}/y_{class_name}', shape=(0, 2), chunks=(chunk_len, nb_classes), dtype=np.float16)
 
     # init metadata - since attrs cannot be appended to, we init a dict here, populate it with information below and finaly assign it to root.attrs
     root.attrs['samplerate_x_Hz'] = samplerate
     root.attrs['samplerate_y_Hz'] = samplerate
-    root.attrs['eventtimes_units'] = 'seconds'
+    # root.attrs['eventtimes_units'] = 'seconds'
     root.attrs['class_names'] = class_names
     root.attrs['class_types'] = class_types
 
@@ -77,3 +86,231 @@ def events_to_probabilities(eventsamples, desired_len=None, extent=61):
     probabilities[:, 1] = np.convolve(probabilities[:, 1], np.ones((extent,)), mode='same')
     probabilities[:, 0] = 1 - probabilities[:, 1]
     return probabilities
+
+
+def infer_class_info(df: pd.DataFrame):
+    """[summary]
+
+    Args:
+        df ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class_names, first_indices = np.unique(df['name'], return_index=True)
+    class_names = list(class_names)
+    class_names.insert(0, 'noise')
+
+    # infer class type - event if start and end are the same
+    class_types = ['segment']
+    for first_index in first_indices:
+        if df.loc[first_index]['start_seconds']==df.loc[first_index]['stop_seconds']:
+            class_types.append('event')
+        else:
+            class_types.append('segment')
+    return class_names, class_types
+
+
+def make_annotation_matrix(df: pd.DataFrame, nb_samples: int, samplerate: float) -> np.ndarray:
+    """[summary]
+
+    Args:
+        df ([type]): [description]
+        nb_samples ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class_names, class_types = infer_class_info(df)
+    class_matrix = np.zeros((nb_samples, len(class_names)))
+    for _, row in df.iterrows():
+        class_index = class_names.index(row['name'])
+        start_index = int(row['start_seconds'] * samplerate)
+        stop_index = int(row['stop_seconds'] * samplerate + 1)
+        if start_index < stop_index:
+            class_matrix[start_index:stop_index, class_index] = 1
+        else:
+            logging.warning(f'{start_index} should be greater than {stop_index} for row {row}')
+    return class_matrix
+
+
+def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List[str], shuffle: bool = True):
+    """[summary]
+
+    Args:
+        arrays (Mapping): [description]
+        splits ([type]): [description]
+        split_names ([type]): [description]
+        shuffle (bool, optional): [description]. Defaults to True.
+
+    Returns:
+        [type]: [description]
+    """
+    splits = np.array(splits)  # split train twice - otherwise val is always at the crappy beginning or end of a recording
+    names = np.array(split_names)
+
+    # if not all([len(arrays[0]) == len(a) for a in arrays]):
+    #     ValueError('All arrays should have same length')
+
+    if shuffle:
+        order = np.random.permutation(np.arange(len(names)))
+        splits = splits[order]
+        names = names[order]
+
+    split_points = np.cumsum(splits)
+
+    split_arrays = dict()
+    for key, array in arrays.items():
+        nb_samples = array.shape[0]
+        nb_dims = array.shape[1]
+        split_arrays[key] = {name: np.empty((0, nb_dims)) for name in names}
+        train_val_test_split = (np.array(split_points)*nb_samples).astype(np.int)[:-1]
+
+        x_splits = np.split(array, train_val_test_split)
+
+        for x_split, name in zip(x_splits, names):
+            print(f'   {name}: {x_split.shape}, {split_arrays[key][name].shape}')
+            split_arrays[key][name] = np.concatenate((split_arrays[key][name], x_split))
+    return split_arrays
+
+
+def normalize_probabilities(p: np.ndarray) -> np.ndarray:
+    """[summary]
+
+    Args:
+        p (np.ndarray): [description]
+
+    Returns:
+        np.ndarray: [description]
+    """
+    p_song = np.sum(p[:, 1:], axis=-1)
+
+    p[p_song > 1.0, 1:] = p[p_song > 1.0, 1:] / p_song[p_song > 1.0, np.newaxis]
+    p[:, 0] = 1 - np.sum(p[:, 1:], axis=-1)
+    return p
+
+
+def generate_file_splits(file_list: List, splits: List[float], split_names: List[str], shuffle: bool = True) -> List:
+    """[summary]
+
+    Args:
+        file_list (List): [description]
+        splits (List[float]): [description]
+        split_names (List[str]): [description]
+        shuffle (bool, optional): [description]. Defaults to True.
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+
+    Returns:
+        List: [description]
+    """
+
+    if len(splits) != len(split_names):
+        raise ValueError(f'there must be one name per split. but there are {len(split_names)} names and {len(splits)} splits.')
+
+    file_list = np.array(file_list)
+    nb_files = len(file_list)
+    if shuffle:
+        order = np.random.permutation(np.arange(nb_files))
+        file_list = file_list[order]
+
+    splits = np.concatenate(([0], np.array(splits)))  # prepend 0 as split anchor
+
+    if np.sum(splits) != 1:
+        logging.warn(f'probs should sum to 1 - but sum({splits}={np.sum(splits)}. Normalizing to {splits / np.sum(splits)}')
+        splits /= np.sum(splits)
+
+    file_counts = splits * nb_files
+    print(file_counts)
+    if not np.all(file_counts[1:] >=1):
+        raise ValueError(f'too few files for probs - with {nb_files} files, probs should not be smaller than 1/{nb_files}={1/nb_files} but smallest prob is {np.min(splits[1:])}')
+
+    indices = dict()
+    split_files = dict()
+    cum_counts = np.cumsum(file_counts)
+    file_counts, cum_counts, len(file_list)
+
+    for start, end, name in zip(cum_counts[:-1], cum_counts[1:], split_names):
+        indices[name] = list(range(int(np.ceil(start)), int(np.ceil(end))))
+        split_files[name] = list(file_list[indices[name]])
+
+    return split_files
+
+
+def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float ) -> np.ndarray:
+    """[summary]
+
+    0011112222000111100 -> 0011100222000111100 (gap_fullwidth=2)
+
+    Args:
+        y (np.ndarray): One-hot encoded labels [T, nb_labels]
+        gap_seconds (float): [description]
+        samplerate (float): [description]
+
+    Returns:
+        np.ndarray: [description]
+    """
+    y0 = y.copy()
+
+    if y.ndim>1 and y.shape[1]>1:
+        y = np.argmax(y, axis=1)
+
+    a = y.copy().astype(np.float)
+    gap_halfwidth = int(np.floor(gap_seconds * samplerate)/2)
+
+
+    # widen gaps between syllables of different types
+    label_change = np.where(np.diff(a, axis=0)!=0)[0]
+    # remove on and offsets (0->label or label->0)
+    onset = a[label_change]==0
+    offset = a[label_change+1]==0
+    neither_on_nor_off = np.logical_and(~onset, ~offset)
+
+    if np.sum(neither_on_nor_off):
+        label_change = label_change[neither_on_nor_off]
+
+        # introduce gap around label changes for adjacent syllables
+        for gap_offset in range(-gap_halfwidth,gap_halfwidth+1):
+            y[label_change+gap_offset] = 0
+
+    # one-hot-encode gapped labels
+    y0[:] = 0
+    for label in range(y0.shape[1]):
+        y0[y==label, label] = 1
+
+
+    # widen gaps between same sylls
+    for label in range(1, y0.shape[1]):
+        label_change = np.where(np.diff(y0[:,label], axis=0)!=0)[0]
+        onset = y0[label_change, label] == 0
+        offset = y0[label_change+1, label] == 0
+
+        # there is no gap at before the first syll starts and after the last syll ends so ignore those
+        gap_onsets = label_change[onset][1:]
+        gap_offsets = label_change[offset][:-1]
+        gaps = gap_onsets - gap_offsets #label_change[onset][1:] - label_change[offset][:-1]
+
+        for gap, gap_onset, gap_offset in zip(gaps, gap_onsets, gap_offsets):
+            if gap < 2*gap_halfwidth:
+                midpoint = int(gap_offset + gap/2)
+                y0[midpoint - gap_halfwidth:midpoint + gap_halfwidth+1, :] = 0
+    return y0
+
+
+def blur_events(event_trace: np.ndarray, event_std_seconds: float, samplerate: float) -> np.ndarray:
+    """Blur event trace with a gaussian.
+
+    Args:
+        event_trace (np.ndarray): shape (N,)
+        event_std_seconds (float): With of the Gaussian in seconds
+        samplerate (float): sample rate of event_trace
+
+    Returns:
+        np.ndarray: blurred event trace
+    """
+    event_std_samples = event_std_seconds * samplerate
+    win = scipy.signal.gaussian(int(event_std_samples * 8), event_std_samples)
+    event_trace = scipy.signal.convolve(event_trace, win, mode='same')
+    return event_trace
