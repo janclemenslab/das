@@ -145,16 +145,24 @@ def predict_events(class_probabilities, samplerate=1,
     return events
 
 
-def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_size: int = None,
+def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None, batch_size: int = None,
+            model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
             event_dist_min: float = 0, event_dist_max: float = np.inf,
             segment_thres: float = 0.5, segment_minlen: float = None,
             segment_fillgap: float = None):
     """[summary]
 
+    Two ways of calling:
+
+    1. model_save_name - will load model and params
+    2. model and params
+
     Args:
         x (np.array_equal): [description]
         model_save_name (str): [description]
+        model (keras.model.Models): ...
+        params (dict): ...
         verbose (int, optional): [description]. Defaults to None.
         batch_size (int, optional): Override batch_size specified during training.
                                     Large batch sizes lead to loss of samples
@@ -165,8 +173,8 @@ def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_
         event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
         event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to inf seconds.
         segment_thres (float, optional): [description]. Defaults to 0.5.
-        segment_minlen (float, optional): [description]. Defaults to None.
-        segment_fillgap (float, optional): [description]. Defaults to None.
+        segment_minlen (float, optional): seconds. Defaults to None.
+        segment_fillgap (float, optional): seconds. Defaults to None.
 
     Raises:
         ValueError: [description]
@@ -174,8 +182,14 @@ def predict(x: np.array_equal, model_save_name: str, verbose: int = None, batch_
     Returns:
         [type]: [description]
     """
-    model, params = utils.load_model_and_params(model_save_name)
+    if model_save_name is not None:
+        model, params = utils.load_model_and_params(model_save_name)
+    else:
+        assert isinstance(model, models.keras.models.Model)
+        assert isinstance(params, dict)
+
     samplerate = params['samplerate_y_Hz']
+
 
     # if model.input_shape[2:] != x.shape[1:]:
     #     raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
