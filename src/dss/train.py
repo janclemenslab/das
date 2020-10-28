@@ -9,6 +9,9 @@ from glob import glob
 from typing import List
 from . import data, models, utils, predict, io, evaluate  #, timeseries
 
+from tensorflow.python.framework.ops import disable_eager_execution
+disable_eager_execution()
+
 
 def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 3,
           nb_conv: int = 3, nb_hist: int = 1024, batch_norm: bool = True,

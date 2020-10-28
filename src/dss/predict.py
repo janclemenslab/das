@@ -3,6 +3,9 @@ import logging
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils
 
+from tensorflow.python.framework.ops import disable_eager_execution
+disable_eager_execution()
+
 
 def predict_probabililties(x, model, params, verbose=None):
     """[summary]
