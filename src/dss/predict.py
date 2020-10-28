@@ -1,7 +1,12 @@
 """Code for training and evaluating networks."""
 import logging
+import os
+import defopt
+import scipy
+import flammkuchen
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils
+from typing import List, Union
 
 from tensorflow.python.framework.ops import disable_eager_execution
 disable_eager_execution()
@@ -99,10 +104,10 @@ def predict_segments(class_probabilities, samplerate=1, segment_dims=None, segme
     return segments
 
 
-def predict_events(class_probabilities, samplerate=1,
-                   event_dims=None, event_names=None,
-                   event_thres=0.5, events_offset=0, event_dist=100,
-                   event_dist_min: float = 0, event_dist_max: float = np.inf):
+def predict_events(class_probabilities, samplerate: float = 1.0,
+                   event_dims: int = None, event_names: List[str] = None,
+                   event_thres: float = 0.5, events_offset: float = 0, event_dist: float=100,
+                   event_dist_min: float = 0, event_dist_max: float = None):
     """[summary]
 
     Args:
@@ -114,7 +119,7 @@ def predict_events(class_probabilities, samplerate=1,
         events_offset (float, optional): . Defaults to 0 seconds.
         event_dist (float, optional): minimal distance between events for detection (in seconds). Defaults to 100 seconds.
         event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
-        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to inf seconds.
+        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to None (no upper limit).
 
     Raises:
         ValueError: [description]
@@ -129,11 +134,15 @@ def predict_events(class_probabilities, samplerate=1,
     if event_names is None:
         event_names = event_dims
 
+    if event_dist_max is None:
+        event_dist_max = class_probabilities.shape[0] + 1
+
     events = dict()
     if len(event_dims):
         for event_dim, event_name in zip(event_dims, event_names):
             events[event_name] = dict()
             events[event_name]['index'] = event_dim
+
             events[event_name]['seconds'], events[event_name]['probabilities'] = event_utils.detect_events(
                                                                           class_probabilities[:, event_dim],
                                                                           thres=event_thres, min_dist=event_dist * samplerate)
@@ -148,10 +157,10 @@ def predict_events(class_probabilities, samplerate=1,
     return events
 
 
-def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None, batch_size: int = None,
+def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch_size: int = None,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
-            event_dist_min: float = 0, event_dist_max: float = np.inf,
+            event_dist_min: float = 0, event_dist_max: float = None,
             segment_thres: float = 0.5, segment_minlen: float = None,
             segment_fillgap: float = None):
     """[summary]
@@ -162,7 +171,7 @@ def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None,
     2. model and params
 
     Args:
-        x (np.array_equal): [description]
+        x (np.array): [description]
         model_save_name (str): [description]
         model (keras.model.Models): ...
         params (dict): ...
@@ -174,7 +183,7 @@ def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None,
         event_thres (float, optional): [description]. Defaults to 0.5.
         event_dist (float, optional): minimal distance between events for detection (in seconds). Defaults to 0.01 seconds.
         event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
-        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to inf seconds.
+        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to None (no upper limit).
         segment_thres (float, optional): [description]. Defaults to 0.5.
         segment_minlen (float, optional): seconds. Defaults to None.
         segment_fillgap (float, optional): seconds. Defaults to None.
@@ -185,14 +194,14 @@ def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None,
     Returns:
         [type]: [description]
     """
+
     if model_save_name is not None:
         model, params = utils.load_model_and_params(model_save_name)
     else:
         assert isinstance(model, models.keras.models.Model)
         assert isinstance(params, dict)
 
-    samplerate = params['samplerate_y_Hz']
-
+    samplerate = params['samplerate_x_Hz']
 
     # if model.input_shape[2:] != x.shape[1:]:
     #     raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
@@ -211,6 +220,7 @@ def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None,
                                 segment_thres, segment_minlen, segment_fillgap)
     segments['samplerate_Hz'] = samplerate
 
+
     event_dims = np.where([val == 'event' for val in params['class_types']])[0]
     event_names = [params['class_names'][event_dim] for event_dim in event_dims]
     events = predict_events(class_probabilities, samplerate,
@@ -222,3 +232,62 @@ def predict(x: np.array_equal, model_save_name: str = None, verbose: int = None,
     events['samplerate_Hz'] = samplerate
 
     return events, segments, class_probabilities
+
+
+def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: str = None,
+         verbose: int = 1, batch_size: int = None,
+         event_thres: float = 0.5, event_dist: float = 0.01,
+         event_dist_min: float = 0, event_dist_max: float = None,
+         segment_thres: float = 0.5, segment_minlen: float = None,
+         segment_fillgap: float = None):
+    """[summary]
+
+    Saves hdf5 file with keys: events, segments,class_probabilities
+
+    Args:
+        recording_filename (str): [description]
+        model_save_name (str): [description].
+        save_filename (str): Optional - will strip extension from recording_filename and add '_dss.h5'.
+
+        verbose (int): [description]. Defaults to 1.
+        batch_size (int): [description]. Defaults to None.
+
+        event_thres (float): [description]. Defaults to 0.5.
+        event_dist (float): [description]. Defaults to 0.01.
+        event_dist_min (float): [description]. Defaults to 0.
+        event_dist_max (float): [description]. Defaults to None (no upper limit).
+
+        segment_thres (float): [description]. Defaults to 0.5.
+        segment_minlen (float): [description]. Defaults to None.
+        segment_fillgap (float): [description]. Defaults to None.
+    """
+
+    logging.info(f"   Loading data from {recording_filename}.")
+    _, x = scipy.io.wavfile.read(recording_filename)
+    x = np.atleast_2d(x).T
+
+    logging.info(f"   Annotating using model at {model_save_name}.")
+    events, segments, class_probabilities = predict(x, model_save_name, verbose, batch_size,
+                                                    None, None,
+                                                    event_thres, event_dist, event_dist_min, event_dist_max,
+                                                    segment_thres, segment_minlen, segment_fillgap)
+
+    d = {'events': events,
+        'segments': segments,
+        'class_probabilities': class_probabilities}
+
+    if save_filename is None:
+        save_filename = os.path.splitext(recording_filename)[0] + '_dss.h5'
+
+    logging.info(f"   Saving results to {save_filename}.")
+    flammkuchen.save(save_filename, d)
+    logging.info(f"Done.")
+
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    defopt.run(cli_predict)
+
+
+if __name__ == '__main__':
+    main()

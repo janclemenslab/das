@@ -42,5 +42,7 @@ setup(name='deepsongsegmenter',
                         'matplotlib_scalebar', 'peakutils'],
       include_package_data=True,
       zip_safe=False,
-      entry_points = { 'console_scripts': ['dss-train=dss.train:main'],}
+      entry_points = { 'console_scripts': ['dss-train=dss.train:main',
+                                           'dss-predict=dss.predict:main']
+                     }
      )
