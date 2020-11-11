@@ -142,7 +142,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     model = models.model_dict[model_name](**params)
 
     logging.info(model.summary())
-    os.path.mkdirs(os.path.abspath(save_dir), exist_ok=True)
+    os.path.makedirs(os.path.abspath(save_dir), exist_ok=True)
     save_name = '{0}/{1}'.format(save_dir, time.strftime('%Y%m%d_%H%M%S'))
     utils.save_params(params, save_name)
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
