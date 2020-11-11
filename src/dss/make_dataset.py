@@ -14,14 +14,15 @@ def init_store(nb_channels, nb_classes, samplerate=None,
     """[summary]
 
     Args:
-        nb_channels ([type]): [description]
-        nb_classes ([type]): [description]
-        samplerate ([type], optional): [description]. Defaults to None.
-        class_names ([type], optional): [description]. Defaults to None.
-        class_types ([type], optional): [description]. Defaults to None.
+        nb_channels (int): [description]
+        nb_classes (int): [description]  <- should infer from class_names!
+        samplerate (float, optional): [description]. Defaults to None.
+        make_single_class_datasets (bool, optional): make y_suffix and attrs['class_names/types_suffix']. Defaults to None.
+        class_names (List[str], optional): [description]. Defaults to None.
+        class_types (List[str], optional): 'event' or 'segment'. Defaults to None.
         store_type ([type], optional): [description]. Defaults to zarr.DictStore.
         store_name (str, optional): [description]. Defaults to 'store.zarr'.
-        chunk_len ([type], optional): [description]. Defaults to 1_000_000.
+        chunk_len (int, optional): [description]. Defaults to 1_000_000.
 
     Raises:
         ValueError: [description]
@@ -322,6 +323,6 @@ def blur_events(event_trace: np.ndarray, event_std_seconds: float, samplerate: f
         np.ndarray: blurred event trace
     """
     event_std_samples = event_std_seconds * samplerate
-    win = scipy.signal.gaussian(int(event_std_samples * 8), event_std_samples)
+    win = scipy.signal.gaussian(int(event_std_samples), event_std_samples)
     event_trace = scipy.signal.convolve(event_trace, win, mode='same')
     return event_trace
