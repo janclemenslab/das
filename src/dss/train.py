@@ -5,6 +5,7 @@ import flammkuchen as fl
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 import defopt
+import os
 from glob import glob
 from typing import List
 from . import data, models, utils, predict, io, evaluate  #, timeseries
@@ -19,7 +20,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           nb_stacks: int = 2, with_y_hist: bool = True, nb_epoch: int = 400,
           fraction_data: float = None, seed: int = None, ignore_boundaries: bool = False,
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
-          learning_rate: float = None, reduce_lr: bool = False, batch_level_subsampling: bool = False,
+          learning_rate: float = None, reduce_lr: bool = False, reduce_lr_patience: int = 5, batch_level_subsampling: bool = False,
           tensorboard: bool = False, use_separable: List[bool] = False,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2):
     """[summary]
@@ -141,6 +142,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     model = models.model_dict[model_name](**params)
 
     logging.info(model.summary())
+    os.path.mkdirs(os.path.abspath(save_dir), exist_ok=True)
     save_name = '{0}/{1}'.format(save_dir, time.strftime('%Y%m%d_%H%M%S'))
     utils.save_params(params, save_name)
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
@@ -150,7 +152,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
     if reduce_lr:
-        callbacks.append(ReduceLROnPlateau(patience=5, verbose=1))
+        callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
 
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
