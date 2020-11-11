@@ -50,9 +50,14 @@ def init_store(nb_channels, nb_classes, samplerate=None,
     # init metadata - since attrs cannot be appended to, we init a dict here, populate it with information below and finaly assign it to root.attrs
     root.attrs['samplerate_x_Hz'] = samplerate
     root.attrs['samplerate_y_Hz'] = samplerate
-    # root.attrs['eventtimes_units'] = 'seconds'
+
     root.attrs['class_names'] = class_names
     root.attrs['class_types'] = class_types
+
+    if make_single_class_datasets:
+        for class_name, class_type in zip(class_names[1:], class_types[1:]):
+            root.attrs[f'class_names_{class_name}'] = [class_names[0], class_name]
+            root.attrs[f'class_types_{class_name}'] = [class_types[0], class_type]
 
     for target in ['train', 'val', 'test']:
         root.attrs[f'filename_startsample_{target}'] = []
