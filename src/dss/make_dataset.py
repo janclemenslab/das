@@ -111,19 +111,26 @@ def infer_class_info(df: pd.DataFrame):
     return class_names, class_types
 
 
-def make_annotation_matrix(df: pd.DataFrame, nb_samples: int, samplerate: float) -> np.ndarray:
+def make_annotation_matrix(df: pd.DataFrame, nb_samples: int, samplerate: float,
+                           class_names: List[str]= None) -> np.ndarray:
     """[summary]
 
     Args:
         df ([type]): [description]
         nb_samples ([type]): [description]
+        samplerate
+        class_names (List[str]): will take only events in class_names, order in class_names determines order in class_matrix
+                                 if not provided, will take the names in df
 
     Returns:
         [type]: [description]
     """
-    class_names, class_types = infer_class_info(df)
+    if class_names is None:
+        class_names, _ = infer_class_info(df)
     class_matrix = np.zeros((nb_samples, len(class_names)))
     for _, row in df.iterrows():
+        if not row['name'] in class_names:
+            continue
         class_index = class_names.index(row['name'])
         start_index = int(row['start_seconds'] * samplerate)
         stop_index = int(row['stop_seconds'] * samplerate + 1)
@@ -169,7 +176,6 @@ def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List
         x_splits = np.split(array, train_val_test_split)
 
         for x_split, name in zip(x_splits, names):
-            print(f'   {name}: {x_split.shape}, {split_arrays[key][name].shape}')
             split_arrays[key][name] = np.concatenate((split_arrays[key][name], x_split))
     return split_arrays
 
