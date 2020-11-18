@@ -177,7 +177,7 @@ def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List
         nb_samples = array.shape[0]
         nb_dims = array.shape[1]
         split_arrays[key] = {name: np.empty((0, nb_dims)) for name in names}
-        train_val_test_split = (np.array(split_points)*nb_samples).astype(np.int)[:-1]
+        train_val_test_split = (split_points*nb_samples).astype(np.int)[:-1]
 
         x_splits = np.split(array, train_val_test_split)
 
