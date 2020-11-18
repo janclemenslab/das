@@ -22,7 +22,8 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           x_suffix: str = '', y_suffix: str = '', nb_pre_conv: int = 0,
           learning_rate: float = None, reduce_lr: bool = False, reduce_lr_patience: int = 5, batch_level_subsampling: bool = False,
           tensorboard: bool = False, use_separable: List[bool] = False,
-          pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2):
+          pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
+          save_prefix: str = None):
     """[summary]
 
     Args:
@@ -52,6 +53,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         pre_nb_filters (int): [description]. Defaults to 16.
         pre_kernel_size (int): [description]. Defaults to 3.
         pre_nb_conv (int): [description]. Defaults to 3.
+        save_prefix (str): prepend to save file name. Defaults to ''.
         """
 
     # FIXME THIS IS NOT GREAT:
@@ -73,7 +75,13 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
 
+    if save_prefix is None:
+        save_prefix = ''
+
     params = locals()
+
+    if stride <=0:
+        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
 
     # remove learning rate param if not set so the value from the model def is used
     if params['learning_rate'] is None:
@@ -143,7 +151,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
 
     logging.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
-    save_name = '{0}/{1}'.format(save_dir, time.strftime('%Y%m%d_%H%M%S'))
+    save_name = '{0}/{1}_{2}'.format(save_dir, save_prefix, time.strftime('%Y%m%d_%H%M%S'))
     utils.save_params(params, save_name)
     utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
 
@@ -169,35 +177,39 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
     )
 
     # TEST
-    logging.info('re-loading last best model')
-    model.load_weights(checkpoint_save_name)
+    if len(d['test']['x']) < nb_hist:
+        logging.info('No test data - skipping final evaluation step.')
+        return
+    else:
+        logging.info('re-loading last best model')
+        model.load_weights(checkpoint_save_name)
 
-    logging.info('predicting')
-    x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
-                                                             model=model, params=params)
+        logging.info('predicting')
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
+                                                                model=model, params=params)
 
-    labels_test = predict.labels_from_probabilities(y_test)
-    labels_pred = predict.labels_from_probabilities(y_pred)
+        labels_test = predict.labels_from_probabilities(y_test)
+        labels_pred = predict.labels_from_probabilities(y_pred)
 
-    logging.info('evaluating')
-    conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'])
-    logging.info(conf_mat)
-    logging.info(report)
+        logging.info('evaluating')
+        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'])
+        logging.info(conf_mat)
+        logging.info(report)
 
-    save_filename = "{0}_results.h5".format(save_name)
-    logging.info('saving to ' + save_filename + '.')
-    d = {'fit_hist': fit_hist.history,
-         'confusion_matrix': conf_mat,
-         'classification_report': report,
-         'x_test': x_test,
-         'y_test': y_test,
-         'y_pred': y_pred,
-         'labels_test': labels_test,
-         'labels_pred': labels_pred,
-         'params': params,
-         }
+        save_filename = "{0}_results.h5".format(save_name)
+        logging.info('saving to ' + save_filename + '.')
+        d = {'fit_hist': fit_hist.history,
+            'confusion_matrix': conf_mat,
+            'classification_report': report,
+            'x_test': x_test,
+            'y_test': y_test,
+            'y_pred': y_pred,
+            'labels_test': labels_test,
+            'labels_pred': labels_pred,
+            'params': params,
+            }
 
-    fl.save(save_filename, d)
+        fl.save(save_filename, d)
 
 def main():
     logging.basicConfig(level=logging.INFO)
