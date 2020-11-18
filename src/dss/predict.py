@@ -165,34 +165,50 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch
             segment_fillgap: float = None):
     """[summary]
 
-    Two ways of calling:
+    Usage:
+    Calling predict with the path to the model will load the model and the
+    associated params and run inference:
+    `dss.predict.predict(x=data, model_save_name='tata')`
 
-    1. model_save_name - will load model and params
-    2. model and params
+    To re-use the same model with multiple recordings, load the modal and params
+    once and pass them to `predict`
+    ```my_model, my_params = dss.utils.load_model_and_params(model_save_name)
+    for data in data_list:
+        dss.predict.predict(x=data, model=my_model, params=my_params)
+    ```
 
     Args:
-        x (np.array): [description]
-        model_save_name (str): [description]
-        model (keras.model.Models): ...
-        params (dict): ...
-        verbose (int, optional): [description]. Defaults to None.
-        batch_size (int, optional): Override batch_size specified during training.
-                                    Large batch sizes lead to loss of samples
-                                    since only complete batches are used.
-                                    Defaults to None.
-        event_thres (float, optional): [description]. Defaults to 0.5.
-        event_dist (float, optional): minimal distance between events for detection (in seconds). Defaults to 0.01 seconds.
-        event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
-        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to None (no upper limit).
-        segment_thres (float, optional): [description]. Defaults to 0.5.
-        segment_minlen (float, optional): seconds. Defaults to None.
-        segment_fillgap (float, optional): seconds. Defaults to None.
+        x (np.array): Audio data [samples, channels]
+        model_save_name (str): path with the trunk name of the model. Defaults to None.
+        model (keras.model.Models): Defaults to None.
+        params (dict): Defaults to None.
+
+        verbose (int): display progress bar during prediction. Defaults to 1.
+        batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).
+                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
+                         Large batch sizes lead to loss of samples since only complete batches are used.
+
+        event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
+        event_dist (float): Minimal distance between adjacent events during thresholding.
+                            Prevents detecting duplicate events when the confidence trace is a little noisy.
+                            Defaults to 0.01.
+        event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
+                                Defaults to 0.
+        event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.
+                                Defaults to None (no upper limit).
+
+        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
+        segment_minlen (float): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
+        segment_fillgap (float): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+
 
     Raises:
         ValueError: [description]
 
     Returns:
-        [type]: [description]
+        events: [description]
+        segments: [description]
+        class_probabilities: [description]
     """
 
     if model_save_name is not None:
@@ -245,21 +261,26 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     Saves hdf5 file with keys: events, segments,class_probabilities
 
     Args:
-        recording_filename (str): [description]
-        model_save_name (str): [description].
-        save_filename (str): Optional - will strip extension from recording_filename and add '_dss.h5'.
+        recording_filename (str): path to the WAV file with the audio data.
+        model_save_name (str): path with the trunk name of the model.
+        save_filename (str): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_dss.h5'.
 
-        verbose (int): [description]. Defaults to 1.
-        batch_size (int): [description]. Defaults to None.
+        verbose (int): display progress bar during prediction. Defaults to 1.
+        batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).
+                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
 
-        event_thres (float): [description]. Defaults to 0.5.
-        event_dist (float): [description]. Defaults to 0.01.
-        event_dist_min (float): [description]. Defaults to 0.
-        event_dist_max (float): [description]. Defaults to None (no upper limit).
+        event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
+        event_dist (float): Minimal distance between adjacent events during thresholding.
+                            Prevents detecting duplicate events when the confidence trace is a little noisy.
+                            Defaults to 0.01.
+        event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
+                                Defaults to 0.
+        event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.
+                                Defaults to None (no upper limit).
 
-        segment_thres (float): [description]. Defaults to 0.5.
-        segment_minlen (float): [description]. Defaults to None.
-        segment_fillgap (float): [description]. Defaults to None.
+        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
+        segment_minlen (float): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
+        segment_fillgap (float): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
     """
 
     logging.info(f"   Loading data from {recording_filename}.")
