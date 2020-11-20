@@ -12,5 +12,5 @@ dependencies:
   - pip:
     - tensorflow>=2.3
     - xarray-behave[gui]
+    - deepss
     - deepss-unsupervised
-    - git+https://github.com/janclemenslab/deepsongsegmenter
