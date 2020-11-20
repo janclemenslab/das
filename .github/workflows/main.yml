@@ -71,21 +71,23 @@ jobs:
           environment-file: env/deepss_gui.yml
           python-version: ${{ matrix.python-version }}
       - name: Conda info
-        shell: bash -l {0}
+        # shell: bash -l {0}
         run: conda info
       - name: Conda list
-        shell: pwsh
+        # shell: pwsh
         run: conda list
       # - name: Install deepss_gui
       #   run: conda env update -f ./env/deepss_gui.yml
+      - name: Test with pytest
+        run: |
+          conda install pytest
+          pytest
       - name: Test cli
+        run: |
+          python -m dss.train --help
+          xb --help
+      - name: Test cli2
         run: |
           dss-train --help
           dss-predict --help
-          xb --help
-      - name: Test with pytest
-        run: |
-          conda activate dss
-          conda install pytest
-          pytest
 
