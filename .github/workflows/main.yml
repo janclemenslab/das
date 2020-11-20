@@ -60,8 +60,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: ["3.7", "3.8"]
+        os: ["ubuntu-latest"]  #, "macos-latest", "windows-latest"]
+        python-version: ["3.7"]  #, "3.8"]
     steps:
       - uses: conda-incubator/setup-miniconda@v2
         with:
@@ -73,13 +73,15 @@ jobs:
       - name: Conda list
         shell: pwsh
         run: conda list
-      - name: Test with pytest
-        run: |
-          conda install pytest
-          $CONDA/bin/pytest
+      - name: Install deepss_gui
+        run: conda env update -f ./env/deepss_gui.yml
       - name: Test cli
         run: |
           dss-train --help
           dss-predict --help
           xb --help
+      - name: Test with pytest
+        run: |
+          conda install pytest
+          pytest
 
