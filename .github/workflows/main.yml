@@ -78,11 +78,13 @@ jobs:
         run: conda env update -f ./env/deepss_gui.yml
       - name: Test cli
         run: |
+          conda activate dss
           dss-train --help
           dss-predict --help
           xb --help
       - name: Test with pytest
         run: |
+          conda activate dss
           conda install pytest
           pytest
 
