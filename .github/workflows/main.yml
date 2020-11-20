@@ -64,6 +64,8 @@ jobs:
         python-version: ["3.7"]  #, "3.8"]
     steps:
       - uses: actions/checkout@v2
+      - name: list
+        run: la *
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
