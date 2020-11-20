@@ -122,7 +122,7 @@ fig*
 !/tests/
 !/env/
 !/docs/
-!/pyproject.toml
+!/*.toml
 src/*.egg-info/
 src/deepsongsegmenter.egg-info/PKG-INFO
 src/deepsongsegmenter.egg-info/SOURCES.txt
