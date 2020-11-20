@@ -43,9 +43,10 @@ jobs:
         run: |
           python -m dss.train --help
           xb --help
+          dss-train --help
+          dss-predict --help
       - name: Test cli2
         shell: bash -l {0}
         run: |
           dss-train --help
           dss-predict --help
-
