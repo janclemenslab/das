@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: list
-        run: ls -al *
+        run: ls -al **/*
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
