@@ -1,4 +1,3 @@
-
 from setuptools import setup, find_packages
 import codecs
 import re
@@ -26,12 +25,12 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-setup(name='deepsongsegmenter',
+setup(name='deepss',
       version=find_version("src/dss/__init__.py"),
       description='deepsongsegmenter',
       long_description=long_description,
       long_description_content_type="text/markdown",
-      url='http://github.com/janclemenslab/deepsongsegmenter',
+      url='http://github.com/janclemenslab/deepss',
       author='Jan Clemens',
       author_email='clemensjan@googlemail.com',
       license='MIT',

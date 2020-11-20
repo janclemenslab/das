@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core"]
+requires = ["flit_core >=2,<3"]
 build-backend = "flit_core.buildapi"
 
 [tool.flit.metadata]
@@ -14,3 +14,8 @@ requires = ['numpy', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
             'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
             'matplotlib_scalebar', 'peakutils']
 description-file = "README.md"
+
+[tool.flit.scripts]
+dss-train = "dss.train:main"
+dss-predict = "dss.predict:main"
+
