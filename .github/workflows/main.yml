@@ -70,8 +70,10 @@ jobs:
           activate-environment: dss
           environment-file: env/deepss_gui.yml
           python-version: ${{ matrix.python-version }}
-      - name: Conda info
+      - name: install libsndfile
         shell: bash -l {0}
+        run: sudo apt-get install libsndfile1
+      - name: Conda info
         run: conda info
       - name: Conda list
         shell: bash -l {0}
