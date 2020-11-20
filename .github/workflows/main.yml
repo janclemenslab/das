@@ -18,8 +18,8 @@ runs-on: ${{ matrix.os }}
       - name: Test with pytest
         run: |
           conda install pytest
-          $CONDA/bin/pytest    
-        
+          $CONDA/bin/pytest
+
 
     steps:
     - uses: actions/checkout@v2
@@ -30,7 +30,7 @@ runs-on: ${{ matrix.os }}
     - name: Install package
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda env create --file deepss_gui.yml --name base
+        $CONDA/bin/conda env create --file env/deepss_gui.yml --name base
     - name: Test with pytest
       run: |
         conda install pytest
@@ -39,4 +39,4 @@ runs-on: ${{ matrix.os }}
       run: |
         dss-train --help
         dss-predict --help
-        xb --help    
+        xb --help
