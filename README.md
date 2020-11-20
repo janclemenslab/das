@@ -1,5 +1,5 @@
 
-![](https://github.com/janclemenslab/deepsongsegmenter/workflows/Python%20Package%20using%20Conda/badge.svg)
+![](https://github.com/janclemenslab/deepss/workflows/Python%20Package%20using%20Conda/badge.svg)
 
 # DeepSS
 DeepSS is supervised. See [dss-unsupervised](https://github.com/janclemenslab/dss-unsupervised) for unsupervised tools to augment DeepSS.
@@ -11,7 +11,7 @@ conda create -n dss python=3.7
 conda activate dss
 conda install zarr
 conda install tensorflow  # add -gpu to ensure GPU support
-pip install git+https://github.com/janclemenslab/deepsongsegmenter
+pip install deepss
 ```
 DeepSS has been tested with python 3.7 and 3.8 and tensorflow versions 2.1, 2.2, and 2.3.
 
