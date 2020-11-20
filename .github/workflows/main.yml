@@ -77,7 +77,7 @@ jobs:
         shell: pwsh
         run: conda list
       - name: Install deepss_gui
-        run: conda env update -f ./env/deepss_gui.yml
+        run: conda env update -f ./deepss_gui.yml
       - name: Test cli
         run: |
           dss-train --help
