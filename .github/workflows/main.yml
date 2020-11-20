@@ -2,33 +2,51 @@ name: Python Package using Conda
 
 on: [push]
 
+# jobs:
+#   build:
+#       name: Tests (${{ matrix.python-version }}, ${{ matrix.os }})
+#       runs-on: ${{ matrix.os }}
+#       strategy:
+#         fail-fast: false
+#         matrix:
+#           os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+#           python-version: ["3.7", "3.8"]
+#       steps:
+#       - uses: actions/checkout@v2
+#       - name: Setup conda
+#           uses: s-weigand/setup-conda@v1
+#           with:
+#             update-conda: true
+#             python-version: ${{ matrix.python-version }}
+#             conda-channels: anaconda, conda-forge
+#       - run: conda --version
+#       - run: which python
+#       - name: Display Python version
+#         run: $CONDA/bin/python -c "import sys; print(sys.version)"
+#       - name: Install package
+#         run: |
+#           # $CONDA is an environment variable pointing to the root of the miniconda directory
+#           $CONDA/bin/conda env create --file env/deepss_gui.yml --name base
+#       - name: Test with pytest
+#         run: |
+#           conda install pytest
+#           $CONDA/bin/pytest
+
 jobs:
-  build:
-      name: Tests (${{ matrix.python-version }}, ${{ matrix.os }})
-      runs-on: ${{ matrix.os }}
-      strategy:
-        fail-fast: false
-        matrix:
-          os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-          python-version: ["3.7", "3.8"]
-      steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Display Python version
-        run: $CONDA/bin/python -c "import sys; print(sys.version)"
-      - name: Install package
-        run: |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          $CONDA/bin/conda env create --file env/deepss_gui.yml --name base
-      - name: Test with pytest
-        run: |
-          conda install pytest
-          $CONDA/bin/pytest
-      - name: Test cli
-        run: |
-          dss-train --help
-          dss-predict --help
-          xb --help
+  build-and-run:
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update Conda environment with "requirements.yml"
+      uses: matthewrmshin/conda-action@v1
+      with:
+        args: conda env update -f ./requirements.yml
+    - name: Run "pytest" with the Conda environment
+      uses: matthewrmshin/conda-action@v1
+      with:
+        args: pytest
+    - name: Test cli
+      uses: matthewrmshin/conda-action@v1
+      run: |
+        dss-train --help
+        dss-predict --help
+        xb --help
