@@ -2,7 +2,7 @@ name: Python Package using Conda
 
 on: [push]
 
-build: ${{ matrix.os }}
+build:
     name: Tests (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
