@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annotate song manually &#8212; DeepSS docs</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Making a data set for training" href="make_dataset.html" />
+    <link rel="prev" title="Install" href="install.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">DeepSS docs</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to DeepSS
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="install.html">
+   Install
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Annotate song manually
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="make_dataset.html">
+   Making a data set for training
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="train.html">
+   Configure and train a network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="predict.html">
+   Predict
+  </a>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="unsupervised/unsupervised.html">
+   Unsupervised classification
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/flies.html">
+     Fly song
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/mice.html">
+     Ultrasonic vocalizations from mice
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/birds.html">
+     Song of Bengalese finches
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="technical.html">
+   Technical specifications
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="data_formats.html">
+     Data formats
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli.html">
+     Command line interfaces
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/annotate.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#loading-audio-data">
+   Loading audio data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#overview-over-the-display-and-menus">
+   Overview over the display and menus
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#annotate-song">
+   Annotate song
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#save-annotations">
+   Save annotations
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="annotate-song-manually">
+<h1>Annotate song manually<a class="headerlink" href="#annotate-song-manually" title="Permalink to this headline">¶</a></h1>
+<p>Manual annotations are required for training a <em>DeepSS</em> to annotate your recordings. If already have annotated data, head straight to <a class="reference internal" href="make_dataset.html"><span class="doc std std-doc">make a dataset for training</span></a>.</p>
+<p>Otherwise, we provide a GUI for annotating song manually.
+Start the GUI by opening a terminal, activating the conda environment, and typing <code class="docutils literal notranslate"><span class="pre">xb</span></code>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate dss
+xb
+</pre></div>
+</div>
+<p>This opens a window with options for loading data - <code class="docutils literal notranslate"><span class="pre">Load</span> <span class="pre">audio</span> <span class="pre">from</span> <span class="pre">file</span></code>:</p>
+<a class="reference internal image-reference" href="_images/xb_start.png"><img alt="start screen" src="_images/xb_start.png" style="width: 450px;" /></a>
+<div class="section" id="loading-audio-data">
+<h2>Loading audio data<a class="headerlink" href="#loading-audio-data" title="Permalink to this headline">¶</a></h2>
+<p>This will open a dialog for selecting a file. The GUI can load audio data in a wide range of data formats:</p>
+<ul class="simple">
+<li><p>audio files (readable by <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a>, <a class="reference external" href="http://www.mega-nerd.com/libsndfile/#Features">list of supported formats</a>)</p></li>
+<li><p>hdfs files (<a class="reference external" href="http://docs.h5py.org/">h5py</a>). Matlab’s <code class="docutils literal notranslate"><span class="pre">.mat</span></code> <a class="reference external" href="https://www.mathworks.com/help/matlab/ref/save.html#btox10b-1-version">files</a> also use this format.</p></li>
+<li><p>numpy’s <code class="docutils literal notranslate"><span class="pre">npy</span></code> or <code class="docutils literal notranslate"><span class="pre">npz</span></code> files (<a class="reference external" href="https://numpy.org/doc/stable/reference/routines.io.html">numpy</a>)</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If your favorite format is not included in this list, try to convert it to a <code class="docutils literal notranslate"><span class="pre">wav</span></code> file.</p>
+</div>
+<p>After selecting a file, a menu allows you to fine tune things:</p>
+<ul class="simple">
+<li><p>which dataset</p></li>
+<li><p>data format - xb infers, you can correct</p></li>
+<li><p>sample rate - xb infers, but some formats do not have that information so you may need to correct or provide</p></li>
+<li><p>ignore_tracks (REMOVE)</p></li>
+<li><p>crop (REMOVE)</p></li>
+<li><p>annotations: This will also attempt to load existing annotations - it will default to the selected filename with the extension replaced by <code class="docutils literal notranslate"><span class="pre">.csv</span></code> but an alternative can be selected. The annotations need to be saved as comma-separated values with a header naming three columns: name, start_seconds, stop_seconds and each following row containing the name of the song type and the start and stop of the song in the recording in seconds. For events, start and stop need to have identical values. See <a class="reference external" href="data_formats.html#exported-annotations-and-audio">technical specification</a>)</p></li>
+<li><p>initialize annotations: “name,category;name2,category2” (category is either event or segment)</p></li>
+<li><p>Sample rate events (REMOVE)</p></li>
+<li><p>the range of frequencies displayed in the spectrogram views to focus the display on the frequencies that occur in the song</p></li>
+<li><p>band-pass filter the audio to remove noise</p></li>
+<li><p>cue points</p></li>
+</ul>
+<div class="figure align-default" id="xb-load-fig">
+<img alt="loading screen" src="_images/xb_load.png" />
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Loading screen.</span><a class="headerlink" href="#xb-load-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>Most of these parameters can also be specified using the xb command line interface (see [xb_cli]).</p>
+</div>
+<div class="section" id="overview-over-the-display-and-menus">
+<h2>Overview over the display and menus<a class="headerlink" href="#overview-over-the-display-and-menus" title="Permalink to this headline">¶</a></h2>
+<p>Audio data from all channels (gray), with one channel being selected (white), and the spectogram of the currently selected channel below. Move forward/backward along the time axis via the A/D keys and zoom in/out the time axis with W/S keys (See Playback/). The temporal resolution of the spectrogram can be increased at the expense of frequency resolution with the R and T keys.</p>
+<div class="figure align-default" id="xb-display-fig">
+<a class="reference internal image-reference" href="_images/xb_display.png"><img alt="waveform and spectrogram display" src="_images/xb_display.png" style="width: 100%;" /></a>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">Waveform (top) and spectrogram (bottom) display of a multi-channel recording.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>You can choose to hide all non-selected channels in the waveform view by toggling “Audio/Show all channels”. To change the channel for which the spectrogram is displayed, use the dropdown list on the upper right or switch to next/previous channel with the up/down arrow keys. Pressing <code class="docutils literal notranslate"><span class="pre">Q</span></code> (Audio/Autoselect loudest channel) will toggle automatically selecting the loudest channel in the current view.</p>
+<!-- :::{figure} markdown-fig
+<img src="images/xb_channels.png" alt="select channels" width="100%">
+
+Channel selection
+::: -->
+</div>
+<div class="section" id="annotate-song">
+<h2>Annotate song<a class="headerlink" href="#annotate-song" title="Permalink to this headline">¶</a></h2>
+<p>Song types for annotation are taken from existing annotations if they were loaded. Song types for annotation can be defined upon load (see above). You can also add new or edit the names of existing song types via “Audio/Add or edit annotation types”.</p>
+<div class="figure align-default" id="xb-make-fig">
+<a class="reference internal image-reference" href="_images/xb_make.png"><img alt="edit annotation types" src="_images/xb_make.png" style="height: 500px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">Create, rename or delete song types for annotation.</span><a class="headerlink" href="#xb-make-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>The dropdown many on the top left of the waveform view can be used to select which song types you want to annotate. The selected annotation type can also be changed with number keys according to the number indicated in the dropdown menu.</p>
+<div class="figure align-default" id="xb-types-fig">
+<a class="reference internal image-reference" href="_images/xb_types.png"><img alt="select annotation types" src="_images/xb_types.png" style="height: 150px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Select annotation types.</span><a class="headerlink" href="#xb-types-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>To annotate a new song, left-click on the waveform or spectrogram view. If you have selected an event-like type, that’s it - you just placed the event time and a line should appear in the waveform and spectrogram view. If you have selected a segment type, the cursor changes to a cross. You have only placed one boundary of the segment, a second click somewhere else will complete the annotation and a shaded area should appear between the time points of the first and second click.</p>
+<div class="figure align-default" id="xb-annotate-fig">
+<a class="reference internal image-reference" href="_images/xb_annotate.png"><img alt="annotate song" src="_images/xb_annotate.png" style="height: 500px;" /></a>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">Fully annotated fly song. Pulse (cyan) is an event-like song type and is annotated by clicking on the pulse center. Sine (red shaded area) is a segment- or syllable-like song type and is annotated by clicking on the beginning and the end of the sine syllable.</span><a class="headerlink" href="#xb-annotate-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>Delete annotations by right-clicking on the annotation. You can delete all annotations or only the selected annotation with the U and Y, respectively or via the Audio menu. Move annotations by dragging the lines or the boundaries of the shaded area - this will change event times and segment bounds. Or drag the shaded area itself to move the whole segment. Movement can be disabled completely or restricted to the currently selected annotation type.</p>
+</div>
+<div class="section" id="save-annotations">
+<h2>Save annotations<a class="headerlink" href="#save-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Save the annotations via the file menu as a comma-separated <code class="docutils literal notranslate"><span class="pre">csv</span></code> file. See <a class="reference external" href="data_formats.html#exported-annotations-and-audio">here</a> for a specification of the file format.</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="install.html" title="previous page">Install</a>
+    <a class='right-next' id="next-link" href="make_dataset.html" title="next page">Making a data set for training</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Jan Clemens<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>

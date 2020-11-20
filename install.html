@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Install &#8212; DeepSS docs</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Annotate song manually" href="annotate.html" />
+    <link rel="prev" title="Welcome to DeepSS" href="intro.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">DeepSS docs</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to DeepSS
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Install
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="annotate.html">
+   Annotate song manually
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="make_dataset.html">
+   Making a data set for training
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="train.html">
+   Configure and train a network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="predict.html">
+   Predict
+  </a>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="unsupervised/unsupervised.html">
+   Unsupervised classification
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/flies.html">
+     Fly song
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/mice.html">
+     Ultrasonic vocalizations from mice
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/birds.html">
+     Song of Bengalese finches
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="technical.html">
+   Technical specifications
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="data_formats.html">
+     Data formats
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli.html">
+     Command line interfaces
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/install.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#pre-requisites">
+   Pre-requisites
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#install-deepss-with-or-without-the-gui">
+   Install
+   <em>
+    DeepSS
+   </em>
+   with or without the GUI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#test-the-installation">
+   Test the installation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#next-steps">
+   Next steps
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pre-requisites">
+<h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">¶</a></h2>
+<p><strong>Anaconda</strong>: <em>DeepSS</em> is installed using an anaconda environment. For that, you first have to <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">install anaconda</a> (or use <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>).</p>
+<p><strong>CUDA libraries for using the GPU</strong>: While <em>DeepSS</em> works well for annotating song using CPUs, GPUs will greatly improve annotation speed and are in particular recommended for training a <em>DeepSS</em> network. The network is implement in the deep-learning framework Tensorflow. To make sure that Tensorflow can utilize the GPU, make sure you have the required CUDA libraries installed: <span class="xref myst">https://www.tensorflow.org/install/gpu</span>.</p>
+<p><strong>Libsoundfile on linux</strong>: The graphical user interface (GUI) reads audio data using <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a>, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS but needs to be installed separately with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Alternatively, <em>DeepSS</em> can be installed and used w/o the GUI (see below).</p>
+</div>
+<div class="section" id="install-deepss-with-or-without-the-gui">
+<h2>Install <em>DeepSS</em> with or without the GUI<a class="headerlink" href="#install-deepss-with-or-without-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>We then create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">deepss</span></code> that contains all the required packages:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_gui.yml -n dss
+</pre></div>
+</div>
+<p>This will also install the graphical user interface (GUI) <code class="docutils literal notranslate"><span class="pre">xb</span></code>. The information about the required packages is in <a class="reference external" href="https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_gui.yml">deepss_gui.yml</a>. If you do not need the <code class="docutils literal notranslate"><span class="pre">xb</span></code> GUI (for instance on a server), you can also install a plain version:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_plain.yml -n dss
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-the-installation">
+<h2>Test the installation<a class="headerlink" href="#test-the-installation" title="Permalink to this headline">¶</a></h2>
+<p>To test the installation, activate the conda environment and run these three commands in the terminal:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate dss
+dss-train --help
+dss-predict --help
+xb
+</pre></div>
+</div>
+<p>The first two should display the command line arguments for <code class="docutils literal notranslate"><span class="pre">dss-train</span></code> and <code class="docutils literal notranslate"><span class="pre">dss-predict</span></code>. The last should start the graphical user interface.</p>
+</div>
+<div class="section" id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+<p>If all is working, you probably want to adapt <em>DeepSS</em> to annotate song in your own recordings. For that, you first need to manually <a class="reference internal" href="annotate.html"><span class="doc std std-doc">annotate song using the GUI</span></a>. If you already have annotations, you are already able to <a class="reference internal" href="make_dataset.html"><span class="doc std std-doc">make a dataset for training</span></a> <em>DeepSS</em>.</p>
+<!--
+# Manual
+## Install python
+Install conda (see [here](https://docs.conda.io/en/latest/miniconda.html)). DeepSS has been tested with python 3.7 and 3.8. Then create a fresh python environment and activate it:
+```shell
+conda create -n dss python=3.7 -y
+conda activate dss
+```
+All of the following steps should be performed with this environment active.
+```shell
+conda env create -f deepss_gui_osx.yml -n dss
+```
+
+
+
+## Install _DeepSS_
+This is sufficient if you want to use the _dss_ module via the command line or python:
+```shell
+conda install zarr tensorflow # or `tensorflow-gpu`
+pip install git+https://github.com/janclemenslab/deepsongsegmenter
+```
+Tensorflow is the deep learning framework used to implement the DeepSS network. Tensorflow is not installed automatically to avoid interference with existing installations and to provide more control over versions. We recommend installation via conda install, but pip install should also work and typically installs a newer version. The manual install of zarr is required in some windows systems since the install via pip can be wonky. DeepSS has been tested with tensorflow versions 2.1, 2.2, and 2.3.
+
+## Install the GUI
+If you want to use the GUI to annotate song manually and with DeepSS and to train DeepSS networks:
+```shell
+conda install pyside2
+conda install pyqtgraph=0.11.0rc0 python-sounddevice hdbscan umap-learn -c conda-forge -y
+pip install xarray-behave[gui]
+```
+
+
+## Optional
+Install tools for unsupervised analyses of song:
+```shell
+conda install hdbscan umap-learn -c conda-forge -y
+pip install deepss-unsupervised
+```
+
+
+## Test the installation
+To test the installation, run these three commands in the terminal:
+```shell
+dss-train --help
+dss-predict --help
+xb
+```
+The first two should display the command line arguments for `dss-train` and `dss-predict`. The last should start the graphical user interface.
+
+
+```
+conda create -n dss python=3.7 -y
+conda activate dss
+conda install zarr tensorflow -y # or `tensorflow-gpu`
+conda install python-sounddevice hdbscan umap-learn -c conda-forge -y
+conda install hdbscan umap-learn -c conda-forge -y
+pip install git+https://github.com/janclemenslab/deepsongsegmenter
+pip install xarray-behave[gui]
+pip install deepss-unsupervised
+dss-train --help
+dss-predict --help
+xb
+``` -->
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">Welcome to <em>DeepSS</em></a>
+    <a class='right-next' id="next-link" href="annotate.html" title="next page">Annotate song manually</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Jan Clemens<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
