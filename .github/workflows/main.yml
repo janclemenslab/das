@@ -56,16 +56,17 @@ on: [push]
 jobs:
   build:
     name: test_cli (${{ matrix.python-version }}, ${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    runs-on: ["macos-latest"]
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest"]  #, "macos-latest", "windows-latest"]
+        # os: ["ubuntu-latest"]  #, "macos-latest", "windows-latest"]
+        os: ["macos-latest"]
         python-version: ["3.7"]  #, "3.8"]
     steps:
       - uses: actions/checkout@v2
       - name: list
-        run: ls -al **/*
+        run: ls
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
