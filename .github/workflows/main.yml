@@ -82,7 +82,7 @@ jobs:
         run: |
           conda install pytest -n dss
           conda install pytest -n base
-          pytest
+          python -m pytest
       - name: Test cli
         run: |
           python -m dss.train --help
