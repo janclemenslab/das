@@ -1,3 +1,6 @@
+
+![](https://github.com/janclemenslab/deepsongsegmenter/workflows/Python%20Package%20using%20Conda/badge.svg)
+
 # DeepSS
 DeepSS is supervised. See [dss-unsupervised](https://github.com/janclemenslab/dss-unsupervised) for unsupervised tools to augment DeepSS.
 
