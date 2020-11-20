@@ -67,6 +67,8 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
+          activate-environment: dss
+          environment-file: env/deepss_gui.yml
           python-version: ${{ matrix.python-version }}
       - name: Conda info
         shell: bash -l {0}
@@ -74,8 +76,8 @@ jobs:
       - name: Conda list
         shell: pwsh
         run: conda list
-      - name: Install deepss_gui
-        run: conda env update -f ./env/deepss_gui.yml
+      # - name: Install deepss_gui
+      #   run: conda env update -f ./env/deepss_gui.yml
       - name: Test cli
         run: |
           conda activate dss
