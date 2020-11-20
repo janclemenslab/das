@@ -121,6 +121,7 @@ fig*
 !/src/
 !/tests/
 !/env/
+!/pyproject.toml
 src/*.egg-info/
 src/deepsongsegmenter.egg-info/PKG-INFO
 src/deepsongsegmenter.egg-info/SOURCES.txt
