@@ -23,7 +23,7 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
           learning_rate: float = None, reduce_lr: bool = False, reduce_lr_patience: int = 5, batch_level_subsampling: bool = False,
           tensorboard: bool = False, use_separable: List[bool] = False,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-          save_prefix: str = None):
+          save_prefix: str = None, log_messages: bool = False):
     """[summary]
 
     Args:
@@ -54,7 +54,11 @@ def train(*, data_dir: str, model_name: str = 'tcn', nb_filters: int = 16, kerne
         pre_kernel_size (int): [description]. Defaults to 3.
         pre_nb_conv (int): [description]. Defaults to 3.
         save_prefix (str): prepend to save file name. Defaults to ''.
+        log_messages (bool): sets logging level to INFO. Defaults to False (will follow existing settings).
         """
+
+    if log_messages:
+        logging.basicConfig(level=logging.INFO)
 
     # FIXME THIS IS NOT GREAT:
     batch_size = 32
