@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Song of Bengalese finches &#8212; DeepSS docs</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical specifications" href="technical.html" />
+    <link rel="prev" title="Ultrasonic vocalizations from mice" href="mice.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">DeepSS docs</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to DeepSS
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="install.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="annotate.html">
+   Annotate song
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="make_dataset.html">
+   Making a data set for training DeepSS
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="make_dataset.html#using-the-dss-module">
+   Using the
+   <em>
+    dss
+   </em>
+   module
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="train.html">
+   Configure and train a DeepSS network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="predict.html">
+   Predict
+  </a>
+ </li>
+ <li class="toctree-l1 current active collapsible-parent">
+  <a class="reference internal" href="unsupervised.html">
+   Unsupervised classification
+  </a>
+  <ul class="current collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="flies.html">
+     Fly song
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="mice.html">
+     Ultrasonic vocalizations from mice
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Song of Bengalese finches
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="technical.html">
+   Technical specifications
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="data_formats.html">
+     Data formats
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli.html">
+     Command line interfaces
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/birds.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/birds.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="song-of-bengalese-finches">
+<h1>Song of Bengalese finches<a class="headerlink" href="#song-of-bengalese-finches" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">librosa.feature</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span><span class="p">,</span> <span class="n">LinearSegmentedColormap</span>
+<span class="kn">import</span> <span class="nn">colorcet</span> <span class="k">as</span> <span class="nn">cc</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">deepss_unsupervised.spec_utils</span>
+<span class="kn">import</span> <span class="nn">umap</span>
+<span class="kn">import</span> <span class="nn">hdbscan</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ncb.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import zarr</span>
+<span class="c1"># store_raw = zarr.open(&#39;/Volumes/shinkansen/Dropbox/dss.paper/sober/20200412_135228.zarr&#39;)</span>
+<span class="c1"># fs = 32_000</span>
+<span class="c1"># t0 = 0</span>
+<span class="c1"># t1 = t0 + 50_000_000</span>
+
+<span class="c1"># x = store_raw[&#39;x_test&#39;][t0:t1,0]</span>
+<span class="c1"># y = store_raw[&#39;labels_test&#39;][t0:t1]</span>
+<span class="c1"># diff = np.diff((y&gt;0).astype(np.double))</span>
+<span class="c1"># syllable_onsets = np.where(diff==1)[0]</span>
+<span class="c1"># syllable_offsets = np.where(diff==-1)[0]</span>
+<span class="c1"># syllable_types = y[syllable_onsets+10]</span>
+
+<span class="c1"># np.savez_compressed(&#39;data/birds.npz&#39;, recording=x, syllable_onsets=syllable_onsets, syllable_offsets=syllable_offsets, </span>
+<span class="c1">#                                       syllable_types=syllable_types, samplerate=fs)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data from: D Nicholson, JE Queen, S Sober (2017). Bengalese finch song repository. https://doi.org/10.6084/m9.figshare.4805749.v5</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/janclemenslab/deepss_unsupervised/releases/download/v0.4/birds.npz&#39;</span>
+<span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">ff</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ff</span><span class="p">)</span>
+<span class="n">recording</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;recording&#39;</span><span class="p">]</span>
+<span class="n">syllable_onsets</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;syllable_onsets&#39;</span><span class="p">]</span>
+<span class="n">syllable_offsets</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;syllable_offsets&#39;</span><span class="p">]</span>
+<span class="n">syllable_types</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;syllable_types&#39;</span><span class="p">]</span>
+<span class="n">samplerate</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;samplerate&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">noisereduce</span> <span class="k">as</span> <span class="nn">nr</span>
+<span class="n">noise_clip</span> <span class="o">=</span> <span class="n">recording</span><span class="p">[:</span><span class="mi">150_000</span><span class="p">]</span>
+<span class="n">x_nr</span> <span class="o">=</span> <span class="n">nr</span><span class="o">.</span><span class="n">reduce_noise</span><span class="p">(</span><span class="n">audio_clip</span><span class="o">=</span><span class="n">recording</span><span class="p">,</span> <span class="n">noise_clip</span><span class="o">=</span><span class="n">noise_clip</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hop_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">win_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">/</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">specgram</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">x_nr</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">samplerate</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="n">win_length</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="n">hop_length</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">specgram</span> <span class="o">=</span> <span class="n">specgram</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">specgram</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">],:]</span>
+<span class="n">sm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">specgram</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">specgram</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(128,)
+</pre></div>
+</div>
+<img alt="_images/birds_5_1.png" src="_images/birds_5_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="o">=</span> <span class="p">[]</span> 
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">syllable_onsets</span><span class="p">,</span> <span class="n">syllable_offsets</span><span class="p">)):</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">specgram</span><span class="p">[:,</span> <span class="nb">int</span><span class="p">(</span><span class="n">onset</span><span class="o">/</span><span class="n">hop_length</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">offset</span><span class="o">/</span><span class="n">hop_length</span><span class="p">)]</span> <span class="o">/</span> <span class="n">sm</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">20</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span> <span class="o">-</span> <span class="mi">2</span>
+    <span class="n">spec</span><span class="p">[</span><span class="n">spec</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">specs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">specs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;function matplotlib.pyplot.show(close=None, block=None)&gt;
+</pre></div>
+</div>
+<img alt="_images/birds_6_1.png" src="_images/birds_6_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec_rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">deepss_unsupervised</span><span class="o">.</span><span class="n">spec_utils</span><span class="o">.</span><span class="n">log_resize_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">specs</span><span class="p">]</span>
+
+<span class="n">max_len</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">spec</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">spec_rs</span><span class="p">])</span>
+<span class="n">spec_rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">deepss_unsupervised</span><span class="o">.</span><span class="n">spec_utils</span><span class="o">.</span><span class="n">pad_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">pad_length</span><span class="o">=</span><span class="n">max_len</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">spec_rs</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec_flat</span> <span class="o">=</span> <span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">spec_rs</span><span class="p">]</span>
+<span class="n">spec_flat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec_flat</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">spec_flat</span><span class="p">)</span>
+<span class="n">hdbscan_labels</span> <span class="o">=</span> <span class="n">hdbscan</span><span class="o">.</span><span class="n">HDBSCAN</span><span class="p">(</span><span class="n">min_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">out</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">syllable_types</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cet_glasbey_dark&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;UMAP 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;UMAP 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Pre-defined syllable labels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/birds_10_0.png" src="_images/birds_10_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">cc</span><span class="o">.</span><span class="n">palette</span><span class="p">[</span><span class="s1">&#39;glasbey_dark&#39;</span><span class="p">]</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">cmap</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">))</span>
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">(</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">out</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">hdbscan_labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;UMAP 1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;UMAP 2&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Unsupervised syllable labels&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/birds_11_0.png" src="_images/birds_11_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">syllable_types</span><span class="p">,</span> <span class="n">hdbscan_labels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Confusion matrix (log scaled&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Syllable label&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Cluster label&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Homogeneity_score: </span><span class="si">{</span><span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">homogeneity_score</span><span class="p">(</span><span class="n">syllable_types</span><span class="p">,</span> <span class="n">hdbscan_labels</span><span class="p">)</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">&#39;Completeness_score: </span><span class="si">{</span><span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">completeness_score</span><span class="p">(</span><span class="n">syllable_types</span><span class="p">,</span> <span class="n">hdbscan_labels</span><span class="p">)</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span>
+      <span class="sa">f</span><span class="s1">&#39;V_measure_score: </span><span class="si">{</span><span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">v_measure_score</span><span class="p">(</span><span class="n">syllable_types</span><span class="p">,</span> <span class="n">hdbscan_labels</span><span class="p">)</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Homogeneity_score: 0.90
+ Completeness_score: 0.94
+ V_measure_score: 0.92
+</pre></div>
+</div>
+<img alt="_images/birds_12_2.png" src="_images/birds_12_2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>  <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+  <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">hdbscan_labels</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">label</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">hdbscan_labels</span><span class="o">==</span><span class="n">label</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">label</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spec_rs</span><span class="p">)[</span><span class="n">idx</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cet_CET_L17&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/birds_13_0.png" src="_images/birds_13_0.png" />
+</div>
+</div>
+</div>
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"123c3506fe0a4123a5cb4bd0ebbf0711": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "2db4a4c8c4a741db818f0069a230f2f7": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HBoxModel", "state": {"_view_module_version": "1.5.0", "_model_name": "HBoxModel", "_model_module": "@jupyter-widgets/controls", "_view_name": "HBoxView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_3caa773b27364fd38173ed21589e962a", "_view_count": null, "_model_module_version": "1.5.0", "box_style": "", "children": ["IPY_MODEL_8dc0fcf8407a46b085e0cac24b4347cb", "IPY_MODEL_68166486a1864ac894978a614f16d0a3"]}}, "3caa773b27364fd38173ed21589e962a": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "3d99753c1815404784b4f80fc71d881e": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "68166486a1864ac894978a614f16d0a3": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_view_module_version": "1.5.0", "description_tooltip": null, "_model_name": "HTMLModel", "_model_module": "@jupyter-widgets/controls", "_view_name": "HTMLView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_998c2e046fc540a69743425b74532c65", "value": " 449/449 [16:18&lt;00:00,  2.18s/it]", "style": "IPY_MODEL_123c3506fe0a4123a5cb4bd0ebbf0711", "placeholder": "\u200b", "_view_count": null, "_model_module_version": "1.5.0", "description": ""}}, "8dc0fcf8407a46b085e0cac24b4347cb": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "FloatProgressModel", "state": {"_view_module_version": "1.5.0", "description_tooltip": null, "_model_name": "FloatProgressModel", "_model_module": "@jupyter-widgets/controls", "max": 449, "bar_style": "success", "_view_name": "ProgressView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_3d99753c1815404784b4f80fc71d881e", "orientation": "horizontal", "value": 449, "style": "IPY_MODEL_a753e1ac6662434789c649c801346837", "min": 0, "_view_count": null, "_model_module_version": "1.5.0", "description": "100%"}}, "998c2e046fc540a69743425b74532c65": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "a753e1ac6662434789c649c801346837": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "ProgressStyleModel", "state": {"_view_module_version": "1.2.0", "_model_name": "ProgressStyleModel", "_model_module": "@jupyter-widgets/controls", "description_width": "initial", "_view_name": "StyleView", "_view_module": "@jupyter-widgets/base", "_view_count": null, "bar_color": null, "_model_module_version": "1.5.0"}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python37664bitminicondavirtualenv7fae029fd0bd4545b5a81627b1a0f8fe",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python37664bitminicondavirtualenv7fae029fd0bd4545b5a81627b1a0f8fe'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="mice.html" title="previous page">Ultrasonic vocalizations from mice</a>
+    <a class='right-next' id="next-link" href="technical.html" title="next page">Technical specifications</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Jan Clemens<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>

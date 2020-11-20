@@ -1,0 +1,547 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Making a data set for training &#8212; DeepSS docs</title>
+    
+  <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="_static/togglebutton.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configure and train a network" href="train.html" />
+    <link rel="prev" title="Annotate song manually" href="annotate.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="index.html">
+  
+  
+  <h1 class="site-logo" id="site-title">DeepSS docs</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="intro.html">
+   Welcome to DeepSS
+  </a>
+ </li>
+</ul>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="install.html">
+   Install
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="annotate.html">
+   Annotate song manually
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Making a data set for training
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="train.html">
+   Configure and train a network
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="predict.html">
+   Predict
+  </a>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="unsupervised/unsupervised.html">
+   Unsupervised classification
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/flies.html">
+     Fly song
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/mice.html">
+     Ultrasonic vocalizations from mice
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="unsupervised/birds.html">
+     Song of Bengalese finches
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+ <li class="toctree-l1 collapsible-parent">
+  <a class="reference internal" href="technical.html">
+   Technical specifications
+  </a>
+  <ul class="collapse-ul">
+   <li class="toctree-l2">
+    <a class="reference internal" href="data_formats.html">
+     Data formats
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="cli.html">
+     Command line interfaces
+    </a>
+   </li>
+  </ul>
+  <i class="fas fa-chevron-down">
+  </i>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/make_dataset.md"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.md</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-the-gui">
+   Using the GUI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#using-your-own-data">
+   Using your own data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#folder-with-wav-and-csv">
+   1. Folder with wav and csv
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#annotation-format">
+     Annotation format
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#recording-format">
+     Recording format
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#custom-loaders-for-the-recordings-and-annotations">
+   2. Custom loaders for the recordings and annotations
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-1-more-exotic-audio-files">
+     Example 1: More exotic audio files
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-2-audio-data-in-hdf5-or-matlab-files">
+     Example 2: Audio data in HDF5 or matlab files
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#example-3-transforming-a-custom-annotation-format">
+     Example 3: Transforming a custom annotation format
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bring-your-own-mappable">
+   3. Bring your own mappable
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="making-a-data-set-for-training">
+<h1>Making a data set for training<a class="headerlink" href="#making-a-data-set-for-training" title="Permalink to this headline">¶</a></h1>
+<p>Inference on any data but training expects data in a specific format with splits and metadata (see <a class="reference external" href="data_formats.html#dataset-for-training">specification</a>).
+Three(ways):</p>
+<ol class="simple">
+<li><p>From manual annotations created in the <code class="docutils literal notranslate"><span class="pre">xb</span></code> GUI</p></li>
+<li><p>From your own annotations</p></li>
+</ol>
+<p>We provide tools that more or less automate the generation of these datasets from audio annotated using the GUI but also present sample code for using your own data formats.</p>
+<div class="section" id="using-the-gui">
+<h2>Using the GUI<a class="headerlink" href="#using-the-gui" title="Permalink to this headline">¶</a></h2>
+<p>Once you have annotated a recording, export it for DeepSS (File/Export for DeepSS). This will save the annotations as csv. You can export a specific song type or all types.</p>
+<p>Audio (and sample rate information) can be saved as WAV or NPZ (compressed numpy binary file). We recommend NPZ, because it is robust and portable. WAV is more general but the format is more restricted and can lead to data loss. For instance, floating point data is restricted to the range [-1, 1]. You can compensate for this by setting the re-scaling the data via s scale factor to avoid clipping when saving.</p>
+<p>Export only a selected range - for fast training - annotate 5 seconds, export only the annotated part. Select the range to ensure that all three splits (train/validate/test) will end up with annotated song. For instance, the beginning and end should contain annotated - do not export a 15 second snippet where the first 10 seconds are silent - during splitting, this will result in some splits - for instance the validation set - being without annotations and can result in poor training results.</p>
+<p>Annotate and export multiple recordings into the same folder and then assemble a dataset via DeepSS/Make dataset.</p>
+<p>By default, the dataset will be assembled to allow training a single network that recognizes all annotated song types. If you want to train network for specific song types, then make training target for individual song types. For instance, fly song typically consists of sine and pulse song. We found training a pulse and a separate sine networks improves accuracy.</p>
+<p>Next set how annotation types are encoded in the training target. Events are marked by a single time point - to make training more robust, events should be represented by gaussian with a standard deviation. To simplify post processing of segments, in particular for birdsong with its many syllable types that are directly adjacent, we found that introducing brief gaps helps with post-processing the inferred annotations.</p>
+<p>Lastly, the data is split into three sets, which are used during different phases of the training:</p>
+<ul class="simple">
+<li><p><em>train</em>: optimize the network parameters</p></li>
+<li><p><em>validation</em>: monitor network performance during training and steer training (stop early or adjust learning rates)</p></li>
+<li><p><em>test</em>: independent data to assess network performance after training)</p></li>
+</ul>
+<p>Data can by split based on files or based on samples:</p>
+<ul class="simple">
+<li><p><em>Split by files</em>: select a fraction of files for the specific split. The full file will be used.</p></li>
+<li><p><em>Split by samples</em>: select a fraction of data from each file.</p></li>
+</ul>
+<p>If you have enough files, split by validation and ideally test by files - different files may come from different individuals so you test and validate the network based on how well it generalizes across individuals. If you have too few files or the different song types do not appear in all files, split by samples.</p>
+<p>Inspect the data set with the <span class="xref myst">1_inspect_data.ipynb</span> notebook</p>
+<p>To learn how to annotate song, DeepSS requires annotated audio data. The annotated audio is split into three parts:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">train</span></code>: The inference of Deeps is compared to the provided annotations for this part and errors are used to update the DeepSS network during training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">val</span></code> (aka validation): Track network performance during training and decide when to save the network, adjust the training strategy or stop training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code>: Assess the quality of the DeepSS inference after training.</p></li>
+</ul>
+<p>Each of the three parts contains two main variables:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: The audio data in the form <code class="docutils literal notranslate"><span class="pre">[samples</span> <span class="pre">x</span> <span class="pre">channels]</span></code>. Can be pre-processed, for instance filtered for noise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y</span></code>: The annotations in the form <code class="docutils literal notranslate"><span class="pre">[samples</span> <span class="pre">x</span> <span class="pre">song</span> <span class="pre">types]</span></code>, encoded as the probability of finding each song type (or noise) at each sample. These are the targets that DeepSS is optimized to reproduce during training.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_suffix</span></code>: Alternative annotations for the audio in <code class="docutils literal notranslate"><span class="pre">x</span></code> can be provided here. For instance, if you want to train DeepSS to detect only one of the song types in the data, you can make an annotation trace <code class="docutils literal notranslate"><span class="pre">y_specificsongtype</span></code> and provide the <code class="docutils literal notranslate"><span class="pre">y_suffix=specificsongtype</span></code> as an argument during training.</p></li>
+<li><p>metadata:</p>
+<ul>
+<li><p>the sample rate of <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> in Hz.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_names</span></code> and <code class="docutils literal notranslate"><span class="pre">class_types</span></code> (event or segment DEFINE)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_names_suffix</span></code> and <code class="docutils literal notranslate"><span class="pre">class_types_suffix</span></code> (for each suffix - would be [‘noise’, ‘suffix’])</p></li>
+</ul>
+</li>
+</ul>
+<p>DeepSS expects this information to come in a specific format, see Section 3 below and [data_schema.md] for details. Briefly, the data should be provided in a nested dict-like structure (or mappable):</p>
+<p>There are three ways of providing data for training, with increasing levels of complexity and flexibility:</p>
+<ol class="simple">
+<li><p>(simplest, least flexible) Folder with the data and annotations in a specific format (wav and csv files).</p></li>
+<li><p>(intermediate simplicity and flexibility) Folder with the data and annotations in a custom format - requires providing custom functions for loading both data types.</p></li>
+<li><p>(complex, maximally flexible) Bring your own mappable.</p></li>
+</ol>
+</div>
+<div class="section" id="using-your-own-data">
+<h2>Using your own data<a class="headerlink" href="#using-your-own-data" title="Permalink to this headline">¶</a></h2>
+<p>See <span class="xref myst">tutorials/1_prepare_data.ipynb</span> for an example. This allows you more flexibility and to use your own data formats.</p>
+</div>
+<div class="section" id="folder-with-wav-and-csv">
+<h2>1. Folder with wav and csv<a class="headerlink" href="#folder-with-wav-and-csv" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> folder with <code class="docutils literal notranslate"><span class="pre">*.wav</span></code> files with the recording and matching <code class="docutils literal notranslate"><span class="pre">*.csv</span></code> files with the annotations - recordings and annotations will be matched according to the file base name:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>data<span class="se">\</span>
+    file01.wav
+    file01.csv
+    another_file.wav
+    another_file.csv
+    yaf.wav
+    yaf.csv
+</pre></div>
+</div>
+<div class="section" id="annotation-format">
+<h3>Annotation format<a class="headerlink" href="#annotation-format" title="Permalink to this headline">¶</a></h3>
+<p>csv file with three columns:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: name of the song element for instance ‘pulse’ or ‘sine’ or ‘syllable A’</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_seconds</span></code>: <em>start</em> of the song element in seconds rel. to the start of the recording</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>: <em>end</em> of the song element in seconds rel. to the start of the recording</p></li>
+</ul>
+<p>There are two types of song elements:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">events</span></code> have not extent in time, <code class="docutils literal notranslate"><span class="pre">start_seconds=stop_seconds</span></code>, and are best used for brief, pulsatile signals like fly pulse song</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segments</span></code> extend in time, <code class="docutils literal notranslate"><span class="pre">start_seconds&gt;stop_seconds</span></code>, and should be used for normal syllables or fly sine song</p></li>
+</ul>
+</div>
+<div class="section" id="recording-format">
+<h3>Recording format<a class="headerlink" href="#recording-format" title="Permalink to this headline">¶</a></h3>
+<p>Single or multi channel wave file (should be readable via <code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code>).</p>
+</div>
+</div>
+<div class="section" id="custom-loaders-for-the-recordings-and-annotations">
+<h2>2. Custom loaders for the recordings and annotations<a class="headerlink" href="#custom-loaders-for-the-recordings-and-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Same general data structure as above but with custom data formats. If your recordings and annotations are not in the format expected by the standard loaders used above (<code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> for the recordings, <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> with name/start_seconds/stop_seconds for annotations), or if it’s hard to convert your data into these standard formats, you can provide your own loaders as long as they conform to the following interface:</p>
+<ul class="simple">
+<li><p><em>data loaders</em>: <code class="docutils literal notranslate"><span class="pre">samplerate,</span> <span class="pre">data</span> <span class="pre">=</span> <span class="pre">data_loader(filename)</span></code>, accepts a single string argument - the path to the data file and returns two things: the samplerate of the data and a numpy array with the recording data [time, channels]. Note: <code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> returns <code class="docutils literal notranslate"><span class="pre">[time,]</span></code> arrays - you need to add a new axis to make it 2d!</p></li>
+<li><p><em>annotation loaders</em>: <code class="docutils literal notranslate"><span class="pre">df</span> <span class="pre">=</span> <span class="pre">annotation_loader(filename)</span></code>, accepts a single string argument with the file path and returns a pandas DataFrame with these three columns: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> (see 1).</p></li>
+</ul>
+<p>ref notebook</p>
+<div class="section" id="example-1-more-exotic-audio-files">
+<h3>Example 1: More exotic audio files<a class="headerlink" href="#example-1-more-exotic-audio-files" title="Permalink to this headline">¶</a></h3>
+<p>You can use <a class="reference external" href="https://pypi.org/project/audiofile/">audiofile</a> for reading audio data from more exotic formats. Just be aware that the order of outputs is not as required - the first return argument of <code class="docutils literal notranslate"><span class="pre">audiofile.read</span></code> is the data, the second one the sample rate:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">audiofile</span> <span class="k">as</span> <span class="nn">af</span>
+<span class="n">data</span><span class="p">,</span> <span class="n">samplerate</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;signal.aif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A simple wrapper that reverses the order of the output will do</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">audiofile</span> <span class="k">as</span> <span class="nn">af</span>
+<span class="k">def</span> <span class="nf">data_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">data</span><span class="p">,</span> <span class="n">samplerate</span> <span class="o">=</span> <span class="n">af</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-2-audio-data-in-hdf5-or-matlab-files">
+<h3>Example 2: Audio data in HDF5 or matlab files<a class="headerlink" href="#example-2-audio-data-in-hdf5-or-matlab-files" title="Permalink to this headline">¶</a></h3>
+<p>If you data is saved in HDF5 format, with the recording in a ‘samples’ field and the sample rate as an attribute, you could use the following wrapper:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">h5py</span>
+<span class="k">def</span> <span class="nf">data_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">][:]</span>
+        <span class="n">samplerate</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;samplerate&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span>
+</pre></div>
+</div>
+<p>If sample rate is not saved with the data, you can return a constant value: <code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">10_000,</span> <span class="pre">data</span></code>.
+Recent versions of matlab also save data as HDF5 so this should work for <code class="docutils literal notranslate"><span class="pre">mat</span></code> files. Otherwise use <code class="docutils literal notranslate"><span class="pre">scipy.io.loadmat</span></code></p>
+</div>
+<div class="section" id="example-3-transforming-a-custom-annotation-format">
+<h3>Example 3: Transforming a custom annotation format<a class="headerlink" href="#example-3-transforming-a-custom-annotation-format" title="Permalink to this headline">¶</a></h3>
+<p>Build DataFrame from segment on- and offsets and event times loaded from a custom format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># create empty DataFrame with the required columns</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;start_seconds&#39;</span><span class="p">,</span> <span class="s1">&#39;stop_seconds&#39;</span><span class="p">])</span>
+
+<span class="c1"># append a segment</span>
+<span class="n">onset</span> <span class="o">=</span> <span class="mf">1.33</span> <span class="c1"># seconds</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mf">1.42</span>  <span class="c1"># seconds</span>
+<span class="n">segment_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">onset</span><span class="p">,</span> <span class="n">offset</span><span class="p">]</span>
+<span class="n">segment_name</span> <span class="o">=</span> <span class="s1">&#39;sine_song&#39;</span>
+
+<span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">segment_name</span><span class="p">,</span> <span class="o">*</span><span class="n">segment_bounds</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:],</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># append an event</span>
+<span class="n">event_time</span> <span class="o">=</span> <span class="mf">2.15</span> <span class="c1"># seconds</span>
+<span class="n">event_name</span> <span class="o">=</span> <span class="s1">&#39;pulse&#39;</span>
+
+<span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">event_name</span><span class="p">,</span> <span class="n">event_time</span><span class="p">,</span> <span class="n">event_time</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:],</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="bring-your-own-mappable">
+<h2>3. Bring your own mappable<a class="headerlink" href="#bring-your-own-mappable" title="Permalink to this headline">¶</a></h2>
+<p>DeepSS expects a simple dictionary-like data structure (see npy_dir doc):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data
+  ├── [&#39;train&#39;]
+  │   ├── [&#39;x&#39;]         (the audio data - samples x channels)
+  │   ├── [&#39;y&#39;]        (annotations - samples x song types, first one is noise, needs to add to )
+  │   ├── [&#39;y_suffix1&#39;] (optional, multiple allowed)
+  ├── [&#39;val&#39;]
+  │   ├── [&#39;x&#39;]
+  │   ├── [&#39;y&#39;]
+  │   ├── [&#39;y_suffix1&#39;]
+  ├── [&#39;test&#39;]
+  │   ├── [&#39;x&#39;]
+  │   ├── [&#39;y&#39;]
+  │   ├── [&#39;y_suffix1&#39;]
+  └── attrs
+        └── [&#39;samplerate&#39;] (of x and y in Hz)
+              [&#39;class_names&#39;]
+              [&#39;class_types&#39;] (event or segment)
+              [&#39;class_names_suffix1&#39;]
+              [&#39;class_types_suffix1&#39;] (event or segment)
+</pre></div>
+</div>
+<p>Data is accessed via keys, for instance <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a dictionary accessed via <code class="docutils literal notranslate"><span class="pre">.</span></code> notation: <code class="docutils literal notranslate"><span class="pre">data.attrs['samplerate']</span></code>.</p>
+<p>This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org%27">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
+<p>We provide a alternative storage backend - <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code> (<span class="xref myst">source</span>) - that mirrors the data structure in directory hierarchy with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html">numpy’s npy</a> files (inspired by Cyrille Rossant’s series of blog posts (<a class="reference external" href="https://cyrille.rossant.net/moving-away-hdf5/">1</a>, <a class="reference external" href="https://cyrille.rossant.net/should-you-use-hdf5/">2</a>), <a class="reference external" href="https://github.com/bastibe/jbof">jbof</a> and <a class="reference external" href="https://exdir.readthedocs.io/">exdir</a>). For instance, <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> is stored in <code class="docutils literal notranslate"><span class="pre">dirname/train/x.npy</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is stored as a <code class="docutils literal notranslate"><span class="pre">yaml</span></code> file in the top directory.</p>
+<p>This provides structured access to data via npy files. npy files have the advantage of providing a fast memory-mapping mechanism for out-of-memory access if your data set does not fit in memory. While zarr, h5py, and xarray provide mechanisms for out-of-memory access, they tend to be generally slower or require fine tuning to reach the performance reached with memmapped npy files.</p>
+<p><em>Notes</em></p>
+<ul class="simple">
+<li><p>that the annotations correspond to probabilities - they should sum to 1.0 for each sample. The first “song” type, should be noise or no song, <code class="docutils literal notranslate"><span class="pre">p(no</span> <span class="pre">song)</span></code></p></li>
+<li><p>y_suffix…</p></li>
+</ul>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="annotate.html" title="previous page">Annotate song manually</a>
+    <a class='right-next' id="next-link" href="train.html" title="next page">Configure and train a network</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Jan Clemens<br/>
+        
+            &copy; Copyright 2020.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>

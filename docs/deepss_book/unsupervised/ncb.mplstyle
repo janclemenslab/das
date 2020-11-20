@@ -1,0 +1,44 @@
+# https://matplotlib.org/3.1.3/tutorials/introductory/customizing.html
+
+# reset all font sizes to defaults
+axes.autolimit_mode: round_numbers
+axes.xmargin: 0
+axes.ymargin: 0
+axes.facecolor: None
+#axes.titlesize: 10
+#axes.labelsize: 9
+#axes.linewidth: 0.5
+axes.spines.top: False
+axes.spines.right: False
+
+#xtick.labelsize: 7
+#xtick.major.width: 0.5
+
+#ytick.labelsize: 7
+#ytick.major.width: 0.5
+
+lines.markeredgecolor: auto
+lines.markeredgewidth: 0
+#lines.dashed_pattern : 1.5, 1
+#lines.linewidth: 1.0
+
+figure.frameon: False
+figure.facecolor : none      ## figure facecolor
+figure.edgecolor : none      ## figure edgecolor
+
+legend.frameon: False
+
+
+image.interpolation: nearest
+image.aspect: auto
+image.origin: lower
+
+font.family: Helvetica, Arial
+font.size:13
+
+pdf.fonttype: 42
+ps.fonttype: 42
+svg.fonttype: none
+
+savefig.pad_inches  : 0.01      ## Padding to be used when bbox is set to 'tight'
+savefig.transparent : True    ## setting that controls whether figures are saved with a

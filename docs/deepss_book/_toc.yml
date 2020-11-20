@@ -1,0 +1,17 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+- file: intro
+- file: install
+- file: annotate
+- file: make_dataset
+- file: train
+- file: predict
+- file: unsupervised/unsupervised
+  sections:
+    - file: unsupervised/flies
+    - file: unsupervised/mice
+    - file: unsupervised/birds
+- file: technical
+  sections:
+    - file: data_formats
+    - file: cli
