@@ -5,8 +5,8 @@ import defopt
 import scipy
 import flammkuchen
 import numpy as np
-from . import utils, data, models, event_utils, segment_utils
-from typing import List, Union
+from . import utils, data, models, event_utils, segment_utils, evaluate
+from typing import List, Optional, Dict
 
 from tensorflow.python.framework.ops import disable_eager_execution
 disable_eager_execution()
@@ -63,48 +63,94 @@ def labels_from_probabilities(probabilities, threshold=None):
     return labels
 
 
-def predict_segments(class_probabilities, samplerate=1, segment_dims=None, segment_names=None,
-                     segment_thres=0.5, segment_minlen=None, segment_fillgap=None):
+def predict_segments(class_probabilities: np.array,
+                     samplerate: float = 1.0,
+                     segment_dims: Optional[List[int]] = None,
+                     segment_names: Optional[List[str]] = None,
+                     segment_ref_onsets: Optional[List[float]] = None,
+                     segment_ref_offsets: Optional[List[float]] = None,
+                     segment_thres: float = 0.5,
+                     segment_minlen: Optional[float] = None,
+                     segment_fillgap: Optional[float] = None,
+                     segment_labels_by_majority: bool = True) -> Dict:
     """[summary]
 
     Args:
-        class_probabilities ([type]): [description]
-        samplerate [float, optional): Hz
-        segement_dims ([type], optional): [description]. Defaults to None.
-        segment_names ([type], optional): [description]. Defaults to None.
+        class_probabilities ([type]): [T, nb_classes] with probabilities for each class and sample
+                                      or [T,] with integer entries as class labels
+        samplerate (float, optional): Hz. Defaults to 1.0.
+        segment_dims (Optional[List[int]], optional): set of indices into class_probabilities corresponding
+                                                      to segment-like song types. Defaults to None.
+        segment_names (Optional[List[str]], optional): [description]. Defaults to None.
+        segment_ref_onsets (Optional[List[float]], optional):
+                            Use onsets as ref for estimating labels.
+                            Defaults to None (will use onsets est from class_probabilitieslabels as ref).
+        segment_ref_offsets (Optional[List[float]], optional): [description].
+                            Use offsets as ref for estimating labels.
+                            Defaults to None (will use offsets est from class_probabilitieslabels as ref).
         segment_thres (float, optional): [description]. Defaults to 0.5.
-        segment_minlen ([type], optional): seconds [description]. Defaults to None.
-        segment_fillgap ([type], optional): seconds [description]. Defaults to None.
+        segment_minlen (Optional[float], optional): seconds. Defaults to None.
+        segment_fillgap (Optional[float], optional): seconds. Defaults to None.
+        segment_labels_by_majority (bool, optional): Segment labels given by majority of label values within on- and offsets. Defaults to True.
 
     Returns:
         dict['segmentnames']['denselabels-samples'/'onsets'/'offsets'/'probabilities']
-
     """
+
+    probs_are_labels = class_probabilities.ndim == 1
+
     if segment_dims is None:
-        nb_classes = class_probabilities.shape[1]
+        if not probs_are_labels:  # class_probabilities is [T, nb_classes]
+            nb_classes = class_probabilities.shape[1]
+        else:  # class_probabilities is [T,] with integer entries as class labels
+            nb_classes = int(np.max(class_probabilities))
         segment_dims = range(nb_classes)
 
     if segment_names is None:
         segment_names = segment_dims
 
-    # cleanup
     segments = dict()
     if len(segment_dims):
-        for segment_dim, segment_name in zip(segment_dims, segment_names):
-            segments[segment_name] = dict()
-            segments[segment_name]['index'] = segment_dim
-            prob = class_probabilities[:, segment_dim]
-            segments[segment_name]['probabilities'] = prob
-            labels = labels_from_probabilities(prob, segment_thres)
-            if segment_fillgap is not None:
-                labels = segment_utils.fill_gaps(labels, segment_fillgap * samplerate)
-            if segment_minlen is not None:
-                labels = segment_utils.remove_short(labels, segment_minlen * samplerate)
-            segments[segment_name]['samples'] = labels
+            segments['samplerate_Hz'] = samplerate
+            segments['index'] = segment_dims
+            segments['names'] = segment_names
+            if not probs_are_labels:
+                prob = class_probabilities[:, segment_dims]
+                segments['probabilities'] = prob
+                labels = labels_from_probabilities(prob, segment_thres)
+            else:
+                segments['probabilities'] = None
+                labels = class_probabilities
 
-            segments[segment_name]['onsets_seconds'] = np.where(np.diff(np.insert(labels, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
-            segments[segment_name]['offsets_seconds'] = np.where(np.diff(np.append(labels, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
-            segments[segment_name]['durations_seconds'] = segments[segment_name]['offsets_seconds'] - segments[segment_name]['onsets_seconds']
+            # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
+            song_pred = (labels>0).astype(np.float)
+            if segment_fillgap is not None:
+                song_pred = segment_utils.fill_gaps(song_pred, segment_fillgap * samplerate)
+            if segment_minlen is not None:
+                song_pred = segment_utils.remove_short(song_pred, segment_minlen * samplerate)
+
+            # detect syllable on- and offsets
+            # pre- and post-pend 0 so we detect on and offsets at boundaries
+            segments['onsets_seconds'] = np.where(np.diff(np.insert(song_pred, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
+            segments['offsets_seconds'] = np.where(np.diff(np.append(song_pred, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
+            segments['durations_seconds'] = segments['offsets_seconds'] - segments['onsets_seconds']
+
+            if segment_labels_by_majority:
+                # if not provided, use use on/offsets from smoothed labels
+                if segment_ref_onsets is None:
+                    segment_ref_onsets = segments['onsets_seconds']
+                if segment_ref_offsets is None:
+                    segment_ref_offsets = segments['offsets_seconds']
+
+                # majority vote uses un-smoothed labels
+                sequence, labels = segment_utils.label_syllables_by_majority(labels,
+                                                                             segment_ref_onsets,
+                                                                             segment_ref_offsets,
+                                                                             samplerate)
+                segments['sequence'] = sequence  # syllable-type for each syllable as int
+            else:
+                segments['sequence'] = None
+            segments['samples'] = labels
     return segments
 
 
@@ -145,6 +191,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
     if len(event_dims):
         for event_dim, event_name in zip(event_dims, event_names):
             events[event_name] = dict()
+            events[event_name]['samplerate_Hz'] = samplerate
             events[event_name]['index'] = event_dim
 
             events[event_name]['seconds'], events[event_name]['probabilities'] = event_utils.detect_events(
@@ -160,13 +207,40 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
 
     return events
 
+def predict_song(class_probabilities: np.ndarray,  params: dict = None,
+                 event_thres: float = 0.5, event_dist: float = 0.01,
+                 event_dist_min: float = 0, event_dist_max: float = None,
+                 segment_ref_onsets: Optional[List[float]] = None,
+                 segment_ref_offsets: Optional[List[float]] = None,
+                 segment_thres: float = 0.5, segment_minlen: float = None,
+                 segment_fillgap: float = None):
+
+    samplerate = params['samplerate_x_Hz']
+    events_offset = 0
+
+    segment_dims = np.where([val == 'segment' for val in params['class_types']])[0]
+    segment_names = [params['class_names'][segment_dim] for segment_dim in segment_dims]
+    segments = predict_segments(class_probabilities, samplerate,
+                                segment_dims, segment_names,
+                                segment_ref_onsets, segment_ref_offsets,
+                                segment_thres, segment_minlen, segment_fillgap)
+
+    event_dims = np.where([val == 'event' for val in params['class_types']])[0]
+    event_names = [params['class_names'][event_dim] for event_dim in event_dims]
+    events = predict_events(class_probabilities, samplerate,
+                            event_dims, event_names,
+                            event_thres, events_offset, event_dist,
+                            event_dist_min, event_dist_max)
+    return events, segments
+
 
 def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch_size: int = None,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
             event_dist_min: float = 0, event_dist_max: float = None,
             segment_thres: float = 0.5, segment_minlen: float = None,
-            segment_fillgap: float = None):
+            segment_fillgap: float = None,
+            prepend_padding: bool = True):
     """[summary]
 
     Usage:
@@ -221,35 +295,17 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch
         assert isinstance(model, models.keras.models.Model)
         assert isinstance(params, dict)
 
-    samplerate = params['samplerate_x_Hz']
-
-    # if model.input_shape[2:] != x.shape[1:]:
-    #     raise ValueError(f'Input x has wrong shape - expected [samples, {model.input_shape[2:]}], got [samples, {x.shape[1:]}]')
-
     if batch_size is not None:
         params['batch_size'] = batch_size
 
-    events_offset = params['data_padding'] / samplerate
+    class_probabilities = predict_probabililties(x, model, params, verbose, prepend_padding)
 
-    class_probabilities = predict_probabililties(x, model, params, verbose)
-
-    segment_dims = np.where([val == 'segment' for val in params['class_types']])[0]
-    segment_names = [params['class_names'][segment_dim] for segment_dim in segment_dims]
-    segments = predict_segments(class_probabilities, samplerate,
-                                segment_dims, segment_names,
-                                segment_thres, segment_minlen, segment_fillgap)
-    segments['samplerate_Hz'] = samplerate
-
-
-    event_dims = np.where([val == 'event' for val in params['class_types']])[0]
-    event_names = [params['class_names'][event_dim] for event_dim in event_dims]
-    events = predict_events(class_probabilities, samplerate,
-                            event_dims, event_names,
-                            event_thres, events_offset, event_dist,
-                            event_dist_min, event_dist_max)
-
-
-    events['samplerate_Hz'] = samplerate
+    events, segments = predict_song(class_probabilities=class_probabilities, params=params,
+                                    event_thres=event_thres, event_dist=event_dist,
+                                    event_dist_min=event_dist_min, event_dist_max=event_dist_max,
+                                    segment_ref_onsets=None, segment_ref_offsets=None,
+                                    segment_thres=segment_thres, segment_minlen=segment_minlen,
+                                    segment_fillgap=segment_fillgap)
 
     return events, segments, class_probabilities
 
@@ -260,9 +316,9 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
          event_dist_min: float = 0, event_dist_max: float = None,
          segment_thres: float = 0.5, segment_minlen: float = None,
          segment_fillgap: float = None):
-    """[summary]
+    """Predict song labels in a wav file.
 
-    Saves hdf5 file with keys: events, segments,class_probabilities
+    Saves hdf5 file with keys: events, segments, class_probabilities
 
     Args:
         recording_filename (str): path to the WAV file with the audio data.
