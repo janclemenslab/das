@@ -45,3 +45,9 @@ setup(name='deepss',
                                            'dss-predict=dss.predict:main']
                      }
      )
+
+print('IMPORTANT:')
+print('Tensorflow is required to run DeepSS but is not installed automatically,')
+print('to avoid interference with existing installations.')
+print('')
+print('Run `pip install tensorflow` to install tensorflow.')
