@@ -111,8 +111,6 @@ def train(load_name, *, data_dir: str = '../dat.song', save_dir: str = './',
     logging.info(model.summary())
     save_name = '{0}/{1}'.format(save_dir, time.strftime('%Y%m%d_%H%M%S'))
     utils.save_params(params, save_name)
-    utils.save_model_architecture(model, file_trunk=save_name, architecture_ext='_arch.yaml')
-
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
