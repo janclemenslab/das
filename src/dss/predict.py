@@ -12,7 +12,7 @@ from tensorflow.python.framework.ops import disable_eager_execution
 disable_eager_execution()
 
 
-def predict_probabililties(x, model, params, verbose=None):
+def predict_probabililties(x, model, params, verbose=None, prepend_padding: bool = True):
     """[summary]
 
     Args:
@@ -27,6 +27,10 @@ def predict_probabililties(x, model, params, verbose=None):
     pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
     y_pred = model.predict(pred_gen, verbose=verbose)  # run the network
     y_pred = data.unpack_batches(y_pred, pred_gen.data_padding)  # reshape from [batches, nb_hist, ...] to [time, ...]
+    if prepend_padding:   # to account for loss of samples at the first and last chunks
+        y_pred = np.pad(y_pred,
+                        pad_width=((params['data_padding'], params['data_padding']), (0,0)),
+                        mode='constant', constant_values=0)
     return y_pred
 
 
