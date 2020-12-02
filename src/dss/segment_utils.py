@@ -1,8 +1,10 @@
 """Segment (syllable) utilities."""
 import numpy as np
+import scipy.stats
+from typing import List, Tuple
 
 
-def fill_gaps(sine_pred, gap_dur=100):
+def fill_gaps(sine_pred: np.array, gap_dur: int = 100) -> np.array:
     onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
     offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
     if len(onsets) and len(offsets):
@@ -15,72 +17,36 @@ def fill_gaps(sine_pred, gap_dur=100):
     return sine_pred
 
 
-def remove_short(sine_pred, min_len=100):
+def remove_short(sine_pred: np.array, min_len: int = 100) -> np.array:
     # remove too short sine songs
-    onsets = np.where(np.diff(sine_pred.astype(np.int))==1)[0]
-    offsets = np.where(np.diff(sine_pred.astype(np.int))==-1)[0]
+    onsets = np.where(np.diff(sine_pred.astype(np.int)) == 1)[0]
+    offsets = np.where(np.diff(sine_pred.astype(np.int)) == -1)[0]
     if len(onsets) and len(offsets):
-        onsets = onsets[onsets<offsets[-1]]
-        offsets = offsets[offsets>onsets[0]]
+        onsets = onsets[onsets < offsets[-1]]
+        offsets = offsets[offsets > onsets[0]]
         durations = offsets - onsets
         for cnt, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
-            if duration<min_len:
-                sine_pred[onset:offset+1] = 0
+            if duration < min_len:
+                sine_pred[onset:offset + 1] = 0
     return sine_pred
 
 
-# def levenshtein(source, target):
-#     """Levenshstein (edit) distance
+def label_syllables_by_majority(labels: np.array,
+                                onsets_seconds: List[float], offsets_seconds: List[float],
+                                samplerate: float) -> Tuple[np.array, np.array]:
+    syllables = []
+    labels_clean = np.zeros_like(labels, dtype=np.int)
 
-#        Corresponds to the number of edits (deletions, insertions, or substitutions)
-#        required to convert source string into target string.
+    for onset_seconds, offset_seconds in zip(onsets_seconds, offsets_seconds):
+        onset_sample = int(onset_seconds * samplerate)
+        offset_sample = int(offset_seconds * samplerate)
 
-#     Args:
-#         source (str): in this context, predicted labels for songbird syllables
-#         target (str): in this context, ground truth labels for songbird syllables
+        syllables.append(int(scipy.stats.mode(labels[onset_sample:offset_sample])[0]))
+        labels_clean[onset_sample:offset_sample] = syllables[-1]
 
-#     Returns:
-#         [type]: Levenshtein distance
+    syllables = np.array(syllables)
 
-#     code copied from from https://github.com/NickleDave/vak/blob/master/src/vak/metrics.py
-#     see from https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#Python
-#     """
-
-#     if len(source) < len(target):
-#         return levenshtein(target, source)
-
-#     # So now we have len(source) >= len(target).
-#     if len(target) == 0:
-#         return len(source)
-
-#     # We call tuple() to force strings to be used as sequences
-#     # ('c', 'a', 't', 's') - numpy uses them as values by default.
-#     source = np.array(tuple(source))
-#     target = np.array(tuple(target))
-
-#     # We use a dynamic programming algorithm, but with the
-#     # added optimization that we only need the last two rows
-#     # of the matrix.
-#     previous_row = np.arange(target.size + 1)
-#     for s in source:
-#         # Insertion (target grows longer than source):
-#         current_row = previous_row + 1
-
-#         # Substitution or matching:
-#         # Target and source items are aligned, and either
-#         # are different (cost of 1), or are the same (cost of 0).
-#         current_row[1:] = np.minimum(
-#                 current_row[1:],
-#                 np.add(previous_row[:-1], target != s))
-
-#         # Deletion (target grows shorter than source):
-#         current_row[1:] = np.minimum(
-#                 current_row[1:],
-#                 current_row[0:-1] + 1)
-
-#         previous_row = current_row
-
-#     return previous_row[-1]
+    return syllables, labels_clean
 
 
 def levenshtein(seq1, seq2):
