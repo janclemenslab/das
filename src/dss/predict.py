@@ -80,7 +80,9 @@ def predict_segments(class_probabilities: np.array,
                                       or [T,] with integer entries as class labels
         samplerate (float, optional): Hz. Defaults to 1.0.
         segment_dims (Optional[List[int]], optional): set of indices into class_probabilities corresponding
-                                                      to segment-like song types. Defaults to None.
+                                                      to segment-like song types.
+                                                      Needs to include the noise dim.
+                                                      Defaults to None.
         segment_names (Optional[List[str]], optional): [description]. Defaults to None.
         segment_ref_onsets (Optional[List[float]], optional):
                             Use onsets as ref for estimating labels.
@@ -135,14 +137,18 @@ def predict_segments(class_probabilities: np.array,
             segments['offsets_seconds'] = np.where(np.diff(np.append(song_pred, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
             segments['durations_seconds'] = segments['offsets_seconds'] - segments['onsets_seconds']
 
-            if segment_labels_by_majority:
-                # if not provided, use use on/offsets from smoothed labels
+            if len(segment_dims) == 2:  # there is just a single segment type plus noise - in that case we use the gap-filled, short-deleted pred
+                labels = song_pred
+                segments['sequence'] = [str(segment_names[1])] * len(segments['offsets_seconds'])   # syllable-type for each syllable as int
+            elif len(segment_dims) > 2 and segment_labels_by_majority:  # if >1 segment type (plus noise) label sylls by majority vote on un-smoothed labels
+
+
+                # if no refs provided, use use on/offsets from smoothed labels
                 if segment_ref_onsets is None:
                     segment_ref_onsets = segments['onsets_seconds']
                 if segment_ref_offsets is None:
                     segment_ref_offsets = segments['offsets_seconds']
 
-                # majority vote uses un-smoothed labels
                 sequence, labels = segment_utils.label_syllables_by_majority(labels,
                                                                              segment_ref_onsets,
                                                                              segment_ref_offsets,
@@ -189,6 +195,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
 
     events = dict()
     if len(event_dims):
+        # TODO: merge all into a single dict with "sequence" as a list of event names?
         for event_dim, event_name in zip(event_dims, event_names):
             events[event_name] = dict()
             events[event_name]['samplerate_Hz'] = samplerate
