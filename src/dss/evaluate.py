@@ -6,6 +6,7 @@ from typing import Union, Dict
 from . import predict, data, utils, models
 from .event_utils import evaluate_eventtimes
 
+
 # to segment_utils
 def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: bool = False,
                       report_as_dict: bool = False, labels=None):
@@ -58,6 +59,8 @@ def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate
     return segment_onsets_report, segment_offsets_report, nearest_predicted_onsets, nearest_predicted_offsets
 
 
+
+# TODO: move to dss.segment_utils
 def segment_timing(labels, samplerate):
     """Get onset and offset time (in seconds) for each segment."""
     segment_onset_times = np.where(np.diff(labels) == 1)[0].astype(np.float) / samplerate  # explicit cast required?
@@ -66,10 +69,29 @@ def segment_timing(labels, samplerate):
 
 
 # def evaluate_probabilities(x, y, model, params, verbose=None):
-def evaluate_probabilities(x, y, model_savename: Union[str] = None, model: Union[models.keras.models.Model] = None, params: Union[Dict] = None, verbose: int = 1):
+def evaluate_probabilities(x, y, model: Union[models.keras.models.Model] = None, params: Union[Dict] = None, model_savename: Union[str] = None, verbose: int = 1):
+    """[summary]
 
-    if model is None or params is None and model_savename is not None:
-        model, params = utils.load_model_and_params(model_savename)
+    evaluate_probabilities(x, y, model=keras_model, params=params_dict)
+    evaluate_probabilities(x, y, model_savename=save_string) -> will load model and params
+
+    Args:
+        x ([type]): [description]
+        y ([type]): [description]
+        model (Union[models.keras.models.Model], optional): [description]. Defaults to None.
+        params (Union[Dict], optional): [description]. Defaults to None.
+        model_savename (Union[str], optional): [description]. Defaults to None.
+        verbose (int, optional): [description]. Defaults to 1.
+
+    Returns:
+        [type]: [description]
+    """
+
+    if model is None or params is None:
+        if model_savename is not None:
+            model, params = utils.load_model_and_params(model_savename)
+        else:
+            raise ValueError(f'Required: Either a model and params OR a model_savename so we can load model and params. But model={model}, params={params}, model_savename={model_savename}.')
 
     y_pred = predict.predict_probabililties(x, model, params, verbose)
 
