@@ -37,34 +37,9 @@ class LossHistory(keras.callbacks.Callback):
         logging.info('trained ended')
 
 
-def save_model(model, file_trunk, weights_ext='_weights.h5', architecture_ext='_arch.yaml'):
-    """Save model weights and architecture to separate files.
-
-    Args:
-        model ([type]): [description]
-        file_trunk ([type]): [description]
-        weights_ext (str, optional): [description]. Defaults to '_weights.h5'.
-        architecture_ext (str, optional): [description]. Defaults to '_arch.yaml'.
-    """
-    save_model_architecture(model, file_trunk, architecture_ext)
-    model.save_weights(file_trunk + weights_ext)
-
-
-def save_model_architecture(model, file_trunk, architecture_ext='_arch.yaml'):
-    """Save model architecture as yaml to separate files.
-
-    Args:
-        model ([type]): [description]
-        file_trunk ([type]): [description]
-        architecture_ext (str, optional): [description]. Defaults to '_arch.yaml'.
-    """
-    with open(file_trunk + architecture_ext, 'w') as f:
-        f.write(model.to_yaml())
-
-
-def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=False,
+def load_model(file_trunk, model_dict, model_ext='_model.h5', from_epoch=False,
                params_ext='_params.yaml', compile=True):
-    """Load model.
+    """Load model with weights.
 
     First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
     Second, try to init model from parameters and then add weights...
@@ -72,42 +47,32 @@ def load_model(file_trunk, model_dict, weights_ext='_weights.h5', from_epoch=Fal
     Args:
         file_trunk ([type]): [description]
         model_dict ([type]): [description]
-        weights_ext (str, optional): [description]. Defaults to '_weights.h5'.
-        from_epoch ([type], optional): [description]. Defaults to None.
+        model_ext (str, optional): [description]. Defaults to '_weights.h5'.
+        from_epoch ([type], optional): Deprecated [description]. Defaults to None.
         params_ext (str, optional): [description]. Defaults to '_params.yaml'.
         compile (bool, optional): [description]. Defaults to True.
 
     Returns:
         [type]: [description]
     """
-
-    if from_epoch:
-        file_trunk_params = file_trunk[:-4]  # remove epoch number from params file name
-        weights_ext = file_trunk[-4:] + '_weights.h5'  # add epoch number to weight file to load epoch specific weights
-        model_ext = '_weights.h5'
-    else:
-        file_trunk_params = file_trunk  # remove epoch number from params file name
-        weights_ext = '_model.h5'  # add epoch number to weight file to load epoch specific weights
-        model_ext = '_model.h5'
-
     try:
         model = keras.models.load_model(file_trunk + model_ext,
                                         custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
                                                         'TCN': tcn.tcn_new.TCN})
     except (SystemError, ValueError):
-        logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights into it.', exc_info=False)
+        logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.', exc_info=False)
         logging.debug('', exc_info=True)
-        model = load_model_from_params(file_trunk_params, model_dict, weights_ext, compile=compile)
+        model = load_model_from_params(file_trunk, model_dict, weights_ext=model_ext, compile=compile)
     return model
 
 
-def load_model_from_params(file_trunk, model_dict, weights_ext='_weights.h5', params_ext='_params.yaml', compile=True):
-    """Load model weights and architecture from separate files.
+def load_model_from_params(file_trunk, model_dict, weights_ext='_model.h5', params_ext='_params.yaml', compile=True):
+    """Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.
 
     Args:
         file_trunk ([type]): [description]
         models_dict ([type]): [description]
-        weights_ext (str, optional): [description]. Defaults to '_weights.h5'.
+        weights_ext (str, optional): [description]. Defaults to '_model.h5' (use weights from model file).
         params_ext (str, optional): [description]. Defaults to '_params.yaml'.
         compile (bool, optional): [description]. Defaults to True.
 
