@@ -130,7 +130,8 @@ def train(*, data_dir: str, y_suffix: str = '',
 
     if save_prefix is None:
         save_prefix = ''
-    else:
+
+    if len(save_prefix):
         save_prefix = save_prefix + '_'
     params = locals()
 
