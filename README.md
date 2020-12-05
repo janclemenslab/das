@@ -5,30 +5,45 @@
 DeepSS is supervised. See [dss-unsupervised](https://github.com/janclemenslab/dss-unsupervised) for unsupervised tools to augment DeepSS.
 
 ## Installation
+### Pre-requisites
 
+
+__Anaconda__: _DeepSS_ is installed using an anaconda environment. For that, first install the [anaconda python distribution](https://docs.anaconda.com/anaconda/install/) (or [miniconda](https://docs.conda.io/en/latest/miniconda.html)).
+
+<!-- ```shell
+curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+sh miniconda.sh -b -p $HOME/miniconda
+export PATH="$HOME/miniconda/bin:$PATH"
+``` -->
+
+__CUDA libraries for using the GPU__: While _DeepSS_ works well for annotating song using CPUs, GPUs will greatly improve annotation speed and are in particular recommended for training a _DeepSS_ network. The network is implement in the deep-learning framework Tensorflow. To make sure that Tensorflow can utilize the GPU, the required CUDA libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details.
+
+__Libsoundfile on linux__: The graphical user interface (GUI) reads audio data using [soundfile](http://pysoundfile.readthedocs.io/), which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Note that _DeepSS_ will work w/o `libsndfile` but will only be able to load more unusual audio file formats.
+
+### Install _DeepSS_ with or without the GUI
+Create an anaconda environment called `deepss` that contains all the required packages, including the GUI:
 ```shell
-conda create -n dss python=3.7
-conda activate dss
-conda install zarr
-conda install tensorflow  # add -gpu to ensure GPU support
-pip install deepss
+conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_gui.yml -n dss
 ```
-DeepSS has been tested with python 3.7 and 3.8 and tensorflow versions 2.1, 2.2, and 2.3.
 
-Tensorflow is *not* installed automatically to avoid interference with existing installations and to provide more control over versions. We recommend installation via `conda install`, but `pip install` should also work and typically installs a newer version. The manual install of zarr is required in some windows systems since the install via pip can be wonky.
+If you do not need require the graphical user interface `dss-gui` (for instance, for training _DeepSS_ on a server), install the plain version:
+```shell
+conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_plain.yml -n dss
+```
 
+## Usage
+To start the graphical user interface:
+```shell
+conda activate dss
+dss gui
+```
 
-## Tutorials
-There are four tutorial notebooks that illustrate all steps required for going from annotated data via training and evaluating a network to segmenting new recordings:
+The documentation at [https://janclemenslab.org/deepss/] provides for information on the usage of _DeepSS_:
 
-- [Prepare training data](tutorials/1_prepare_data.ipynb)
-- [Train the network](tutorials/2_training.ipynb)
-- Evaluate the network and fine tune inference parameters for predicting [events like Drosophila song pulses](tutorials/3a_evaluate_events.ipynb) or [segments like Drosophila sine song or bird song syllables](tutorials/3b_evaluate_segments.ipynb)
-- [Inference on new data](tutorials/4_inference.ipynb)
-- [Realtime inference](tutorials/5_realtime.ipynb)
+- A [quick start tutorial](https://janclemenslab.org/deepss/tutorials_gui/quick_start.html) that walks through all steps from manually annotating song, over training a network, to generating new annotations.
+- How to use [graphical user interface](https://janclemenslab.org/deepss/tutorials_gui).
+- How to use _DeepSS_ from [the terminal or python scripts](https://janclemenslab.org/deepss/tutorials/tutorials.html).
 
-For the tutorials to work, you first need to download some data and example models (266MB) from [here](https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0) and put the four folders in the same folder as the tutorials notebooks. The tutorial notebooks also have extra dependencies:
-`conda install jupyterlab ipython tqdm ipywidgets -y`
 
 
 ## Acknowledgements
@@ -36,6 +51,5 @@ The following packages were modified and integrated into dss:
 
 - Keras implementation of TCN models modified from [keras-tcn](https://github.com/philipperemy/keras-tcn) (in `dss.tcn`)
 - Trainable STFT layer implementation modified from [kapre](https://github.com/keunwoochoi/kapre) (in `dss.kapre`)
-- FCN model code modified from [LEAP](https://github.com/talmo/leap)
 
 See the sub-module directories for the original READMEs.
