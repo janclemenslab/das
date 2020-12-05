@@ -41,9 +41,7 @@ setup(name='deepss',
                         'matplotlib_scalebar', 'peakutils'],
       include_package_data=True,
       zip_safe=False,
-      entry_points = { 'console_scripts': ['dss-train=dss.train:main',
-                                           'dss-predict=dss.predict:main']
-                     }
+      entry_points = {'console_scripts': ['dss=dss.cli:main']}
      )
 
 print('IMPORTANT:')

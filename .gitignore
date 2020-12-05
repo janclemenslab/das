@@ -123,6 +123,7 @@ fig*
 !/env/
 !/docs/
 !/*.toml
+!/.github
 src/*.egg-info/
 src/deepsongsegmenter.egg-info/PKG-INFO
 src/deepsongsegmenter.egg-info/SOURCES.txt

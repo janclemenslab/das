@@ -75,6 +75,8 @@ def predict_segments(class_probabilities: np.array,
                      segment_labels_by_majority: bool = True) -> Dict:
     """[summary]
 
+    TODO: document different approaches for single-type vs. multi-type segment detection
+
     Args:
         class_probabilities ([type]): [T, nb_classes] with probabilities for each class and sample
                                       or [T,] with integer entries as class labels
@@ -370,12 +372,3 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     logging.info(f"   Saving results to {save_filename}.")
     flammkuchen.save(save_filename, d)
     logging.info(f"Done.")
-
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    defopt.run(cli_predict)
-
-
-if __name__ == '__main__':
-    main()

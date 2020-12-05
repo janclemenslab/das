@@ -16,6 +16,4 @@ requires = ['numpy', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
 description-file = "README.md"
 
 [tool.flit.scripts]
-dss-train = "dss.train:main"
-dss-predict = "dss.predict:main"
-
+dss = "dss.cli:main"

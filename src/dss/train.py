@@ -263,12 +263,3 @@ def train(*, data_dir: str, y_suffix: str = '',
             }
 
         fl.save(save_filename, d)
-
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    defopt.run(train)
-
-
-if __name__ == '__main__':
-    main()
