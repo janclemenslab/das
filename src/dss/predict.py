@@ -127,7 +127,7 @@ def predict_segments(class_probabilities: np.array,
                 labels = class_probabilities
 
             # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
-            song_pred = (labels>0).astype(np.float)
+            song_pred = (labels > 0).astype(np.float)
             if segment_fillgap is not None:
                 song_pred = segment_utils.fill_gaps(song_pred, segment_fillgap * samplerate)
             if segment_minlen is not None:
@@ -216,7 +216,8 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
 
     return events
 
-def predict_song(class_probabilities: np.ndarray,  params: dict = None,
+
+def predict_song(class_probabilities: np.ndarray, params: dict = None,
                  event_thres: float = 0.5, event_dist: float = 0.01,
                  event_dist_min: float = 0, event_dist_max: float = None,
                  segment_ref_onsets: Optional[List[float]] = None,
@@ -243,7 +244,7 @@ def predict_song(class_probabilities: np.ndarray,  params: dict = None,
     return events, segments
 
 
-def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch_size: int = None,
+def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_size: int = None,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
             event_dist_min: float = 0, event_dist_max: float = None,
@@ -320,11 +321,11 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = None, batch
 
 
 def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: str = None,
-         verbose: int = 1, batch_size: int = None,
-         event_thres: float = 0.5, event_dist: float = 0.01,
-         event_dist_min: float = 0, event_dist_max: float = None,
-         segment_thres: float = 0.5, segment_minlen: float = None,
-         segment_fillgap: float = None):
+                verbose: int = 1, batch_size: int = None,
+                event_thres: float = 0.5, event_dist: float = 0.01,
+                event_dist_min: float = 0, event_dist_max: float = None,
+                segment_thres: float = 0.5, segment_minlen: float = None,
+                segment_fillgap: float = None):
     """Predict song labels in a wav file.
 
     Saves hdf5 file with keys: events, segments, class_probabilities
@@ -363,8 +364,8 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
                                                     segment_thres, segment_minlen, segment_fillgap)
 
     d = {'events': events,
-        'segments': segments,
-        'class_probabilities': class_probabilities}
+         'segments': segments,
+         'class_probabilities': class_probabilities}
 
     if save_filename is None:
         save_filename = os.path.splitext(recording_filename)[0] + '_dss.h5'

@@ -239,7 +239,7 @@ def train(*, data_dir: str, y_suffix: str = '',
 
         logging.info('predicting')
         x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
-                                                                model=model, params=params)
+                                                                 model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
