@@ -99,7 +99,8 @@ def evaluate_probabilities(x, y, model: Union[models.keras.models.Model] = None,
         else:
             raise ValueError(f'Required: Either a model and params OR a model_savename so we can load model and params. But model={model}, params={params}, model_savename={model_savename}.')
 
-    y_pred = predict.predict_probabililties(x, model, params, verbose)
+    # do not prepend padding since we create y from the generator
+    y_pred = predict.predict_probabililties(x, model, params, verbose, prepend_padding=False)
 
     eval_gen = data.AudioSequence(x, y, shuffle=False, **params)
     x, y = data.get_data_from_gen(eval_gen)
