@@ -25,6 +25,12 @@ def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: 
         conf_mat
         report
     """
+
+    # ensure labels_test and labels_pred have same length
+    min_len = min(len(labels_test), len(labels_pred))
+    labels_test = labels_test[:min_len]
+    labels_pred = labels_pred[:min_len]
+
     conf_mat = sklearn.metrics.confusion_matrix(labels_test, labels_pred)
     if confmat_as_pandas:
         conf_mat = pd.DataFrame(data=conf_mat,
