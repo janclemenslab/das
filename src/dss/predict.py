@@ -143,8 +143,6 @@ def predict_segments(class_probabilities: np.array,
                 labels = song_pred
                 segments['sequence'] = [str(segment_names[1])] * len(segments['offsets_seconds'])   # syllable-type for each syllable as int
             elif len(segment_dims) > 2 and segment_labels_by_majority:  # if >1 segment type (plus noise) label sylls by majority vote on un-smoothed labels
-
-
                 # if no refs provided, use use on/offsets from smoothed labels
                 if segment_ref_onsets is None:
                     segment_ref_onsets = segments['onsets_seconds']
@@ -183,7 +181,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
         ValueError: [description]
 
     Returns:
-        dict['eventnames']['seconds'/'probabilities'/'index']
+        dict[index/name/sequence/seconds/probabilities]
     """
     if event_dims is None:
         nb_classes = class_probabilities.shape[1]
@@ -197,22 +195,26 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
 
     events = dict()
     if len(event_dims):
-        # TODO: merge all into a single dict with "sequence" as a list of event names?
-        for event_dim, event_name in zip(event_dims, event_names):
-            events[event_name] = dict()
-            events[event_name]['samplerate_Hz'] = samplerate
-            events[event_name]['index'] = event_dim
+        events['samplerate_Hz'] = samplerate
+        events['index'] = event_dims
+        events['names'] = event_names
 
-            events[event_name]['seconds'], events[event_name]['probabilities'] = event_utils.detect_events(
+        events['seconds'] = []
+        events['probabilities'] = []
+        events['sequence'] = []
+
+        for event_dim, event_name in zip(event_dims, event_names):
+            event_indices, event_probabilities = event_utils.detect_events(
                                                                           class_probabilities[:, event_dim],
                                                                           thres=event_thres, min_dist=event_dist * samplerate)
-            events[event_name]['seconds'] = events[event_name]['seconds'].astype(np.float) / samplerate
-            events[event_name]['seconds'] += events_offset
+            events_seconds = event_indices.astype(np.float) / samplerate
+            events_seconds += events_offset
 
-            good_event_indices = event_utils.event_interval_filter(events[event_name]['seconds'],
+            good_event_indices = event_utils.event_interval_filter(events['seconds'],
                                                                    event_dist_min, event_dist_max)
-            events[event_name]['seconds'] = events[event_name]['seconds'][good_event_indices]
-            events[event_name]['probabilities'] = events[event_name]['probabilities'][good_event_indices]
+            events['seconds'].extend(events_seconds[good_event_indices])
+            events['probabilities'].extend(event_probabilities[good_event_indices])
+            events['sequence'].extend([event_name for _ in events['seconds']])
 
     return events
 
