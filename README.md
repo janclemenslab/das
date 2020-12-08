@@ -12,6 +12,8 @@ If you have questions, feedback, or find bugs please raise in [issue](https://gi
 
 __Anaconda__: _DeepSS_ is installed using an anaconda environment. For that, first install the [anaconda python distribution](https://docs.anaconda.com/anaconda/install/) (or [miniconda](https://docs.conda.io/en/latest/miniconda.html)).
 
+If you have conda already installed, make sure you have conda v4.8.4+. If not, update from an older version with `conda update conda`.
+
 <!-- ```shell
 curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
 sh miniconda.sh -b -p $HOME/miniconda
