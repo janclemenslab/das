@@ -210,7 +210,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
             events_seconds = event_indices.astype(np.float) / samplerate
             events_seconds += events_offset
 
-            good_event_indices = event_utils.event_interval_filter(events['seconds'],
+            good_event_indices = event_utils.event_interval_filter(events_seconds,
                                                                    event_dist_min, event_dist_max)
             events['seconds'].extend(events_seconds[good_event_indices])
             events['probabilities'].extend(event_probabilities[good_event_indices])
