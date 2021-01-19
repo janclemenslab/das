@@ -207,6 +207,8 @@ def train(*, data_dir: str, y_suffix: str = '',
     logging.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, time.strftime('%Y%m%d_%H%M%S'))
+    logging.info(f'Will save to {save_name}.')
+
     utils.save_params(params, save_name)
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
