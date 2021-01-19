@@ -9,6 +9,7 @@ dependencies:
   - umap-learn
   - pip
   - git
+  - h5py<3
   - pip:
     - tensorflow>=2.3
     - xarray-behave[gui]
