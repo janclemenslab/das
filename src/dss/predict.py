@@ -163,7 +163,7 @@ def predict_segments(class_probabilities: np.array,
 def predict_events(class_probabilities, samplerate: float = 1.0,
                    event_dims: int = None, event_names: List[str] = None,
                    event_thres: float = 0.5, events_offset: float = 0, event_dist: float=100,
-                   event_dist_min: float = 0, event_dist_max: float = None):
+                   event_dist_min: float = 0, event_dist_max: float = np.inf):
     """[summary]
 
     Args:
@@ -181,7 +181,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
         ValueError: [description]
 
     Returns:
-        dict[index/name/sequence/seconds/probabilities]
+        dict[index/names/sequence/seconds/probabilities]
     """
     if event_dims is None:
         nb_classes = class_probabilities.shape[1]
@@ -191,7 +191,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
         event_names = event_dims
 
     if event_dist_max is None:
-        event_dist_max = class_probabilities.shape[0] + 1
+        event_dist_max = np.inf #class_probabilities.shape[0] + 1
 
     events = dict()
     if len(event_dims):
@@ -212,6 +212,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
 
             good_event_indices = event_utils.event_interval_filter(events_seconds,
                                                                    event_dist_min, event_dist_max)
+            # good_event_indices = np.arange(len(events_seconds))
             events['seconds'].extend(events_seconds[good_event_indices])
             events['probabilities'].extend(event_probabilities[good_event_indices])
             events['sequence'].extend([event_name for _ in events['seconds']])
@@ -288,8 +289,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
                                 Defaults to None (no upper limit).
 
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
-        segment_minlen (float): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
-        segment_fillgap (float): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+        segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.
+        segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
 
 
     Raises:
@@ -298,7 +299,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
     Returns:
         events: [description]
         segments: [description]
-        class_probabilities: [description]
+        class_probabilities (np.array): [T, nb_classes]
+        class_names (List[str]): [nb_classes]
     """
 
     if model_save_name is not None:
@@ -319,7 +321,7 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
                                     segment_thres=segment_thres, segment_minlen=segment_minlen,
                                     segment_fillgap=segment_fillgap)
 
-    return events, segments, class_probabilities
+    return events, segments, class_probabilities, params['class_names']
 
 
 def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: str = None,
@@ -360,14 +362,15 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     x = np.atleast_2d(x).T
 
     logging.info(f"   Annotating using model at {model_save_name}.")
-    events, segments, class_probabilities = predict(x, model_save_name, verbose, batch_size,
+    events, segments, class_probabilities, class_names = predict(x, model_save_name, verbose, batch_size,
                                                     None, None,
                                                     event_thres, event_dist, event_dist_min, event_dist_max,
                                                     segment_thres, segment_minlen, segment_fillgap)
 
     d = {'events': events,
          'segments': segments,
-         'class_probabilities': class_probabilities}
+         'class_probabilities': class_probabilities,
+         'class_names': class_names}
 
     if save_filename is None:
         save_filename = os.path.splitext(recording_filename)[0] + '_dss.h5'

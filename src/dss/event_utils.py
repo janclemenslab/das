@@ -103,6 +103,8 @@ def event_interval_filter(events: Iterable, event_dist_min: float = 0, event_dis
 
     ipi_too_long = np.logical_and(ipi_pre>event_dist_max, ipi_post>event_dist_max)
     ipi_too_short = np.logical_or(ipi_pre<event_dist_min, ipi_post<event_dist_min)
+    ipi_too_short[0] = False  # otherwise first event will always be removed
+
     good_event_indices = ~np.logical_or(ipi_too_long, ipi_too_short)
 
     return good_event_indices
