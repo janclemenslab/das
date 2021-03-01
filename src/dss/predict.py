@@ -324,12 +324,12 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
     return events, segments, class_probabilities, params['class_names']
 
 
-def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: str = None,
-                verbose: int = 1, batch_size: int = None,
+def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: Optional[str] = None,
+                verbose: int = 1, batch_size: Optional[int] = None,
                 event_thres: float = 0.5, event_dist: float = 0.01,
-                event_dist_min: float = 0, event_dist_max: float = None,
-                segment_thres: float = 0.5, segment_minlen: float = None,
-                segment_fillgap: float = None):
+                event_dist_min: float = 0, event_dist_max: Optional[float] = None,
+                segment_thres: float = 0.5, segment_minlen: Optional[float] = None,
+                segment_fillgap: Optional[float] = None):
     """Predict song labels in a wav file.
 
     Saves hdf5 file with keys: events, segments, class_probabilities
@@ -337,10 +337,10 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     Args:
         recording_filename (str): path to the WAV file with the audio data.
         model_save_name (str): path with the trunk name of the model.
-        save_filename (str): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_dss.h5'.
+        save_filename (Optional[str]): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_dss.h5'.
 
         verbose (int): display progress bar during prediction. Defaults to 1.
-        batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).
+        batch_size (Optional[int]): number of chunks processed at once . Defaults to None (the default used during training).
                          Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
 
         event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
@@ -349,12 +349,12 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
                             Defaults to 0.01.
         event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
                                 Defaults to 0.
-        event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.
+        event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.
                                 Defaults to None (no upper limit).
 
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
-        segment_minlen (float): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
-        segment_fillgap (float): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
+        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
     """
 
     logging.info(f"   Loading data from {recording_filename}.")

@@ -7,7 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 import defopt
 import os
 from glob import glob
-from typing import List
+from typing import List, Optional
 from . import data, models, utils, predict, io, evaluate  #, timeseries
 
 try:
@@ -18,7 +18,7 @@ except Exception as e:
 
 
 def train(*, data_dir: str, y_suffix: str = '',
-          save_dir: str = './', save_prefix: str = None,
+          save_dir: str = './', save_prefix: Optional[str] = None,
           model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
           nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
           ignore_boundaries: bool = True, batch_norm: bool = True,
@@ -26,8 +26,8 @@ def train(*, data_dir: str, y_suffix: str = '',
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
           verbose: int = 2, batch_size: int = 32,
           nb_epoch: int = 400,
-          learning_rate: float = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
-          fraction_data: float = None, seed: int = None, batch_level_subsampling: bool = False,
+          learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
+          fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, log_messages: bool = False,
           nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = ''):
     """Train a DeepSS network.
@@ -42,7 +42,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         save_dir (str): Directory to save training outputs.
                         The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.
                         Defaults to current directory ('./').
-        save_prefix (str): Prepend to timestamp.
+        save_prefix (Optional[str]): Prepend to timestamp.
                            Name of files created will be SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
                            or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.
                            Defaults to '' (empty).
@@ -81,7 +81,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         nb_epoch (int): Maximal number of training epochs.
                         Training will stop early if validation loss did not decrease in the last 20 epochs.
                         Defaults to 400.
-        learning_rate (float): Learning rate of the model. Defaults should work in most cases.
+        learning_rate (Optional[float]): Learning rate of the model. Defaults should work in most cases.
                                Values typically range between 0.1 and 0.00001.
                                If None, uses per model defaults: "tcn" 0.0001, "tcn_stft" 0.0005).
                                Defaults to None.
@@ -89,9 +89,9 @@ def train(*, data_dir: str, y_suffix: str = '',
                           Defaults to False.
         reduce_lr_patience (int): Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.
                                   Defaults to 5.
-        fraction_data (float): Fraction of training and validation to use for training.
+        fraction_data (Optional[float]): Fraction of training and validation to use for training.
                                Defaults to 1.0.
-        seed (int): Random seed to reproducible select fractions of the data.
+        seed (Optional[int]): Random seed to reproducible select fractions of the data.
                     Defaults to None (no seed).
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
                                         If False, select a continuous chunk of the recording.
