@@ -6,6 +6,10 @@ _DeepSS_ is a method for automatically annotating song from raw audio recordings
 
 If you have questions, feedback, or find bugs please raise in [issue](https://github.com/janclemenslab/deepss/issues).
 
+Please cite DeepSS as:
+
+Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021). _Fast and accurate annotation of acoustic signals with deep neural networks_, bioRxiv, [https://doi.org/10.1101/2021.03.26.436927]()
+
 ## Installation
 ### Pre-requisites
 
