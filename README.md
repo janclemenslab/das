@@ -27,12 +27,12 @@ __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data u
 ### Install _DeepSS_ with or without the GUI
 Create an anaconda environment called `deepss` that contains all the required packages, including the GUI:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_gui.yml -n dss
+conda env create -f https://raw.githubusercontent.com/janclemenslab/deepss/master/env/deepss_gui.yml -n dss
 ```
 
 If you do not need require the graphical user interface `dss-gui` (for instance, for training _DeepSS_ on a server), install the plain version:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/deepsongsegmenter/master/env/deepss_plain.yml -n dss
+conda env create -f https://raw.githubusercontent.com/janclemenslab/deepss/master/env/deepss_plain.yml -n dss
 ```
 
 ## Usage
