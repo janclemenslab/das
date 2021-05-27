@@ -4,6 +4,15 @@ on:
   push:
     paths-ignore: docs/**
 
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'manual run'  
+        
 jobs:
   build:
     name: test_cli (${{ matrix.python-version }}, ${{ matrix.os }})
