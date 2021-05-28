@@ -37,6 +37,11 @@ jobs:
 #           activate-environment: dss
 #           environment-file: env/deepss_gui.yml
 #           python-version: ${{ matrix.python-version }}
+
+      - name: Conda environment creation
+        run: |
+          conda env create -n dss -f env/deepss_gui.yml
+          source activate dss
       - name: install libsndfile
         if: runner.os == 'Linux'
 #         shell: bash -l {0}
