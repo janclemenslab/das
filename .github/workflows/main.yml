@@ -43,35 +43,32 @@ jobs:
       - name: Conda list
         run: conda list
       - name: Test with pytest
-#         if: runner.os == 'Linux'
+        if: runner.os != 'Linux'
         run: |
-          conda init
-          conda activate dss
+          source activate dss
           conda install pytest -n dss
+          conda install pytest -n base
           python -m pytest
-#          conda install pytest -n base
       - name: Test cli
-#         if: runner.os != 'Windows'
+        if: runner.os != 'Windows'
         run: |
-          conda init
-          conda activate dss
+          source activate dss
           python -m dss.cli train --help
           dss train --help
           dss predict --help
           dss gui --help
-
-#       - name: Test with pytest
-#         if: runner.os == 'Windows'
-#         run: |
-#           source activate dss
-#           conda install pytest -n dss
-#           conda install pytest -n base
-#           python -m pytest
-#       - name: Test cli
-#         if: runner.os == 'Linux'
-#         run: |
-#           source activate dss
-#           python -m dss.cli train --help
-#           dss train --help
-#           dss predict --help
-#           dss gui --help
+      - name: Test with pytest
+        if: runner.os == 'Windows'
+        run: |
+          C:\Miniconda\Scripts\activate dss
+          conda install pytest -n dss
+          conda install pytest -n base
+          python -m pytest
+      - name: Test cli
+        if: runner.os == 'Windows'
+        run: |
+          C:\Miniconda\Scripts\activate dss
+          python -m dss.cli train --help
+          dss train --help
+          dss predict --help
+          dss gui --help
