@@ -45,6 +45,7 @@ jobs:
       - name: Test with pytest
 #         if: runner.os == 'Linux'
         run: |
+          conda init
           conda activate dss
           conda install pytest -n dss
           python -m pytest
@@ -52,6 +53,7 @@ jobs:
       - name: Test cli
 #         if: runner.os != 'Windows'
         run: |
+          conda init
           conda activate dss
           python -m dss.cli train --help
           dss train --help
