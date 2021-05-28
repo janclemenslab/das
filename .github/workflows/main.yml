@@ -59,12 +59,12 @@ jobs:
           C:\Miniconda\condabin\conda.bat activate dss
           conda install pytest -n dss
           conda install pytest -n base
-          python -m pytest
+          C:\Miniconda\envs\dss\python -m pytest
       - name: Test cli (Windows)
         if: runner.os == 'Windows'
         run: |
           C:\Miniconda\condabin\conda.bat activate dss
-          python -m dss.cli train --help
+          C:\Miniconda\envs\dss\python -m dss.cli train --help
           dss train --help
           dss predict --help
           dss gui --help
