@@ -30,26 +30,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
           conda-channels: anaconda, conda-forge
           activate-conda: true
-      - run: conda --version
-      - run: which python
       - name: Conda environment creation
-        run: |
-          conda env create -n dss -f env/deepss_gui.yml
-      - name: install libsndfile
+        run: conda env create -n dss -f env/deepss_gui.yml
+      - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
-      - name: Conda info
-        run: conda info
-      - name: Conda list
-        run: conda list
-      - name: Test with pytest
-        if: runner.os != 'Linux'
+      - name: Test with pytest (Linux, Macos)
+        if: runner.os != 'Windows'
         run: |
           source activate dss
           conda install pytest -n dss
           conda install pytest -n base
           python -m pytest
-      - name: Test cli
+      - name: Test cli (Linux, Macos)
         if: runner.os != 'Windows'
         run: |
           source activate dss
@@ -57,14 +50,14 @@ jobs:
           dss train --help
           dss predict --help
           dss gui --help
-      - name: Test with pytest
+      - name: Test with pytest (Windows)
         if: runner.os == 'Windows'
         run: |
           C:\Miniconda\Scripts\activate dss
           conda install pytest -n dss
           conda install pytest -n base
           python -m pytest
-      - name: Test cli
+      - name: Test cli (Windows)
         if: runner.os == 'Windows'
         run: |
           C:\Miniconda\Scripts\activate dss
