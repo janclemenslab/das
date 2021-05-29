@@ -13,24 +13,41 @@ on:
         default: 'warning'
       tags:
         description: 'manual run'  
-        
+   
 jobs:
   build:
-    name: test_cli (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-        python-version: ["3.6", "3.7", "3.8"]
+        os: [windows-latest]  #[ubuntu-latest, windows-latest, macOS-latest]
+        python-version: [3.6, 3.7, 3.8]
+    name: Python ${{ matrix.python-version }} example
     steps:
       - uses: actions/checkout@v2
-      - uses: s-weigand/setup-conda@v1
+      - name: Setup conda
+        uses: s-weigand/setup-conda@v1
         with:
           update-conda: true
           python-version: ${{ matrix.python-version }}
-          conda-channels: anaconda, conda-forge
-          activate-conda: true
+          # conda-channels: anaconda, conda-forge
+      - run: conda --version
+      - run: which python
+      - run: conda list
+    # name: test_cli (${{ matrix.python-version }} on ${{ matrix.os }})
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+    #     python-version: ["3.6", "3.7", "3.8"]
+    # steps:
+    #   - uses: actions/checkout@v2
+    #   - uses: s-weigand/setup-conda@v1
+    #     with:
+    #       update-conda: true
+    #       python-version: ${{ matrix.python-version }}
+    #       conda-channels: anaconda, conda-forge
+    #       activate-conda: true
       - name: Conda environment creation
         run: conda env create -n dss -f env/deepss_gui.yml
       - name: Install libsndfile (Linux only)
