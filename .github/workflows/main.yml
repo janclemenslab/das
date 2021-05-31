@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]  #[ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: [3.6, 3.7, 3.8]
     name: Python ${{ matrix.python-version }} example
     steps:
@@ -33,27 +33,13 @@ jobs:
       - run: conda --version
       - run: which python
       - run: conda list
-    # name: test_cli (${{ matrix.python-version }} on ${{ matrix.os }})
-    # runs-on: ${{ matrix.os }}
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-    #     python-version: ["3.6", "3.7", "3.8"]
-    # steps:
-    #   - uses: actions/checkout@v2
-    #   - uses: s-weigand/setup-conda@v1
-    #     with:
-    #       update-conda: true
-    #       python-version: ${{ matrix.python-version }}
-    #       conda-channels: anaconda, conda-forge
-    #       activate-conda: true
       - name: Conda environment creation
         run: conda env create -n dss -f env/deepss_gui.yml
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
       - name: Test with pytest (Linux, Macos)
+        shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
           source activate dss
@@ -61,6 +47,7 @@ jobs:
           conda install pytest -n base
           python -m pytest
       - name: Test cli (Linux, Macos)
+        shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
           source activate dss
@@ -69,25 +56,19 @@ jobs:
           dss predict --help
           dss gui --help
       - name: Test with pytest (Windows)
-        if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
+        if: runner.os == 'Windows'
         run: |
           conda activate dss
           conda install pytest -n dss
           conda install pytest -n base
           python -m pytest
-#       - name: Test with pytest (Windows)
-#         if: runner.os == 'Windows'
-#         run: |
-#           C:\Miniconda\condabin\conda.bat activate dss
-#           conda install pytest -n dss
-#           conda install pytest -n base
-#           C:\Miniconda\envs\dss\python -m pytest
-#       - name: Test cli (Windows)
-#         if: runner.os == 'Windows'
-#         run: |
-#           C:\Miniconda\condabin\conda.bat activate dss
-#           C:\Miniconda\envs\dss\python -m dss.cli train --help
-#           dss train --help
-#           dss predict --help
-#           dss gui --help
+      - name: Test cli (Windows)
+        shell: cmd /C CALL {0}
+        if: runner.os == 'Windows'
+        run: |
+          C:\Miniconda\condabin\conda.bat activate dss
+          C:\Miniconda\envs\dss\python -m dss.cli train --help
+          dss train --help
+          dss predict --help
+          dss gui --help
