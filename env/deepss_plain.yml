@@ -1,18 +1,18 @@
 name: dss
 channels:
-  - conda-forge
   - defaults
+  - conda-forge
 dependencies:
   - zarr
   - python-sounddevice
-  - hdbscan
   - umap-learn
+  - hdbscan
   - pip
   - git
   - h5py<3
+  - numpy=1.18.5
   - pip:
-    - scipy==1.6.2
-    - tensorflow>=2.3
+    - tensorflow==2.3.2
     - xarray-behave
     - deepss
     - deepss-unsupervised
