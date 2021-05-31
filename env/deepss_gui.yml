@@ -10,9 +10,9 @@ dependencies:
   - pip
   - git
   - h5py<3
-  - numpy=1.19.2
+  - numpy=1.18.5
   - pip:
-    - tensorflow==2.4.1
+    - tensorflow==2.3.2
     - xarray-behave[gui]
     - deepss
     - deepss-unsupervised
