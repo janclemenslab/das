@@ -70,16 +70,19 @@ jobs:
           dss gui --help
       - name: Test with pytest (Windows)
         if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
         run: |
-          C:\Miniconda\condabin\conda.bat activate dss
+          conda activate dss
+          # C:\Miniconda\condabin\conda.bat activate dss
           conda install pytest -n dss
           conda install pytest -n base
-          C:\Miniconda\envs\dss\python -m pytest
-      - name: Test cli (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          C:\Miniconda\condabin\conda.bat activate dss
-          C:\Miniconda\envs\dss\python -m dss.cli train --help
-          dss train --help
-          dss predict --help
+          python -m pytest
+          # C:\Miniconda\envs\dss\python -m pytest
+#       - name: Test cli (Windows)
+#         if: runner.os == 'Windows'
+#         run: |
+#           C:\Miniconda\condabin\conda.bat activate dss
+#           C:\Miniconda\envs\dss\python -m dss.cli train --help
+#           dss train --help
+#           dss predict --help
           dss gui --help
