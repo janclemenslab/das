@@ -87,10 +87,10 @@ def predict_segments(class_probabilities: np.array,
                                                       Defaults to None.
         segment_names (Optional[List[str]], optional): [description]. Defaults to None.
         segment_ref_onsets (Optional[List[float]], optional):
-                            Use onsets as ref for estimating labels.
+                            Use onsets (in seconds) as ref for estimating labels.
                             Defaults to None (will use onsets est from class_probabilitieslabels as ref).
         segment_ref_offsets (Optional[List[float]], optional): [description].
-                            Use offsets as ref for estimating labels.
+                            Use offsets (in seconds) as ref for estimating labels.
                             Defaults to None (will use offsets est from class_probabilitieslabels as ref).
         segment_thres (float, optional): [description]. Defaults to 0.5.
         segment_minlen (Optional[float], optional): seconds. Defaults to None.
