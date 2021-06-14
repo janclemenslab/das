@@ -12,7 +12,7 @@ from tensorflow.python.framework.ops import disable_eager_execution
 disable_eager_execution()
 
 
-def predict_probabililties(x, model, params, verbose=None, prepend_padding: bool = True):
+def predict_probabililties(x, model, params, verbose=None, prepend_data_padding: bool = True):
     """[summary]
 
     Args:
@@ -20,14 +20,16 @@ def predict_probabililties(x, model, params, verbose=None, prepend_padding: bool
         model (tf.keras.Model): [description]
         params ([type]): [description]
         verbose (int, optional): Verbose level for predict_generator (see tf.keras docs). Defaults to None.
-
+        prepend_data_padding (bool, optional): Restores samples that are ignored
+                    in the beginning of the first and the end of the last chunk
+                    because of "ignore_boundaries". Defaults to True.
     Returns:
         y_pred - output of network for each sample
     """
     pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
     y_pred = model.predict(pred_gen, verbose=verbose)  # run the network
     y_pred = data.unpack_batches(y_pred, pred_gen.data_padding)  # reshape from [batches, nb_hist, ...] to [time, ...]
-    if prepend_padding:   # to account for loss of samples at the first and last chunks
+    if prepend_data_padding:   # to account for loss of samples at the first and last chunks
         y_pred = np.pad(y_pred,
                         pad_width=((params['data_padding'], params['data_padding']), (0,0)),
                         mode='constant', constant_values=0)
@@ -247,13 +249,14 @@ def predict_song(class_probabilities: np.ndarray, params: dict = None,
     return events, segments
 
 
-def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_size: int = None,
+def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
+            batch_size: int = None,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
             event_dist_min: float = 0, event_dist_max: float = None,
             segment_thres: float = 0.5, segment_minlen: float = None,
             segment_fillgap: float = None,
-            prepend_padding: bool = True):
+            pad: bool = True, prepend_data_padding: bool = True):
     """[summary]
 
     Usage:
@@ -278,6 +281,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
         batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).
                          Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
                          Large batch sizes lead to loss of samples since only complete batches are used.
+        pad (bool): Append zeros to fill up batch. Otherwise the end can be cut.
+                    Defaults to False
 
         event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
         event_dist (float): Minimal distance between adjacent events during thresholding.
@@ -291,8 +296,11 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
         segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.
         segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
-
-
+        pad (bool): prepend values (repeat last sample value) to fill the last batch. Otherwise, the end of the data will not be annotated because
+                    the last, non-full batch will be skipped.
+        prepend_data_padding (bool, optional): Restores samples that are ignored
+                    in the beginning of the first and the end of the last chunk
+                    because of "ignore_boundaries". Defaults to True.
     Raises:
         ValueError: [description]
 
@@ -312,7 +320,14 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1, batch_si
     if batch_size is not None:
         params['batch_size'] = batch_size
 
-    class_probabilities = predict_probabililties(x, model, params, verbose, prepend_padding)
+    if pad:
+        # figure out length in multiples of batches
+        pad_len = params['batch_size'] * params['nb_hist']
+        # pad with end val to fill
+        x = np.pad(x, ((0, pad_len), (0,0)), mode='edge')
+
+
+    class_probabilities = predict_probabililties(x, model, params, verbose, prepend_data_padding)
 
     events, segments = predict_song(class_probabilities=class_probabilities, params=params,
                                     event_thres=event_thres, event_dist=event_dist,
