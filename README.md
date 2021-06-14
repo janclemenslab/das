@@ -1,5 +1,4 @@
-
-![](https://github.com/janclemenslab/deepss/workflows/Python%20Package%20using%20Conda/badge.svg)
+[![Test install](https://github.com/janclemenslab/deepss/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/deepss/actions/workflows/main.yml)
 
 # DeepSS
 _DeepSS_ is a method for automatically annotating song from raw audio recordings based on a deep neural network. _DeepSS_ can be used with a graphical user interface, from the terminal or from with in python scripts.
