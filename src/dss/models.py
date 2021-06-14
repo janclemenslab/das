@@ -444,8 +444,8 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     Returns:
         [keras.models.Model]: Compiled TCN network model.
     """
-    if nb_freq > 1:
-        raise ValueError(f'This model only works with single channel data but last dim of inputs has len {nb_freq} (should be 1).')
+    # if nb_freq > 1:
+    #     raise ValueError(f'This model only works with single channel data but last dim of inputs has len {nb_freq} (should be 1).')
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
