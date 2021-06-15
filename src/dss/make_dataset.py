@@ -9,7 +9,7 @@ import logging
 def init_store(nb_channels, nb_classes, samplerate=None,
                make_single_class_datasets=False,
                class_names=None, class_types=None,
-               store_type=zarr.DictStore, store_name='store.zarr',
+               store_type=zarr.TempStore, store_name='store.zarr',
                chunk_len=1_000_000):
     """[summary]
 
@@ -20,7 +20,7 @@ def init_store(nb_channels, nb_classes, samplerate=None,
         make_single_class_datasets (bool, optional): make y_suffix and attrs['class_names/types_suffix']. Defaults to None.
         class_names (List[str], optional): [description]. Defaults to None.
         class_types (List[str], optional): 'event' or 'segment'. Defaults to None.
-        store_type ([type], optional): [description]. Defaults to zarr.DictStore.
+        store_type ([type], optional): [description]. Defaults to zarr.TemporaryStore.
         store_name (str, optional): [description]. Defaults to 'store.zarr'.
         chunk_len (int, optional): [description]. Defaults to 1_000_000.
 
