@@ -171,3 +171,133 @@ class Timer:
         else:
             s = "Timer in unexpected state."
         return s
+
+
+
+# try:
+#     import PySide2  # this will force pyqtgraph to use PySide instead of PyQt4/5
+#     import pyqtgraph as pg
+# except ImportError:
+#     pass
+
+class QtProgressCallback(keras.callbacks.Callback):
+
+    def __init__(self, nb_epochs, comms):
+        super().__init__()
+        self.nb_epochs = nb_epochs
+        self.queue = comms[0]
+        self.stop_event = comms[1]
+
+
+        # add input thread/pipe and listen to STOP signals in another Thread?
+
+    def on_train_begin(self, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("Starting training; got log keys: {}".format(keys))
+        self.queue.put((0, "Starting training."))
+
+    def on_train_end(self, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("Stop training; got log keys: {}".format(keys))
+        self.queue.put((None, "Finishing training."))
+
+    # def on_epoch_begin(self, epoch, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("Start epoch {} of training; got log keys: {}".format(epoch, keys))
+
+    def on_epoch_end(self, epoch, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("End epoch {} of training; got log keys: {}".format(epoch, keys))
+        self.queue.put((epoch, f"Epoch {epoch}/{self.nb_epochs}"))
+
+    # def on_test_begin(self, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("Start testing; got log keys: {}".format(keys))
+
+    # def on_test_end(self, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("Stop testing; got log keys: {}".format(keys))
+
+    # def on_predict_begin(self, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("Start predicting; got log keys: {}".format(keys))
+
+    # def on_predict_end(self, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("Stop predicting; got log keys: {}".format(keys))
+
+    # def on_train_batch_begin(self, batch, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("...Training: start of batch {}; got log keys: {}".format(batch, keys))
+
+    def on_train_batch_end(self, batch, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("...Training: end of batch {}; got log keys: {}".format(batch, keys))
+        if self.stop_event.is_set():
+            self.model.stop_training = True
+            self.queue.put((None, f"Stopping training."))
+
+
+    # def on_test_batch_begin(self, batch, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("...Evaluating: start of batch {}; got log keys: {}".format(batch, keys))
+
+    def on_test_batch_end(self, batch, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("...Evaluating: end of batch {}; got log keys: {}".format(batch, keys))
+        if self.stop_event.is_set():
+            self.model.stop_training = True
+            self.queue.put((None, f"Stopping training."))
+
+    # def on_predict_batch_begin(self, batch, logs=None):
+    #     if logs is None:
+    #         keys = []
+    #     else:
+    #         keys = list(logs.keys())
+    #     print("...Predicting: start of batch {}; got log keys: {}".format(batch, keys))
+
+    def on_predict_batch_end(self, batch, logs=None):
+        # if logs is None:
+        #     keys = []
+        # else:
+        #     keys = list(logs.keys())
+        # print("...Predicting: end of batch {}; got log keys: {}".format(batch, keys))
+        if self.stop_event.is_set():
+            self.model.stop_training = True
+            self.queue.put((None, f"Stopping training."))

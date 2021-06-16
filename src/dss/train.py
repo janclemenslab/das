@@ -29,7 +29,8 @@ def train(*, data_dir: str, y_suffix: str = '',
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, log_messages: bool = False,
-          nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = ''):
+          nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
+          _qt_progress: bool = False):
     """Train a DeepSS network.
 
     Args:
@@ -104,7 +105,6 @@ def train(*, data_dir: str, y_suffix: str = '',
         with_y_hist (bool): Unused if model name is "tcn" or "tcn_stft". Defaults to True.
         x_suffix (str): Select specific training data based on suffix (e.g. x_suffix).
                         Defaults to '' (will use the standard data 'x')
-
         """
 
     if log_messages:
@@ -134,6 +134,7 @@ def train(*, data_dir: str, y_suffix: str = '',
     if len(save_prefix):
         save_prefix = save_prefix + '_'
     params = locals()
+    del params['_qt_progress']
 
     if stride <=0:
         raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
@@ -214,8 +215,12 @@ def train(*, data_dir: str, y_suffix: str = '',
 
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
+
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
+
+    if _qt_progress is not None:
+        callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
 
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
