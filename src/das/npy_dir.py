@@ -8,13 +8,13 @@ As an example, this code:
 ```python
 data = {'first_level': {'song': some_data, 'response': some_other_data}}
 data.attrs = {'song_name': 'this is the dream...', 'response_name': 'yeah'}
-dss.npy.save('song_responses.npy', data)
+das.npy.save('song_responses.npy', data)
 ```
 will result in a folder `song_responses.npy` containing
 one subfolder `first_level` with two npy files - `song.npy` containing `some_data` and
 `responses.npy` containing `some_other_data`. The `attrs` attribute can be used to store metadata and will be stored in `song_responses.npy/attrs.npy`)
 
-`data = dss.npy.load('song_responses.npy')` will restore the data with the metadata.
+`data = das.npy.load('song_responses.npy')` will restore the data with the metadata.
 """
 import numpy as np
 import os

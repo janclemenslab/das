@@ -49,7 +49,7 @@ def train(*, data_dir: str, y_suffix: str = '',
                            Defaults to '' (empty).
         model_name (str): Network architecture to use.
                           Use "tcn" (TCN) or "tcn_stft" (TCN with STFT frontend).
-                          See dss.models for a description of all models.
+                          See das.models for a description of all models.
                           Defaults to 'tcn'.
         nb_filters (int): Number of filters per layer.
                           Defaults to 16.

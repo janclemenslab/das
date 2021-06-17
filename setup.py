@@ -26,11 +26,11 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='das',
-      version=find_version("src/dss/__init__.py"),
-      description='deepsongsegmenter',
+      version=find_version("src/das/__init__.py"),
+      description='deep audio segmenter',
       long_description=long_description,
       long_description_content_type="text/markdown",
-      url='http://github.com/janclemenslab/deepss',
+      url='http://github.com/janclemenslab/das',
       author='Jan Clemens',
       author_email='clemensjan@googlemail.com',
       license='MIT',
@@ -41,7 +41,7 @@ setup(name='das',
                         'matplotlib_scalebar', 'peakutils'],
       include_package_data=True,
       zip_safe=False,
-      entry_points = {'console_scripts': ['dss=dss.cli:main']}
+      entry_points = {'console_scripts': ['das=das.cli:main']}
      )
 
 print('IMPORTANT:')

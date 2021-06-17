@@ -262,13 +262,13 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
     Usage:
     Calling predict with the path to the model will load the model and the
     associated params and run inference:
-    `dss.predict.predict(x=data, model_save_name='tata')`
+    `das.predict.predict(x=data, model_save_name='tata')`
 
     To re-use the same model with multiple recordings, load the modal and params
     once and pass them to `predict`
-    ```my_model, my_params = dss.utils.load_model_and_params(model_save_name)
+    ```my_model, my_params = das.utils.load_model_and_params(model_save_name)
     for data in data_list:
-        dss.predict.predict(x=data, model=my_model, params=my_params)
+        das.predict.predict(x=data, model=my_model, params=my_params)
     ```
 
     Args:
@@ -352,7 +352,7 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     Args:
         recording_filename (str): path to the WAV file with the audio data.
         model_save_name (str): path with the trunk name of the model.
-        save_filename (Optional[str]): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_dss.h5'.
+        save_filename (Optional[str]): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.
 
         verbose (int): display progress bar during prediction. Defaults to 1.
         batch_size (Optional[int]): number of chunks processed at once . Defaults to None (the default used during training).
@@ -388,7 +388,7 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
          'class_names': class_names}
 
     if save_filename is None:
-        save_filename = os.path.splitext(recording_filename)[0] + '_dss.h5'
+        save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
 
     logging.info(f"   Saving results to {save_filename}.")
     flammkuchen.save(save_filename, d)

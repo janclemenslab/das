@@ -66,7 +66,7 @@ def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate
 
 
 
-# TODO: move to dss.segment_utils
+# TODO: move to das.segment_utils
 def segment_timing(labels, samplerate):
     """Get onset and offset time (in seconds) for each segment."""
     segment_onset_times = np.where(np.diff(labels) == 1)[0].astype(np.float) / samplerate  # explicit cast required?

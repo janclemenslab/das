@@ -4,10 +4,10 @@ build-backend = "flit_core.buildapi"
 
 [tool.flit.metadata]
 dist-name = "das"
-module = "dss"
+module = "das"
 author = "Jan Clemens"
 author-email = "clemensjan@googlemail.com"
-home-page = "https://github.com/janclemenslab/deepss"
+home-page = "https://github.com/janclemenslab/das"
 classifiers = ["License :: OSI Approved :: MIT License"]
 requires-python = ">=3.6"
 requires = ['numpy', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
@@ -16,4 +16,4 @@ requires = ['numpy', 'h5py', 'scipy', 'sklearn', 'pyyaml', 'peakutils', 'zarr',
 description-file = "README.md"
 
 [tool.flit.scripts]
-dss = "dss.cli:main"
+das = "das.cli:main"

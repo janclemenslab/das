@@ -16,7 +16,7 @@ def main():
 
     try:
         import xarray_behave.gui.app
-        subcommands['gui'] = xarray_behave.gui.app.main_dss
+        subcommands['gui'] = xarray_behave.gui.app.main_das
     except (ImportError, ModuleNotFoundError):
         # fall back to function that displays helpful instructions
         subcommands['gui'] = no_xb_gui
