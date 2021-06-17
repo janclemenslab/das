@@ -5,7 +5,7 @@ _DAS_ is a method for automatically annotating song from raw audio recordings ba
 
 If you have questions, feedback, or find bugs please raise in [issue](https://github.com/janclemenslab/das/issues).
 
-Please cite DAS as:
+Please cite _DAS_ as:
 
 Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021). _Fast and accurate annotation of acoustic signals with deep neural networks_, bioRxiv, [https://doi.org/10.1101/2021.03.26.436927]()
 
@@ -28,14 +28,14 @@ __CUDA libraries for using the GPU__: While _DAS_ works well for annotating song
 __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data using [soundfile](http://pysoundfile.readthedocs.io/), which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Note that _DAS_ will work w/o `libsndfile` but will only be able to load more unusual audio file formats.
 
 ### Install _DAS_ with or without the GUI
-Create an anaconda environment called `DAS` that contains all the required packages, including the GUI:
+Create an anaconda environment called `das` that contains all the required packages, including the GUI:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/DAS/master/env/DAS_gui.yml -n das
+conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_gui.yml -n das
 ```
 
-If you do not need require the graphical user interface `das-gui` (for instance, for training _DAS_ on a server), install the plain version:
+If you do not need require the graphical user interface `das gui` (for instance, for training _DAS_ on a server), install the plain version:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/DAS/master/env/DAS_plain.yml -n das
+conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_plain.yml -n das
 ```
 
 ## Usage
