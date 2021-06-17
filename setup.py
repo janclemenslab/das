@@ -25,7 +25,7 @@ this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-setup(name='deepss',
+setup(name='das',
       version=find_version("src/dss/__init__.py"),
       description='deepsongsegmenter',
       long_description=long_description,

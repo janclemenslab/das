@@ -3,7 +3,7 @@ requires = ["flit_core >=2,<3"]
 build-backend = "flit_core.buildapi"
 
 [tool.flit.metadata]
-dist-name = "deepss"
+dist-name = "das"
 module = "dss"
 author = "Jan Clemens"
 author-email = "clemensjan@googlemail.com"
