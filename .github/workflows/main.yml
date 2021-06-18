@@ -34,7 +34,7 @@ jobs:
       - run: which python
       - run: conda list
       - name: Conda environment creation
-        run: conda env create -n dss -f env/deepss_gui.yml
+        run: conda env create -n das -f env/das_gui.yml
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
@@ -42,33 +42,33 @@ jobs:
         shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
-          source activate dss
-          conda install pytest -n dss
+          source activate das
+          conda install pytest -n das
           conda install pytest -n base
           python -m pytest
       - name: Test cli (Linux, Macos)
         shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
-          source activate dss
-          python -m dss.cli train --help
-          dss train --help
-          dss predict --help
-          dss gui --help
+          source activate das
+          python -m das.cli train --help
+          das train --help
+          das predict --help
+          das gui --help
       - name: Test with pytest (Windows)
         shell: cmd /C CALL {0}
         if: runner.os == 'Windows'
         run: |
-          conda activate dss
-          conda install pytest -n dss
+          conda activate das
+          conda install pytest -n das
           conda install pytest -n base
           python -m pytest
       - name: Test cli (Windows)
         shell: cmd /C CALL {0}
         if: runner.os == 'Windows'
         run: |
-          C:\Miniconda\condabin\conda.bat activate dss
-          C:\Miniconda\envs\dss\python -m dss.cli train --help
-          dss train --help
-          dss predict --help
-          dss gui --help
+          C:\Miniconda\condabin\conda.bat activate das
+          C:\Miniconda\envs\dss\python -m das.cli train --help
+          das train --help
+          das predict --help
+          das gui --help
