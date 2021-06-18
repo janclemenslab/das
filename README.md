@@ -3,7 +3,7 @@
 # Deep Audio Segmenter
 _DAS_ is a method for automatically annotating song from raw audio recordings based on a deep neural network. _DAS_ can be used with a graphical user interface, from the terminal or from with in python scripts.
 
-If you have questions, feedback, or find bugs please raise in [issue](https://github.com/janclemenslab/das/issues).
+If you have questions, feedback, or find bugs please raise an [issue](https://github.com/janclemenslab/das/issues).
 
 Please cite _DAS_ as:
 
