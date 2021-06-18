@@ -45,7 +45,7 @@ conda activate das
 das gui
 ```
 
-The documentation at [https://janclemenslab.org/das/] provides for information on the usage of _DAS_:
+The documentation at [https://janclemenslab.org/das/]() provides for information on the usage of _DAS_:
 
 - A [quick start tutorial](https://janclemenslab.org/das/tutorials_gui/quick_start.html) that walks through all steps from manually annotating song, over training a network, to generating new annotations.
 - How to use [graphical user interface](https://janclemenslab.org/das/tutorials_gui).
