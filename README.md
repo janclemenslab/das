@@ -1,6 +1,6 @@
-[![Test install](https://github.com/janclemenslab/DAS/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/DAS/actions/workflows/main.yml)
+[![Test install](https://github.com/janclemenslab/DAS/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/das/actions/workflows/main.yml)
 
-# Deep Audio Segementer
+# Deep Audio Segmenter
 _DAS_ is a method for automatically annotating song from raw audio recordings based on a deep neural network. _DAS_ can be used with a graphical user interface, from the terminal or from with in python scripts.
 
 If you have questions, feedback, or find bugs please raise in [issue](https://github.com/janclemenslab/das/issues).
@@ -45,11 +45,11 @@ conda activate das
 das gui
 ```
 
-The documentation at [https://janclemenslab.org/DAS/] provides for information on the usage of _DAS_:
+The documentation at [https://janclemenslab.org/das/] provides for information on the usage of _DAS_:
 
-- A [quick start tutorial](https://janclemenslab.org/DAS/tutorials_gui/quick_start.html) that walks through all steps from manually annotating song, over training a network, to generating new annotations.
-- How to use [graphical user interface](https://janclemenslab.org/DAS/tutorials_gui).
-- How to use _DAS_ from [the terminal or python scripts](https://janclemenslab.org/DAS/tutorials/tutorials.html).
+- A [quick start tutorial](https://janclemenslab.org/das/tutorials_gui/quick_start.html) that walks through all steps from manually annotating song, over training a network, to generating new annotations.
+- How to use [graphical user interface](https://janclemenslab.org/das/tutorials_gui).
+- How to use _DAS_ from [the terminal or python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
 
 
 
