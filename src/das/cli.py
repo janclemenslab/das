@@ -4,10 +4,10 @@ from . import train, predict
 
 
 def no_xb_gui():
-    """Could not import the GUI. For instructions on how to install the GUI, check the docs janclemenslab.org/deepss/install.html."""
+    """Could not import the GUI. For instructions on how to install the GUI, check the docs janclemenslab.org/das/install.html."""
     print("Could not import the GUI.")
     print("For instructions on how to install the GUI,")
-    print("check the docs janclemenslab.org/deepss/install.html.")
+    print("check the docs janclemenslab.org/das/install.html.")
 
 
 def main():
