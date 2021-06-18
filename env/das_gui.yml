@@ -15,4 +15,4 @@ dependencies:
     - tensorflow==2.3.2
     - xarray-behave[gui]
     - das
-    - das-unsupervised
+    - das_unsupervised
