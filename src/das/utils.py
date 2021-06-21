@@ -190,15 +190,17 @@ class QtProgressCallback(keras.callbacks.Callback):
         self.stop_event = comms[1]
 
     def _check_if_stopped(self):
-        if self.stop_event.is_set():
-            self.model.stop_training = True
-            self.queue.put((None, f"Stopping."))
+        try:
+            if self.stop_event.is_set():
+                self.model.stop_training = True
+        except Exception as e:
+            print(e)
 
     def on_train_begin(self, logs=None):
         self.queue.put((0, "Starting training."))
 
     def on_train_end(self, logs=None):
-        self.queue.put((None, "Finishing training."))
+        self.queue.put((-1, "Finishing training."))
 
     def on_epoch_end(self, epoch, logs=None):
         self.queue.put((epoch, f"Epoch {epoch}/{self.nb_epochs}"))

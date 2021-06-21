@@ -106,7 +106,9 @@ def train(*, data_dir: str, y_suffix: str = '',
         x_suffix (str): Select specific training data based on suffix (e.g. x_suffix).
                         Defaults to '' (will use the standard data 'x')
         """
-
+        # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
+        #        The queue is used to transmit progress updates to the GUI,
+        #        the event is set in the GUI to stop training.
     if log_messages:
         logging.basicConfig(level=logging.INFO)
 
