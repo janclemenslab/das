@@ -412,10 +412,11 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
              dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
              use_skip_connections: bool = True, return_sequences: bool = True,
              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-             nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+             nb_pre_conv: int = 0, pre_nb_dft: int = 64,
+             learning_rate: float = 0.0005, upsample: bool = True,
              use_separable: bool = False,
              **kwignored):
-    """Create TCN network with trainable STFT layer as pre-processing and downsampling frontend.
+    """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
     Args:
         nb_freq (int): [description]
@@ -434,6 +435,8 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         nb_pre_conv (int, optional): If >0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
+        pre_nb_dft (int, optional): Number of filters (roughly corresponding to filters) in the STFT frontend.
+                                    Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but my speed up inference.
@@ -449,7 +452,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
-        out = Spectrogram(n_dft=64, n_hop=2**nb_pre_conv,
+        out = Spectrogram(n_dft=pre_nb_dft, n_hop=2**nb_pre_conv,
                           return_decibel_spectrogram=True, power_spectrogram=1.0,
                           trainable_kernel=True, name='trainable_stft', image_data_format='channels_last')(out)
         # out = AmplitudeToDB()(out)

@@ -22,7 +22,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
           nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
           ignore_boundaries: bool = True, batch_norm: bool = True,
-          nb_pre_conv: int = 0,
+          nb_pre_conv: int = 0, pre_nb_dft: int = 64,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
           verbose: int = 2, batch_size: int = 32,
           nb_epoch: int = 400,
@@ -68,13 +68,16 @@ def train(*, data_dir: str, y_suffix: str = '',
                                   Defaults to True.
         batch_norm (bool): Batch normalize.
                            Defaults to True.
-        nb_pre_conv (int): Adds downsampling frontend.
-                           TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN - useful for reducing the sampling rate for USV.
-                           TCN_STFT: stft
+        nb_pre_conv (int): Downsampling rate. Adds downsampling frontend if not 0.
+                           TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+                           TCN_STFT: adds a trainable STFT frontend.
                            Defaults to 0 (no frontend).
-        pre_nb_filters (int): [description]. Defaults to 16.
-        pre_kernel_size (int): [description]. Defaults to 3.
-        pre_nb_conv (int): [description]. Defaults to 3.
+        pre_nb_dft (int): Number of filters (roughly corresponding to filters) in the STFT frontend.
+                          Defaults to 64.
+        pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.
+                              Defaults to 16.
+        pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.
+                               Defaults to 3.
         verbose (int): Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
                        Defaults to 2.
         batch_size (int): Batch size
