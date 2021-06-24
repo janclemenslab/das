@@ -221,7 +221,7 @@ def train(*, data_dir: str, y_suffix: str = '',
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
 
-    if _qt_progress is not None:
+    if _qt_progress:
         callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
 
     if tensorboard:
