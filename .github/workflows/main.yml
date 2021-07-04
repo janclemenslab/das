@@ -45,7 +45,7 @@ jobs:
         run: |
           source activate das
           conda install pytest -n das
-          conda install pytest -n base
+          printenv | sort
           python3 -m pytest
       - name: Test cli (Linux, Macos)
         shell: bash -l {0}
