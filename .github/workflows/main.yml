@@ -46,8 +46,7 @@ jobs:
           source activate das
           conda install pytest -n das
           conda install pytest -n base
-          source activate das
-          python -m pytest
+          python3 -m pytest
       - name: Test cli (Linux, Macos)
         shell: bash -l {0}
         if: runner.os != 'Windows'
