@@ -23,7 +23,7 @@ sh miniconda.sh -b -p $HOME/miniconda
 export PATH="$HOME/miniconda/bin:$PATH"
 ``` -->
 
-__CUDA libraries for using the GPU__: While _DAS_ works well for annotating song using CPUs, GPUs will greatly improve annotation speed and are in particular recommended for training a _DAS_ network. The network is implement in the deep-learning framework Tensorflow. To make sure that Tensorflow can utilize the GPU, the required CUDA libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details.
+__CUDA libraries for using the GPU__: While _DAS_ works well for annotating song using CPUs, GPUs will greatly improve annotation speed and are in particular recommended for training a _DAS_ network. The network is implement in the deep-learning framework Tensorflow. To make sure that Tensorflow can use the GPU, the required CUDA libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details.
 
 __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data using [soundfile](http://pysoundfile.readthedocs.io/), which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Note that _DAS_ will work w/o `libsndfile` but will only be able to load more unusual audio file formats.
 
@@ -33,7 +33,7 @@ Create an anaconda environment called `das` that contains all the required packa
 conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_gui.yml -n das
 ```
 
-If you do not need require the graphical user interface `das gui` (for instance, for training _DAS_ on a server), install the plain version:
+If you do not need the graphical user interface, for instance, when training _DAS_ on a server, install the plain version:
 ```shell
 conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_plain.yml -n das
 ```
@@ -45,11 +45,11 @@ conda activate das
 das gui
 ```
 
-The documentation at [https://janclemenslab.org/das/]() provides for information on the usage of _DAS_:
+The documentation at [https://janclemenslab.org/das/]() provides information on the usage of _DAS_:
 
-- A [quick start tutorial](https://janclemenslab.org/das/quick_start.html) that walks through all steps from manually annotating song, over training a network, to generating new annotations.
-- How to use [graphical user interface](https://janclemenslab.org/das/tutorials_gui/tutorials_gui.html).
-- How to use _DAS_ from [the terminal or python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
+- A [quick start tutorial](https://janclemenslab.org/das/quick_start.html) walks through all steps from manually annotating song, over training a network, to generating new annotations.
+- How to use the [graphical user interface](https://janclemenslab.org/das/tutorials_gui/tutorials_gui.html).
+- How to use _DAS_ [from the terminal or from python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
 
 
 
