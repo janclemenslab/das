@@ -46,13 +46,13 @@ jobs:
           source activate das
           conda install pytest -n das
           printenv | sort
-          python3 -m pytest
+          $CONDA_PYTHON_EXE -m pytest
       - name: Test cli (Linux, Macos)
         shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
           source activate das
-          python -m das.cli train --help
+          $CONDA_PYTHON_EXE -m das.cli train --help
           das train --help
           das predict --help
           das gui --help
