@@ -19,8 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest]  #[ubuntu-latest, windows-latest, macOS-latest]
-        python-version: [3.8] # [3.6, 3.7, 3.8, 3.9]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        python-version: [3.6, 3.7, 3.8, 3.9]
       fail-fast: false
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }} 
     steps:
@@ -34,9 +34,9 @@ jobs:
       - run: which python
       - run: conda list
       - name: Conda environment creation
-        run: conda env create -q -n das -f env/das_gui.yml
-      - name: Conda install pytest
-        run: conda install pytest -q -n das
+        run: |
+          conda env create -q -n das -f env/das_gui.yml
+          conda install pytest -q -n das
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
@@ -46,13 +46,13 @@ jobs:
         run: |
           source activate das
           printenv | sort
-          $CONDA_PYTHON_EXE -m pytest
+          $CONDA_PREFIX/bin/python -m pytest
       - name: Test cli (Linux, Macos)
         shell: bash -l {0}
         if: runner.os != 'Windows'
         run: |
           source activate das
-          $CONDA_PYTHON_EXE -m das.cli train --help
+          $CONDA_PREFIX/bin/python -m das.cli train --help
           das train --help
           das predict --help
           das gui --help
