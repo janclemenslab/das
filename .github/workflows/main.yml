@@ -20,22 +20,23 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest]  #[ubuntu-latest, windows-latest, macOS-latest]
-        python-version: [3.8] # [3.6, 3.7, 3.8]
+        python-version: [3.8] # [3.6, 3.7, 3.8, 3.9]
       fail-fast: false
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }} 
     steps:
       - uses: actions/checkout@v2
       - name: Setup conda
-        uses: s-weigand/setup-conda@v1
+        uses: c@v1
         with:
           update-conda: true
           python-version: ${{ matrix.python-version }}
-          # conda-channels: anaconda, conda-forge
       - run: conda --version
       - run: which python
       - run: conda list
       - name: Conda environment creation
-        run: conda env create -n das -f env/das_gui.yml
+        run: 
+          conda env create -q -n das -f env/das_gui.yml
+          conda install pytest -q -n das
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
@@ -44,7 +45,6 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           source activate das
-          conda install pytest -n das
           printenv | sort
           $CONDA_PYTHON_EXE -m pytest
       - name: Test cli (Linux, Macos)
@@ -61,8 +61,6 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           conda activate das
-          conda install pytest -n das
-          conda install pytest -n base
           python -m pytest
       - name: Test cli (Windows)
         shell: cmd /C CALL {0}
