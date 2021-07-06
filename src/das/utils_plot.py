@@ -5,6 +5,8 @@ import matplotlib_scalebar
 import matplotlib as mpl
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
+import itertools
+
 
 def scalebar(length, dx=1, units='', label=None, axis=None, location='lower right', frameon=False, **kwargs):
     """Add scalebar to axis.
@@ -187,9 +189,6 @@ class Pdf:
 
 
 # from https://gist.github.com/thesamovar/52dbbb3a58a73c590d54c34f5f719bac
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-
 def panel_specs(layout, fig=None):
     """
     ```
@@ -241,7 +240,7 @@ def panel_specs(layout, fig=None):
         if not valid:
             raise ValueError('Invalid layout (not all square)')
     # build axis specs
-    gs = gridspec.GridSpec(ncols=width, nrows=height, figure=fig)
+    gs = mpl.gridspec.GridSpec(ncols=width, nrows=height, figure=fig)
     specs = {}
     for letter, (left, right, top, bottom) in panel_grid.items():
         specs[letter] = gs[top:bottom, left:right]
@@ -363,3 +362,76 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
         ax.legend_ = mlegend.Legend(ax, leg_handles, leg_labels, ncol=ncol+int(row_labels is not None), handletextpad=handletextpad, **kwargs)
         ax.legend_._remove_method = ax._remove_legend
         return ax.legend_
+
+
+def imshow_text(data, labels=None, ax=None, color_high='w', color_low='k', color_threshold=50, skip_zeros=False):
+    """Text labels for individual cells of an imshow plot
+
+    Args:
+        data ([type]): Color values
+        labels ([type], optional): Text labels. Defaults to None.
+        ax ([type], optional): axis. Defaults to plt.gca().
+        color_high (str, optional): [description]. Defaults to 'w'.
+        color_low (str, optional): [description]. Defaults to 'k'.
+        color_threshold (int, optional): [description]. Defaults to 50.
+        skip_zeros (bool, optional): [description]. Defaults to False.
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    if labels is None:
+        labels = data
+
+    for x, y in itertools.product(range(data.shape[0]), range(data.shape[1])):
+        if labels[y, x] == 0:
+            continue
+        ax.text(x, y, f'{labels[y, x]:1.0f}',
+                ha='center', va='center',
+                c=color_high if data[y, x]>color_threshold else color_low)
+
+
+def bar_text(ax=None, spacing=-20, to_int=True):
+    """Add labels to the end of each bar in a bar chart.
+
+    Arguments:
+        ax (matplotlib.axes.Axes): The matplotlib object containing the axes
+            of the plot to annotate. Defaults to current axis.
+        spacing (int): The distance between the labels and the bars. Defaults to -20 (inside bar)
+    """
+    if ax is None:
+        ax = plt.gca()
+
+    # For each bar: Place a label
+    for rect in ax.patches:
+        # Get X and Y placement of label from rect.
+        y_value = rect.get_height()
+        x_value = rect.get_x() + rect.get_width() / 2
+
+        # Number of points between bar and label. Change to your liking.
+        space = spacing
+        # Vertical alignment for positive values
+        va = 'bottom'
+
+        # If value of bar is negative: Place label below bar
+        if y_value < 0:
+            # Invert space to place label below
+            space *= -1
+            # Vertically align label at top
+            va = 'top'
+
+        # Use Y value as label and format number with one decimal place
+        if to_int:
+            label = int(y_value)
+        else:
+            label = float(y_value)
+
+        # Create annotation
+        ax.annotate(
+            label,                      # Use `label` as label
+            (x_value, y_value),         # Place label at end of the bar
+            xytext=(0, space),          # Vertically shift label by `space`
+            textcoords="offset points", # Interpret `xytext` as offset in points
+            ha='center',                # Horizontally center label
+            va=va,
+            color='w')                      # Vertically align label differently for
+                                        # positive and negative values.
