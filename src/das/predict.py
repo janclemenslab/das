@@ -24,7 +24,7 @@ def predict_probabililties(x, model, params, verbose=None, prepend_data_padding:
                     in the beginning of the first and the end of the last chunk
                     because of "ignore_boundaries". Defaults to True.
     Returns:
-        y_pred - output of network for each sample
+        y_pred - output of network for each sample [samples, nb_classes]
     """
     pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
     y_pred = model.predict(pred_gen, verbose=verbose)  # run the network
@@ -328,6 +328,11 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
 
 
     class_probabilities = predict_probabililties(x, model, params, verbose, prepend_data_padding)
+
+    if pad: # set all song probs in padded section to zero to avoid out of bounds detections!
+        # assumes that the non-song class is at index 0
+        class_probabilities[:-pad_len, 1:] = 0
+        class_probabilities[:-pad_len, 0] = 1
 
     events, segments = predict_song(class_probabilities=class_probabilities, params=params,
                                     event_thres=event_thres, event_dist=event_dist,
