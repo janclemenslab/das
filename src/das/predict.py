@@ -331,8 +331,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
 
     if pad: # set all song probs in padded section to zero to avoid out of bounds detections!
         # assumes that the non-song class is at index 0
-        class_probabilities[:-pad_len, 1:] = 0
-        class_probabilities[:-pad_len, 0] = 1
+        class_probabilities[-pad_len:, 1:] = 0
+        class_probabilities[-pad_len:, 0] = 1
 
     events, segments = predict_song(class_probabilities=class_probabilities, params=params,
                                     event_thres=event_thres, event_dist=event_dist,
