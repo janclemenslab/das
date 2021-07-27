@@ -1,6 +1,6 @@
 import numpy as np
 import zarr
-from typing import List, Iterable, Mapping
+from typing import List, Iterable, Mapping, Optional
 import pandas as pd
 import scipy.signal
 import logging
@@ -137,6 +137,8 @@ def make_annotation_matrix(df: pd.DataFrame, nb_samples: int, samplerate: float,
     for _, row in df.iterrows():
         if not row['name'] in class_names:
             continue
+        if np.all(np.isnan(row['start_seconds'])):
+            continue
         class_index = class_names.index(row['name'])
         start_index = int(row['start_seconds'] * samplerate)
         stop_index = int(row['stop_seconds'] * samplerate + 1)
@@ -147,7 +149,7 @@ def make_annotation_matrix(df: pd.DataFrame, nb_samples: int, samplerate: float,
     return class_matrix
 
 
-def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List[str], shuffle: bool = True):
+def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List[str], shuffle: bool = True, seed: Optional[float] = None):
     """[summary]
 
     Args:
@@ -155,10 +157,14 @@ def generate_data_splits(arrays: Mapping, splits: List[float], split_names: List
         splits ([type]): [description]
         split_names ([type]): [description]
         shuffle (bool, optional): [description]. Defaults to True.
+        seed (float, optional): Defaults to None (do not seed random number generator)
 
     Returns:
         [type]: [description]
     """
+    if seed is not None:
+        np.random.seed(seed)
+
     splits = np.array(splits)  # split train twice - otherwise val is always at the crappy beginning or end of a recording
     names = np.array(split_names)
 
@@ -202,7 +208,8 @@ def normalize_probabilities(p: np.ndarray) -> np.ndarray:
     return p
 
 
-def generate_file_splits(file_list: List, splits: List[float], split_names: List[str], shuffle: bool = True) -> List:
+def generate_file_splits(file_list: List, splits: List[float], split_names: List[str],
+                         shuffle: bool = True, seed: Optional[float] = None) -> List:
     """[summary]
 
     Args:
@@ -210,6 +217,7 @@ def generate_file_splits(file_list: List, splits: List[float], split_names: List
         splits (List[float]): [description]
         split_names (List[str]): [description]
         shuffle (bool, optional): [description]. Defaults to True.
+        seed (float, optional): Defaults to None (do not seed random number generator)
 
     Raises:
         ValueError: [description]
@@ -218,6 +226,9 @@ def generate_file_splits(file_list: List, splits: List[float], split_names: List
     Returns:
         List: [description]
     """
+
+    if seed is not None:
+        np.random.seed(seed)
 
     if len(splits) != len(split_names):
         raise ValueError(f'there must be one name per split. but there are {len(split_names)} names and {len(splits)} splits.')
@@ -251,7 +262,9 @@ def generate_file_splits(file_list: List, splits: List[float], split_names: List
     return split_files
 
 
-def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float ) -> np.ndarray:
+def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float,
+              start_seconds: Optional[List[float]] = None,
+              stop_seconds: Optional[List[float]] = None) -> np.ndarray:
     """[summary]
 
     0011112222000111100 -> 0011100222000111100 (gap_fullwidth=2)
@@ -260,6 +273,8 @@ def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float ) -> np.ndarr
         y (np.ndarray): One-hot encoded labels [T, nb_labels]
         gap_seconds (float): [description]
         samplerate (float): [description]
+        start_seconds:
+        stop_seconds:
 
     Returns:
         np.ndarray: [description]
@@ -269,11 +284,10 @@ def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float ) -> np.ndarr
     if y.ndim>1 and y.shape[1]>1:
         y = np.argmax(y, axis=1)
 
-    a = y.copy().astype(np.float)
     gap_halfwidth = int(np.floor(gap_seconds * samplerate)/2)
 
-
-    # widen gaps between syllables of different types
+    # widen gaps between adjacent syllables of different types
+    a = y.copy().astype(np.float)
     label_change = np.where(np.diff(a, axis=0)!=0)[0]
     # remove on and offsets (0->label or label->0)
     onset = a[label_change]==0
@@ -292,22 +306,30 @@ def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float ) -> np.ndarr
     for label in range(y0.shape[1]):
         y0[y==label, label] = 1
 
-
-    # widen gaps between same sylls
+    # widen gaps between syllables of same type
     for label in range(1, y0.shape[1]):
-        label_change = np.where(np.diff(y0[:,label], axis=0)!=0)[0]
+        label_change = np.where(np.diff(y0[:, label], axis=0)!=0)[0]
         onset = y0[label_change, label] == 0
         offset = y0[label_change+1, label] == 0
 
-        # there is no gap at before the first syll starts and after the last syll ends so ignore those
+        # there is no gap before the first syll starts and after the last syll ends so ignore those
         gap_onsets = label_change[onset][1:]
         gap_offsets = label_change[offset][:-1]
-        gaps = gap_onsets - gap_offsets #label_change[onset][1:] - label_change[offset][:-1]
+        gaps = gap_onsets - gap_offsets
 
         for gap, gap_onset, gap_offset in zip(gaps, gap_onsets, gap_offsets):
             if gap < 2*gap_halfwidth:
                 midpoint = int(gap_offset + gap/2)
                 y0[midpoint - gap_halfwidth:midpoint + gap_halfwidth+1, :] = 0
+
+    # ensure gaps exist even when same-type segments touch
+    if start_seconds is not None and stop_seconds is not None:
+        start_samples = np.array(start_seconds * samplerate).astype(np.uintp)
+        stop_samples = np.array(stop_seconds * samplerate).astype(np.uintp)
+        for start_sample, stop_sample in zip(start_samples, stop_samples):
+            y0[start_sample:int(start_sample + gap_halfwidth), :] = 0
+            y0[int(stop_sample - gap_halfwidth):stop_sample, :] = 0
+
     return y0
 
 
@@ -324,5 +346,5 @@ def blur_events(event_trace: np.ndarray, event_std_seconds: float, samplerate: f
     """
     event_std_samples = event_std_seconds * samplerate
     win = scipy.signal.gaussian(int(event_std_samples * 8), std=event_std_samples)
-    event_trace = scipy.signal.convolve(event_trace, win, mode='same')
+    event_trace = scipy.signal.convolve(event_trace.astype(float), win, mode='same')
     return event_trace

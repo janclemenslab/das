@@ -206,9 +206,8 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
         events['sequence'] = []
 
         for event_dim, event_name in zip(event_dims, event_names):
-            event_indices, event_probabilities = event_utils.detect_events(
-                                                                          class_probabilities[:, event_dim],
-                                                                          thres=event_thres, min_dist=event_dist * samplerate)
+            event_indices, event_probabilities = event_utils.detect_events(class_probabilities[:, event_dim],
+                                                                           thres=event_thres, min_dist=event_dist * samplerate)
             events_seconds = event_indices.astype(np.float) / samplerate
             events_seconds += events_offset
 

@@ -30,6 +30,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, log_messages: bool = False,
           nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
+          balance: bool = False,
           _qt_progress: bool = False):
     """Train a DeepSS network.
 
@@ -108,6 +109,8 @@ def train(*, data_dir: str, y_suffix: str = '',
         with_y_hist (bool): Unused if model name is "tcn" or "tcn_stft". Defaults to True.
         x_suffix (str): Select specific training data based on suffix (e.g. x_suffix).
                         Defaults to '' (will use the standard data 'x')
+        balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
+                        Defaults to False.
         """
         # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
         #        The queue is used to transmit progress updates to the GUI,
@@ -230,6 +233,16 @@ def train(*, data_dir: str, y_suffix: str = '',
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
 
+
+    class_weights = None
+    if balance:
+        from sklearn.utils import class_weight
+        y_train = np.argmax(d['train']['y'], axis=1)
+        class_weights = class_weight.compute_class_weight('balanced',
+                                                        np.unique(y_train),
+                                                        y_train)
+        logging.info(f'Balancing classes: {class_weights}')
+
     # TRAIN NETWORK
     logging.info('start training')
     fit_hist = model.fit(
@@ -239,6 +252,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         verbose=verbose,
         validation_data=val_gen,
         callbacks=callbacks,
+        class_weight=class_weights,
     )
 
     # TEST
