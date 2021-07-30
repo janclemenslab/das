@@ -6,9 +6,7 @@ import os
 from typing import Optional, Dict
 
 class Poseidon():
-    # could also get these from env vars:
-    # export NEPTUNE_PROJECT='<YOUR_WORKSPACE/YOUR_PROJECT>'
-    # export NEPTUNE_API_TOKEN='YOUR_LONG_API_TOKEN'
+    """Utility class for logging to neptune.ai in das.train.train."""
 
     def __init__(self, project: Optional[str] = None, api_token: Optional[str] = None,
                  params: Optional[Dict] = None, infer_from_env: bool = False):
@@ -38,11 +36,13 @@ class Poseidon():
             logging.exception('NEPTUNE stuff went wrong.')
 
     def callback(self):
+        """Get callback for auto-logging from tensorfow/keras."""
         if self.run is not None:
             return NeptuneCallback(run=self.run, base_namespace='metrics')
         else:
             pass
 
     def log_test_results(self, report: Dict):
+        """Log final classification result from test data."""
         if self.run is not None:
             self.run['classification_report'] = report
