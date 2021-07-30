@@ -8,7 +8,7 @@ import defopt
 import os
 from glob import glob
 from typing import List, Optional
-from . import data, models, utils, predict, io, evaluate  #, timeseries
+from . import data, models, utils, predict, io, evaluate, neptune  #, timeseries
 
 try:
     from tensorflow.python.framework.ops import disable_eager_execution
@@ -28,8 +28,8 @@ def train(*, data_dir: str, y_suffix: str = '',
           nb_epoch: int = 400,
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
-          tensorboard: bool = False, log_messages: bool = False,
-          nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
+          tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
+          log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
           balance: bool = False,
           _qt_progress: bool = False):
     """Train a DeepSS network.
@@ -101,8 +101,10 @@ def train(*, data_dir: str, y_suffix: str = '',
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
-        tensorboard (bool): Write tensorboard logs to save_dir.
-                            Defaults to False.
+        tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
+
+        neptune_api_token (Optional[str]): API token for logging to neptune.ai. Defaults to None (no logging).
+        neptune_project (Optional[str]): Project to log to for neptune.ai. Defaults to None (no logging).
         log_messages (bool): Sets logging level to INFO.
                              Defaults to False (will follow existing settings).
         nb_stacks (int): Unused if model name is "tcn" or "tcn_stft". Defaults to 2.
@@ -111,6 +113,10 @@ def train(*, data_dir: str, y_suffix: str = '',
                         Defaults to '' (will use the standard data 'x')
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
+
+        Returns
+            model (tf.keras.Model)
+            params (Dict[str:Any])
         """
         # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
         #        The queue is used to transmit progress updates to the GUI,
@@ -210,6 +216,10 @@ def train(*, data_dir: str, y_suffix: str = '',
     logging.info('Validation data:')
     logging.info(val_gen)
 
+    # TODO: hash train/test/val data
+    params['train_hash'] = None
+    params['val_hash'] = None
+    params['test_hash'] = None
 
     params['class_weights'] = None
     if balance:
@@ -243,15 +253,13 @@ def train(*, data_dir: str, y_suffix: str = '',
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
 
-
-    class_weights = None
-    if balance:
-        from sklearn.utils import class_weight
-        y_train = np.argmax(d['train']['y'], axis=1)
-        class_weights = class_weight.compute_class_weight('balanced',
-                                                        np.unique(y_train),
-                                                        y_train)
-        logging.info(f'Balancing classes: {class_weights}')
+    del params['neptune_api_token']
+    if neptune_api_token and neptune_project:  # could also get those from env vars!
+        try:
+            poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
+            callbacks.append(poseidon.callback())
+        except Exception as e:
+            logging.exception('Neptune stuff failed.')
 
     # TRAIN NETWORK
     logging.info('start training')
@@ -281,9 +289,10 @@ def train(*, data_dir: str, y_suffix: str = '',
         labels_pred = predict.labels_from_probabilities(y_pred)
 
         logging.info('evaluating')
-        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'])
+        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
+        neptune.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
@@ -299,3 +308,6 @@ def train(*, data_dir: str, y_suffix: str = '',
             }
 
         fl.save(save_filename, d)
+
+    logging.info('DONE.')
+    return model, params
