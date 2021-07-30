@@ -216,7 +216,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
             # good_event_indices = np.arange(len(events_seconds))
             events['seconds'].extend(events_seconds[good_event_indices])
             events['probabilities'].extend(event_probabilities[good_event_indices])
-            events['sequence'].extend([event_name for _ in events['seconds']])
+            events['sequence'].extend([event_name for _ in events_seconds[good_event_indices]])
 
     return events
 
