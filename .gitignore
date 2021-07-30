@@ -49,6 +49,7 @@ coverage.xml
 .pytest_cache/
 tests/test.npy
 tests/test.res
+scratch
 .neptune
 # Translations
 *.mo
