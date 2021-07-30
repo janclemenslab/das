@@ -1,7 +1,11 @@
 import das.train
+import logging
 
-model, params = das.train.train(data_dir='test.npy', save_dir='test.res',
-                          nb_epoch=4, fraction_data=0.1)
+
+logging.basicConfig(level=logging.INFO)
+
+model, params = das.train.train(data_dir='tests/test.npy', save_dir='tests/test.res',
+                          nb_epoch=4, fraction_data=0.1, version_data=True)
 
 # load results from disk
 
