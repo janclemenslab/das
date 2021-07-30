@@ -292,7 +292,8 @@ def train(*, data_dir: str, y_suffix: str = '',
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
-        neptune.log_test_results(report)
+        if neptune_api_token and neptune_project:  # could also get those from env vars!
+            poseidon.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
