@@ -210,6 +210,16 @@ def train(*, data_dir: str, y_suffix: str = '',
     logging.info('Validation data:')
     logging.info(val_gen)
 
+
+    params['class_weights'] = None
+    if balance:
+        from sklearn.utils import class_weight
+        y_train = np.argmax(d['train']['y'], axis=1)
+        params['class_weights'] = class_weight.compute_class_weight('balanced',
+                                                        np.unique(y_train),
+                                                        y_train)
+        logging.info(f'Balancing classes: {class_weights}')
+
     logging.info('building network')
     model = models.model_dict[model_name](**params)
 
@@ -252,7 +262,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         verbose=verbose,
         validation_data=val_gen,
         callbacks=callbacks,
-        class_weight=class_weights,
+        class_weight=params['class_weights'],
     )
 
     # TEST
