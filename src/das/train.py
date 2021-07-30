@@ -8,7 +8,7 @@ import defopt
 import os
 from glob import glob
 from typing import List, Optional
-from . import data, models, utils, predict, io, evaluate, neptune  #, timeseries
+from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
 
 try:
     from tensorflow.python.framework.ops import disable_eager_execution
@@ -30,7 +30,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
-          balance: bool = False,
+          balance: bool = False, version_data: bool = False,
           _qt_progress: bool = False):
     """Train a DeepSS network.
 
@@ -113,6 +113,8 @@ def train(*, data_dir: str, y_suffix: str = '',
                         Defaults to '' (will use the standard data 'x')
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
+        version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
+                             Defaults to False (can take long for large datasets ).
 
         Returns
             model (tf.keras.Model)
@@ -160,16 +162,23 @@ def train(*, data_dir: str, y_suffix: str = '',
     if '_multi' in model_name:
         params['unpack_channels'] = True
 
-    logging.info('loading data')
+    logging.info('Loading data from {data_dir}.')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
+
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
+
+    if version_data:
+        params['data_hash'] = data_hash.hash_data(data_dir)
+        logging.info(f"Version of the data:")
+        logging.info(f"   MD5 hash of {data_dir} is")
+        logging.info(f"   {params['data_hash']}")
 
     if fraction_data is not None:
         if fraction_data > 1.0:  # seconds
             logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         elif fraction_data < 1.0:
-            logging.info(f"Using {fraction_data:1.4f} of data for training and validation.")
+            logging.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
     if fraction_data is not None and not batch_level_subsampling:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
@@ -187,7 +196,7 @@ def train(*, data_dir: str, y_suffix: str = '',
     logging.info('Parameters:')
     logging.info(params)
 
-    logging.info('preparing data')
+    logging.info('Preparing data')
     if fraction_data is not None and batch_level_subsampling:  # train on a subset
         np.random.seed(seed)
         shuffle_subset = fraction_data
@@ -211,15 +220,10 @@ def train(*, data_dir: str, y_suffix: str = '',
     #                              shuffle=False, batch_size=batch_size,
     #                              start_index=first_sample_val, end_index=last_sample_val)
 
-    logging.info('Training data:')
-    logging.info(data_gen)
-    logging.info('Validation data:')
-    logging.info(val_gen)
-
-    # TODO: hash train/test/val data
-    params['train_hash'] = None
-    params['val_hash'] = None
-    params['test_hash'] = None
+    logging.info(f"Training data:")
+    logging.info(f"   {data_gen}")
+    logging.info(f"Validation data:")
+    logging.info(f"   {val_gen}")
 
     params['class_weights'] = None
     if balance:
