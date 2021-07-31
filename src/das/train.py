@@ -259,11 +259,14 @@ def train(*, data_dir: str, y_suffix: str = '',
 
     del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
-        try:
-            poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
-            callbacks.append(poseidon.callback())
-        except Exception as e:
-            logging.exception('Neptune stuff failed.')
+        if not neptune.HAS_NEPTUNE:
+            logging.error('Could not import neptune in das.neptune.')
+        else:
+            try:
+                poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
+                callbacks.append(poseidon.callback())
+            except Exception as e:
+                logging.exception('Neptune stuff failed.')
 
     # TRAIN NETWORK
     logging.info('start training')

@@ -1,9 +1,16 @@
-import neptune.new as neptune
-from neptune.new.integrations.tensorflow_keras import NeptuneCallback
-from sklearn.metrics import precision_recall_fscore_support
 import logging
 import os
 from typing import Optional, Dict
+from sklearn.metrics import precision_recall_fscore_support
+
+try:
+    import nptune.new as neptune
+    from neptune.new.integrations.tensorflow_keras import NeptuneCallback
+    HAS_NEPTUNE = True
+except ImportError as e:
+    # logging.exception('Could not import neptune libraries.')
+    HAS_NEPTUNE = False
+
 
 class Poseidon():
     """Utility class for logging to neptune.ai in das.train.train."""
