@@ -30,7 +30,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
-          balance: bool = False, version_data: bool = False,
+          balance: bool = False, version_data: bool = True,
           _qt_progress: bool = False):
     """Train a DeepSS network.
 
@@ -114,7 +114,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
-                             Defaults to False (can take long for large datasets ).
+                             Defaults to True (set to False for large datasets since it can be slow).
 
         Returns
             model (tf.keras.Model)
