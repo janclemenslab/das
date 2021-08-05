@@ -232,7 +232,7 @@ def train(*, data_dir: str, y_suffix: str = '',
         params['class_weights'] = class_weight.compute_class_weight('balanced',
                                                         np.unique(y_train),
                                                         y_train)
-        logging.info(f'Balancing classes: {class_weights}')
+        logging.info(f"Balancing classes: {params['class_weights']}")
 
     logging.info('building network')
     model = models.model_dict[model_name](**params)
