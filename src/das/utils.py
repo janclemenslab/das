@@ -120,10 +120,10 @@ def load_params(file_trunk, params_ext='_params.yaml'):
     return params
 
 
-def load_model_and_params(model_save_name):
+def load_model_and_params(model_save_name, model_dict=models.model_dict):
     # load parameters and model
     params = load_params(model_save_name)
-    model = load_model(model_save_name, models.model_dict, from_epoch=False)
+    model = load_model(model_save_name, model_dict, from_epoch=False)
     return model, params
 
 
