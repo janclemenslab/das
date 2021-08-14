@@ -10,10 +10,18 @@ from glob import glob
 from typing import List, Optional
 from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
 
-try:
+try:  # disabling eager execution speeds up everything
     from tensorflow.python.framework.ops import disable_eager_execution
     disable_eager_execution()
 except Exception as e:
+    logging.exception(e)
+
+try:  # fixes cuDNN error when using LSTM layer
+    import tensorflow as tf
+    physical_devices = tf.config.list_physical_devices('GPU')
+    if physical_devices:
+        tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+except:
     logging.exception(e)
 
 
@@ -24,6 +32,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           ignore_boundaries: bool = True, batch_norm: bool = True,
           nb_pre_conv: int = 0, pre_nb_dft: int = 64,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
+          nb_lstm_units: int = 0,
           verbose: int = 2, batch_size: int = 32,
           nb_epoch: int = 400,
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
@@ -79,6 +88,8 @@ def train(*, data_dir: str, y_suffix: str = '',
                               Defaults to 16.
         pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.
                                Defaults to 3.
+        nb_lstm_units (int): If >0, adds LSTM with given number of units to the output of the stack of TCN blocks.
+                             Defaults to 0 (no LSTM layer).
         verbose (int): Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
                        Defaults to 2.
         batch_size (int): Batch size
@@ -102,7 +113,6 @@ def train(*, data_dir: str, y_suffix: str = '',
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
-
         neptune_api_token (Optional[str]): API token for logging to neptune.ai. Defaults to None (no logging).
         neptune_project (Optional[str]): Project to log to for neptune.ai. Defaults to None (no logging).
         log_messages (bool): Sets logging level to INFO.
@@ -162,7 +172,7 @@ def train(*, data_dir: str, y_suffix: str = '',
     if '_multi' in model_name:
         params['unpack_channels'] = True
 
-    logging.info('Loading data from {data_dir}.')
+    logging.info(f'Loading data from {data_dir}.')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
 
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
