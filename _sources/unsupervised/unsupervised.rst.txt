@@ -1,14 +1,14 @@
 
-.. _gui:
+.. _uns:
 
-GUI tutorials
+Unsupervised classification
 =============
 
 .. toctree::
-   :caption: GUI
+   :caption: uns
    :maxdepth: 1
 
-   :toctree: GUI
+   :toctree: uns
    flies
    birds
    mice
