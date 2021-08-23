@@ -1,0 +1,409 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Train" href="train.html" /><link rel="prev" title="Load and view data" href="load.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+        <title>Annotate song - DAS documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style>
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css"></head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">DAS  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/icon.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome to <em>DAS</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials_gui.html">GUI tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="load.html">Load and view data</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Annotate song</a></li>
+<li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/flies.html">Courtship song of flies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/birds.html">Song of Bengalese finches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/mice.html">Ultrasonic vocalizations from mice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../technical/technical.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../technical/cli.html">Command line interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.event_utils.html">das.event_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.io.html">das.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <div class="section" id="annotate-song">
+<h1>Annotate song<a class="headerlink" href="#annotate-song" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="initialize-or-edit-song-types">
+<h2>Initialize or edit song types<a class="headerlink" href="#initialize-or-edit-song-types" title="Permalink to this headline">¶</a></h2>
+<p>Song types need to be “registered” for annotation. <em>DAS</em> discriminates two categories of song types:</p>
+<ul class="simple">
+<li><p><em>Events</em> are defined by a single time of occurrence. <em>Drosophila</em> pulse song is a song type of the event category.</p></li>
+<li><p><em>Segments</em> are song types that extend over time and are defined by a start and a stop time. <em>Drosophila</em>  sine song and the syllables of mouse and bird vocalizations fall into the segment category.</p></li>
+</ul>
+<p>If you load audio that has been annotated before, the annotations will be loaded with the audio. Song types can be added, renamed, and deleted via <em>Annotations/Add or edit song types</em>.</p>
+<div class="figure align-default" id="xb-make-fig">
+<a class="reference internal image-reference" href="../_images/xb_make.png"><img alt="edit annotation types" src="../_images/xb_make.png" style="height: 500px;"/></a>
+<p class="caption"><span class="caption-text">Create, rename or delete song types for annotation.</span><a class="headerlink" href="#xb-make-fig" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="create-annotations-manually">
+<h2>Create annotations manually<a class="headerlink" href="#create-annotations-manually" title="Permalink to this headline">¶</a></h2>
+<p>The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.</p>
+<div class="figure align-default" id="xb-create-fig">
+<a class="reference internal image-reference" href="../_images/xb_create_opt.gif"><img alt="annotate song" src="../_images/xb_create_opt.gif" style="width: 700px;"/></a>
+<p class="caption"><span class="caption-text">Left clicks in waveform or spectrogram few create annotations.</span><a class="headerlink" href="#xb-create-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
+</div>
+<div class="section" id="annotate-by-thresholding-the-waveform">
+<h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">¶</a></h2>
+<p>Annotation of events can be sped up with the “Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the <em>Annotations/Toggle thresholding mode</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
+<div class="figure align-default" id="xb-thres-fig">
+<a class="reference internal image-reference" href="../_images/xb_thres_opt.gif"><img alt="annotate song" src="../_images/xb_thres_opt.gif" style="width: 700px;"/></a>
+<p class="caption"><span class="caption-text">Annotations assisted by thresholding and peak detection.</span><a class="headerlink" href="#xb-thres-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>The detection of events can be adjusted via <em>Annotations/Adjust thresholding mode</em>:</p>
+<ul class="simple">
+<li><p><em>Smoothing factor for envelope (seconds)</em>: Sets the width of the Gaussian used for smoothing the envelope. Too short and the envelope will contain many noise peaks, too long and individual events will become less distinct.</p></li>
+<li><p><em>Minimal distance between events (seconds)</em>: If the events typically arrive at a minimal rate, this can be used to reduce spurious detections.</p></li>
+</ul>
+</div>
+<div class="section" id="edit-annotations">
+<h2>Edit annotations<a class="headerlink" href="#edit-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Adjust event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type in the <em>Annotations</em> menu.</p>
+<p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
+<div class="figure align-default" id="xb-edit-fig">
+<a class="reference internal image-reference" href="../_images/xb_edit_opt.gif"><img alt="annotate song" src="../_images/xb_edit_opt.gif" style="width: 700px;"/></a>
+<p class="caption"><span class="caption-text">Dragging moves, right click deletes annotations.</span><a class="headerlink" href="#xb-edit-fig" title="Permalink to this image">¶</a></p>
+</div>
+</div>
+<div class="section" id="export-and-save-annotations">
+<h2>Export and save annotations<a class="headerlink" href="#export-and-save-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Export audio data and annotations for integration into a training dataset via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>. This will first ask you to select a folder. When making a training dataset, all exported data in the folder will be used, so make sure you do not save data from different projects to the same folder:</p>
+<div class="figure align-default" id="xb-assemble-fig">
+<a class="reference internal image-reference" href="../_images/xb_export.png"><img alt="export audio and annotations" src="../_images/xb_export.png" style="width: 500px;"/></a>
+<p class="caption"><span class="caption-text">Export audio data and annotations</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
+</div>
+<p>After a folder has been selected, a dialog will open with options to customize the data export:</p>
+<ul class="simple">
+<li><p><em>Song types to export</em>: Select a specific song type to export annotations for. Predicting song in proof-read mode will produce song types ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> - exclude these from the export. Annotations will be saved as a file ending in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> (see a <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">description</span></a> of the format).</p></li>
+<li><p><em>Audio file format</em>: The file format of the exported audio data:</p>
+<ul>
+<li><p><em>NPZ</em>: Zipped numpy variables. Will store a <code class="docutils literal notranslate"><span class="pre">data</span></code> variable with the audio and a <code class="docutils literal notranslate"><span class="pre">samplerate</span></code> variable.</p></li>
+<li><p><em>WAV</em>: Wave audio file. More general but also less flexible format. For instance, floating point data is restricted to the range [-1, 1] (see <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy docs</a>). Audio may need to be scaled before saving to prevent data loss from clipping.</p></li>
+<li><p><em>Recommendation</em>: Use NPZ—it is robust and portable.</p></li>
+</ul>
+</li>
+<li><p><em>Scale factor</em>: Scale the audio before export. May be required when exporting to WAV, since the WAV format has range restrictions.</p></li>
+<li><p><em>Start seconds</em> &amp; <em>end seconds</em>: Export audio and annotations between start and end seconds. Relevant when exporting partially annotated data. When training with small datasets, do not include too much silence before the first and after the last annotation to ensure that all parts of the exported audio contain annotated song.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To generate a larger and more diverse dataset, annotate and export <em>multiple recordings into the same folder</em>. They can then be assembled in a single dataset for training (see next page).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We also recommend you additionally save the full annotations next to the audio data via the <em>File/Save annotations</em>, since the exported annotations only contain the selected range. Saving will create a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file ending in ‘_annotations.csv’, that will be loaded automatically the next time you load the recording.</p>
+</div>
+<p>Once data is exported, the next step is to <a class="reference internal" href="train.html"><span class="doc std std-doc">train the network</span></a>.</p>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="train.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Train</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="load.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Load and view data</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Jan Clemens
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/tutorials_gui/annotate.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Annotate song</a><ul>
+<li><a class="reference internal" href="#initialize-or-edit-song-types">Initialize or edit song types</a></li>
+<li><a class="reference internal" href="#create-annotations-manually">Create annotations manually</a></li>
+<li><a class="reference internal" href="#annotate-by-thresholding-the-waveform">Annotate by thresholding the waveform</a></li>
+<li><a class="reference internal" href="#edit-annotations">Edit annotations</a></li>
+<li><a class="reference internal" href="#export-and-save-annotations">Export and save annotations</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/main.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    </body>
+</html>

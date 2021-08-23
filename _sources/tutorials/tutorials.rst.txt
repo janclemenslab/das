@@ -1,0 +1,20 @@
+
+.. _pro:
+
+Programming tutorials
+=============
+
+.. toctree::
+   :caption: pro
+   :maxdepth: 1
+
+   :toctree: pro
+   convert
+   make_ds_notebook
+   train
+   predict
+   colab
+   label_segments
+   evaluate_fly
+   evaluate_bird
+   realtimg

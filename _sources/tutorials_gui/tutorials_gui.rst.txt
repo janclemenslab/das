@@ -1,0 +1,15 @@
+
+.. _gui:
+
+GUI tutorials
+=============
+
+.. toctree::
+   :caption: GUI
+   :maxdepth: 1
+
+   :toctree: GUI
+   load
+   annotate
+   train
+   predict

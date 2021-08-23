@@ -1,0 +1,13 @@
+
+.. _tec:
+
+Technical details
+=============
+
+.. toctree::
+   :caption: tec
+   :maxdepth: 1
+
+   :toctree: tec
+   cli
+   data_formats

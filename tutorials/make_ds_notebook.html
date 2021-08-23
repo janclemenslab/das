@@ -1,0 +1,817 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Train" href="train.html" /><link rel="prev" title="Convert your own annotations and audio data" href="convert.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+        <title>Make a dataset from custom data formats - DAS documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style>
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css"></head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">DAS  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/icon.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome to <em>DAS</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials.html">Programming tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Make a dataset from custom data formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_fly.html">Evaluate a sine and pulse network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/flies.html">Courtship song of flies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/birds.html">Song of Bengalese finches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/mice.html">Ultrasonic vocalizations from mice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../technical/technical.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../technical/cli.html">Command line interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.event_utils.html">das.event_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.io.html">das.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <div class="section" id="make-a-dataset-from-custom-data-formats">
+<h1>Make a dataset from custom data formats<a class="headerlink" href="#make-a-dataset-from-custom-data-formats" title="Permalink to this headline">¶</a></h1>
+<p>If your data is readable by the GUI, you only need to convert annotations. You can then load both into the GUI and export to data and annotations for DAS.</p>
+<p>Three alternatives:</p>
+<div class="section" id="export-your-data-as-wav-npz-and-csv-to-a-folder-and-make-a-dataset-with-the-gui">
+<h2>1. Export your data as wav/npz and csv to a folder and make a dataset with the GUI<a class="headerlink" href="#export-your-data-as-wav-npz-and-csv-to-a-folder-and-make-a-dataset-with-the-gui" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">data</span></code> folder with <code class="docutils literal notranslate"><span class="pre">*.wav</span></code> or <code class="docutils literal notranslate"><span class="pre">npz</span></code> files files with the recording and matching <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code> files with the annotations (see format details [here]](/technical/data_formats))- recordings and annotations will be matched according to the file base name:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>data<span class="se">\</span>
+    file01.wav
+    file01_annotations.csv
+    another_file.wav
+    another_file_annotations.csv
+    yaf.wav
+    yaf_annotations.csv
+</pre></div>
+</div>
+<p>Simplest way - no need of having to deal with specific of the data structure required by DAS for training - simply hit <em>DAS/Make dataset for training</em> and select the folder.</p>
+</div>
+<div class="section" id="use-notebook-with-custom-loaders-to-directly-read-recordings-and-annotations">
+<h2>2. Use notebook with custom loaders to directly read recordings and annotations<a class="headerlink" href="#use-notebook-with-custom-loaders-to-directly-read-recordings-and-annotations" title="Permalink to this headline">¶</a></h2>
+<p>Intermediate simplicity and flexibility) Folder with the data and annotations in a custom format - provide custom functions for loading audio data and annotations. This is illustrated in the next section.</p>
+</div>
+<div class="section" id="diy-dataset">
+<h2>3. DIY dataset<a class="headerlink" href="#diy-dataset" title="Permalink to this headline">¶</a></h2>
+<p>Complex, maximally flexible) Bring your own mappable (for experts): Generate the data structure yourself. The description of the <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">dataset structure</span></a> has information on how to do that.</p>
+</div>
+<div class="section" id="id1">
+<h2>Use notebook with custom loaders to directly read recordings and annotations<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>This notebook creates an annotated data set for training das from lists of filenames for the song recordings and associated annotations.</p>
+<p>This may look a bit complicated at first sight but only requires you to change two things in the next two cells:</p>
+<ol class="simple">
+<li><p>The functions for loading the data (song recordings) and the annotations need to be adapted to work with your data.</p></li>
+<li><p>Two lists with the names of data files (consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code>) and the associated annotation files (consumed by <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>) need to be created.</p></li>
+</ol>
+<p>The notebook works with a small toy data set (with song recordings from the data provided with <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">Stern 2014</a>) and with annotations produced by <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a>.</p>
+<p><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
+</div>
+<div class="section" id="internals">
+<h2>Internals<a class="headerlink" href="#internals" title="Permalink to this headline">¶</a></h2>
+<p>The dataset is created in two steps.</p>
+<p>First, the data and annotations for different recordings are combined in a large matrix. This works even with large datasets that don’t fit in memory thanks to <a class="reference external" href="https://zarr.readthedocs.io/en/stable/tutorial.html#storage-alternatives">zarr</a>, which provides an interface for on-disk arrays. The annotations are converted from lists of event times to one-hot-encoded probability vectors, (0 for no event, 1 for a specified short duration (default is $\pm$30 samples) surrounding the event).</p>
+<p>Second, the zarr dataset is converted to a directory hierarchy of numpy files (npy) using <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. Numpy files allow extremely fast memory mapping, providing faster out-of-memory access than zarr during training.</p>
+<p>Code below closely follows the code used in the GUI - see the <a class="reference external" href="https://github.com/janclemenslab/xarray-behave/blob/master/src/xarray_behave/gui/DAS.py">source</a> code.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">zarr</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">das.npy_dir</span>
+<span class="kn">import</span> <span class="nn">das.make_dataset</span>
+<span class="kn">import</span> <span class="nn">das.annot</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'ncb.mplstyle'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="define-custom-audio-and-annotation-loaders">
+<h2>Define custom audio and annotation loaders<a class="headerlink" href="#define-custom-audio-and-annotation-loaders" title="Permalink to this headline">¶</a></h2>
+<p>If your recordings and annotations are not in the format expected by the standard loaders used above (<code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> for the recordings, <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> with name/start_seconds/stop_seconds for annotations), or if it’s hard to convert your data into these standard formats, you can provide your own loaders as long as they conform to the following interface:</p>
+<ul class="simple">
+<li><p><em>data loaders</em>: <code class="docutils literal notranslate"><span class="pre">samplerate,</span> <span class="pre">data</span> <span class="pre">=</span> <span class="pre">data_loader(filename)</span></code>, accepts a single string argument - the path to the data file and returns two things: the samplerate of the data and a numpy array with the recording data [time, channels]. Note: <code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> returns <code class="docutils literal notranslate"><span class="pre">[time,]</span></code> arrays - you need to add a new axis to make it 2d!</p></li>
+<li><p><em>annotation loaders</em>: <code class="docutils literal notranslate"><span class="pre">df</span> <span class="pre">=</span> <span class="pre">annotation_loader(filename)</span></code>, accepts a single string argument with the file path and returns a pandas DataFrame with these three columns: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> (see 1).</p></li>
+</ul>
+<p>Below, we read example data produced in matlab (D. Stern). The recording was exported and saved as a matlab struct - the audio data is found in <code class="docutils literal notranslate"><span class="pre">data</span></code>, the samplerate is not saved with the data. The annotations were produced by the <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a> and the pulse times (in samples) and a mask indicating for each sample in the recording whether it was occupied by noise (0), a pulse train (1), or sine song (2) were exported saved as a struct - <code class="docutils literal notranslate"><span class="pre">annotations.mask</span></code>, <code class="docutils literal notranslate"><span class="pre">annotations.pulsesamples</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">data_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>    
+        <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">'data'</span><span class="p">][:]</span>
+    <span class="n">samplerate</span> <span class="o">=</span> <span class="mi">10_000</span>
+    <span class="k">return</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span>
+
+<span class="k">def</span> <span class="nf">annotation_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">samplerate</span> <span class="o">=</span> <span class="mi">10_000</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="c1"># fss saves mask with sine=1, pulsetrains=2</span>
+        <span class="n">sine</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">][</span><span class="s1">'mask'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+        <span class="n">sine_onsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">samplerate</span>
+        <span class="n">sine_offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">samplerate</span>
+        
+        <span class="c1"># fss saves pulse times in samples</span>
+        <span class="n">pulse_times</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">][</span><span class="s1">'pulsesamples'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">samplerate</span>
+
+    <span class="c1"># make lists:</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">start_seconds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stop_seconds</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">pulse_time</span> <span class="ow">in</span> <span class="n">pulse_times</span><span class="p">:</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'pulse'</span><span class="p">)</span>
+        <span class="n">start_seconds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">pulse_time</span><span class="p">))</span>
+        <span class="n">stop_seconds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">pulse_time</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">sine_onset</span><span class="p">,</span> <span class="n">sine_offset</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sine_onsets</span><span class="p">,</span> <span class="n">sine_offsets</span><span class="p">):</span>        
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'sine'</span><span class="p">)</span>
+        <span class="n">start_seconds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sine_onset</span><span class="p">))</span>
+        <span class="n">stop_seconds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">sine_offset</span><span class="p">))</span>
+
+    <span class="n">event_times</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">annot</span><span class="o">.</span><span class="n">Events</span><span class="o">.</span><span class="n">from_lists</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">event_times</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="lists-the-names-of-data-and-annotation-files">
+<h2>Lists the names of data and annotation files<a class="headerlink" href="#lists-the-names-of-data-and-annotation-files" title="Permalink to this headline">¶</a></h2>
+<p>Lists of <code class="docutils literal notranslate"><span class="pre">data_files</span></code> and associated <code class="docutils literal notranslate"><span class="pre">annotation_files</span></code> are consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code> and <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>, respectively.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data_dir = '/Users/clemens10/Dropbox/code.py/DAS/tutorials/dat.mat/'</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="s1">'../../../DAS/tutorials/dat.mat/'</span>
+<span class="n">files_data</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">'*_recording.mat'</span><span class="p">)</span>  <span class="c1"># list all data files</span>
+<span class="n">files_annotation</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_recording.mat'</span><span class="p">,</span> <span class="s1">'_song.mat'</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files_data</span><span class="p">]</span>  <span class="c1"># generate the names of associated annotation files</span>
+<span class="p">[</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'data "</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">" with annotations in "</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1">".'</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">files_data</span><span class="p">,</span> <span class="n">files_annotation</span><span class="p">)];</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>data "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_song.mat".
+data "../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_song.mat".
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="test-loaders">
+<h3>Test loaders<a class="headerlink" href="#test-loaders" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data_loader</span><span class="p">(</span><span class="n">files_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Audio data with samplerate </span><span class="si">{</span><span class="n">samplerate</span><span class="si">}</span><span class="s2">, shape </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, and data type </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Annotations'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">annotation_loader</span><span class="p">(</span><span class="n">files_annotation</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Audio data with samplerate 10000, shape (4100001, 1), and data type float32
+Annotations
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<div class="table-wrapper"><table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>name</th>
+<th>start_seconds</th>
+<th>stop_seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>sine</td>
+<td>5.1539</td>
+<td>5.3898</td>
+</tr>
+<tr>
+<th>1</th>
+<td>sine</td>
+<td>127.9297</td>
+<td>128.8389</td>
+</tr>
+<tr>
+<th>2</th>
+<td>sine</td>
+<td>171.8631</td>
+<td>172.0899</td>
+</tr>
+<tr>
+<th>3</th>
+<td>sine</td>
+<td>178.0876</td>
+<td>178.2290</td>
+</tr>
+<tr>
+<th>4</th>
+<td>sine</td>
+<td>181.9101</td>
+<td>182.4161</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>1956</th>
+<td>pulse</td>
+<td>404.4817</td>
+<td>404.4817</td>
+</tr>
+<tr>
+<th>1957</th>
+<td>pulse</td>
+<td>404.5128</td>
+<td>404.5128</td>
+</tr>
+<tr>
+<th>1958</th>
+<td>pulse</td>
+<td>404.5440</td>
+<td>404.5440</td>
+</tr>
+<tr>
+<th>1959</th>
+<td>pulse</td>
+<td>404.5751</td>
+<td>404.5751</td>
+</tr>
+<tr>
+<th>1960</th>
+<td>pulse</td>
+<td>404.6469</td>
+<td>404.6469</td>
+</tr>
+</tbody>
+</table></div>
+<p>1961 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">file_data</span> <span class="ow">in</span> <span class="n">files_data</span><span class="p">:</span>
+    <span class="n">samplerate</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data_loader</span><span class="p">(</span><span class="n">file_data</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">file_data</span> <span class="o">+</span> <span class="s1">'.h5'</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="p">[</span><span class="s1">'data'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="parse-annotation-files-to-identify-song-types">
+<h3>Parse annotation files to identify song types<a class="headerlink" href="#parse-annotation-files-to-identify-song-types" title="Permalink to this headline">¶</a></h3>
+<p>This will collect all unique values in <code class="docutils literal notranslate"><span class="pre">names</span></code> of the annotation files and infer their categories based on the equality of start_seconds and stop_seconds. Skip this step and define <code class="docutils literal notranslate"><span class="pre">class_names</span></code> and <code class="docutils literal notranslate"><span class="pre">class_categories</span></code> manually if you know the song types and their categories.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># go through all annotation files and collect info on classes</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">class_categories</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">file_annotation</span> <span class="ow">in</span> <span class="n">files_annotation</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">file_annotation</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">annotation_loader</span><span class="p">(</span><span class="n">file_annotation</span><span class="p">)</span>
+    <span class="n">event_times</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">annot</span><span class="o">.</span><span class="n">Events</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">class_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_times</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+    <span class="n">class_categories</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_times</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<span class="n">class_names</span><span class="p">,</span> <span class="n">first_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">class_categories</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">class_categories</span><span class="p">)[</span><span class="n">first_indices</span><span class="p">])</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_category</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">class_categories</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'found </span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1"> of type </span><span class="si">{</span><span class="n">class_category</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+
+<span class="c1"># Need to add a "noise" song type for when there is no song</span>
+<span class="n">class_names</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">'noise'</span><span class="p">)</span>
+<span class="n">class_categories</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">'segment'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_song.mat
+../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_song.mat
+found pulse of type event
+found sine of type segment
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="split-files-into-train-val-test-sets">
+<h2>Split files into train/val/test sets<a class="headerlink" href="#split-files-into-train-val-test-sets" title="Permalink to this headline">¶</a></h2>
+<p>Split the list of recordings into train/val/test files:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">train</span></code> is used for optimizing the parameters during model fitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">val</span></code> is used during training to track model performance and save the current best model based on the performance on the validation data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> is used to evaluate the best model after training is done and fine tune inference</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># seed random number generator for reproducible splits</span>
+<span class="n">test_idx</span><span class="p">,</span> <span class="n">val_idx</span><span class="p">,</span> <span class="n">train_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files_data</span><span class="p">)),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># this will split the recordings into one for testing, one for validation, and the remained for training  </span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Indices of test file(s):'</span><span class="p">,</span> <span class="n">test_idx</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">indices of validation file(s):'</span><span class="p">,</span> <span class="n">val_idx</span><span class="p">,</span> <span class="s1">'</span><span class="se">\n</span><span class="s1">indices of train files:'</span><span class="p">,</span> <span class="n">train_idx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Indices of test file(s): [6] 
+indices of validation file(s): [2] 
+indices of train files: [1 0 4 3 5]
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="initialize-the-data-structure-store">
+<h2>Initialize the data structure (store)<a class="headerlink" href="#initialize-the-data-structure-store" title="Permalink to this headline">¶</a></h2>
+<p>The store will hold the audio data and the annotations in a format ready for training (see <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a> for details). The store also contains metadata which is important for training and inference:</p>
+<ul class="simple">
+<li><p>samplerates of the data in Hz</p></li>
+<li><p>description of the different classes (names, types (segment or events)) - largely used to post-process the output of the network after inference (e.g. detect event times from the probabilities produced by the network).</p></li>
+</ul>
+<p>We use zarr as a data structure because it provides in-memory as well as out-of-memory arrays with the same, dict-like interface (similar to h5py).</p>
+<p>Choose the zarr <code class="docutils literal notranslate"><span class="pre">store_type</span></code> based on the total size of your dataset:</p>
+<ul class="simple">
+<li><p>If it fits in memory, use a <code class="docutils literal notranslate"><span class="pre">DictStore</span></code>, which will place the data and annotation arrays in memory.</p></li>
+<li><p>For “big data”, use a <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code>, this will place the arrays in chunked files in a directory.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">samplerate</span> <span class="o">=</span> <span class="mi">10_000</span>  <span class="c1"># this is the sample rate of your data and the pulse times</span>
+<span class="n">store</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">make_dataset</span><span class="o">.</span><span class="n">init_store</span><span class="p">(</span>
+        <span class="n">nb_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>  <span class="c1"># number of channels/microphones in the recording</span>
+        <span class="n">nb_classes</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">),</span>  <span class="c1"># number of classes to predict - [noise, pulse]</span>
+        <span class="n">make_single_class_datasets</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># also make y_pulse and y_sine</span>
+        <span class="n">samplerate</span><span class="o">=</span><span class="n">samplerate</span><span class="p">,</span>  <span class="c1"># make sure audio data and the annotations are all on the same sampling rate</span>
+        <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span>
+        <span class="n">class_types</span><span class="o">=</span><span class="n">class_categories</span><span class="p">,</span>
+        <span class="n">store_type</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">DictStore</span><span class="p">,</span>  <span class="c1"># use DirectoryStore for big data        </span>
+        <span class="n">store_name</span><span class="o">=</span><span class="s1">'intermediate.zarr'</span><span class="p">,</span> <span class="c1"># only used with DirectoryStore - this is the path to the directory created</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="load-the-individual-data-files">
+<h3>Load the individual data files<a class="headerlink" href="#load-the-individual-data-files" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Assembling data set:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">annotation_file</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">files_data</span><span class="p">,</span> <span class="n">files_annotation</span><span class="p">)):</span>
+    <span class="c1"># Determine whether file is test/val/train</span>
+    <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">test_idx</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="s1">'test'</span>
+    <span class="k">elif</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">val_idx</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="s1">'val'</span>
+    <span class="k">elif</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">train_idx</span><span class="p">:</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="s1">'train'</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">continue</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">data_file</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2"> set"</span><span class="p">)</span>
+    <span class="n">fs</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">data_loader</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+    <span class="n">nb_samples</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># load annotations</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">annotation_loader</span><span class="p">(</span><span class="n">annotation_file</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+
+    <span class="c1"># make initial annotation matrix</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">make_dataset</span><span class="o">.</span><span class="n">make_annotation_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">nb_samples</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">class_names</span><span class="p">)</span>
+    
+    <span class="c1"># blur events</span>
+    <span class="k">for</span> <span class="n">class_index</span><span class="p">,</span> <span class="n">class_category</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">class_categories</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">class_category</span> <span class="o">==</span> <span class="s1">'event'</span><span class="p">:</span>
+            <span class="n">y</span><span class="p">[:,</span> <span class="n">class_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">make_dataset</span><span class="o">.</span><span class="n">blur_events</span><span class="p">(</span><span class="n">y</span><span class="p">[:,</span> <span class="n">class_index</span><span class="p">],</span>
+                                                             <span class="n">event_std_seconds</span><span class="o">=</span><span class="mf">.0016</span><span class="p">,</span>
+                                                             <span class="n">samplerate</span><span class="o">=</span><span class="n">samplerate</span><span class="p">)</span>
+    
+    <span class="c1"># Append the recording (x) and the prediction target (y) to the data set</span>
+    <span class="n">store</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">store</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">das</span><span class="o">.</span><span class="n">make_dataset</span><span class="o">.</span><span class="n">normalize_probabilities</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+    <span class="c1"># Make prediction targets for individual song types</span>
+    <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">store</span><span class="p">[</span><span class="n">target</span><span class="p">][</span><span class="sa">f</span><span class="s1">'y_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">das</span><span class="o">.</span><span class="n">make_dataset</span><span class="o">.</span><span class="n">normalize_probabilities</span><span class="p">(</span><span class="n">y</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">cnt</span><span class="o">+</span><span class="mi">1</span><span class="p">]]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Got </span><span class="si">{</span><span class="n">store</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">store</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">store</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> train/test/val samples."</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Assembling data set:
+   ../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_recording.mat -&gt; train set
+   ../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_recording.mat -&gt; train set
+   ../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_recording.mat -&gt; val set
+   ../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_recording.mat -&gt; train set
+   ../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_recording.mat -&gt; train set
+   ../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_recording.mat -&gt; train set
+   ../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_recording.mat -&gt; test set
+Got (20440005, 1), (4160001, 1), (3980001, 1) train/test/val samples.
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="inspect-the-dataset">
+<h3>Inspect the dataset<a class="headerlink" href="#inspect-the-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Plot x/y values from the dataset to make sure everything is well aligned.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">class_names</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">45_000</span><span class="p">]:</span>  <span class="c1">#range(0, 500_000, 10_000):</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="mi">10_000</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="n">store</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'samplerate_x_Hz'</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">store</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">][</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">],</span> <span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'microphone voltage'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>    
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">413</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">][</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Greys'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)),</span> <span class="n">labels</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">414</span><span class="p">)</span>                      
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">store</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">][</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'time [seconds]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/make_ds_notebook_19_0.svg" src="../_images/make_ds_notebook_19_0.svg"/></div>
+</div>
+</div>
+<div class="section" id="save-as-npy-dir">
+<h3>Save as npy_dir<a class="headerlink" href="#save-as-npy-dir" title="Permalink to this headline">¶</a></h3>
+<p>Once all data and annotation files have been appended to the store, save the data as an <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code> store - a directory hierarchy that replicates the nested dictionary structure of the zarr store. For instance, the data set at <code class="docutils literal notranslate"><span class="pre">root['train']['x']</span></code> (the audio data for training) will be stored as <code class="docutils literal notranslate"><span class="pre">store_name/train/x.npy</span></code>. We use these npy files rather than the zarr store because access is faster. Saving is done by <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. The directory structure is mapped back to a nested dictionary via <code class="docutils literal notranslate"><span class="pre">das.npy_dir.load</span></code>. If you used the <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code> during assembly, you can delete the <code class="docutils literal notranslate"><span class="pre">*.zarr</span></code> directory after that final step.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the zarr store as a hierarchy of npy files</span>
+<span class="n">store_folder</span> <span class="o">=</span> <span class="s1">'tutorial_dataset.npy'</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  Saving to </span><span class="si">{</span><span class="n">store_folder</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
+<span class="n">das</span><span class="o">.</span><span class="n">npy_dir</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">store_folder</span><span class="p">,</span> <span class="n">store</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can now train using the <a class="reference internal" href="../tutorials_gui/train.html"><span class="doc std std-doc">GUI</span></a>, or a <a class="reference internal" href="train.html"><span class="doc std std-doc">script</span></a>, or the <a class="reference internal" href="train.html"><span class="doc std std-doc">command line</span></a>.</p>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="train.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Train</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="convert.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Convert your own annotations and audio data</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Jan Clemens
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/tutorials/make_ds_notebook.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Make a dataset from custom data formats</a><ul>
+<li><a class="reference internal" href="#export-your-data-as-wav-npz-and-csv-to-a-folder-and-make-a-dataset-with-the-gui">1. Export your data as wav/npz and csv to a folder and make a dataset with the GUI</a></li>
+<li><a class="reference internal" href="#use-notebook-with-custom-loaders-to-directly-read-recordings-and-annotations">2. Use notebook with custom loaders to directly read recordings and annotations</a></li>
+<li><a class="reference internal" href="#diy-dataset">3. DIY dataset</a></li>
+<li><a class="reference internal" href="#id1">Use notebook with custom loaders to directly read recordings and annotations</a></li>
+<li><a class="reference internal" href="#internals">Internals</a></li>
+<li><a class="reference internal" href="#define-custom-audio-and-annotation-loaders">Define custom audio and annotation loaders</a></li>
+<li><a class="reference internal" href="#lists-the-names-of-data-and-annotation-files">Lists the names of data and annotation files</a><ul>
+<li><a class="reference internal" href="#test-loaders">Test loaders</a></li>
+<li><a class="reference internal" href="#parse-annotation-files-to-identify-song-types">Parse annotation files to identify song types</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#split-files-into-train-val-test-sets">Split files into train/val/test sets</a></li>
+<li><a class="reference internal" href="#initialize-the-data-structure-store">Initialize the data structure (store)</a><ul>
+<li><a class="reference internal" href="#load-the-individual-data-files">Load the individual data files</a></li>
+<li><a class="reference internal" href="#inspect-the-dataset">Inspect the dataset</a></li>
+<li><a class="reference internal" href="#save-as-npy-dir">Save as npy_dir</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/main.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    </body>
+</html>

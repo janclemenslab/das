@@ -1,0 +1,96 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Command line interfaces\n",
+    "\n",
+    "## Graphical user interface"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "usage: das gui [-h] [--song-types-string SONG_TYPES_STRING]\n               [--spec-freq-min SPEC_FREQ_MIN] [--spec-freq-max SPEC_FREQ_MAX]\n               [--skip-dialog | --no-skip-dialog]\n               [source]\n\nGUI for annotating song and training and using das networks.\n\npositional arguments:\n  source                Data source to load.\n                        Optional - will open an empty GUI if omitted.\n                        Source can be the path to:\n                        - an audio file,\n                        - a numpy file (npy or npz),\n                        - an h5 file\n                        - an xarray-behave dataset constructed from an ethodrome data folder saved as a zarr file,\n                        - an ethodrome data folder (e.g. 'dat/localhost-xxx').\n\noptional arguments:\n  -h, --help            show this help message and exit\n  --song-types-string SONG_TYPES_STRING\n                        Initialize song types for annotations.\n                        String of the form \"song_name,song_category;song_name,song_category\".\n                        Avoid spaces or trailing ';'.\n                        Need to wrap the string in \"...\" in the terminal\n                        \"song_name\" can be any string w/o space, \",\", or \";\"\n                        \"song_category\" can be \"event\" (e.g. pulse) or \"segment\" (sine, syllable)\n  --spec-freq-min SPEC_FREQ_MIN\n                        Smallest frequency displayed in the spectrogram view. Defaults to 0 Hz.\n  --spec-freq-max SPEC_FREQ_MAX\n                        Largest frequency displayed in the spectrogram view. Defaults to samplerate/2.\n  --skip-dialog, --no-skip-dialog\n                        If True, skips the loading dialog and goes straight to the data view.\n\u001b[0m"
+     ]
+    }
+   ],
+   "source": [
+    "!das gui --help"
+   ]
+  },
+  {
+   "source": [
+    "## Train"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "source": [
+    "!das train --help"
+   ],
+   "cell_type": "code",
+   "metadata": {},
+   "execution_count": 2,
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "usage: das train [-h] -d DATA_DIR [-y Y_SUFFIX] [--save-dir SAVE_DIR]\n                 [--save-prefix SAVE_PREFIX] [-m MODEL_NAME]\n                 [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]\n                 [--nb-conv NB_CONV] [-u [USE_SEPARABLE [USE_SEPARABLE ...]]]\n                 [--nb-hist NB_HIST]\n                 [-i | --ignore-boundaries | --no-ignore-boundaries]\n                 [--batch-norm | --no-batch-norm] [--nb-pre-conv NB_PRE_CONV]\n                 [--pre-kernel-size PRE_KERNEL_SIZE]\n                 [--pre-nb-filters PRE_NB_FILTERS] [--pre-nb-conv PRE_NB_CONV]\n                 [-v VERBOSE] [--batch-size BATCH_SIZE] [--nb-epoch NB_EPOCH]\n                 [--learning-rate LEARNING_RATE]\n                 [--reduce-lr | --no-reduce-lr]\n                 [--reduce-lr-patience REDUCE_LR_PATIENCE] [-f FRACTION_DATA]\n                 [--seed SEED]\n                 [--batch-level-subsampling | --no-batch-level-subsampling]\n                 [-t | --tensorboard | --no-tensorboard]\n                 [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]\n                 [-w | --with-y-hist | --no-with-y-hist] [-x X_SUFFIX]\n\nTrain a DeepSS network.\n\noptional arguments:\n  -h, --help            show this help message and exit\n  -d DATA_DIR, --data-dir DATA_DIR\n                        Path to the directory or file with the dataset for training.\n                        Accepts npy-dirs (recommended), h5 files or zarr files.\n                        See documentation for how the dataset should be organized.\n  -y Y_SUFFIX, --y-suffix Y_SUFFIX\n                        Select training target by suffix.\n                        Song-type specific targets can be created with a training dataset,\n                        Defaults to '' (will use the standard target 'y')\n  --save-dir SAVE_DIR   Directory to save training outputs.\n                        The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.\n                        Defaults to current directory ('./').\n  --save-prefix SAVE_PREFIX\n                        Prepend to timestamp.\n                        Name of files created will be SAVE_DIR/SAVE_PREFIX + \"_\" + TIMESTAMP\n                        or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.\n                        Defaults to '' (empty).\n  -m MODEL_NAME, --model-name MODEL_NAME\n                        Network architecture to use.\n                        Use \"tcn\" (TCN) or \"tcn_stft\" (TCN with STFT frontend).\n                        See das.models for a description of all models.\n                        Defaults to 'tcn'.\n  --nb-filters NB_FILTERS\n                        Number of filters per layer.\n                        Defaults to 16.\n  -k KERNEL_SIZE, --kernel-size KERNEL_SIZE\n                        Duration of the filters (=kernels) in samples.\n                        Defaults to 16.\n  --nb-conv NB_CONV     Number of TCN blocks in the network.\n                        Defaults to 3.\n  -u [USE_SEPARABLE [USE_SEPARABLE ...]], --use-separable [USE_SEPARABLE [USE_SEPARABLE ...]]\n                        Specify which TCN blocks should use separable convolutions.\n                        Provide as a space-separated sequence of \"False\" or \"True.\n                        For instance: \"True False False\" will set the first block in a\n                        three-block (as given by nb_conv) network to use separable convolutions.\n                        Defaults to False (no block uses separable convolution).\n  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk size).\n                        Defaults to 1024.\n  -i, --ignore-boundaries, --no-ignore-boundaries\n                        Minimize edge effects by discarding predictions at the edges of chunks.\n                        Defaults to True.\n  --batch-norm, --no-batch-norm\n                        Batch normalize.\n                        Defaults to True.\n  --nb-pre-conv NB_PRE_CONV\n                        Adds downsampling frontend.\n                        TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN - useful for reducing the sampling rate for USV.\n                        TCN_STFT: stft\n                        Defaults to 0 (no frontend).\n  --pre-kernel-size PRE_KERNEL_SIZE\n                        [description]. Defaults to 3.\n  --pre-nb-filters PRE_NB_FILTERS\n                        [description]. Defaults to 16.\n  --pre-nb-conv PRE_NB_CONV\n                        [description]. Defaults to 3.\n  -v VERBOSE, --verbose VERBOSE\n                        Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).\n                        Defaults to 2.\n  --batch-size BATCH_SIZE\n                        Batch size\n                        Defaults to 32.\n  --nb-epoch NB_EPOCH   Maximal number of training epochs.\n                        Training will stop early if validation loss did not decrease in the last 20 epochs.\n                        Defaults to 400.\n  --learning-rate LEARNING_RATE\n                        Learning rate of the model. Defaults should work in most cases.\n                        Values typically range between 0.1 and 0.00001.\n                        If None, uses per model defaults: \"tcn\" 0.0001, \"tcn_stft\" 0.0005).\n                        Defaults to None.\n  --reduce-lr, --no-reduce-lr\n                        Reduce learning rate on plateau.\n                        Defaults to False.\n  --reduce-lr-patience REDUCE_LR_PATIENCE\n                        Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.\n                        Defaults to 5.\n  -f FRACTION_DATA, --fraction-data FRACTION_DATA\n                        Fraction of training and validation to use for training.\n                        Defaults to 1.0.\n  --seed SEED           Random seed to reproducible select fractions of the data.\n                        Defaults to None (no seed).\n  --batch-level-subsampling, --no-batch-level-subsampling\n                        Select fraction of data for training from random subset of shuffled batches.\n                        If False, select a continuous chunk of the recording.\n                        Defaults to False.\n  -t, --tensorboard, --no-tensorboard\n                        Write tensorboard logs to save_dir.\n                        Defaults to False.\n  --log-messages, --no-log-messages\n                        Sets logging level to INFO.\n                        Defaults to False (will follow existing settings).\n  --nb-stacks NB_STACKS\n                        Unused if model name is \"tcn\" or \"tcn_stft\". Defaults to 2.\n  -w, --with-y-hist, --no-with-y-hist\n                        Unused if model name is \"tcn\" or \"tcn_stft\". Defaults to True.\n  -x X_SUFFIX, --x-suffix X_SUFFIX\n                        Select specific training data based on suffix (e.g. x_suffix).\n                        Defaults to '' (will use the standard data 'x')\n\u001b[0m"
+     ]
+    }
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Predict"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "usage: das predict [-h] [--save-filename SAVE_FILENAME] [-v VERBOSE]\n                   [-b BATCH_SIZE] [--event-thres EVENT_THRES]\n                   [--event-dist EVENT_DIST] [--event-dist-min EVENT_DIST_MIN]\n                   [--event-dist-max EVENT_DIST_MAX]\n                   [--segment-thres SEGMENT_THRES]\n                   [--segment-minlen SEGMENT_MINLEN]\n                   [--segment-fillgap SEGMENT_FILLGAP]\n                   recording_filename model_save_name\n\nPredict song labels in a wav file. \n \nSaves hdf5 file with keys: events, segments, class_probabilities\n\npositional arguments:\n  recording_filename    path to the WAV file with the audio data.\n  model_save_name       path with the trunk name of the model.\n\noptional arguments:\n  -h, --help            show this help message and exit\n  --save-filename SAVE_FILENAME\n                        path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.\n  -v VERBOSE, --verbose VERBOSE\n                        display progress bar during prediction. Defaults to 1.\n  -b BATCH_SIZE, --batch-size BATCH_SIZE\n                        number of chunks processed at once . Defaults to None (the default used during training).\n                        Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.\n  --event-thres EVENT_THRES\n                        Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.\n  --event-dist EVENT_DIST\n                        Minimal distance between adjacent events during thresholding.\n                        Prevents detecting duplicate events when the confidence trace is a little noisy.\n                        Defaults to 0.01.\n  --event-dist-min EVENT_DIST_MIN\n                        MINimal inter-event interval for the event filter run during post processing.\n                        Defaults to 0.\n  --event-dist-max EVENT_DIST_MAX\n                        MAXimal inter-event interval for the event filter run during post processing.\n                        Defaults to None (no upper limit).\n  --segment-thres SEGMENT_THRES\n                        Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.\n  --segment-minlen SEGMENT_MINLEN\n                        Minimal duration of a segment used for filtering out spurious detections. Defaults to None.\n  --segment-fillgap SEGMENT_FILLGAP\n                        Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.\n\u001b[0m"
+     ]
+    }
+   ],
+   "source": [
+    "!das predict --help"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "name": "python3",
+   "display_name": "Python 3.7.6 64-bit ('base': conda)"
+  },
+  "widgets": {
+   "application/vnd.jupyter.widget-state+json": {
+    "state": {},
+    "version_major": 2,
+    "version_minor": 0
+   }
+  },
+  "interpreter": {
+   "hash": "8b0ab261a56efe1a5fd9591203310bfa777485461dc7aa1d8ccede5021fac1c0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

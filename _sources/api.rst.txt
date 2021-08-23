@@ -1,0 +1,43 @@
+..
+  This file is auto-generated.
+
+
+.. _api:
+
+Developer API
+=============
+
+.. toctree::
+   :caption: API
+   :maxdepth: 1
+
+.. autosummary::
+   :toctree: api
+
+   das.annot
+   das.data
+   das.data_hash
+   das.evaluate
+   das.event_utils
+   das.io
+   das.make_dataset
+   das.models
+   das.neptune
+   das.npy_dir
+   das.predict
+   das.pulse_utils
+   das.segment_utils
+   das.train
+   das.train_transfer
+   das.utils
+   das.utils_plot
+   das.tcn.tcn
+   das.tcn.tcn_new
+   das._models.das
+   das._models.legacy
+   das.kapre.augmentation
+   das.kapre.backend
+   das.kapre.backend_keras
+   das.kapre.filterbank
+   das.kapre.time_frequency
+   das.kapre.utils

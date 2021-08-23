@@ -1,0 +1,953 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Evaluate a bird song network" href="evaluate_bird.html" /><link rel="prev" title="Generate segment labels" href="label_segments.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+        <title>Evaluate a sine and pulse network - DAS documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style>
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css"></head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">DAS  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/icon.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome to <em>DAS</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials.html">Programming tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Evaluate a sine and pulse network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/flies.html">Courtship song of flies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/birds.html">Song of Bengalese finches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/mice.html">Ultrasonic vocalizations from mice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../technical/technical.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../technical/cli.html">Command line interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.event_utils.html">das.event_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.io.html">das.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <div class="section" id="evaluate-a-sine-and-pulse-network">
+<h1>Evaluate a sine and pulse network<a class="headerlink" href="#evaluate-a-sine-and-pulse-network" title="Permalink to this headline">¶</a></h1>
+<p>Shows how to:</p>
+<ul class="simple">
+<li><p>load the outputs of training or generate predictions anew.</p></li>
+<li><p>generate diagnostic plots to evaluate network performance and detect and troubleshoot any issues.</p></li>
+</ul>
+<p><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = 'jpg'  # smaller mem footprint for page
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span>
+<span class="kn">import</span> <span class="nn">librosa.feature</span><span class="o">,</span> <span class="nn">librosa.display</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span> <span class="nn">das.utils</span><span class="o">,</span> <span class="nn">das.utils_plot</span><span class="o">,</span> <span class="nn">das.predict</span><span class="o">,</span> <span class="nn">das.event_utils</span><span class="o">,</span> <span class="nn">das.segment_utils</span><span class="o">,</span> <span class="nn">das.io</span><span class="o">,</span> <span class="nn">das.evaluate</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'ncb.mplstyle'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">save_name</span></code> should be the stem common to all files produced during training.
+For instance, if the parameter file for the model is <code class="docutils literal notranslate"><span class="pre">res/20191121_094529_params.yaml</span></code>, then <code class="docutils literal notranslate"><span class="pre">save_name</span></code> should be <code class="docutils literal notranslate"><span class="pre">res/20191121_094529</span></code>.</p>
+<p>The tutorials come with two networks for Dmel pulse song:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">models/dmel_pulse_tcn_single_channel/</span></code> is an optimal model for dmel single-channel pulse song</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">res/20191128_170521</span></code> is a smaller TCN model  trained for 20 epochs on the toy data set produced by <span class="xref myst">1_prepare_data.ipynb</span> and trained with the parameters in <span class="xref myst">2_training.ipynb</span>.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># path with prefix to the files generated during training</span>
+<span class="n">save_name</span> <span class="o">=</span> <span class="s1">'/Users/clemens10/Dropbox/dss.paper/models/dmel_all/20200507_173738'</span>  <span class="c1"># single-channel dmel pulse and sine model</span>
+
+<span class="c1"># load parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_params</span><span class="p">(</span><span class="n">save_name</span><span class="p">)</span>
+<span class="n">pprint</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'samplerate_x_Hz'</span><span class="p">]</span>
+
+<span class="c1"># Check whether the model predicts segments and/or events</span>
+<span class="k">try</span><span class="p">:</span> 
+    <span class="n">segment_pred_index</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_types'</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'segment'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'model predicts segments at index </span><span class="si">{</span><span class="n">segment_pred_index</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'model does not predict segments.'</span><span class="p">)</span>
+    <span class="n">segment_pred_index</span> <span class="o">=</span> <span class="kc">None</span>
+   
+<span class="k">try</span><span class="p">:</span> 
+    <span class="n">pulse_pred_index</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_types'</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">'event'</span><span class="p">)</span>    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'model predicts pulses at index </span><span class="si">{</span><span class="n">pulse_pred_index</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">'model does not predict pulse.'</span><span class="p">)</span>
+    <span class="n">pulse_pred_index</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'batch_level_subsampling': False,
+ 'batch_norm': True,
+ 'batch_size': 32,
+ 'class_names': ['noise', 'sine', 'pulse'],
+ 'class_names_pulse': ['noise', 'pulse'],
+ 'class_names_sine': ['noise', 'sine'],
+ 'class_types': ['segment', 'segment', 'event'],
+ 'class_types_pulse': ['segment', 'event'],
+ 'class_types_pulse_fss': ['segment', 'event'],
+ 'class_types_sine': ['segment', 'segment'],
+ 'class_types_sine_fss': ['segment', 'segment'],
+ 'data_dir': '../dat/dmel_single_stern_raw.npy',
+ 'data_padding': 96,
+ 'eventtimes_units': 'seconds',
+ 'filename_endsample_test': [],
+ 'filename_endsample_train': [],
+ 'filename_endsample_val': [],
+ 'filename_startsample_test': [],
+ 'filename_startsample_train': [],
+ 'filename_startsample_val': [],
+ 'filename_test': [],
+ 'filename_train': [],
+ 'filename_val': [],
+ 'first_sample_train': 0,
+ 'first_sample_val': 0,
+ 'fraction_data': None,
+ 'ignore_boundaries': True,
+ 'kernel_size': 32,
+ 'last_sample_train': None,
+ 'last_sample_val': None,
+ 'model_name': 'tcn',
+ 'nb_channels': 1,
+ 'nb_classes': 3,
+ 'nb_conv': 3,
+ 'nb_epoch': 400,
+ 'nb_filters': 32,
+ 'nb_freq': 1,
+ 'nb_hist': 4096,
+ 'nb_pre_conv': 0,
+ 'nb_stacks': 2,
+ 'output_stride': 1,
+ 'reduce_lr': False,
+ 'return_sequences': True,
+ 'sample_weight_mode': 'temporal',
+ 'samplerate_x_Hz': 10000,
+ 'samplerate_y_Hz': 10000,
+ 'save_dir': '/scratch/clemens10/dss/res.stern_raw/res.all',
+ 'seed': None,
+ 'stride': 3904,
+ 'verbose': 2,
+ 'with_y_hist': True,
+ 'x_suffix': '',
+ 'y_offset': 0,
+ 'y_suffix': ''}
+model predicts segments at index 1
+model predicts pulses at index 2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="predict-song">
+<h2>Predict song<a class="headerlink" href="#predict-song" title="Permalink to this headline">¶</a></h2>
+<p>Either load audio (<code class="docutils literal notranslate"><span class="pre">x_test</span></code>), ground truth labels (<code class="docutils literal notranslate"><span class="pre">y_test</span></code>), and confidence scores (<code class="docutils literal notranslate"><span class="pre">y_pred</span></code>) from <code class="docutils literal notranslate"><span class="pre">_results.h5</span></code> generated after training or load the data set and run the model.</p>
+<p>The confidence scores are post-processed to detect events and label segments. During postprocessing events can be filtered by interval (<code class="docutils literal notranslate"><span class="pre">event_dist_min</span></code>, <code class="docutils literal notranslate"><span class="pre">event_dist_max</span></code>, not used here),
+and short segments can be removed (<code class="docutils literal notranslate"><span class="pre">segment_minlen=0.02</span></code>) or brief gaps filled (<code class="docutils literal notranslate"><span class="pre">segment_fillgap=0.02</span></code>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">load_results</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <span class="n">load_results</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_name</span> <span class="o">+</span> <span class="s1">'_results.h5'</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'loading results file produced at the end of training.'</span><span class="p">)</span>
+    <span class="n">datasets</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_from</span><span class="p">(</span><span class="n">save_name</span> <span class="o">+</span> <span class="s1">'_results.h5'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'x_test'</span><span class="p">,</span> <span class="s1">'y_test'</span><span class="p">,</span> <span class="s1">'y_pred'</span><span class="p">])</span>
+    <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">datasets</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'x_test'</span><span class="p">,</span> <span class="s1">'y_test'</span><span class="p">,</span> <span class="s1">'y_pred'</span><span class="p">]]</span>  <span class="c1"># unpack dict items to vars</span>
+    <span class="c1"># predict events and segments from loaded confidence scores</span>
+    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict_song</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> 
+                        <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Load training data set - path is in params['data_dir']. If you trained on a different machine set a custom path </span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/Users/clemens10/Dropbox/dss.paper/dat/dmel_single_stern_raw.npy'</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">])</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="c1"># create confidence scores by running the models and predict events and segments</span>
+    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/ops/resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
+Instructions for updating:
+If using Keras pass *_constraint arguments to layers.
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/keras/layers/core.py:895: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
+  , UserWarning)
+WARNING:tensorflow:From /Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/ops/math_grad.py:1424: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+315/315 [==============================] - 9s 28ms/step
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">1138</span><span class="n">d666c794</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="c1"># create confidence scores by running the models and predict events and segments</span>
+<span class="ne">---&gt; </span><span class="mi">16</span>     <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+<span class="ne">ValueError</span>: too many values to unpack (expected 3)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="inspect-the-raw-confidence-scores">
+<h2>Inspect the raw confidence scores<a class="headerlink" href="#inspect-the-raw-confidence-scores" title="Permalink to this headline">¶</a></h2>
+<p>The DAS network produces a confidence score for each sample, which correspond to the probability of finding a specific song type at that sample. The confidence score is post-processed to create annotations - detect the times of events  and label segments.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">160_000</span><span class="p">,</span> <span class="mi">270_000</span><span class="p">]:</span>
+    <span class="n">t1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="mi">40_000</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">413</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y_test</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Blues'</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])),</span> <span class="n">labels</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Manual'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">414</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Oranges'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])),</span> <span class="n">labels</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'DAS'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_7_0.jpg" src="../_images/evaluate_fly_7_0.jpg"/>
+<img alt="../_images/evaluate_fly_7_1.jpg" src="../_images/evaluate_fly_7_1.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="evaluate-events">
+<h2>Evaluate events<a class="headerlink" href="#evaluate-events" title="Permalink to this headline">¶</a></h2>
+<p>Evaluate event timing and compute performance metrics.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prc_pulse</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">f1_score</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">thres</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+        <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">pulsetimes_pred_confidence</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">)</span>
+        <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">pulsetimes_pred</span> <span class="o">/</span> <span class="n">fs</span>
+        <span class="n">d</span><span class="p">,</span> <span class="n">nn_pred_pulse</span><span class="p">,</span> <span class="n">nn_true_pulse</span><span class="p">,</span> <span class="n">nn_dist</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+        <span class="n">precision</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'precision'</span><span class="p">])</span>
+        <span class="n">recall</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'recall'</span><span class="p">])</span>
+        <span class="n">f1_score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'f1_score'</span><span class="p">])</span>
+        <span class="n">threshold</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thres</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span>
+
+<span class="c1"># Evaluate events based on timing, allowing for some tolerance</span>
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">.01</span>  <span class="c1"># seconds = 10ms</span>
+<span class="n">min_dist</span> <span class="o">=</span> <span class="mf">0.01</span>
+    
+<span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">y_test</span><span class="p">[:,</span> <span class="n">pulse_pred_index</span><span class="p">],</span> <span class="n">thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">pulsetimes_true</span> <span class="o">=</span>  <span class="n">pulsetimes_true</span> <span class="o">/</span> <span class="n">fs</span>
+    <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">'pulse'</span><span class="p">][</span><span class="s1">'seconds'</span><span class="p">]</span>
+
+    <span class="c1"># Evalute event times (match predicted pulse times to their nearest true pulses)</span>
+    <span class="n">d</span><span class="p">,</span> <span class="n">nn_pred_pulse</span><span class="p">,</span> <span class="n">nn_true_pulse</span><span class="p">,</span> <span class="n">nn_dist</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+
+    <span class="c1"># calc performance metrics (precision, recall, f1 score) for different thresholds</span>
+    <span class="n">threshold</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">prc_pulse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[:,</span> <span class="n">pulse_pred_index</span><span class="p">],</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"FP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'FP'</span><span class="p">]</span><span class="si">}</span><span class="s2">, TP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'TP'</span><span class="p">]</span><span class="si">}</span><span class="s2">, FN </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'FN'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"precision </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'precision'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, recall </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'recall'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, f1-score </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'f1_score'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FP 50, TP 635, FN 6
+precision 0.93, recall 0.99, f1-score 0.96
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="event-sequences">
+<h3>Event sequences<a class="headerlink" href="#event-sequences" title="Permalink to this headline">¶</a></h3>
+<p>First, inspect the sequences of true and the predicted event times. They should track each other closely.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pulsetimes_true</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pulsetimes_pred</span> <span class="o">/</span> <span class="mi">60</span><span class="p">,</span> <span class="s1">'.'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">'True events'</span><span class="p">,</span> <span class="s1">'Predicted events'</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Event number'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Time [minutes]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">fs</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">*</span> <span class="mf">1.01</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_11_0.jpg" src="../_images/evaluate_fly_11_0.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="performance-metrics">
+<h3>Performance metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
+<li><p>F1-score for different decision thresholds. The higher the better.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Precision'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Recall'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'square'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Threshold'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'F1 score'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'square'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_13_0.jpg" src="../_images/evaluate_fly_13_0.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="event-timing">
+<h3>Event timing<a class="headerlink" href="#event-timing" title="Permalink to this headline">¶</a></h3>
+<p>The sequence (left) and the distribution (right) of temporal errors (dist to nearest event). Black lines indicate the distance threshold within which true and predicted events are matched. This will reveal drifts in event timing.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nn_dist</span><span class="p">,</span> <span class="s1">'.-'</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">nn_dist</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">'log'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Distance to</span><span class="se">\n</span><span class="s1">nearest event [s]'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">nn_dist</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">.001</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Distance to</span><span class="se">\n</span><span class="s1">nearest event [s]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Probability'</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_15_0.jpg" src="../_images/evaluate_fly_15_0.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="event-shapes">
+<h3>Event shapes<a class="headerlink" href="#event-shapes" title="Permalink to this headline">¶</a></h3>
+<p>Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from wrong annotations</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.pulse_utils</span>
+<span class="k">def</span> <span class="nf">plot_pulses</span><span class="p">(</span><span class="n">pulseshapes</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">''</span><span class="p">):</span>
+    <span class="n">win_hw</span> <span class="o">=</span> <span class="n">pulseshapes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">win_hw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pulseshapes</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">scalebar</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'ms'</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">col</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pulseshapes</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'RdBu_r'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">clim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">win_hw</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">scalebar</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'ms'</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">win_hw</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">pulseshapes_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">get_pulseshapes</span><span class="p">(</span><span class="n">pulsetimes_pred</span> <span class="o">*</span> <span class="n">fs</span> <span class="o">+</span> <span class="n">win_hw</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">win_hw</span><span class="p">)</span>
+    <span class="n">pulsenorm_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">pulseshapes_pred</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="o">-</span><span class="mi">50</span><span class="p">,:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">pulsefreq_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">pulse_freq</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pulseshapes_pred</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="o">-</span><span class="mi">50</span><span class="p">,:]</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+    <span class="n">pulseshapes_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">normalize_pulse</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">pulseshapes_pred</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">tp_pulses</span> <span class="o">=</span> <span class="n">pulseshapes_pred</span><span class="p">[:,</span> <span class="o">~</span><span class="n">nn_pred_pulse</span><span class="o">.</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">fp_pulses</span> <span class="o">=</span> <span class="n">pulseshapes_pred</span><span class="p">[:,</span> <span class="n">nn_pred_pulse</span><span class="o">.</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">pulseshapes_true</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">get_pulseshapes</span><span class="p">(</span><span class="n">pulsetimes_true</span> <span class="o">*</span> <span class="n">fs</span> <span class="o">+</span> <span class="n">win_hw</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">win_hw</span><span class="p">)</span>
+    <span class="n">pulsenorm_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">pulseshapes_true</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="o">-</span><span class="mi">50</span><span class="p">,:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">pulsefreq_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">pulse_freq</span><span class="p">(</span><span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pulseshapes_true</span><span class="p">[</span><span class="mi">50</span><span class="p">:</span><span class="o">-</span><span class="mi">50</span><span class="p">,:]</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+    <span class="n">pulseshapes_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">das</span><span class="o">.</span><span class="n">pulse_utils</span><span class="o">.</span><span class="n">normalize_pulse</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">pulseshapes_true</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">fn_pulses</span> <span class="o">=</span> <span class="n">pulseshapes_true</span><span class="p">[:,</span> <span class="n">nn_true_pulse</span><span class="o">.</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plot_pulses</span><span class="p">(</span><span class="n">tp_pulses</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'True positives (N=</span><span class="si">{</span><span class="n">tp_pulses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+    <span class="n">plot_pulses</span><span class="p">(</span><span class="n">fp_pulses</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'False positives (N=</span><span class="si">{</span><span class="n">fp_pulses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+    <span class="n">plot_pulses</span><span class="p">(</span><span class="n">fn_pulses</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'False negatives (N=</span><span class="si">{</span><span class="n">fn_pulses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_17_0.jpg" src="../_images/evaluate_fly_17_0.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="troubleshooting">
+<h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
+<p>Things to do when the predictions look weird:</p>
+<ul class="simple">
+<li><p>Plot the raw predictions alongside the input song recording, the labels used for training, and the raw event times. This will reveal whether there is an offset or even a mismatch in sampling frequencies.</p></li>
+<li><p>Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the groundtruth (manual annotation).</p></li>
+<li><p>Inspect the amplitude and frequency of false negative and false positive pulses and look for patterns. Maybe the network fails for soft pulses</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="evaluate-segments">
+<h2>Evaluate segments<a class="headerlink" href="#evaluate-segments" title="Permalink to this headline">¶</a></h2>
+<p>Inspect the post-processed segment labels</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="mi">55_000</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="mi">10_000</span>
+
+<span class="n">nb_channels</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">x_snippet</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,:]</span>
+
+<span class="n">segment_labels_true</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_test</span><span class="p">[:,</span> <span class="n">segment_pred_index</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+<span class="n">segment_labels_pred</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s1">'samples'</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">((</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_snippet</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nb_channels</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'tight'</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y_test</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Blues'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])),</span> <span class="n">labels</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Manual'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Oranges'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">segment_labels_pred</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'c'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])),</span> <span class="n">labels</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'DAS'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'tight'</span><span class="p">)</span>
+<span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+<span class="c1"># compute and display spectrograms for each audio channel</span>
+<span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_snippet</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+    <span class="n">specgram</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="o">+</span><span class="n">cnt</span><span class="p">)</span>
+    <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">specgram</span><span class="p">),</span> <span class="n">sr</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_axis</span><span class="o">=</span><span class="s1">'mel'</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">'ms'</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'turbo'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">clim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cnt</span><span class="o">&lt;</span><span class="n">nb_channels</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">([])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Freq on chan </span><span class="si">{</span><span class="n">cnt</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/evaluate_fly_20_0.jpg" src="../_images/evaluate_fly_20_0.jpg"/>
+</div>
+</div>
+<div class="section" id="sample-wise-performance-metrics">
+<h3>Sample-wise performance metrics<a class="headerlink" href="#sample-wise-performance-metrics" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
+<li><p>F1-score for different decision thresholds. The higher the better.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">annot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color_high</span><span class="o">=</span><span class="s1">'w'</span><span class="p">,</span> <span class="n">color_low</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">color_threshold</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">data</span>
+
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">labels</span><span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span><span class="si">:</span><span class="s1">1.0f</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> 
+                <span class="n">ha</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span> 
+                <span class="n">c</span><span class="o">=</span><span class="n">color_high</span> <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span><span class="o">&gt;</span><span class="n">color_threshold</span> <span class="k">else</span> <span class="n">color_low</span><span class="p">)</span>
+
+<span class="c1"># Calculate PR-curve - this one does not post-process labels (fill gaps, remove short segments)</span>
+<span class="n">min_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">precision_recall_curve</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">[:</span><span class="n">min_len</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span>
+                                                                      <span class="n">y_pred</span><span class="p">[:</span><span class="n">min_len</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="n">segment_pred_index</span><span class="p">])</span>    
+
+<span class="n">f1score</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
+<span class="n">threshold_opt</span> <span class="o">=</span> <span class="n">threshold</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f1score</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">precision</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">recall</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">[::</span><span class="mi">10</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Precision'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Recall'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'square'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">threshold</span><span class="p">[:],</span> <span class="n">f1score</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">[:])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Threshold'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'F1 score'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'square'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+
+
+<span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_segments</span><span class="p">(</span><span class="n">y_test</span><span class="p">[:</span><span class="n">min_len</span><span class="p">,</span> <span class="n">segment_pred_index</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="p">,</span> 
+                                                  <span class="n">segments</span><span class="p">[</span><span class="s1">'samples'</span><span class="p">][:</span><span class="n">min_len</span><span class="p">],</span>
+                                                  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">])[[</span><span class="mi">0</span><span class="p">,</span> <span class="n">segment_pred_index</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
+<span class="n">conf_mat_norm</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">conf_mat</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">conf_mat_norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">'Blues'</span><span class="p">)</span>
+<span class="n">annot</span><span class="p">(</span><span class="n">conf_mat_norm</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Noise'</span><span class="p">,</span> <span class="s1">'Sine'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">'Noise'</span><span class="p">,</span> <span class="s1">'Sine'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Manual'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'DAS'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Confusion matrix'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'square'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
+
+       noise      0.996     0.989     0.993   1060420
+        sine      0.934     0.976     0.955    165628
+
+    accuracy                          0.988   1226048
+   macro avg      0.965     0.983     0.974   1226048
+weighted avg      0.988     0.988     0.988   1226048
+</pre></div>
+</div>
+<img alt="../_images/evaluate_fly_22_1.jpg" src="../_images/evaluate_fly_22_1.jpg"/>
+</div>
+</div>
+</div>
+<div class="section" id="evaluate-segment-timing">
+<h3>Evaluate segment timing<a class="headerlink" href="#evaluate-segment-timing" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fixlen</span><span class="p">(</span><span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">onsets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
+        <span class="n">onsets</span> <span class="o">=</span> <span class="n">onsets</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">onsets</span><span class="p">):</span>
+        <span class="n">offsets</span> <span class="o">=</span> <span class="n">offsets</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span>
+    
+<span class="n">tol</span> <span class="o">=</span> <span class="mf">.04</span>  <span class="c1"># seconds = 40ms</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">segment_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">segment_onset_times_true</span><span class="p">,</span> <span class="n">segment_offset_times_true</span> <span class="o">=</span> <span class="n">fixlen</span><span class="p">(</span><span class="o">*</span><span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">segment_timing</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">))</span>
+    <span class="n">segment_onset_times_pred</span><span class="p">,</span> <span class="n">segment_offset_times_pred</span> <span class="o">=</span> <span class="n">fixlen</span><span class="p">(</span><span class="o">*</span><span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">segment_timing</span><span class="p">(</span><span class="n">segment_labels_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">))</span>
+    
+    <span class="n">durations_true</span> <span class="o">=</span> <span class="n">segment_offset_times_true</span> <span class="o">-</span> <span class="n">segment_onset_times_true</span>
+    <span class="n">durations_pred</span> <span class="o">=</span> <span class="n">segment_offset_times_pred</span> <span class="o">-</span> <span class="n">segment_onset_times_pred</span>
+
+    <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_segment_timing</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">,</span> <span class="n">segment_labels_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">segment_onsets_report</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">segment_offsets_report</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Temporal errors of all predicted sine onsets: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">nearest_predicted_onsets</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="s1"> ms'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Temporal errors of all predicted sine offsets: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">nearest_predicted_offsets</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s1">1.2f</span><span class="si">}</span><span class="s1"> ms'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">nearest_predicted_onsets</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">.01</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Distance to nearest</span><span class="se">\n</span><span class="s1">segment onset [s]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Probability'</span><span class="p">);</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">nearest_predicted_offsets</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">tol</span><span class="p">,</span> <span class="mf">.01</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">tol</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Distance to nearest</span><span class="se">\n</span><span class="s1">segment offset [s]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Probability'</span><span class="p">);</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">durations_true</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">'bar'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'true'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">durations_pred</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="n">histtype</span><span class="o">=</span><span class="s1">'bar'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'pred'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Segment duration [seconds]'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Count'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
+    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000
+{'FP': 7, 'TP': 33, 'FN': 6, 'precision': 0.825, 'recall': 0.8461538461538461, 'f1_score': 0.8354430379746836}
+{'FP': 7, 'TP': 33, 'FN': 6, 'precision': 0.825, 'recall': 0.8461538461538461, 'f1_score': 0.8354430379746836}
+Temporal errors of all predicted sine onsets: 8.80 ms
+Temporal errors of all predicted sine offsets: 9.95 ms
+</pre></div>
+</div>
+<img alt="../_images/evaluate_fly_24_1.jpg" src="../_images/evaluate_fly_24_1.jpg"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="evaluate_bird.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Evaluate a bird song network</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="label_segments.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Generate segment labels</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Jan Clemens
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/tutorials/evaluate_fly.ipynb.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Evaluate a sine and pulse network</a><ul>
+<li><a class="reference internal" href="#predict-song">Predict song</a></li>
+<li><a class="reference internal" href="#inspect-the-raw-confidence-scores">Inspect the raw confidence scores</a></li>
+<li><a class="reference internal" href="#evaluate-events">Evaluate events</a><ul>
+<li><a class="reference internal" href="#event-sequences">Event sequences</a></li>
+<li><a class="reference internal" href="#performance-metrics">Performance metrics</a></li>
+<li><a class="reference internal" href="#event-timing">Event timing</a></li>
+<li><a class="reference internal" href="#event-shapes">Event shapes</a></li>
+<li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#evaluate-segments">Evaluate segments</a><ul>
+<li><a class="reference internal" href="#sample-wise-performance-metrics">Sample-wise performance metrics</a></li>
+<li><a class="reference internal" href="#evaluate-segment-timing">Evaluate segment timing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/main.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    </body>
+</html>

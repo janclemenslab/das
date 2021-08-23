@@ -1,0 +1,417 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developer API" href="../api.html" /><link rel="prev" title="Command line interfaces" href="cli.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+        <title>Data formats - DAS documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style>
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css"></head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">DAS  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/icon.png" alt="Logo"/>
+  </div>
+  
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome to <em>DAS</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/flies.html">Courtship song of flies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/birds.html">Song of Bengalese finches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../unsupervised/mice.html">Ultrasonic vocalizations from mice</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="technical.html">GUI tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cli.html">Command line interfaces</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Data formats</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.event_utils.html">das.event_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.io.html">das.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <div class="section" id="data-formats">
+<h1>Data formats<a class="headerlink" href="#data-formats" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="format-of-exported-annotations-and-audio">
+<h2>Format of exported annotations and audio<a class="headerlink" href="#format-of-exported-annotations-and-audio" title="Permalink to this headline">¶</a></h2>
+<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
+<p>Annotations are exported to <code class="docutils literal notranslate"><span class="pre">csv</span></code> (comma-separated values) and audio data to <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files) or <code class="docutils literal notranslate"><span class="pre">wav</span></code> (wave audio file):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.npz</span></code> consist of two variables:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code> array with the audio data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samplerate</span></code>: <code class="docutils literal notranslate"><span class="pre">[1,]</span></code> array with the sample rate in Hz</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> contains three columns:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> - the name of the song or syllable type</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> - the start time of the syllable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.</p></li>
+<li><p>Each row in the file contains to a single annotation with <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> and an arbitrary stop_seconds. For event-like types (song pulses), both <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> are <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="data-structure-used-for-training">
+<h2>Data structure used for training<a class="headerlink" href="#data-structure-used-for-training" title="Permalink to this headline">¶</a></h2>
+<p>For training, <em>DAS</em> expects a simple dictionary-like data structure, sth like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data
+  ├── ['train']
+  │      ├── ['x']         (the audio data - samples x channels)
+  │      ├── ['y']        (annotations - samples x song types, first one is noise, needs to add to )
+  │      ├── ['y_suffix1'] (optional, multiple allowed)
+  ├── ['val']
+  │      ├── ['x']
+  │      ├── ['y']
+  │      ├── ['y_suffix1']
+  ├── ['test']
+  │      ├── ['x']
+  │      ├── ['y']
+  │      ├── ['y_suffix1']
+  └── attrs
+         └── ['samplerate'] (of x and y in Hz)
+             ['class_names']
+             ['class_types'] (event or segment)
+             ['class_names_suffix1']
+             ['class_types_suffix1'] (event or segment)
+</pre></div>
+</div>
+<p>Top-level keys <code class="docutils literal notranslate"><span class="pre">train</span></code>, <code class="docutils literal notranslate"><span class="pre">val</span></code>, and <code class="docutils literal notranslate"><span class="pre">test</span></code> correspond to the data splits for training, validation, and test. Training and validation data are required. Validation is used during training to monitor progress and adjust the learning rate or stop training early. Test data is optional - it is used after training to assess the performance of the model.</p>
+<p>Each a top-level key contains a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the following keys:</p>
+<ul class="simple">
+<li><p>Inputs <code class="docutils literal notranslate"><span class="pre">x</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code></p>
+<ul>
+<li><p>First dim is always samples, last is typically audio channels (&gt;=1).</p></li>
+<li><p>For spectrogram representations, could also be frequency channels <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">freqs]</span></code> for single-channel recordings. For multi-channel data time, the frequency channels from the spectrum of each audio channels can be stacked to <code class="docutils literal notranslate"><span class="pre">[time,</span> <span class="pre">channels*freqs]</span></code></p></li>
+</ul>
+</li>
+<li><p>Targets <code class="docutils literal notranslate"><span class="pre">y</span></code> for each sample in ‘x’: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">nb_classes]</span></code></p>
+<ul>
+<li><p>Binary (0/1) or a probability but should sum to 1.0 across classes for each sample</p></li>
+<li><p>Multiple targets can be specified by adding target variables with a suffix <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>. That allows you to train the a network with the same x but different y’s (e.g. pulse or sine-only). <em>Must</em> named like <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, where <code class="docutils literal notranslate"><span class="pre">somesuffix</span></code> can be an arbitrary string. The target can be specified during training with the <code class="docutils literal notranslate"><span class="pre">y_suffix=somesuffix</span></code> argument, which defaults to ‘’ (the standard target w/o suffix <code class="docutils literal notranslate"><span class="pre">y</span></code>). Training y-suffixes also requires suffix-specific attributes specifying the name and type of the target - <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classtype_somesuffix</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Metadata in dict <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_x_Hz</span></code>, <code class="docutils literal notranslate"><span class="pre">samplerate_y_Hz</span></code> - should be equal</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_song_Hz</span></code> (optional) - of <code class="docutils literal notranslate"><span class="pre">song</span></code>, the original recording in case <code class="docutils literal notranslate"><span class="pre">x</span></code> is the result of a wavelet or spectrogram transform</p></li>
+<li><p>class name and type information for each target:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">classnames</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> - one for each 2nd dim in y</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">classtype</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> (optional for training) - <code class="docutils literal notranslate"><span class="pre">event</span></code> (e.g. pulse) or <code class="docutils literal notranslate"><span class="pre">segment</span></code> (sine or syllable)</p></li>
+<li><p>for each target specified via <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, create a <code class="docutils literal notranslate"><span class="pre">classnames_suffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> attribute</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Data is accessed via <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> and the metadata via <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a standard attribute for storing metadata in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">zarr</span></code> files and can be easily attached to a standard dictionary: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">dict();</span> <span class="pre">a.attrs</span> <span class="pre">=</span> <span class="pre">{'samplerate_x_Hz':</span> <span class="pre">10_000}</span></code>.</p>
+<p>This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org%27">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
+<p>We provide a alternative storage backend, <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code>, that mirrors the data structure in directory hierarchy with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html">numpy’s npy</a> files (inspired by Cyrille Rossant’s series of blog posts (<a class="reference external" href="https://cyrille.rossant.net/moving-away-hdf5/">1</a>, <a class="reference external" href="https://cyrille.rossant.net/should-you-use-hdf5/">2</a>), <a class="reference external" href="https://github.com/bastibe/jbof">jbof</a> and <a class="reference external" href="https://exdir.readthedocs.io/">exdir</a>). Keys map to directories; values and <code class="docutils literal notranslate"><span class="pre">attrs</span></code> map to <code class="docutils literal notranslate"><span class="pre">npy</span></code> files (see <code class="docutils literal notranslate"><span class="pre">das.npy_dir</span></code>). For instance, <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> is stored in <code class="docutils literal notranslate"><span class="pre">dirname.npy/train/x.npy</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is stored in the top-level directory. Storing data as <code class="docutils literal notranslate"><span class="pre">npy</span></code> files provides a fast memory-mapping mechanism for out-of-memory access if your data set does not fit in memory. While zarr, h5py, and xarray provide mechanisms for out-of-memory access, they tend to be slower in our experience or require fine tuning to reach the performance reached with memmapped npy files.</p>
+<p>During training, data is loaded (see <code class="docutils literal notranslate"><span class="pre">das.io</span></code>) with the correct backend given by the extension of the file or directory. Currently supported files types are:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zarr.readthedocs.io/">zarr</a> storages (files or directories ending in <code class="docutils literal notranslate"><span class="pre">.zarr</span></code>),</p></li>
+<li><p><a class="reference external" href="http://docs.h5py.org/">hdf5</a> files (files ending in <code class="docutils literal notranslate"><span class="pre">.h5</span></code>),</p></li>
+<li><p>directories ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.save.html">numpy</a> files.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">zarr</span></code> is great for assembling and storing datasets, in particular for datasets with unknown final size since it allows appending to arrays, and is used as an intermediate storage during dataset assembly. For training, <code class="docutils literal notranslate"><span class="pre">npy</span></code> is the fastest, in particular for random access of datasets that are too large to fit in memory, thanks to highly efficient memory mapping.</p>
+</div>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../api.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Developer API</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="cli.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Command line interfaces</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Jan Clemens
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="../_sources/technical/data_formats.md.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Data formats</a><ul>
+<li><a class="reference internal" href="#format-of-exported-annotations-and-audio">Format of exported annotations and audio</a></li>
+<li><a class="reference internal" href="#data-structure-used-for-training">Data structure used for training</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/main.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    </body>
+</html>
