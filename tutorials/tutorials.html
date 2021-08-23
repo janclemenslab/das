@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Convert your own annotations and audio data" href="convert.html" /><link rel="prev" title="Predict" href="../tutorials_gui/predict.html" />
 
     <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
-        <title>Programming tutorials - DAS documentation</title>
+        <title>Programming documentation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -160,17 +160,17 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../intro.html">Welcome to <em>DAS</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Programming tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Programming documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
@@ -245,19 +245,23 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="section" id="programming-tutorials">
-<span id="pro"></span><h1>Programming tutorials<a class="headerlink" href="#programming-tutorials" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="train.html">Train</a></li>
-<li class="toctree-l1"><a class="reference internal" href="predict.html">Predict</a></li>
-<li class="toctree-l1"><a class="reference internal" href="colab.html">Training and inference with colab</a></li>
-<li class="toctree-l1"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluate_fly.html">Evaluate a sine and pulse network</a></li>
-<li class="toctree-l1"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
+        <div class="section" id="programming-documentation">
+<span id="pro"></span><h1>Programming documentation<a class="headerlink" href="#programming-documentation" title="Permalink to this headline">¶</a></h1>
+<p>While <em>DAS</em> can be used via the GUI, the <em>das</em> programming module and
+command-line interface provide more control, flexibility and automation:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="convert.html">Convert your own annotation or audio data format for use with the
+GUI or training</a></p></li>
+<li><p><a class="reference external" href="make_ds_notebook.html">Make dataset from your own data</a></p></li>
+<li><p><a class="reference external" href="train.html">Train a network and optimize network parameters</a></p></li>
+<li><p><a class="reference external" href="predict.html">Infer annotations using a trained network</a></p></li>
+<li><p><a class="reference external" href="colab.html">Train and predict using a free GPU on colab</a></p></li>
+<li><p>Details on <a class="reference external" href="label_segments.html">generating segment labels</a></p></li>
+<li><p>Evaluate networks with examples for <a class="reference external" href="evaluate_fly.html">fly song</a> and
+<a class="reference external" href="evaluate_bird.html">bird song</a></p></li>
+<li><p><a class="reference external" href="realtime.html">Annotate song in realtime for closed loop experiments</a></p></li>
 </ul>
+<div class="toctree-wrapper compound">
 </div>
 </div>
 

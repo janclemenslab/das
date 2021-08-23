@@ -1,11 +1,23 @@
 
 .. _gui:
 
-GUI tutorials
-=============
+GUI documentation
+=================
+
+Start with the `quick start tutorial <../quickstart.html>`__.
+
+The GUI documentation contains a comprehensive description of all menus
+and options to:
+
+- `load data <load.html>`__
+- `annotate song <annotate.html>`__
+- `train a network <train.html>`__
+- `predict annotations <predict.html>`__
+
 
 .. toctree::
    :maxdepth: 1
+   :hidden:
 
    :toctree: GUI
    load
