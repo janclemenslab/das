@@ -4,9 +4,13 @@
 Technical details
 =============
 
+Contains technical information about:
+
 .. toctree::
    :maxdepth: 1
 
    :toctree: tec
    cli
    data_formats
+
+

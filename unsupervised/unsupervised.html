@@ -137,7 +137,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -240,19 +240,97 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <div class="section" id="unsupervised-classification">
 <span id="uns"></span><h1>Unsupervised classification<a class="headerlink" href="#unsupervised-classification" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="flies.html">Courtship song of flies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="birds.html">Song of Bengalese finches</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mice.html">Ultrasonic vocalizations from mice</a></li>
+<p>Unsupervised classifications is an alternative to tedious manual
+classification of song types: Use <em>DAS</em> via the GUI or the command line
+to detect anything that you think is song and then classify song into
+different types afterwards. The song types discovered with unsupervised
+methods can then be used to create a training dataset for training <em>DAS</em>
+to directly label the different song types.</p>
+<p><em>DAS-unsupervised</em> provides tools for applying this approach with a
+focus on pre-processing acoustic signals for unsupervised
+classification:</p>
+<ul class="simple">
+<li><p>extract waveforms or spectrograms of acoustic events from a recording</p></li>
+<li><p>normalize the duration, center frequency, amplitude, or sign of
+waveform/spectrograms</p></li>
 </ul>
+<p>Unsupervised classification itself is performed using existing
+libraries:</p>
+<ul class="simple">
+<li><p>dimensionality reduction:
+<a class="reference external" href="https://umap-learn.readthedocs.io/">umap</a></p></li>
+<li><p>clustering: <a class="reference external" href="https://hdbscan.readthedocs.io/">hdbscan</a> or
+<a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn</a></p></li>
+</ul>
+<p>Code for the unsupervised classification can be found at
+<a class="reference external" href="https://github.com/janclemenslab/DAS_unsupervised">https://github.com/janclemenslab/DAS_unsupervised</a>.</p>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>We illustrate different pre-processing and classification strategies
+using three different examples</p>
+<ul class="simple">
+<li><p><a class="reference external" href="flies.html">Courtship song of flies</a> - normalize waveforms to
+automatically detect sine song and different pulse types.</p></li>
+<li><p><a class="reference external" href="birds.html">Song of Bengalese finches</a> - process syllable
+spectrograms to classify &gt;40 syllable types.</p></li>
+<li><p><a class="reference external" href="mice.html">Ultrasonic vocalizations from mice</a> - process
+syllable spectrograms to group syllables by the shape of their
+spectral contours.</p></li>
+</ul>
+<p><img alt="image1" src="../_images/banner.png"/></p>
+</div>
+<div class="section" id="acknowledgements">
+<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
+<p>Code from the following open source packages was modified and integrated
+into das-unsupervised:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/timsainb/avgn_paper">avgn</a> (Sainburg et
+al. 2020)</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/noisereduce">noisereduce</a></p></li>
+<li><p><a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">fly pulse
+classifier</a>
+(Clemens et al. 2018)</p></li>
+</ul>
+<p>Data sources:</p>
+<ul class="simple">
+<li><p>flies: <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">David
+Stern</a>
+(Stern, 2014)</p></li>
+<li><p>mice: data provided by Kurt Hammerschmidt (Ivanenko et al. 2020)</p></li>
+<li><p>birds: <a class="reference external" href="https://doi.org/10.6084/m9.figshare.4805749.v5">Bengalese finch song
+repository</a>
+(Nicholson et al. 2017)</p></li>
+</ul>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>T Sainburg, M Thielk, TQ Gentner (2020) Latent space visualization,
+characterization, and generation of diverse vocal communication
+signals. Biorxiv . <a href="#id1"><span class="problematic" id="id2">`https://doi.org/10.1101/870311 &lt;&gt;`__</span></a></p></li>
+<li><p>J Clemens, P Coen, F Roemschied, T Perreira, D Mazumder, D Aldorando,
+D Pacheco, M Murthy (2018) Discovery of a New Song Mode in Drosophila
+Reveals Hidden Structure in the Sensory and Neural Drivers of
+Behavior. Current Biology 28, 2400–2412.e6 (2018).
+<a href="#id1"><span class="problematic" id="id3">`https://doi.org/10.1016/j.cub.2018.06.011 &lt;&gt;`__</span></a></p></li>
+<li><p>D Stern (2014). Reported Drosophila courtship song rhythms are
+artifacts of data analysis. BMC Biology</p></li>
+<li><p>A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz
+(2020) Classifying sex and strain from mouse ultrasonic vocalizations
+using deep learning. PLoS Comput Biol 16(6): e1007918.
+<a href="#id1"><span class="problematic" id="id4">`https://doi.org/10.1371/journal.pcbi.1007918 &lt;&gt;`__</span></a></p></li>
+<li><p>D Nicholson, JE Queen, S Sober (2017). Bengalese finch song
+repository. <a href="#id1"><span class="problematic" id="id5">`https://doi.org/10.6084/m9.figshare.4805749.v5 &lt;&gt;`__</span></a></p></li>
+</ol>
+<div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
@@ -298,8 +376,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Unsupervised classification</a><ul>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
