@@ -5,7 +5,6 @@ Programming tutorials
 =============
 
 .. toctree::
-   :caption: pro
    :maxdepth: 1
 
    :toctree: pro

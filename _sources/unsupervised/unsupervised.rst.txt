@@ -5,7 +5,6 @@ Unsupervised classification
 =============
 
 .. toctree::
-   :caption: uns
    :maxdepth: 1
 
    :toctree: uns
