@@ -255,7 +255,7 @@
 </div>
 <div class="section" id="start-the-gui">
 <h2>Start the GUI<a class="headerlink" href="#start-the-gui" title="Permalink to this headline">¶</a></h2>
-<p>Install <em>DAS</em> following these <span class="xref myst">instructions</span>. Then start the GUI by opening a terminal, activating the conda environment created during install and typing <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>:</p>
+<p>Install <em>DAS</em> following these <a class="reference internal" href="installation.html"><span class="doc std std-doc">instructions</span></a>. Then start the GUI by opening a terminal, activating the conda environment created during install and typing <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate das
 das gui
 </pre></div>
@@ -326,7 +326,7 @@ das gui
 </div>
 <div class="section" id="export-annotations-and-make-a-dataset">
 <h2>Export annotations and make a dataset<a class="headerlink" href="#export-annotations-and-make-a-dataset" title="Permalink to this headline">¶</a></h2>
-<p><em>DAS</em> achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording—a couple of pulse trains and sine song segments—you can train a network to help with annotating the rest of the data.</p>
+<p><em>DAS</em> achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording—<em>all</em> pulses and sine song segments in that section of the song—you can train a network to help with annotating the rest of the data.</p>
 <p>Trainining requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code> to a new folder (not the one containing the original audio)—let’s call the folder <code class="docutils literal notranslate"><span class="pre">quickstart</span></code>. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.</p>
 <div class="figure align-default" id="xb-export-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_export.png"><img alt="export audio and annotations" src="_images/xb_quick_export.png" style="width: 450px;"/></a>
@@ -369,11 +369,11 @@ das gui
 </div>
 <div class="section" id="proof-reading">
 <h2>Proof reading<a class="headerlink" href="#proof-reading" title="Permalink to this headline">¶</a></h2>
-<p>To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. Once you have corrected all errors in the view, approve annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code> or <code class="docutils literal notranslate"><span class="pre">H</span></code> for approving only the active or all song types, respectively. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>).</p>
+<p>To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. See <a class="reference external" href="#create-annotations-manually">Create annotations</a> and <a class="reference external" href="#edit-annotations">Edit annotations</a>. Once you have corrected all errors in the view, select the proposals type you want to fix (<code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> or <code class="docutils literal notranslate"><span class="pre">pulse_proposals</span></code>), and approve the corresponding annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code>. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>). Alternatively, <code class="docutils literal notranslate"><span class="pre">H</span></code> will approve proposals of all song types in view.</p>
 </div>
 <div class="section" id="go-back-to-export">
 <h2>Go back to “Export”<a class="headerlink" href="#go-back-to-export" title="Permalink to this headline">¶</a></h2>
-<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set (TODO: add option to specify a file as the test set to the “Make dataset” dialog) and with a larger number of epochs.</p>
+<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.</p>
 </div>
 </div>
 

@@ -8,7 +8,7 @@ To follow the tutorial, download and open this [audio file](https://github.com/j
 
 ## Start the GUI
 
-Install _DAS_ following these [instructions](/install). Then start the GUI by opening a terminal, activating the conda environment created during install and typing `das gui`:
+Install _DAS_ following these [instructions](/installation). Then start the GUI by opening a terminal, activating the conda environment created during install and typing `das gui`:
 ```shell
 conda activate das
 das gui
@@ -97,7 +97,7 @@ Dragging moves, right click deletes annotations.
 :::
 
 ## Export annotations and make a dataset
-_DAS_ achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording---a couple of pulse trains and sine song segments---you can train a network to help with annotating the rest of the data.
+_DAS_ achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording---*all* pulses and sine song segments in that section of the song---you can train a network to help with annotating the rest of the data.
 
 Trainining requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.
 
@@ -146,7 +146,7 @@ Predict in proof-reading mode on the next 60 seconds.
 In contrast to training, prediction is very fast, and does not require a GPU---should finish within 30 seconds. The proposed annotations should be already good --- most pulses should be correctly detected. Sine song is harder to predict and will likely be often missed or chopped up into multiple segments with gaps in between.
 
 ## Proof reading
-To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors---add missing annotations, remove false positive annotations, adjust the timing of annotations. Once you have corrected all errors in the view, approve annotations with `G` or `H` for approving only the active or all song types, respectively. This will rename the proposals in the view to the original names (for instance, `sine_proposals` -> `sine`).
+To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors---add missing annotations, remove false positive annotations, adjust the timing of annotations. See [Create annotations](#create-annotations-manually) and [Edit annotations](#edit-annotations). Once you have corrected all errors in the view, select the proposals type you want to fix (`sine_proposals` or `pulse_proposals`), and approve the corresponding annotations with `G`. This will rename the proposals in the view to the original names (for instance, `sine_proposals` -> `sine`). Alternatively, `H` will approve proposals of all song types in view.
 
 ## Go back to "Export"
-Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set (TODO: add option to specify a file as the test set to the "Make dataset" dialog) and with a larger number of epochs.
+Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
