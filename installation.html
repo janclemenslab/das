@@ -263,11 +263,11 @@ __CUDA libraries for using the GPU__: While _DAS_ works well for annotating song
 <div class="section" id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">¶</a></h2>
 <p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages, including the GUI:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das -c conda-forge -c ncb -c fastai -n das
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das -c conda-forge -c ncb -c fastai -n das
 </pre></div>
 </div>
 <p>If you do not need the graphical user interface (for instance, when training <em>DAS</em> on a server), install the non-GUI version:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das -c conda-forge -c ncb -c fastai -n das
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das-nogui -c conda-forge -c ncb -c fastai -n das
 </pre></div>
 </div>
 </div>
@@ -393,8 +393,6 @@ das gui
     <script src="_static/scripts/main.js"></script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
