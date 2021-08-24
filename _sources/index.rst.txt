@@ -74,6 +74,32 @@ Tutorials
     Discover song types in annotated syllables.
 
 
+Technical documentation
+-----------------------
+
+.. panels ::
+
+    .. link-button :: technical/technical
+        :text: Technical details
+        :type: ref
+        :classes: stretched-link
+    +++
+
+    Command-line interface and data structures.
+
+    ---
+
+    .. link-button :: api
+        :text: Developer API
+        :type: ref
+        :classes: stretched-link
+
+    +++
+
+    Comprehensive description of classes and functions.
+
+
+
 
 .. toctree::
    :maxdepth: 2

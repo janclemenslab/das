@@ -256,6 +256,37 @@
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">...</span></span></dt>
 <dd></dd></dl>
+<p>[summary]</p>
+<p>x and y can be mem-mapped numpy arrays or lazily loaded hdf5 (zarr, xarray) datasets. Dask arrays do not work since they are immutable.
+:param x: [nb_samples, …]
+:type x: np.ndarray
+:param y: [nb_samples,  nb_classes] - class probabilities - so sum over classes for each sample should be 1.0. Defaults to None.</p>
+<blockquote>
+<div><p>If None, getitem will only return x batches - neither y nor sample weights</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – number of batches to return. Defaults to 32.</p></li>
+<li><p><strong>shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – randomize order of batches. Defaults to True.</p></li>
+<li><p><strong>nb_hist</strong> (<em>int</em><em>, </em><em>optional</em>) – nb of time steps per batch. Defaults to 1.</p></li>
+<li><p><strong>y_offset</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – time offset between x and y. nb_hist/2 if None (predict central sample in each batch). Defaults to None.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – nb of time steps between batches. Defaults to 1.</p></li>
+<li><p><strong>cut_trailing_dim</strong> (<em>bool</em><em>, </em><em>optional</em>) – Remove trailing dimension. Defaults to False.</p></li>
+<li><p><strong>with_y_hist</strong> (<em>bool</em><em>, </em><em>optional</em>) – y as central value of the x_hist window (False) or the full sequence covering
+the x_hist window (True). Defaults to False.</p></li>
+<li><p><strong>data_padding</strong> (<em>int</em><em>, </em><em>optional</em>) – if &gt; 0, will set weight of as many samples at start and end of nb_hist window to zero. Defaults to 0.</p></li>
+<li><p><strong>first_sample</strong> (<em>int</em>) – 0</p></li>
+<li><p><strong>last_sample</strong> (<em>int</em>) – None - last_sample in x, otherwise last_sample</p></li>
+<li><p><strong>output_stride</strong> (<em>int</em>) – Take every Nth sample as output. Useful in combination with a “downsampling frontend”. Defaults to 1 (every sample).</p></li>
+<li><p><strong>nb_repeats</strong> (<em>int</em>) – Number of repeats before the dataset runs out of data. Defaults to 1 (no repeats).</p></li>
+<li><p><strong>shuffle_subset</strong> (<em>float</em>) – Fraction of batches to use - only works if shuffle=True</p></li>
+<li><p><strong>unpack_channels</strong> (<em>bool</em>) – For multi-channel models with single-channel preprocessing -
+unpack [nb_hist, nb_channels] -&gt; [nb_channels * [nb_hist, 1]]</p></li>
+<li><p><strong>mask_input</strong> (<em>int</em>) – halfwidth of the number of central samples to mask. Defaults to None (no masking).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.data.AudioSequence.unroll">
 <span class="sig-name descname"><span class="pre">unroll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">return_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">merge_batches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/data.html#AudioSequence.unroll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.data.AudioSequence.unroll" title="Permalink to this definition">¶</a></dt>

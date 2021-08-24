@@ -247,10 +247,24 @@
         </div>
         <div class="section" id="module-das.neptune">
 <span id="das-neptune"></span><h1>das.neptune<a class="headerlink" href="#module-das.neptune" title="Permalink to this headline">¶</a></h1>
+<p>Utilities for logging to neptune.ai.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.neptune.Poseidon">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.neptune.</span></span><span class="sig-name descname"><span class="pre">Poseidon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon" title="Permalink to this definition">¶</a></dt>
-<dd><p>Utility class for logging to neptune.ai in das.train.train.</p>
+<dd><p>Utility class for logging to neptune.ai in <a class="reference internal" href="das.train.html#das.train.train" title="das.train.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train.train</span></code></a>.</p>
+<p>Set up neptune run and log params.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Project to log to. Defaults to None.</p></li>
+<li><p><strong>api_token</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Neptune api token. Defaults to None.</p></li>
+<li><p><strong>params</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>]</em><em>, </em><em>optional</em>) – Dict to log to <code class="xref py py-obj docutils literal notranslate"><span class="pre">hyper-parameters</span></code>. Defaults to None.</p></li>
+<li><p><strong>infer_from_env</strong> (<em>bool</em><em>, </em><em>optional</em>) – read project and api_token from environment variables
+NEPTUNE_PROJECT and NEPTUNE_API_TOKEN.
+Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.neptune.Poseidon.callback">
 <span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon.callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon.callback" title="Permalink to this definition">¶</a></dt>
@@ -260,6 +274,11 @@
 <dt class="sig sig-object py" id="das.neptune.Poseidon.log_test_results">
 <span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon.log_test_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log final classification result from test data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>report</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a>) – dictionary containing the classification report.</p>
+</dd>
+</dl>
 </dd></dl>
 </dd></dl>
 </div>

@@ -323,6 +323,41 @@ auditory system – by compressing frequency axis into mel-scale axis.</p>
 </dl>
 </dd>
 </dl>
+<p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_dft</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of DFT points. Best if power of 2. Defaults to 512.</p></li>
+<li><p><strong>n_hop</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Hop length between frames in sample. Best if &lt;= <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_dft</span></code>. Defaults to None.</p></li>
+<li><p><strong>padding</strong> (<em>str</em><em>, </em><em>optional</em>) – Pads signal boundaries (<code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">valid</span></code>). Defaults to ‘same’.</p></li>
+<li><p><strong>power_spectrogram</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">2.0</span></code> for power, <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code> for amplitude spectrogram. Defaults to 2.0 (power).</p></li>
+<li><p><strong>return_decibel_spectrogram</strong> (<em>bool</em><em>, </em><em>optional</em>) – Convert spectrogram values to dB. Recommended. Defaults to False.</p></li>
+<li><p><strong>trainable_kernel</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, kernels will be optimized during training. Defaults to False.</p></li>
+<li><p><strong>image_data_format</strong> (<em>str</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code> or keras’ <code class="xref py py-obj docutils literal notranslate"><span class="pre">default</span></code>. Defaults to ‘default’.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
+<li><p>Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
+<li><p>The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Keras layer computing the spectrogram</dt><dd><ul class="simple">
+<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
+<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Layer</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram.build" title="Permalink to this definition">¶</a></dt>
@@ -412,6 +447,41 @@ if they want to modify it.</p>
 <span class="go">            )</span>
 </pre></div>
 </div>
+<p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_dft</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of DFT points. Best if power of 2. Defaults to 512.</p></li>
+<li><p><strong>n_hop</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Hop length between frames in sample. Best if &lt;= <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_dft</span></code>. Defaults to None.</p></li>
+<li><p><strong>padding</strong> (<em>str</em><em>, </em><em>optional</em>) – Pads signal boundaries (<code class="xref py py-obj docutils literal notranslate"><span class="pre">same</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">valid</span></code>). Defaults to ‘same’.</p></li>
+<li><p><strong>power_spectrogram</strong> (<em>float</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">2.0</span></code> for power, <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code> for amplitude spectrogram. Defaults to 2.0 (power).</p></li>
+<li><p><strong>return_decibel_spectrogram</strong> (<em>bool</em><em>, </em><em>optional</em>) – Convert spectrogram values to dB. Recommended. Defaults to False.</p></li>
+<li><p><strong>trainable_kernel</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, kernels will be optimized during training. Defaults to False.</p></li>
+<li><p><strong>image_data_format</strong> (<em>str</em><em>, </em><em>optional</em>) – <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code> or keras’ <code class="xref py py-obj docutils literal notranslate"><span class="pre">default</span></code>. Defaults to ‘default’.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
+<li><p>Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
+<li><p>The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Keras layer computing the spectrogram</dt><dd><ul class="simple">
+<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
+<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Layer</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram.build" title="Permalink to this definition">¶</a></dt>

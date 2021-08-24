@@ -99,7 +99,7 @@ Dragging moves, right click deletes annotations.
 ## Export annotations and make a dataset
 _DAS_ achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording---*all* pulses and sine song segments in that section of the song---you can train a network to help with annotating the rest of the data.
 
-Trainining requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.
+Training requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.
 
 :::{figure} xb_export-fig
 <img src="/images/xb_quick_export.png" alt="export audio and annotations" width=450>

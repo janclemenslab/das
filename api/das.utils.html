@@ -311,7 +311,18 @@ but that may change in the future.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">QtProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Init the callback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nb_epochs</strong> (<em>[</em><em>type</em><em>]</em>) – number of training epochs</p></li>
+<li><p><strong>comms</strong> (<em>tuple</em>) – tuple of (multiprocessing.Queue, threading.Event)
+The queue is used to transmit progress updates to the GUI,
+the event is set in the GUI to stop training.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_epoch_end">
 <span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_epoch_end" title="Permalink to this definition">¶</a></dt>
 <dd><p>Called at the end of an epoch.</p>

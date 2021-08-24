@@ -250,7 +250,27 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.tcn.tcn_new.</span></span><span class="sig-name descname"><span class="pre">ResidualBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Defines the residual block for the WaveNet TCN</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The previous layer in the model</p></li>
+<li><p><strong>training</strong> – boolean indicating whether the layer should behave in training mode or in inference mode</p></li>
+<li><p><strong>dilation_rate</strong> – The dilation power of 2 we are using for this residual block</p></li>
+<li><p><strong>nb_filters</strong> – The number of convolutional filters to use in this block</p></li>
+<li><p><strong>kernel_size</strong> – The size of the convolutional kernel</p></li>
+<li><p><strong>padding</strong> – The padding used in the convolutional layers, ‘same’ or ‘causal’.</p></li>
+<li><p><strong>activation</strong> – The final activation used in o = Activation(x + F(x))</p></li>
+<li><p><strong>dropout_rate</strong> – Float between 0 and 1. Fraction of the input units to drop.</p></li>
+<li><p><strong>kernel_initializer</strong> – Initializer for the kernel weights matrix (Conv1D).</p></li>
+<li><p><strong>use_batch_norm</strong> – Whether to use batch normalization in the residual layers or not.</p></li>
+<li><p><strong>use_layer_norm</strong> – Whether to use layer normalization in the residual layers or not.</p></li>
+<li><p><strong>use_separable</strong> – Whether to use separabel conv1d.</p></li>
+<li><p><strong>kwargs</strong> – Any initializers for Layer class.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>

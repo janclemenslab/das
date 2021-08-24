@@ -251,6 +251,16 @@
 <dt class="sig sig-object py" id="das.kapre.augmentation.AdditiveNoise">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.kapre.augmentation.</span></span><span class="sig-name descname"><span class="pre">AdditiveNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/augmentation.html#AdditiveNoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.augmentation.AdditiveNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds Gaussian noise to the spectrogram.</p>
+<p>Init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>power</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation of the noise. Defaults to 0.1.</p></li>
+<li><p><strong>random_gain</strong> (<em>True</em><em>, </em><em>optional</em>) – If <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, gain is sampled from <code class="xref py py-obj docutils literal notranslate"><span class="pre">uniform(low=0.0,</span> <span class="pre">high=power)</span></code> in every batch. Defaults to False.</p></li>
+<li><p><strong>noise_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Only supports white. Defaults to ‘white’.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.augmentation.AdditiveNoise.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/augmentation.html#AdditiveNoise.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.augmentation.AdditiveNoise.call" title="Permalink to this definition">¶</a></dt>

@@ -259,6 +259,9 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Spectrogram</span><span class="p">(</span><span class="n">return_decibel</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Args:
+amin (float, optional): Noise floor. Defaults to 1e-10 (dB).
+top_db (float, optional): Dynamic range of output. Defaults to 80.0 (dB).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.utils.AmplitudeToDB.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/utils.html#AmplitudeToDB.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.utils.AmplitudeToDB.call" title="Permalink to this definition">¶</a></dt>
@@ -311,6 +314,27 @@ if they want to modify it.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Normalization2D</span><span class="p">(</span><span class="n">str_axis</span><span class="o">=</span><span class="s1">'freq'</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>str_axis</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Axis name along which mean/std is computed (<code class="xref py py-obj docutils literal notranslate"><span class="pre">batch</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">data_sample</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">channel</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">freq</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span></code>).
+Recommended over <code class="xref py py-obj docutils literal notranslate"><span class="pre">int_axis</span></code> because it provides more meaningful and image data format-robust interface.
+Defaults to None.</p></li>
+<li><p><strong>int_axis</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – <dl class="simple">
+<dt>Axis index along which mean/std is computed.</dt><dd><ul>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">0</span></code> for per data sample, <code class="xref py py-obj docutils literal notranslate"><span class="pre">-1</span></code> for per batch.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">1</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">2</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">3</span></code> for channel, row, col (if channels_first)</p></li>
+</ul>
+</dd>
+</dl>
+<p>Defaults to None.</p>
+</p></li>
+<li><p><strong>image_data_format</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘channels_first’ (c,x,y,) or ‘channels_last’ (x,y,c) or TF ‘default’. Defaults to ‘default’.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – Small numerical value added to avoid divide by zero. Defaults to 1e-10.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.utils.Normalization2D.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/utils.html#Normalization2D.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.utils.Normalization2D.call" title="Permalink to this definition">¶</a></dt>
