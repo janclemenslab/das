@@ -4,15 +4,20 @@ import numpy as np
 from tensorflow.keras import backend as K
 
 
-def amplitude_to_decibel(x, amin=1e-10, dynamic_range=80.0):
-    """[K] Convert (linear) amplitude to decibel (log10(x)).
+def amplitude_to_decibel(x, amin: float = 1e-10, dynamic_range: float = 80.0):
+    """Convert (linear) amplitude to decibel (log10(x)).
 
-    x: Keras *batch* tensor or variable. It has to be batch because of sample-wise `K.max()`.
+        >>> x[x<amin] = amin  # clip everythin below amin
+        >>> y = 10 * log(x) / log(10)  # log transform
+        >>> y = ...  # rescale dyn range to [-80, 0]
 
-    amin: minimum amplitude. amplitude smaller than `amin` is set to this.
+    Args:
+        x (Tensor): Tensor
+        amin (float, optional): Minimal amplitude. Smaller values are clipped to this. Defaults to 1e-10 (dB).
+        dynamic_range (float, optional): Dynamic range. Defaults to 80.0 (dB).
 
-    dynamic_range: dynamic_range in decibel
-
+    Returns:
+        [Tensor]: Tensor with the values converted to dB
     """
     log_spec = 10 * K.log(K.maximum(x, amin)) / np.log(10).astype(K.floatx())
     if K.ndim(x) > 1:

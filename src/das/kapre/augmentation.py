@@ -2,41 +2,20 @@
 from __future__ import absolute_import
 import numpy as np
 from tensorflow.keras import backend as K
-from tensorflow.keras.layers import Layer, InputSpec
+from tensorflow.keras.layers import Layer
 
 
 class AdditiveNoise(Layer):
-    """
-    ### `AdditiveNoise`
+    """Adds Gaussian noise to the spectrogram."""
 
-    ```python
-    kapre.augmentation.AdditiveNoise(power=0.1, random_gain=False, noise_type='white', **kwargs)
-    ```
-    Add noise to input data and output it.
+    def __init__(self, power: float = 0.1, random_gain: True = False, noise_type: str = 'white', **kwargs):
+        """Init.
 
-    #### Parameters
-    
-    * power: float [scalar]
-        - The power of noise. std if it's white noise.
-        - Default: ``0.1``
-
-    * random_gain: bool
-        - Whether the noise gain is random or not.
-        - If ``True``, gain is sampled from ``uniform(low=0.0, high=power)`` in every batch.
-        - Default: ``False``
-
-    * noise_type; str,
-        - Specify the type of noise. It only supports ``'white'`` now.
-        - Default: ```white```
-
-
-    #### Returns
-
-    Same shape as input data but with additional generated noise.
-
-    """
-
-    def __init__(self, power=0.1, random_gain=False, noise_type='white', **kwargs):
+        Args:
+            power (float, optional): Standard deviation of the noise. Defaults to 0.1.
+            random_gain (True, optional): If `True`, gain is sampled from `uniform(low=0.0, high=power)` in every batch. Defaults to False.
+            noise_type (str, optional): Only supports white. Defaults to 'white'.
+        """
         assert noise_type in ['white']
         self.supports_masking = True
         self.power = power
@@ -47,14 +26,10 @@ class AdditiveNoise(Layer):
 
     def call(self, x):
         if self.random_gain:
-            noise_x = x + K.random_normal(shape=K.shape(x),
-                                          mean=0.,
-                                          stddev=np.random.uniform(0.0, self.power))
+            power = np.random.uniform(0.0, self.power)
         else:
-            noise_x = x + K.random_normal(shape=K.shape(x),
-                                          mean=0.,
-                                          stddev=self.power)
-
+            power = self.power
+        noise_x = x + K.random_normal(shape=K.shape(x), mean=0.0, stddev=power)
         return K.in_train_phase(noise_x, x)
 
     def get_config(self):
