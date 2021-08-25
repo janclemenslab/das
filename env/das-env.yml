@@ -1,16 +1,20 @@
-name: das
+name: das-env
 channels:
   - defaults
   - conda-forge
 dependencies:
   - zarr
-  - python-sounddevice
-  - umap-learn
-  - hdbscan
   - pip
+  - flammkuchen
+  - xarray
+  - defopt
+  - yaml
   - git
   - h5py<3
   - numpy=1.18.5
+  - umap-learn
+  - hdbscan
+  - python-sounddevice
   - pip:
     - tensorflow==2.3.2
     - xarray-behave[gui]
