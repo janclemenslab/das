@@ -35,6 +35,7 @@ jobs:
       - run: conda list
       - name: Conda environment creation
         run: |
+          conda install anaconda-client -n base
           conda env create ncb/das-env -q -n das
           conda install pytest -q -n das
       - name: Install libsndfile (Linux only)
