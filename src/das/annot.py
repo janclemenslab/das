@@ -1,7 +1,4 @@
-"""[summary]
-
-TODO: From/to traces
-"""
+"""Utilities for dealing with annotations."""
 import numpy as np
 import xarray as xr
 import pandas as pd
@@ -12,12 +9,11 @@ class Events(UserDict):
 
     def __init__(self, data: Optional[Dict[str, List[float]]] = None, categories: Optional[Dict[str, str]] = None,
                  add_names_from_categories: bool = True):
-        """[summary]
+        """Initialize Events dict.
 
         Args:
             data: dict or Events
             categories (dict[str: str]): name, category mapping
-
         """
         if data is None:
             data = dict()

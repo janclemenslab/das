@@ -1,23 +1,24 @@
+"""Utilities for logging to neptune.ai."""
 import logging
 import os
 from typing import Optional, Dict
-from sklearn.metrics import precision_recall_fscore_support
+
 
 try:
-    import nptune.new as neptune
+    import neptune.new as neptune
     from neptune.new.integrations.tensorflow_keras import NeptuneCallback
     HAS_NEPTUNE = True
 except ImportError as e:
     # logging.exception('Could not import neptune libraries.')
     HAS_NEPTUNE = False
-
+HAS_NEPTUNE = True
 
 class Poseidon():
-    """Utility class for logging to neptune.ai in das.train.train."""
+    """Utility class for logging to neptune.ai in `das.train.train`."""
 
     def __init__(self, project: Optional[str] = None, api_token: Optional[str] = None,
                  params: Optional[Dict] = None, infer_from_env: bool = False):
-        """Setup neptune run and log params
+        """Set up neptune run and log params.
 
         Args:
             project (Optional[str], optional): Project to log to. Defaults to None.
@@ -27,6 +28,7 @@ class Poseidon():
                                              NEPTUNE_PROJECT and NEPTUNE_API_TOKEN.
                                              Defaults to False.
         """
+
         try:
             if project is None:
                 project = os.environ['NEPTUNE_PROJECT']
@@ -50,6 +52,10 @@ class Poseidon():
             pass
 
     def log_test_results(self, report: Dict):
-        """Log final classification result from test data."""
+        """Log final classification result from test data.
+
+        Args:
+            report (Dict): dictionary containing the classification report.
+        """
         if self.run is not None:
             self.run['classification_report'] = report
