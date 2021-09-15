@@ -7,8 +7,8 @@ If you have questions, feedback, or find bugs please raise an [issue](https://gi
 
 Please cite _DAS_ as:
 
-Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021).   
-_Fast and accurate annotation of acoustic signals with deep neural networks._   
+Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021).
+_Fast and accurate annotation of acoustic signals with deep neural networks._
 bioRxiv, [https://doi.org/10.1101/2021.03.26.436927]()
 
 ## Installation
@@ -32,12 +32,12 @@ __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data u
 ### Install _DAS_ with or without the GUI
 Create an anaconda environment called `das` that contains all the required packages, including the GUI:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_gui.yml -n das
+conda env create ncb/das-env -n das
 ```
 
 If you do not need the graphical user interface, for instance, when training _DAS_ on a server, install the plain version:
 ```shell
-conda env create -f https://raw.githubusercontent.com/janclemenslab/das/master/env/das_plain.yml -n das
+conda env create ncb/das-nogui-env -n das
 ```
 
 ## Usage
