@@ -21,7 +21,7 @@ try:  # fixes cuDNN error when using LSTM layer
     physical_devices = tf.config.list_physical_devices('GPU')
     if physical_devices:
         tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
-except:
+except Exception as e:
     logging.exception(e)
 
 
