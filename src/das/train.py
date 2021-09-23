@@ -4,10 +4,11 @@ import logging
 import flammkuchen as fl
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+from tensorflow import keras
 import defopt
 import os
 from glob import glob
-from typing import List, Optional
+from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
 
 try:  # disabling eager execution speeds up everything
@@ -40,7 +41,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
           balance: bool = False, version_data: bool = True,
-          _qt_progress: bool = False):
+          _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DeepSS network.
 
     Args:
@@ -127,8 +128,8 @@ def train(*, data_dir: str, y_suffix: str = '',
                              Defaults to True (set to False for large datasets since it can be slow).
 
         Returns
-            model (tf.keras.Model)
-            params (Dict[str:Any])
+            model (keras.Model)
+            params (Dict[str, Any])
         """
         # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
         #        The queue is used to transmit progress updates to the GUI,
