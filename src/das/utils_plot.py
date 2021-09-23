@@ -3,9 +3,13 @@ import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib_scalebar
 import matplotlib as mpl
+import matplotlib.legend as mlegend
+from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_pdf import PdfPages
+import colorcet
 import numpy as np
 import itertools
+from typing import Optional, List
 
 
 def scalebar(length, dx=1, units='', label=None, axis=None, location='lower right', frameon=False, **kwargs):
@@ -188,89 +192,6 @@ class Pdf:
         self.pdf.__exit__(exc_type, exc_val, exc_tb)
 
 
-# from https://gist.github.com/thesamovar/52dbbb3a58a73c590d54c34f5f719bac
-def panel_specs(layout, fig=None):
-    """
-    ```
-    layout = '''
-    AAB
-    AA.
-    .DD
-    '''
-    fig = plt.figure(figsize=(10, 7))
-    axes, spec = panels(layout, fig=fig)
-    spec.set_width_ratios([1, 3, 1])
-    label_panels(axes, letters='ABD')
-    plt.tight_layout()
-    ```
-
-    Args:
-        layout ([type]): [description]
-        fig ([type], optional): [description]. Defaults to None.
-
-    Raises:
-        ValueError: [description]
-        ValueError: [description]
-
-    Returns:
-        [type]: [description]
-    """
-    # default arguments
-    if fig is None:
-        fig = plt.gcf()
-    # format and sanity check grid
-    lines = layout.split('\n')
-    lines = [line.strip() for line in lines if line.strip()]
-    linewidths = set(len(line) for line in lines)
-    if len(linewidths)>1:
-        raise ValueError('Invalid layout (all lines must have same width)')
-    width = linewidths.pop()
-    height = len(lines)
-    panel_letters = set(c for line in lines for c in line)-set('.')
-    # find bounding boxes for each panel
-    panel_grid = {}
-    for letter in panel_letters:
-        left = min(x for x in range(width) for y in range(height) if lines[y][x]==letter)
-        right = 1+max(x for x in range(width) for y in range(height) if lines[y][x]==letter)
-        top = min(y for x in range(width) for y in range(height) if lines[y][x]==letter)
-        bottom = 1+max(y for x in range(width) for y in range(height) if lines[y][x]==letter)
-        panel_grid[letter] = (left, right, top, bottom)
-        # check that this layout is consistent, i.e. all squares are filled
-        valid = all(lines[y][x]==letter for x in range(left, right) for y in range(top, bottom))
-        if not valid:
-            raise ValueError('Invalid layout (not all square)')
-    # build axis specs
-    gs = mpl.gridspec.GridSpec(ncols=width, nrows=height, figure=fig)
-    specs = {}
-    for letter, (left, right, top, bottom) in panel_grid.items():
-        specs[letter] = gs[top:bottom, left:right]
-    return specs, gs
-
-def panels(layout, fig=None):
-    # default arguments
-    if fig is None:
-        fig = plt.gcf()
-    specs, gs = panel_specs(layout, fig=fig)
-    for letter, spec in specs.items():
-        axes[letter] = fig.add_subplot(spec)
-    return axes, gs
-
-def label_panel(ax, letter, *, prefix='', postfix='.', spaces=6, pad=10, fontsize=18):
-    ax.set_title(prefix+letter+postfix+' '*spaces, loc='left', pad=pad,
-                 fontdict={'horizontalalignment': 'right',
-                           'fontsize': fontsize})
-
-def label_panels(axes, letters=None, *, prefix='', postfix='.', spaces=6, pad=10, fontsize=18):
-    if letters is None:
-        letters = axes.keys()
-    for letter in letters:
-        ax = axes[letter]
-        label_panel(ax, letter, prefix=prefix, postfix=postfix, spaces=spaces, pad=pad, fontsize=fontsize)
-
-
-
-import matplotlib.legend as mlegend
-from matplotlib.patches import Rectangle
 # from https://stackoverflow.com/a/60345118/2301098
 def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **kwargs):
     """
@@ -278,41 +199,42 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
 
     Creates a legend where the labels are not directly placed with the artists,
     but are used as row and column headers, looking like this:
-
-    title_label   | col_labels[1] | col_labels[2] | col_labels[3]
-    -------------------------------------------------------------
-    row_labels[1] |
-    row_labels[2] |              <artists go there>
-    row_labels[3] |
-
-
-    Parameters
-    ----------
-
-    ax : `matplotlib.axes.Axes`
-        The artist that contains the legend table, i.e. current axes instant.
-
-    col_labels : list of str, optional
-        A list of labels to be used as column headers in the legend table.
-        `len(col_labels)` needs to match `ncol`.
-
-    row_labels : list of str, optional
-        A list of labels to be used as row headers in the legend table.
-        `len(row_labels)` needs to match `len(handles) // ncol`.
-
-    title_label : str, optional
-        Label for the top left corner in the legend table.
-
-    ncol : int
-        Number of columns.
-
-
-    Other Parameters
-    ----------------
-
-    Refer to `matplotlib.legend.Legend` for other parameters.
-
     """
+    # ```
+    # title_label   | col_labels[1] | col_labels[2] | col_labels[3]
+    # -------------------------------------------------------------
+    # row_labels[1] |
+    # row_labels[2] |              <artists go there>
+    # row_labels[3] |
+    # ```
+
+    # Parameters
+    # ----------
+
+    # ax : `matplotlib.axes.Axes`
+    #     The artist that contains the legend table, i.e. current axes instant.
+
+    # col_labels : list of str, optional
+    #     A list of labels to be used as column headers in the legend table.
+    #     `len(col_labels)` needs to match `ncol`.
+
+    # row_labels : list of str, optional
+    #     A list of labels to be used as row headers in the legend table.
+    #     `len(row_labels)` needs to match `len(handles) // ncol`.
+
+    # title_label : str, optional
+    #     Label for the top left corner in the legend table.
+
+    # ncol : int
+    #     Number of columns.
+
+
+    # Other Parameters
+    # ----------------
+
+    # Refer to `matplotlib.legend.Legend` for other parameters.
+
+    # """
     #################### same as `matplotlib.axes.Axes.legend` #####################
     handles, labels, extra_args, kwargs = mlegend._parse_legend_args([ax], *args, **kwargs)
     if len(extra_args):
@@ -435,3 +357,91 @@ def bar_text(ax=None, spacing=-20, to_int=True):
             va=va,
             color='w')                      # Vertically align label differently for
                                         # positive and negative values.
+
+
+def generate_colors(nb_colors: int = 1, start_color=None, start=0, step=1):
+    """[summary]
+
+    Args:
+        nb_colors (int, optional): [description]. Defaults to 1.
+        start_color ([type], optional): [description]. Defaults to None.
+        start (int, optional): [description]. Defaults to 0.
+        step (int, optional): [description]. Defaults to 1.
+
+    Returns:
+        [type]: [description]
+    """
+    cmap = colorcet.palette['glasbey_light'][start::step]
+    cmap = list(cmap)[:nb_colors]
+    if start_color is not None:
+        cmap.insert(0, start_color)
+    return cmap
+
+
+def annotate_events(event_seconds, event_names=None, tmin: float = 0, tmax: float = np.inf, color: Optional[List] = None):
+    """Plot events as vertical lines to plot.
+
+    Args:
+        event_seconds (List[float]): List of event times in seconds
+        event_names (List[str], optional): List of event names. Defaults to None.
+        tmin (float, optional): Start of the range of events annotated in seconds. Defaults to 0.
+        tmax (float, optional): End of the range of events annotated in seconds. Defaults to np.inf.
+        color (optional): Either a single valid matplotlib color (in that case all segment types will have that color)
+                      or a list of matplotlib colors, one for each segment type.
+                      Defaults to None, in which case a list of distinct colors
+                      will be created automatically from colorcet's 'glasbey_light' palette.
+    Raises:
+        ValueError: If the number of colors does not match the number of unique event names.
+    """
+    unique_names = list(set(event_names))
+    if color is None:  # generate a color for each event name
+        color = generate_colors(len(unique_names))
+    elif not isinstance(color, (list, tuple)):  # use given color for each event name
+        color = [color for _ in unique_names]
+
+    event_seen = {name: False for name in unique_names}
+    for seconds, name in zip(event_seconds, event_names):
+        if seconds > tmin and seconds < tmax:
+            if not event_seen[name]:
+                label = name
+                event_seen[name] = True
+            else:
+                label = None
+            plt.axvline(seconds, c=color[unique_names.index(name)], alpha=0.5, label=label)
+
+
+def annotate_segments(onset_seconds, offset_seconds, segment_names=None, tmin: float = 0, tmax: float = np.inf, color=None):
+    """Plot segments as vertical lines to plot.
+
+    Args:
+        onset_seconds ([type]): [description]
+        offset_seconds ([type]): [description]
+        segment_names ([type], optional): [description]. Defaults to None.
+        tmin (float, optional): [description]. Defaults to 0.
+        tmax (float, optional): [description]. Defaults to np.inf.
+        color (optional): Either a single valid matplotlib color (in that case all segment types will have that color)
+                      or a list of matplotlib colors, one for each segment type.
+                      Defaults to None, in which case a list of distinct colors
+                      will be created automatically from colorcet's 'glasbey_light' palette.
+    Raises:
+        ValueError: If the number of colors does not match the number of unique segment names.
+    """
+    unique_names = list(set(segment_names))
+    if color is None:  # generate a color for each event name
+        color = generate_colors(len(unique_names))
+    elif not isinstance(color, (list, tuple)):  # use given color for each event name
+        color = [color for _ in unique_names]
+
+    if len(color) != len(unique_names):
+        raise ValueError(f"Number of colors ({len(color)} does not match number of segment types ({len(unique_names)}).")
+
+    segment_seen = {name: False for name in unique_names}
+    for on, off, name in zip(onset_seconds, offset_seconds, segment_names):
+        if on > tmin and off < tmax:
+            if not segment_seen[name]:
+                label = name
+                segment_seen[name] = True
+            else:
+                label = None
+            plt.axvspan(xmin=on, xmax=off, facecolor=color[unique_names.index(name)], alpha=0.25, label=label)
+
