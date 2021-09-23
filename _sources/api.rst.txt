@@ -21,6 +21,7 @@ Developer API
    das.event_utils
    das.io
    das.make_dataset
+   das.menagerie
    das.models
    das.neptune
    das.npy_dir

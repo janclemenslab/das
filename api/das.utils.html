@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
@@ -425,34 +427,13 @@ the future.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_from">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datasets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_from" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datasets</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load datasets from h5 file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>datasets</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>Returns</strong> – </p></li>
-<li><p><strong>[</strong><strong>type</strong><strong>]</strong> – [description]</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="das.utils.load_model">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load model with weights.</p>
-<p>First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
-Second, try to init model from parameters and then add weights…</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_trunk</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>model_dict</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>model_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_weights.h5’.</p></li>
-<li><p><strong>from_epoch</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – Deprecated [description]. Defaults to None.</p></li>
-<li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
-<li><p><strong>compile</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – </p></li>
+<li><p><strong>datasets</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – Names of the datasets (=keys) to load</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -464,13 +445,53 @@ Second, try to init model from parameters and then add weights…</p>
 </dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="das.utils.load_model">
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load model with weights.</p>
+<p>First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
+Second, try to init model from parameters and then add weights…</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_trunk</strong> (<em>str</em>) – [description]</p></li>
+<li><p><strong>model_dict</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>[</em><em>str</em><em>, </em><em>Callable</em>) – [description]</p></li>
+<li><p><strong>model_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_weights.h5’.</p></li>
+<li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
+<li><p><strong>compile</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>keras.Model</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils.load_model_and_params">
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_and_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model_save_name</span></em>, <em class="sig-param"><span class="pre">model_dict={'cnn':</span> <span class="pre">&lt;function</span> <span class="pre">cnn&gt;</span></em>, <em class="sig-param"><span class="pre">'cnn2D':</span> <span class="pre">&lt;function</span> <span class="pre">cnn2D&gt;</span></em>, <em class="sig-param"><span class="pre">'fcn':</span> <span class="pre">&lt;function</span> <span class="pre">fcn&gt;</span></em>, <em class="sig-param"><span class="pre">'fcn2D':</span> <span class="pre">&lt;function</span> <span class="pre">fcn2D&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn_multi':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_multi&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn_seq':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_seq&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn_small':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_small&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn_stft':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_stft&gt;</span></em>, <em class="sig-param"><span class="pre">'tcn_tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_tcn&gt;}</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tensorflow.python.keras.engine.training.Model</span><span class="p"><span class="pre">,</span> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_model_and_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_and_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_save_name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>model_dict</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to models.model_dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>keras.Model, <a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict">Dict</a>[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_model_from_params">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model_from_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_from_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model_from_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_from_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_trunk</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>file_trunk</strong> (<em>str</em>) – [description]</p></li>
 <li><p><strong>models_dict</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
 <li><p><strong>weights_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_model.h5’ (use weights from model file).</p></li>
 <li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
@@ -478,37 +499,38 @@ Second, try to init model from parameters and then add weights…</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>[description]</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[type]</p>
+<dd class="field-even"><p>keras.Model</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_params">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load model/training parameters from yaml</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_trunk</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
-<li><p><strong>Returns</strong> – </p></li>
-<li><p><strong>[</strong><strong>type</strong><strong>]</strong> – [description]</p></li>
+<li><p><strong>file_trunk</strong> (<em>str</em>) – [description]</p></li>
+<li><p><strong>params_ext</strong> (<em>strs</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Parameter dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict">Dict</a>[str, Any]</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.save_params">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">save_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#save_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.save_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">save_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#save_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.save_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save model/training parameters to yaml.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>params</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>file_trunk</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>params</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>[</em><em>str</em><em>]</em>) – [description]</p></li>
+<li><p><strong>file_trunk</strong> (<em>str</em>) – [description]</p></li>
 <li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
 </ul>
 </dd>

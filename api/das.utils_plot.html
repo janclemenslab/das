@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
@@ -264,6 +266,51 @@
 </dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.annotate_events">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">annotate_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmax</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#annotate_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.annotate_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot events as vertical lines to plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_seconds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of event times in seconds</p></li>
+<li><p><strong>event_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of event names. Defaults to None.</p></li>
+<li><p><strong>tmin</strong> (<em>float</em><em>, </em><em>optional</em>) – Start of the range of events annotated in seconds. Defaults to 0.</p></li>
+<li><p><strong>tmax</strong> (<em>float</em><em>, </em><em>optional</em>) – End of the range of events annotated in seconds. Defaults to np.inf.</p></li>
+<li><p><strong>color</strong> (<em>optional</em>) – Either a single valid matplotlib color (in that case all segment types will have that color)
+or a list of matplotlib colors, one for each segment type.
+Defaults to None, in which case a list of distinct colors
+will be created automatically from colorcet’s ‘glasbey_light’ palette.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the number of colors does not match the number of unique event names.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.annotate_segments">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">annotate_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">onset_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmax</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#annotate_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.annotate_segments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot segments as vertical lines to plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>onset_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>offset_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>segment_names</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+<li><p><strong>tmin</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]. Defaults to 0.</p></li>
+<li><p><strong>tmax</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]. Defaults to np.inf.</p></li>
+<li><p><strong>color</strong> (<em>optional</em>) – Either a single valid matplotlib color (in that case all segment types will have that color)
+or a list of matplotlib colors, one for each segment type.
+Defaults to None, in which case a list of distinct colors
+will be created automatically from colorcet’s ‘glasbey_light’ palette.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the number of colors does not match the number of unique segment names.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="das.utils_plot.bar_text">
 <span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">bar_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#bar_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.bar_text" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add labels to the end of each bar in a bar chart.</p>
@@ -283,6 +330,27 @@ of the plot to annotate. Defaults to current axis.</p></li>
 <dd><p>Reduces complexity of exported pdfs w/o impairing visual appearance.</p>
 <p>Modified from pyqtgraph - downsampleMethod=peak.
 Keeps peaks so the envelope of the waveform is preserved.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.generate_colors">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">generate_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_colors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#generate_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.generate_colors" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nb_colors</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 1.</p></li>
+<li><p><strong>start_color</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 0.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils_plot.imshow_text">
@@ -315,42 +383,6 @@ Keeps peaks so the envelope of the waveform is preserved.</p>
 If None, lower case letters are used.</p></li>
 <li><p><strong>loc</strong> (<em>len=2 tuple of floats</em>) – Where to put the label in axes-fraction units</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="das.utils_plot.panel_specs">
-<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">panel_specs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#panel_specs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.panel_specs" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">layout</span> <span class="pre">=</span> <span class="pre">'''</span>
-<span class="pre">AAB</span>
-<span class="pre">AA.</span>
-<span class="pre">.DD</span>
-<span class="pre">'''</span>
-<span class="pre">fig</span> <span class="pre">=</span> <span class="pre">plt.figure(figsize=(10,</span> <span class="pre">7))</span>
-<span class="pre">axes,</span> <span class="pre">spec</span> <span class="pre">=</span> <span class="pre">panels(layout,</span> <span class="pre">fig=fig)</span>
-<span class="pre">spec.set_width_ratios([1,</span> <span class="pre">3,</span> <span class="pre">1])</span>
-<span class="pre">label_panels(axes,</span> <span class="pre">letters='ABD')</span>
-<span class="pre">plt.tight_layout()</span>
-<span class="pre">`</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>layout</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>fig</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – [description]</p></li>
-<li><p><strong>ValueError</strong> – [description]</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>[description]</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[type]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -404,23 +436,6 @@ label_formatter=None, animated=False):</p></li>
 <dd><p>Place a table legend on the axes.</p>
 <p>Creates a legend where the labels are not directly placed with the artists,
 but are used as row and column headers, looking like this:</p>
-<p>row_labels[1] |
-row_labels[2] |              &lt;artists go there&gt;
-row_labels[3] |</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ax</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.axes.Axes</span></code>) – The artist that contains the legend table, i.e. current axes instant.</p></li>
-<li><p><strong>col_labels</strong> (<em>list of str</em><em>, </em><em>optional</em>) – A list of labels to be used as column headers in the legend table.
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">len(col_labels)</span></code> needs to match <code class="xref py py-obj docutils literal notranslate"><span class="pre">ncol</span></code>.</p></li>
-<li><p><strong>row_labels</strong> (<em>list of str</em><em>, </em><em>optional</em>) – A list of labels to be used as row headers in the legend table.
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">len(row_labels)</span></code> needs to match <code class="xref py py-obj docutils literal notranslate"><span class="pre">len(handles)</span> <span class="pre">//</span> <span class="pre">ncol</span></code>.</p></li>
-<li><p><strong>title_label</strong> (<em>str</em><em>, </em><em>optional</em>) – Label for the top left corner in the legend table.</p></li>
-<li><p><strong>ncol</strong> (<em>int</em>) – Number of columns.</p></li>
-<li><p><strong>parameters.</strong> (<em>Refer to matplotlib.legend.Legend for other</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 </div>
 

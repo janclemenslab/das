@@ -2,10 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Annotate song" href="annotate.html" /><link rel="prev" title="GUI documentation" href="tutorials_gui.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Make a dataset from custom data formats" href="make_ds_notebook.html" /><link rel="prev" title="Convert your own annotations and audio data" href="convert.html" />
 
     <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
-        <title>Load and view data - DAS documentation</title>
+        <title>Choice of structural network parameters - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -137,7 +137,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -163,23 +163,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials_gui.html">GUI documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Load and view data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="annotate.html">Annotate song</a></li>
-<li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/structparams.html">Choice of structural network parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/colab.html">Training and inference with colab</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials.html">Programming documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Choice of structural network parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_fly.html">Evaluate a sine and pulse network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -242,90 +242,54 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="section" id="load-and-view-data">
-<h1>Load and view data<a class="headerlink" href="#load-and-view-data" title="Permalink to this headline">¶</a></h1>
-<p>In the window that opens, choose <em>Load audio from file</em> and select the downloaded recording of fly song. Alternatively, use the menu  <em>File/New from file</em>.</p>
-<div class="section" id="supported-formats">
-<h2>Supported formats<a class="headerlink" href="#supported-formats" title="Permalink to this headline">¶</a></h2>
-<p>Currently, the GUI can load audio data from a wide range of file types:</p>
-<ul class="simple">
-<li><p>audio files like <code class="docutils literal notranslate"><span class="pre">wav</span></code> etc. (read with <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a>, <a class="reference external" href="http://www.mega-nerd.com/libsndfile/#Features">list of supported formats</a>)</p></li>
-<li><p>hdfs files typically ending in <code class="docutils literal notranslate"><span class="pre">h5</span></code> (read with <a class="reference external" href="http://docs.h5py.org/">h5py</a>). Recent versions of Matlab also use this format (see the <a class="reference external" href="https://www.mathworks.com/help/matlab/ref/save.html#btox10b-1-version">matlab docs</a>).</p></li>
-<li><p>numpy’s <code class="docutils literal notranslate"><span class="pre">npy</span></code> or <code class="docutils literal notranslate"><span class="pre">npz</span></code> files (<a class="reference external" href="https://numpy.org/doc/stable/reference/routines.io.html">numpy</a>)</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>If your favorite format is not included in this list, <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">convert it to a supported format</span></a>.</p>
-</div>
-</div>
-<div class="section" id="customizing-loading">
-<h2>Customizing loading<a class="headerlink" href="#customizing-loading" title="Permalink to this headline">¶</a></h2>
-<p>After selecting a file, a menu allows you to adjust things before loading:</p>
-<div class="figure align-default" id="xb-load-fig">
-<img alt="loading screen" src="../_images/xb_load.png"/>
-<p class="caption"><span class="caption-text">Loading screen.</span><a class="headerlink" href="#xb-load-fig" title="Permalink to this image">¶</a></p>
-</div>
-<ul class="simple">
-<li><p><em>Dataset with audio</em>: Select the variable in the <code class="docutils literal notranslate"><span class="pre">npz</span></code>, <code class="docutils literal notranslate"><span class="pre">mat</span></code> or <code class="docutils literal notranslate"><span class="pre">h5</span></code> file that contains the audio data. For audio (e.g. wav) and <code class="docutils literal notranslate"><span class="pre">npy</span></code> files, this field will be empty since they do not contain multiple datasets.</p></li>
-<li><p><em>Data format</em>: The format for loading the file is inferred automatically but can be overridden here.</p></li>
-<li><p><em>Audio sample rate (Hz)</em>: The audio sample rate is obtained from the file for audio files, and from the <code class="docutils literal notranslate"><span class="pre">samplerate</span></code> variable of <code class="docutils literal notranslate"><span class="pre">npz</span></code> files (see <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">data formats</span></a>). Enter the correct sample rate for formats that lack this information.</p></li>
-<li><p>ignore_tracks (IGNORE)</p></li>
-<li><p>crop width and height (IGNORE)</p></li>
-<li><p><em>File with annotations</em>: Load existing annotations from a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file. Will default to the name of the audio file, ending in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code>.  See <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a> for a description of the expected content of that file. Select an alternative file via the <em>Select File with annotations</em> button. Will ignore the file if it does not exist or is malformed.</p></li>
-<li><p><em>Initialize annotations</em>: Initialize the song types you want to annotate. Song types and categories are specified with a string: “name,category;name2,category2” (category is either event or segment), for instance “pulse,event;sine,segments”. After loading, you can add, delete, and rename song types via the <em>Audio/Add or edit annotation types</em> menu.</p></li>
-<li><p><em>Minimal/Maximal spectrogram frequency</em>: Focus the range of frequencies in the spectrogram display on the frequencies that occur in the song you want to annotate. For instance, for fly song, we typically choose 50-1000Hz. If checking <code class="docutils literal notranslate"><span class="pre">None</span></code>, will default to the between 0 and half the audio sample rate.</p></li>
-<li><p><em>Band-pass filter audio</em>: To remove noise at high or low frequencies, specify the lower and upper frequency of the pass-band. Filtering will take a while for long, multi-channel audio. Caution: If you train a network using filtered data, you need to apply the same filter to all recordings you want to apply the network to.</p></li>
-<li><p>Load cue points (IGNORE)</p></li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Many of these parameters are also exposed via the command-line when starting the GUI. See the <a class="reference internal" href="../technical/cli.html"><span class="doc std std-doc">command line docs</span></a> for details.</p>
-</div>
-</div>
-<div class="section" id="overview-over-the-display-and-menus">
-<h2>Overview over the display and menus<a class="headerlink" href="#overview-over-the-display-and-menus" title="Permalink to this headline">¶</a></h2>
-<p>The display shows audio data from all channels (gray) in the top panel, with the currently selected channel colored white. The spectrogram of the currently selected channel is shown in the lower panel.</p>
-<p>To navigate the view: Move forward/backward along the time axis via the <code class="docutils literal notranslate"><span class="pre">A</span></code>/<code class="docutils literal notranslate"><span class="pre">D</span></code> keys and zoom in/out the time axis with the <code class="docutils literal notranslate"><span class="pre">W</span></code>/<code class="docutils literal notranslate"><span class="pre">S</span></code> keys (See Playback/). The temporal resolution of the spectrogram can be increased at the expense of frequency resolution with the <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">T</span></code> keys.</p>
-<p>You can play back the waveform on display through headphones/speakers by pressing <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
-<div class="figure align-default" id="xb-display-fig">
-<a class="reference internal image-reference" href="../_images/xb_display.png"><img alt="waveform and spectrogram display" src="../_images/xb_display.png" style="width: 100%;"/></a>
-<p class="caption"><span class="caption-text">Waveform (top) and spectrogram (bottom) display of a multi-channel recording.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
-</div>
-<p>For multi-channel audio, the waveform view can be further adjusted:</p>
-<ul class="simple">
-<li><p>Hide the non-selected channels in the waveform view by toggling <em>Audio/Show all channels</em>.</p></li>
-<li><p>Change the selected channel for which the spectrogram is displayed using the dropdown list on the upper right (“Channel …”). Or switch to next/previous channel with the up/down arrow keys.</p></li>
-<li><p>Enable the automatic selection of the loudest channel in the current view with <code class="docutils literal notranslate"><span class="pre">Q</span></code> (or <em>Audio/Autoselect loudest channel</em>).</p></li>
-</ul>
-</div>
+        <div class="section" id="choice-of-structural-network-parameters">
+<h1>Choice of structural network parameters<a class="headerlink" href="#choice-of-structural-network-parameters" title="Permalink to this headline">¶</a></h1>
+<p><em>DAS</em> performance is relatively robust to the choice of structural network parameters like filter duration and number, or network depth. The networks tested in the paper (REF) are good starting points for adapting <em>DAS</em> to your own data (Table \ref{tab:params}). In our experience, a network with 32 filters, filter duration 32 samples, 3 TCN blocks, and a chunk duration of 2048 samples will produce good results for most signals. An STFT-downsampling layer with 32 frequency band and 16x downsampling should be included for most signals except when the signals have a pulsatile character. Given that <em>DAS</em> trains quickly, network structure can be optimized by training <em>DAS</em> networks with different structural parameters, for instance to find the simplest network (in terms of number of filters and TCN blocks) that saturates performance but has the shortest latency. We here provide additional guidelines for choosing a network’s key structural parameters:</p>
+<p><strong>The chunk duration</strong> corresponds to the length of audio the network processes in one step and constitutes an upper bound for the context information available to the network. Choose this sufficiently long so the network has access to key features of your signal. For instance, for fly song, we ensured that a single chunk encompasses several pulses in a train, so the network can learn to detect song pulses based on their regular occurrence in trains. Longer chunks relative to this timescale can reduce short false positive detections, for instance for fly sine song and for bird song. Given that increasing chunk duration does not increase the number of parameters for training, we recommend using long chunks unless low latency is of essence (see below). However, networks with longer chunks require more memory, which is often a limit on GPUs.</p>
+<p><strong>Downsampling/STFT</strong> weakly affects performance but strongly accelerates convergence during training. This is because A) the initialization with STFT filters is a good prior that reduces the number of epochs it takes to learn the optimal filters, and B) the downsampling reduces the data bandwidth and thereby the time it takes to finish one training epoch. The overall increase in performance from adding the STFT layer is low because convolutional layers in the rest of the network can easily replicate the computations of the STFT layer. For short pulsatile signals or signals with low sampling rates, STFT and downsampling should be avoided since they can decrease performance due to the loss of temporal resolution.</p>
+<p><strong>The number of TCN blocks</strong> controls the network’s depth. A deeper network can extract more high-level features, though we found that even for the spectro-temporally complex song of Bengalese finches, deeper networks only weakly improved performance.</p>
+<p><strong>Multi-channel audio</strong> can be processed with multi-channel filters via full convolutions or with shared channel-wise filters via time-channel separable convolutions. This can be set on a per-TCN-block basis. We recommend to use separable convolutions in the first 1–2 layers, since basic feature extraction is typically the same for each channel. Later layers can then have full multi-channel filters to allow more complex combination of information across channels.</p>
+<p><strong>Real-time performance</strong> can be optimized by the chunk duration and the network complexity (number and duration of filters, number of TCN blocks). We recommend starting with the default parameters suggested above and then benchmarking latency. If required, latency can be further reduced by reducing chunk duration, the number and duration of filters, and the number of TCN blocks.</p>
+<p>| <strong>Species</strong>   | <strong>Figure</strong> | <strong>Trained</strong>     | <strong>Sample rate [kHz]</strong> | <strong>Chunk duration (samples)</strong> | <strong>Audio channels</strong> | <strong>STFT downsampling</strong> | <strong>Separable conv</strong> | <strong>TCN stacks</strong> | <strong>Kernel size</strong> | <strong>Kernels</strong> |
+|—————|—————-|————————|—————————–|——————–|———————-|——————–|—————|—————-|————-|
+| <em>D. mel.</em>     | Fig. \ref{fig:fly}         |pulse &amp; sine    | 10.0                     | 4096                        | 1                  | -                    | -                  | 3             | 32             | 32          |
+| <em>D. mel.</em> multi channel | Fig. \ref{fig:fly-multi}   | pulse           | 10.0                   | 2048                        | 9                   | -                   | TCN stacks 1+2      | 4             | 32             | 32          |
+| <em>D. mel.</em> multi channel   | Fig. \ref{fig:fly-multi}  | sine            | 10.0                    | 2048                        | 9                   | -                   | TCN stacks 1+2      | 4             | 32             | 32          |
+| <em>D. mel.</em> multi channel   | n/a | pulse &amp; sine    | 10.0                     | 2048                        | 9                  | -                    | -                  | 3             | 32             | 32          |
+| Mice          | Fig. \ref{fig:mouse} | 1 female (tested on another fem. and on a male))     | 300.0                   | 8192                        | 1                  | 16x                   | -                  | 2             | 16             | 32          |
+| Beng. finches  | Fig. \ref{fig:bird} | 4 males | 32.0                    | 1024                        | 1                  | 16x                   | -                  | 4             | 32             | 64          |
+| Zebra finches  | Fig. \ref{fig:zebrafinch} | 1 male | 32.0                    | 2048                       | 1                  | 16x                   | -                  | 4             | 32             | 64          |
+| Marmosets  | Fig. \ref{fig:marmoset}  | 5 male-female pairs | 44.1                    | 8192                        | 1                  | 16x                   | -                  | 2             | 16             | 32          |</p>
+<!-- : __Parameters of the tested networks.__
+\label{tab:params} -->
 </div>
 
       </article>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="annotate.html">
+          <a class="next-page" href="make_ds_notebook.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Annotate song</div>
+                <div class="title">Make a dataset from custom data formats</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="tutorials_gui.html">
+          <a class="prev-page" href="convert.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">GUI documentation</div>
+                <div class="title">Convert your own annotations and audio data</div>
                 
               </div>
             </a>
@@ -339,7 +303,7 @@
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
             |
-            <a class="muted-link" href="../_sources/tutorials_gui/load.md.txt"
+            <a class="muted-link" href="../_sources/tutorials/structparams.md.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -347,29 +311,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Load and view data</a><ul>
-<li><a class="reference internal" href="#supported-formats">Supported formats</a></li>
-<li><a class="reference internal" href="#customizing-loading">Customizing loading</a></li>
-<li><a class="reference internal" href="#overview-over-the-display-and-menus">Overview over the display and menus</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

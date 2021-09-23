@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
@@ -251,9 +253,13 @@
 <span class="kn">from</span> <span class="nn">matplotlib_scalebar.scalebar</span> <span class="kn">import</span> <span class="n">ScaleBar</span>
 <span class="kn">import</span> <span class="nn">matplotlib_scalebar</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.legend</span> <span class="k">as</span> <span class="nn">mlegend</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
+<span class="kn">import</span> <span class="nn">colorcet</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
 
 
 <div class="viewcode-block" id="scalebar"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.scalebar">[docs]</a><span class="k">def</span> <span class="nf">scalebar</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s1">'lower right'</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -436,89 +442,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pdf</span><span class="o">.</span><span class="fm">__exit__</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">)</span></div>
 
 
-<span class="c1"># from https://gist.github.com/thesamovar/52dbbb3a58a73c590d54c34f5f719bac</span>
-<div class="viewcode-block" id="panel_specs"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.panel_specs">[docs]</a><span class="k">def</span> <span class="nf">panel_specs</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""</span>
-<span class="sd">    ```</span>
-<span class="sd">    layout = '''</span>
-<span class="sd">    AAB</span>
-<span class="sd">    AA.</span>
-<span class="sd">    .DD</span>
-<span class="sd">    '''</span>
-<span class="sd">    fig = plt.figure(figsize=(10, 7))</span>
-<span class="sd">    axes, spec = panels(layout, fig=fig)</span>
-<span class="sd">    spec.set_width_ratios([1, 3, 1])</span>
-<span class="sd">    label_panels(axes, letters='ABD')</span>
-<span class="sd">    plt.tight_layout()</span>
-<span class="sd">    ```</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        layout ([type]): [description]</span>
-<span class="sd">        fig ([type], optional): [description]. Defaults to None.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: [description]</span>
-<span class="sd">        ValueError: [description]</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        [type]: [description]</span>
-<span class="sd">    """</span>
-    <span class="c1"># default arguments</span>
-    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
-    <span class="c1"># format and sanity check grid</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="n">layout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">)</span>
-    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-    <span class="n">linewidths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linewidths</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid layout (all lines must have same width)'</span><span class="p">)</span>
-    <span class="n">width</span> <span class="o">=</span> <span class="n">linewidths</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-    <span class="n">height</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-    <span class="n">panel_letters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)</span>
-    <span class="c1"># find bounding boxes for each panel</span>
-    <span class="n">panel_grid</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">panel_letters</span><span class="p">:</span>
-        <span class="n">left</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">letter</span><span class="p">)</span>
-        <span class="n">right</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">letter</span><span class="p">)</span>
-        <span class="n">top</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">letter</span><span class="p">)</span>
-        <span class="n">bottom</span> <span class="o">=</span> <span class="mi">1</span><span class="o">+</span><span class="nb">max</span><span class="p">(</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">lines</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">letter</span><span class="p">)</span>
-        <span class="n">panel_grid</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
-        <span class="c1"># check that this layout is consistent, i.e. all squares are filled</span>
-        <span class="n">valid</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="n">letter</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">))</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Invalid layout (not all square)'</span><span class="p">)</span>
-    <span class="c1"># build axis specs</span>
-    <span class="n">gs</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">gridspec</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
-    <span class="n">specs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">letter</span><span class="p">,</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span> <span class="ow">in</span> <span class="n">panel_grid</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">specs</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="n">gs</span><span class="p">[</span><span class="n">top</span><span class="p">:</span><span class="n">bottom</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span><span class="n">right</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">specs</span><span class="p">,</span> <span class="n">gs</span></div>
-
-<span class="k">def</span> <span class="nf">panels</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># default arguments</span>
-    <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
-    <span class="n">specs</span><span class="p">,</span> <span class="n">gs</span> <span class="o">=</span> <span class="n">panel_specs</span><span class="p">(</span><span class="n">layout</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">letter</span><span class="p">,</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">specs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">axes</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">axes</span><span class="p">,</span> <span class="n">gs</span>
-
-<span class="k">def</span> <span class="nf">label_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">prefix</span><span class="o">+</span><span class="n">letter</span><span class="o">+</span><span class="n">postfix</span><span class="o">+</span><span class="s1">' '</span><span class="o">*</span><span class="n">spaces</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
-                 <span class="n">fontdict</span><span class="o">=</span><span class="p">{</span><span class="s1">'horizontalalignment'</span><span class="p">:</span> <span class="s1">'right'</span><span class="p">,</span>
-                           <span class="s1">'fontsize'</span><span class="p">:</span> <span class="n">fontsize</span><span class="p">})</span>
-
-<span class="k">def</span> <span class="nf">label_panels</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">letters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="s1">'.'</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">letters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">letters</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">letter</span> <span class="ow">in</span> <span class="n">letters</span><span class="p">:</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">letter</span><span class="p">]</span>
-        <span class="n">label_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">letter</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">postfix</span><span class="o">=</span><span class="n">postfix</span><span class="p">,</span> <span class="n">spaces</span><span class="o">=</span><span class="n">spaces</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">fontsize</span><span class="p">)</span>
-
-
-
-<span class="kn">import</span> <span class="nn">matplotlib.legend</span> <span class="k">as</span> <span class="nn">mlegend</span>
-<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span>
 <span class="c1"># from https://stackoverflow.com/a/60345118/2301098</span>
 <div class="viewcode-block" id="tablelegend"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.tablelegend">[docs]</a><span class="k">def</span> <span class="nf">tablelegend</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">col_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title_label</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">"""</span>
@@ -526,41 +449,42 @@
 
 <span class="sd">    Creates a legend where the labels are not directly placed with the artists,</span>
 <span class="sd">    but are used as row and column headers, looking like this:</span>
-
-<span class="sd">    title_label   | col_labels[1] | col_labels[2] | col_labels[3]</span>
-<span class="sd">    -------------------------------------------------------------</span>
-<span class="sd">    row_labels[1] |</span>
-<span class="sd">    row_labels[2] |              &lt;artists go there&gt;</span>
-<span class="sd">    row_labels[3] |</span>
-
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-
-<span class="sd">    ax : `matplotlib.axes.Axes`</span>
-<span class="sd">        The artist that contains the legend table, i.e. current axes instant.</span>
-
-<span class="sd">    col_labels : list of str, optional</span>
-<span class="sd">        A list of labels to be used as column headers in the legend table.</span>
-<span class="sd">        `len(col_labels)` needs to match `ncol`.</span>
-
-<span class="sd">    row_labels : list of str, optional</span>
-<span class="sd">        A list of labels to be used as row headers in the legend table.</span>
-<span class="sd">        `len(row_labels)` needs to match `len(handles) // ncol`.</span>
-
-<span class="sd">    title_label : str, optional</span>
-<span class="sd">        Label for the top left corner in the legend table.</span>
-
-<span class="sd">    ncol : int</span>
-<span class="sd">        Number of columns.</span>
-
-
-<span class="sd">    Other Parameters</span>
-<span class="sd">    ----------------</span>
-
-<span class="sd">    Refer to `matplotlib.legend.Legend` for other parameters.</span>
-
 <span class="sd">    """</span>
+    <span class="c1"># ```</span>
+    <span class="c1"># title_label   | col_labels[1] | col_labels[2] | col_labels[3]</span>
+    <span class="c1"># -------------------------------------------------------------</span>
+    <span class="c1"># row_labels[1] |</span>
+    <span class="c1"># row_labels[2] |              &lt;artists go there&gt;</span>
+    <span class="c1"># row_labels[3] |</span>
+    <span class="c1"># ```</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="c1"># ----------</span>
+
+    <span class="c1"># ax : `matplotlib.axes.Axes`</span>
+    <span class="c1">#     The artist that contains the legend table, i.e. current axes instant.</span>
+
+    <span class="c1"># col_labels : list of str, optional</span>
+    <span class="c1">#     A list of labels to be used as column headers in the legend table.</span>
+    <span class="c1">#     `len(col_labels)` needs to match `ncol`.</span>
+
+    <span class="c1"># row_labels : list of str, optional</span>
+    <span class="c1">#     A list of labels to be used as row headers in the legend table.</span>
+    <span class="c1">#     `len(row_labels)` needs to match `len(handles) // ncol`.</span>
+
+    <span class="c1"># title_label : str, optional</span>
+    <span class="c1">#     Label for the top left corner in the legend table.</span>
+
+    <span class="c1"># ncol : int</span>
+    <span class="c1">#     Number of columns.</span>
+
+
+    <span class="c1"># Other Parameters</span>
+    <span class="c1"># ----------------</span>
+
+    <span class="c1"># Refer to `matplotlib.legend.Legend` for other parameters.</span>
+
+    <span class="c1"># """</span>
     <span class="c1">#################### same as `matplotlib.axes.Axes.legend` #####################</span>
     <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="n">mlegend</span><span class="o">.</span><span class="n">_parse_legend_args</span><span class="p">([</span><span class="n">ax</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extra_args</span><span class="p">):</span>
@@ -683,6 +607,94 @@
             <span class="n">va</span><span class="o">=</span><span class="n">va</span><span class="p">,</span>
             <span class="n">color</span><span class="o">=</span><span class="s1">'w'</span><span class="p">)</span>                      <span class="c1"># Vertically align label differently for</span></div>
                                         <span class="c1"># positive and negative values.</span>
+
+
+<div class="viewcode-block" id="generate_colors"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.generate_colors">[docs]</a><span class="k">def</span> <span class="nf">generate_colors</span><span class="p">(</span><span class="n">nb_colors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">start_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">"""[summary]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nb_colors (int, optional): [description]. Defaults to 1.</span>
+<span class="sd">        start_color ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        start (int, optional): [description]. Defaults to 0.</span>
+<span class="sd">        step (int, optional): [description]. Defaults to 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [type]: [description]</span>
+<span class="sd">    """</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">colorcet</span><span class="o">.</span><span class="n">palette</span><span class="p">[</span><span class="s1">'glasbey_light'</span><span class="p">][</span><span class="n">start</span><span class="p">::</span><span class="n">step</span><span class="p">]</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cmap</span><span class="p">)[:</span><span class="n">nb_colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">start_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cmap</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start_color</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cmap</span></div>
+
+
+<div class="viewcode-block" id="annotate_events"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.annotate_events">[docs]</a><span class="k">def</span> <span class="nf">annotate_events</span><span class="p">(</span><span class="n">event_seconds</span><span class="p">,</span> <span class="n">event_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">"""Plot events as vertical lines to plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event_seconds (List[float]): List of event times in seconds</span>
+<span class="sd">        event_names (List[str], optional): List of event names. Defaults to None.</span>
+<span class="sd">        tmin (float, optional): Start of the range of events annotated in seconds. Defaults to 0.</span>
+<span class="sd">        tmax (float, optional): End of the range of events annotated in seconds. Defaults to np.inf.</span>
+<span class="sd">        color (optional): Either a single valid matplotlib color (in that case all segment types will have that color)</span>
+<span class="sd">                      or a list of matplotlib colors, one for each segment type.</span>
+<span class="sd">                      Defaults to None, in which case a list of distinct colors</span>
+<span class="sd">                      will be created automatically from colorcet's 'glasbey_light' palette.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the number of colors does not match the number of unique event names.</span>
+<span class="sd">    """</span>
+    <span class="n">unique_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">event_names</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># generate a color for each event name</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">generate_colors</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_names</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>  <span class="c1"># use given color for each event name</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="n">color</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">unique_names</span><span class="p">]</span>
+
+    <span class="n">event_seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">unique_names</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">event_seconds</span><span class="p">,</span> <span class="n">event_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seconds</span> <span class="o">&gt;</span> <span class="n">tmin</span> <span class="ow">and</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="n">tmax</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">event_seen</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="n">event_seen</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">[</span><span class="n">unique_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="annotate_segments"><a class="viewcode-back" href="../../api/das.utils_plot.html#das.utils_plot.annotate_segments">[docs]</a><span class="k">def</span> <span class="nf">annotate_segments</span><span class="p">(</span><span class="n">onset_seconds</span><span class="p">,</span> <span class="n">offset_seconds</span><span class="p">,</span> <span class="n">segment_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tmax</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">"""Plot segments as vertical lines to plot.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        onset_seconds ([type]): [description]</span>
+<span class="sd">        offset_seconds ([type]): [description]</span>
+<span class="sd">        segment_names ([type], optional): [description]. Defaults to None.</span>
+<span class="sd">        tmin (float, optional): [description]. Defaults to 0.</span>
+<span class="sd">        tmax (float, optional): [description]. Defaults to np.inf.</span>
+<span class="sd">        color (optional): Either a single valid matplotlib color (in that case all segment types will have that color)</span>
+<span class="sd">                      or a list of matplotlib colors, one for each segment type.</span>
+<span class="sd">                      Defaults to None, in which case a list of distinct colors</span>
+<span class="sd">                      will be created automatically from colorcet's 'glasbey_light' palette.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the number of colors does not match the number of unique segment names.</span>
+<span class="sd">    """</span>
+    <span class="n">unique_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">segment_names</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># generate a color for each event name</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">generate_colors</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_names</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>  <span class="c1"># use given color for each event name</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="p">[</span><span class="n">color</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">unique_names</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">color</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_names</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Number of colors (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">color</span><span class="p">)</span><span class="si">}</span><span class="s2"> does not match number of segment types (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_names</span><span class="p">)</span><span class="si">}</span><span class="s2">)."</span><span class="p">)</span>
+
+    <span class="n">segment_seen</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">unique_names</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">on</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">onset_seconds</span><span class="p">,</span> <span class="n">offset_seconds</span><span class="p">,</span> <span class="n">segment_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">on</span> <span class="o">&gt;</span> <span class="n">tmin</span> <span class="ow">and</span> <span class="n">off</span> <span class="o">&lt;</span> <span class="n">tmax</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">segment_seen</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="n">name</span>
+                <span class="n">segment_seen</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="n">off</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">[</span><span class="n">unique_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span></div>
+
 </pre></div>
       </article>
       <footer>

@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
@@ -276,58 +278,61 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="api/das.make_dataset.html#module-das.make_dataset" title="das.make_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.make_dataset</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.models.html#module-das.models" title="das.models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.models</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.menagerie.html#module-das.menagerie" title="das.menagerie"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.menagerie</span></code></a></p></td>
+<td><p>Utilities for interacting with DAS-Menagerie.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.models.html#module-das.models" title="das.models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.models</span></code></a></p></td>
 <td><p>Defines the network architectures.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.neptune.html#module-das.neptune" title="das.neptune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.neptune</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.neptune.html#module-das.neptune" title="das.neptune"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.neptune</span></code></a></p></td>
 <td><p>Utilities for logging to neptune.ai.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.npy_dir.html#module-das.npy_dir" title="das.npy_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.npy_dir</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.npy_dir.html#module-das.npy_dir" title="das.npy_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.npy_dir</span></code></a></p></td>
 <td><p>Dict of dicts &lt;-&gt; hierarchy of npy files.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.predict.html#module-das.predict" title="das.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.predict</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.predict.html#module-das.predict" title="das.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.predict</span></code></a></p></td>
 <td><p>Code for training and evaluating networks.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.pulse_utils.html#module-das.pulse_utils" title="das.pulse_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.pulse_utils</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.pulse_utils.html#module-das.pulse_utils" title="das.pulse_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.pulse_utils</span></code></a></p></td>
 <td><p>Utilities for handling pulses.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.segment_utils.html#module-das.segment_utils" title="das.segment_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.segment_utils</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.segment_utils.html#module-das.segment_utils" title="das.segment_utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.segment_utils</span></code></a></p></td>
 <td><p>Segment (syllable) utilities.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.train.html#module-das.train" title="das.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.train.html#module-das.train" title="das.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train</span></code></a></p></td>
 <td><p>Code for training networks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.train_transfer.html#module-das.train_transfer" title="das.train_transfer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train_transfer</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.train_transfer.html#module-das.train_transfer" title="das.train_transfer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train_transfer</span></code></a></p></td>
 <td><p>Code for training networks.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.utils.html#module-das.utils" title="das.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.utils</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.utils.html#module-das.utils" title="das.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.utils</span></code></a></p></td>
 <td><p>General utilities</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.utils_plot.html#module-das.utils_plot" title="das.utils_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.utils_plot</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.utils_plot.html#module-das.utils_plot" title="das.utils_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.utils_plot</span></code></a></p></td>
 <td><p>Plot utilities.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.tcn.tcn.html#module-das.tcn.tcn" title="das.tcn.tcn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.tcn.tcn.html#module-das.tcn.tcn" title="das.tcn.tcn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.tcn.tcn_new.html#module-das.tcn.tcn_new" title="das.tcn.tcn_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn_new</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.tcn.tcn_new.html#module-das.tcn.tcn_new" title="das.tcn.tcn_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn_new</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.augmentation.html#module-das.kapre.augmentation" title="das.kapre.augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.augmentation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.augmentation.html#module-das.kapre.augmentation" title="das.kapre.augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.augmentation</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.backend.html#module-das.kapre.backend" title="das.kapre.backend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.backend</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.backend.html#module-das.kapre.backend" title="das.kapre.backend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.backend</span></code></a></p></td>
 <td><p>Kapre backend functions</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.backend_keras.html#module-das.kapre.backend_keras" title="das.kapre.backend_keras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.backend_keras</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.backend_keras.html#module-das.kapre.backend_keras" title="das.kapre.backend_keras"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.backend_keras</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.filterbank.html#module-das.kapre.filterbank" title="das.kapre.filterbank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.filterbank</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.filterbank.html#module-das.kapre.filterbank" title="das.kapre.filterbank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.filterbank</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.time_frequency.html#module-das.kapre.time_frequency" title="das.kapre.time_frequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.time_frequency</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.time_frequency.html#module-das.kapre.time_frequency" title="das.kapre.time_frequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.time_frequency</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.utils.html#module-das.kapre.utils" title="das.kapre.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.utils</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.utils.html#module-das.kapre.utils" title="das.kapre.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.utils</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -389,6 +394,8 @@
     <script src="_static/scripts/main.js"></script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

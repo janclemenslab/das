@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
@@ -249,39 +251,71 @@
 <span></span><span class="sd">"""Segment (syllable) utilities."""</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
 
 
-<span class="k">def</span> <span class="nf">fill_gaps</span><span class="p">(</span><span class="n">sine_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">gap_dur</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-    <span class="n">onsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine_pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine_pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">==-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="viewcode-block" id="fill_gaps"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.fill_gaps">[docs]</a><span class="k">def</span> <span class="nf">fill_gaps</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">gap_dur</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+    <span class="sd">"""Fill short gaps in a sequence of labelled samples.</span>
+
+<span class="sd">    `---111111-1111---` -&gt; `---11111111111---`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labels (np.array): Sequence of labelled samples.</span>
+<span class="sd">        gap_dur (int, optional): Minimal gap duration, in samples. Defaults to 100.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.array: Labelled samples with short gaps filled.</span>
+<span class="sd">    """</span>
+    <span class="n">onsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">==</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">==-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">onsets</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
         <span class="n">onsets</span> <span class="o">=</span> <span class="n">onsets</span><span class="p">[</span><span class="n">onsets</span><span class="o">&lt;</span><span class="n">offsets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
         <span class="n">offsets</span> <span class="o">=</span> <span class="n">offsets</span><span class="p">[</span><span class="n">offsets</span><span class="o">&gt;</span><span class="n">onsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
         <span class="n">durations</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">-</span> <span class="n">onsets</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">durations</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">idx</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">offsets</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">onsets</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-</span><span class="n">gap_dur</span><span class="p">:</span>
-                <span class="n">sine_pred</span><span class="p">[</span><span class="n">offsets</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span><span class="n">onsets</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">sine_pred</span>
+                <span class="n">labels</span><span class="p">[</span><span class="n">offsets</span><span class="p">[</span><span class="n">idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span><span class="n">onsets</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">labels</span></div>
 
 
-<span class="k">def</span> <span class="nf">remove_short</span><span class="p">(</span><span class="n">sine_pred</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">min_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-    <span class="c1"># remove too short sine songs</span>
-    <span class="n">onsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine_pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">sine_pred</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<div class="viewcode-block" id="remove_short"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.remove_short">[docs]</a><span class="k">def</span> <span class="nf">remove_short</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">min_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+    <span class="sd">"""Remove short syllables from sequence of labelled samples.</span>
+
+<span class="sd">    `---1111-1---1--` -&gt; `---1111--------`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labels (np.array): Sequence of labelled samples.</span>
+<span class="sd">        min_len (int, optional): Minimal segment (syllable) duration, in samples. Defaults to 100.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.array: Labelled samples with short syllables removed.</span>
+<span class="sd">    """</span>
+    <span class="n">onsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">onsets</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
         <span class="n">onsets</span> <span class="o">=</span> <span class="n">onsets</span><span class="p">[</span><span class="n">onsets</span> <span class="o">&lt;</span> <span class="n">offsets</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
         <span class="n">offsets</span> <span class="o">=</span> <span class="n">offsets</span><span class="p">[</span><span class="n">offsets</span> <span class="o">&gt;</span> <span class="n">onsets</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
         <span class="n">durations</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">-</span> <span class="n">onsets</span>
         <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="p">(</span><span class="n">onset</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">duration</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span><span class="p">,</span> <span class="n">durations</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="n">min_len</span><span class="p">:</span>
-                <span class="n">sine_pred</span><span class="p">[</span><span class="n">onset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="n">sine_pred</span>
+                <span class="n">labels</span><span class="p">[</span><span class="n">onset</span><span class="p">:</span><span class="n">offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">labels</span></div>
 
 
-<span class="k">def</span> <span class="nf">label_syllables_by_majority</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
+<div class="viewcode-block" id="label_syllables_by_majority"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.label_syllables_by_majority">[docs]</a><span class="k">def</span> <span class="nf">label_syllables_by_majority</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span>
                                 <span class="n">onsets_seconds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">offsets_seconds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
                                 <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+    <span class="sd">"""Label syllables by a majority vote.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        labels (np.array): Sequence of dirty, per sample, labels.</span>
+<span class="sd">        onsets_seconds (List[float]): Onset of each syllable in `labels`, in seconds.</span>
+<span class="sd">        offsets_seconds (List[float]): Offset of each syllable in `labels`, in seconds.</span>
+<span class="sd">        samplerate (float): Samplerate of `labels`, in Hz.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple[np.array, np.array]: Sequence of syllables, clean sequence of per sample labels.</span>
+<span class="sd">    """</span>
     <span class="n">syllables</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">labels_clean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
 
@@ -294,10 +328,22 @@
 
     <span class="n">syllables</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">syllables</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">syllables</span><span class="p">,</span> <span class="n">labels_clean</span>
+    <span class="k">return</span> <span class="n">syllables</span><span class="p">,</span> <span class="n">labels_clean</span></div>
 
 
-<span class="k">def</span> <span class="nf">levenshtein</span><span class="p">(</span><span class="n">seq1</span><span class="p">,</span> <span class="n">seq2</span><span class="p">):</span>
+<div class="viewcode-block" id="levenshtein"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.levenshtein">[docs]</a><span class="k">def</span> <span class="nf">levenshtein</span><span class="p">(</span><span class="n">seq1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">seq2</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">"""Compute the Levenshtein edit distance between two strings.</span>
+
+<span class="sd">    Corresponds to the minimal number of insertions, deletions, and subsitutions</span>
+<span class="sd">    required to transform `seq1` into `seq2`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        seq1 (str)</span>
+<span class="sd">        seq2 (str)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: The Levenshtein distance between seq1 and seq1.</span>
+<span class="sd">    """</span>
     <span class="n">oneago</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">thisrow</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq1</span><span class="p">)):</span>
@@ -307,26 +353,25 @@
             <span class="n">addcost</span> <span class="o">=</span> <span class="n">thisrow</span><span class="p">[</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
             <span class="n">subcost</span> <span class="o">=</span> <span class="n">oneago</span><span class="p">[</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">seq1</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">!=</span> <span class="n">seq2</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
             <span class="n">thisrow</span><span class="p">[</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">delcost</span><span class="p">,</span> <span class="n">addcost</span><span class="p">,</span> <span class="n">subcost</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">thisrow</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">thisrow</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">seq2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="syllable_error_rate"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.syllable_error_rate">[docs]</a><span class="k">def</span> <span class="nf">syllable_error_rate</span><span class="p">(</span><span class="n">true</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
-    <span class="sd">"""Levenshtein/edit distance normalized by length of true sequence</span>
+<div class="viewcode-block" id="syllable_error_rate"><a class="viewcode-back" href="../../api/das.segment_utils.html#das.segment_utils.syllable_error_rate">[docs]</a><span class="k">def</span> <span class="nf">syllable_error_rate</span><span class="p">(</span><span class="n">true</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">"""Compute the Levenshtein edit distance normalized by length of `true`.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        true ([str]): ground truth labels for a series of songbird syllables</span>
-<span class="sd">        pred ([str]): predicted labels for a series of songbird syllables</span>
+<span class="sd">        true (str): Ground truth labels for a sequence of syllables.</span>
+<span class="sd">        pred (str): Predicted labels for a sequence of syllables.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        TypeError: if either input is not a str</span>
+<span class="sd">        TypeError: if either input is not a `str`</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        float: Levenshtein distance / len(true)</span>
-
+<span class="sd">        float: Levenshtein distance normalized by length of `true`.</span>
 <span class="sd">    """</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">true</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Both `true` and `pred` must be of type `str'</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Both `true` and `pred` must be of type `str`"</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">levenshtein</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">true</span><span class="p">)</span></div>
 </pre></div>

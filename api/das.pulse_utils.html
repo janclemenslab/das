@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
@@ -249,29 +251,50 @@
 <span id="das-pulse-utils"></span><h1>das.pulse_utils<a class="headerlink" href="#module-das.pulse_utils" title="Permalink to this headline">¶</a></h1>
 <p>Utilities for handling pulses.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="das.pulse_utils.get_pulseshapes">
-<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">get_pulseshapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulsecenters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">song</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_hw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/pulse_utils.html#get_pulseshapes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.get_pulseshapes" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
-<p>In case of multi-channel recordings, will return the shape for the loudest channel.</p>
+<dt class="sig sig-object py" id="das.pulse_utils.center_of_mass">
+<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thres</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/das/pulse_utils.html#center_of_mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.center_of_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate center of mass of y.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pulsecenters</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>song</strong> (<em>[</em><em>type</em><em>]</em>) – samples x channels</p></li>
-<li><p><strong>win_hw</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>x</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>y</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>thres</strong> (<em>float</em><em>, </em><em>optional</em>) – Threshold. Defaults to 0.5.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>[description]</p>
+<dd class="field-even"><p>Center of mass.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[type]</p>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="das.pulse_utils.get_pulseshapes">
+<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">get_pulseshapes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulsecenters</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">song</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">win_hw</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="reference internal" href="../_modules/das/pulse_utils.html#get_pulseshapes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.get_pulseshapes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract waveforms around <code class="xref py py-obj docutils literal notranslate"><span class="pre">pulsecenters</span></code> from <code class="xref py py-obj docutils literal notranslate"><span class="pre">song</span></code>.</p>
+<p>In case of multi-channel recordings, will return the waveform on the channel
+with the maximum absolute value within +/-<code class="xref py py-obj docutils literal notranslate"><span class="pre">win_hw</span></code> around the each pulsecenter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pulsecenters</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Location of each pulse center in <code class="xref py py-obj docutils literal notranslate"><span class="pre">song</span></code>, in samples</p></li>
+<li><p><strong>song</strong> (<em>np.array</em>) – Audio data ([samples, channels]).</p></li>
+<li><p><strong>win_hw</strong> (<em>int</em>) – Half-width of the waveform cut out around each pulse center, in samples.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Extracted waveforms [2 * win_hw, nb_centers]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.pulse_utils.normalize_pulse">
-<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">normalize_pulse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_win</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/pulse_utils.html#normalize_pulse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.normalize_pulse" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">normalize_pulse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulse</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth_win</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_win</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="reference internal" href="../_modules/das/pulse_utils.html#normalize_pulse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.normalize_pulse" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize pulses.</p>
 <ol class="arabic simple">
 <li><p>scales to unit-norm,</p></li>
@@ -281,33 +304,37 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pulse</strong> – should be [T,]</p></li>
-<li><p><strong>smooth_win</strong> – n samples of rect window used to smooth squared pulse for peak detection</p></li>
-<li><p><strong>flip_win</strong> – number of samples pre-peak used for determining sign of pulse for flipping.</p></li>
+<li><p><strong>pulse</strong> (<em>np.array</em>) – should be [T,]</p></li>
+<li><p><strong>smooth_win</strong> (<em>int</em><em>, </em><em>optional</em>) – n samples of rect window used to smooth squared pulse for peak detection</p></li>
+<li><p><strong>flip_win</strong> (<em>int</em><em>, </em><em>optional</em>) – number of samples pre-peak used for determining sign of pulse for flipping.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>normalized pulse</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.pulse_utils.pulse_freq">
-<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">pulse_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fftlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_subtract</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/pulse_utils.html#pulse_freq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.pulse_freq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate pulse frequency as center of mass of the freq spectrum.</p>
+<span class="sig-prename descclassname"><span class="pre">das.pulse_utils.</span></span><span class="sig-name descname"><span class="pre">pulse_freq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pulse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fftlen</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_subtract</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/pulse_utils.html#pulse_freq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.pulse_utils.pulse_freq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate pulse frequency as center of mass of the pulse’s amplitude spectrum.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>[</strong><strong>T</strong> (<em>pulse -</em>) – </p></li>
-<li><p><strong>]</strong> – </p></li>
-<li><p><strong>spectrum</strong> (<em>fftlen - sets freq resolution of the</em>) – </p></li>
-<li><p><strong>pulse</strong> (<em>sampling_rate of the</em>) – </p></li>
-<li><p><strong>component</strong> (<em>mean_subtract - removes f0</em>) – </p></li>
+<li><p><strong>pulse</strong> (<em>np.array</em>) – Waveform (shape [T,]).</p></li>
+<li><p><strong>fftlen</strong> (<em>int</em><em>, </em><em>optional</em>) – Sets freq resolution of the spectrum. Defaults to 1_000.</p></li>
+<li><p><strong>sampling_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Sample rate of the pulse, in Hz. Defaults to 10_000.</p></li>
+<li><p><strong>mean_subtract</strong> (<em>bool</em><em>, </em><em>optional</em>) – If true, removes f0 component by mean subtraction. Defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pulse frequency
-frequency values and amplitude of the pulse spectrum</p>
+<dd class="field-even"><p>Pulse frequency and frequency values and amplitude of the pulse spectrum (cut of at 1000 Hz).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, np.array, np.array]</p>
 </dd>
 </dl>
 </dd></dl>

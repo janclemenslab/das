@@ -172,6 +172,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/convert.html">Convert your own annotations and audio data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/predict.html">Predict</a></li>
@@ -200,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.io.html">das.io</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
@@ -256,6 +258,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kapre</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
 <div class="viewcode-block" id="LossHistory"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.LossHistory">[docs]</a><span class="k">class</span> <span class="nc">LossHistory</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">Callback</span><span class="p">):</span>
@@ -285,51 +288,60 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'trained ended'</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">,</span> <span class="n">model_ext</span><span class="o">=</span><span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">from_epoch</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">params_ext</span><span class="o">=</span><span class="s1">'_params.yaml'</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
+               <span class="n">model_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_model.h5'</span><span class="p">,</span>
+               <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_params.yaml'</span><span class="p">,</span>
+               <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">"""Load model with weights.</span>
 
 <span class="sd">    First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.</span>
 <span class="sd">    Second, try to init model from parameters and then add weights...</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        file_trunk ([type]): [description]</span>
-<span class="sd">        model_dict ([type]): [description]</span>
+<span class="sd">        file_trunk (str): [description]</span>
+<span class="sd">        model_dict (Dict[str, Callable): [description]</span>
 <span class="sd">        model_ext (str, optional): [description]. Defaults to '_weights.h5'.</span>
-<span class="sd">        from_epoch ([type], optional): Deprecated [description]. Defaults to None.</span>
 <span class="sd">        params_ext (str, optional): [description]. Defaults to '_params.yaml'.</span>
 <span class="sd">        compile (bool, optional): [description]. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        [type]: [description]</span>
+<span class="sd">        keras.Model</span>
 <span class="sd">    """</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">model_ext</span><span class="p">,</span>
+        <span class="n">model_filename</span> <span class="o">=</span> <span class="n">_download_if_url</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">model_ext</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="n">model_filename</span><span class="p">,</span>
                                         <span class="n">custom_objects</span><span class="o">=</span><span class="p">{</span><span class="s1">'Spectrogram'</span><span class="p">:</span> <span class="n">kapre</span><span class="o">.</span><span class="n">time_frequency</span><span class="o">.</span><span class="n">Spectrogram</span><span class="p">,</span>
                                                         <span class="s1">'TCN'</span><span class="p">:</span> <span class="n">tcn</span><span class="o">.</span><span class="n">tcn_new</span><span class="o">.</span><span class="n">TCN</span><span class="p">})</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">SystemError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">'Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.'</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">load_model_from_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">,</span> <span class="n">weights_ext</span><span class="o">=</span><span class="n">model_ext</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="nb">compile</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">load_model_from_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">,</span> <span class="n">weights_ext</span><span class="o">=</span><span class="n">model_ext</span><span class="p">,</span> <span class="n">params_ext</span><span class="o">=</span><span class="n">params_ext</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="nb">compile</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="load_model_from_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_from_params">[docs]</a><span class="k">def</span> <span class="nf">load_model_from_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">,</span> <span class="n">weights_ext</span><span class="o">=</span><span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">params_ext</span><span class="o">=</span><span class="s1">'_params.yaml'</span><span class="p">,</span> <span class="nb">compile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="load_model_from_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_from_params">[docs]</a><span class="k">def</span> <span class="nf">load_model_from_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
+                           <span class="n">weights_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_model.h5'</span><span class="p">,</span>
+                           <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_params.yaml'</span><span class="p">,</span>
+                           <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">"""Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        file_trunk ([type]): [description]</span>
+<span class="sd">        file_trunk (str): [description]</span>
 <span class="sd">        models_dict ([type]): [description]</span>
 <span class="sd">        weights_ext (str, optional): [description]. Defaults to '_model.h5' (use weights from model file).</span>
 <span class="sd">        params_ext (str, optional): [description]. Defaults to '_params.yaml'.</span>
 <span class="sd">        compile (bool, optional): [description]. Defaults to True.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        [type]: [description]</span>
+<span class="sd">        keras.Model</span>
 <span class="sd">    """</span>
-    <span class="n">params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">params_ext</span><span class="o">=</span><span class="n">params_ext</span><span class="p">)</span>
+
     <span class="n">model</span> <span class="o">=</span> <span class="n">model_dict</span><span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s1">'model_name'</span><span class="p">]](</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>  <span class="c1"># get the model - calls the function that generates a model with parameters</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">weights_ext</span><span class="p">)</span>
+    <span class="n">weights_filename</span> <span class="o">=</span> <span class="n">_download_if_url</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">weights_ext</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">weights_filename</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="nb">compile</span><span class="p">:</span>
         <span class="c1"># Compile with random standard optimizer and loss so we can use the model for prediction</span>
         <span class="c1"># Just re-compile the model if you want a particular optimizer and loss.</span>
@@ -338,29 +350,31 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="save_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.save_params">[docs]</a><span class="k">def</span> <span class="nf">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">file_trunk</span><span class="p">,</span> <span class="n">params_ext</span><span class="o">=</span><span class="s1">'_params.yaml'</span><span class="p">):</span>
+<div class="viewcode-block" id="save_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.save_params">[docs]</a><span class="k">def</span> <span class="nf">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_params.yaml'</span><span class="p">):</span>
     <span class="sd">"""Save model/training parameters to yaml.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        params ([type]): [description]</span>
-<span class="sd">        file_trunk ([type]): [description]</span>
+<span class="sd">        params (Dict[str]): [description]</span>
+<span class="sd">        file_trunk (str): [description]</span>
 <span class="sd">        params_ext (str, optional): [description]. Defaults to '_params.yaml'.</span>
 <span class="sd">    """</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">params_ext</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_params">[docs]</a><span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">,</span> <span class="n">params_ext</span><span class="o">=</span><span class="s1">'_params.yaml'</span><span class="p">):</span>
+<div class="viewcode-block" id="load_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_params">[docs]</a><span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'_params.yaml'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">"""Load model/training parameters from yaml</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        file_trunk ([type]): [description]</span>
-<span class="sd">        params_ext (str, optional): [description]. Defaults to '_params.yaml'.</span>
+<span class="sd">        file_trunk (str): [description]</span>
+<span class="sd">        params_ext (strs, optional): [description]. Defaults to '_params.yaml'.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">        [type]: [description]</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: Parameter dictionary</span>
 <span class="sd">    """</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">params_ext</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">_download_if_url</span><span class="p">(</span><span class="n">file_trunk</span> <span class="o">+</span> <span class="n">params_ext</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">params</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -368,21 +382,43 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<span class="k">def</span> <span class="nf">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">,</span> <span class="n">model_dict</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">):</span>
-    <span class="c1"># load parameters and model</span>
+<div class="viewcode-block" id="load_model_and_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_and_params">[docs]</a><span class="k">def</span> <span class="nf">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">,</span> <span class="n">model_dict</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="sd">"""[summary]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_save_name ([type]): [description]</span>
+<span class="sd">        model_dict ([type], optional): [description]. Defaults to models.model_dict.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        keras.Model, Dict[str, Any]: [description]</span>
+<span class="sd">    """</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">load_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">)</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">,</span> <span class="n">from_epoch</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">load_model</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="load_from"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_from">[docs]</a><span class="k">def</span> <span class="nf">load_from</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">datasets</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_download_if_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'http'</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">url</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">urllib.request</span>
+        <span class="kn">import</span> <span class="nn">tempfile</span>
+        <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># get filename</span>
+        <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
+        <span class="n">local_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tmpdir</span><span class="p">)</span> <span class="o">/</span> <span class="n">filename</span>
+        <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">local_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">local_path</span>
+
+
+<div class="viewcode-block" id="load_from"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_from">[docs]</a><span class="k">def</span> <span class="nf">load_from</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">datasets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
     <span class="sd">"""Load datasets from h5 file.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        filename ([type]): [description]</span>
-<span class="sd">        datasets ([type]): [description]</span>
+<span class="sd">        filename (str)</span>
+<span class="sd">        datasets (List[str]): Names of the datasets (=keys) to load</span>
 
-<span class="sd">        Returns:</span>
+<span class="sd">    Returns:</span>
 <span class="sd">        [type]: [description]</span>
 <span class="sd">    """</span>
     <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
