@@ -9,11 +9,12 @@ class Events(UserDict):
 
     def __init__(self, data: Optional[Dict[str, List[float]]] = None, categories: Optional[Dict[str, str]] = None,
                  add_names_from_categories: bool = True):
-        """Initialize Events dict.
+        """Initializes Events class. Do not use. Use `from_df` for `from_lists` instead.
 
         Args:
-            data: dict or Events
-            categories (dict[str: str]): name, category mapping
+            data (Optional[Dict[str, List[float]]], optional): [description]. Defaults to None.
+            categories (Optional[Dict[str, str]], optional): [description]. Defaults to None.
+            add_names_from_categories (bool, optional): [description]. Defaults to True.
         """
         if data is None:
             data = dict()
@@ -48,14 +49,39 @@ class Events(UserDict):
                     self.add_name(name=name, category=cat)
 
     @classmethod
-    def from_df(cls, df, possible_event_names=[]):
+    def from_df(cls, df, possible_event_names: Optional[List] = None):
+        """[summary]
+
+        Args:
+            df (pd.DataFrame): with columns `name`, `start_seconds`, `end_seconds`.
+            possible_event_names (list, optional): [description]. Defaults to [].
+
+        Returns:
+            Events: [description]
+        """
+        if possible_event_names is None:
+            possible_event_names = []
+
         return cls.from_lists(df.name.values,
-                              df.start_seconds.values.astype(np.float),
-                              df.stop_seconds.values.astype(np.float),
+                              df.start_seconds.values.astype(float),
+                              df.stop_seconds.values.astype(float),
                               possible_event_names)
 
     @classmethod
-    def from_lists(cls, names, start_seconds, stop_seconds, possible_event_names=[]):
+    def from_lists(cls, names, start_seconds, stop_seconds, possible_event_names: Optional[List] = None):
+        """[summary]
+
+        Args:
+            names ([type]): [description]
+            start_seconds ([type]): [description]
+            stop_seconds ([type]): [description]
+            possible_event_names (list, optional): [description]. Defaults to [].
+
+        Returns:
+            [type]: [description]
+        """
+        if possible_event_names is None:
+            possible_event_names = []
         unique_names = list(set(names))
         unique_names.extend(possible_event_names)
         dct = {name: [] for name in unique_names}
@@ -67,6 +93,14 @@ class Events(UserDict):
 
     @classmethod
     def from_dataset(cls, ds):
+        """[summary]
+
+        Args:
+            ds ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         start_seconds = np.array(ds.event_times.sel(event_time='start_seconds').data)
         stop_seconds = np.array(ds.event_times.sel(event_time='stop_seconds').data)
         names = np.array(ds.event_names.data)
@@ -83,18 +117,18 @@ class Events(UserDict):
             out = cls(out, categories=cats)
         return out
 
-    def _init_df(self):
+    def _init_df(self) -> pd.DataFrame:
         return pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
 
-    def _append_row(self, df, name, start_seconds, stop_seconds=None):
+    def _append_row(self, df, name, start_seconds, stop_seconds=None) -> pd.DataFrame:
         if stop_seconds is None:
             stop_seconds = start_seconds
         new_row = pd.DataFrame(np.array([name, start_seconds, stop_seconds])[np.newaxis,:],
                                 columns=df.columns)
         return df.append(new_row, ignore_index=True)
 
-    def to_df(self, preserve_empty: bool = True):
-        """Convert to pandas.DataFeame
+    def to_df(self, preserve_empty: bool = True) -> pd.DataFrame:
+        """Convert to pandas.DataFrame
 
         Args:
             preserve_empty (bool, optional):
@@ -107,7 +141,7 @@ class Events(UserDict):
                 Defaults to True.
 
         Returns:
-            pandas.DataFrame: with columns name, start_seconds, stop_seconds, one row per event.
+            pandas.DataFrame: with columns `name`, `start_seconds`, `stop_seconds`, one row per event.
         """
         df = self._init_df()
         for name in self.names:
@@ -123,11 +157,16 @@ class Events(UserDict):
         df['stop_seconds'] = pd.to_numeric(df['stop_seconds'], errors='coerce')
         return df
 
-    def to_dataset(self):
+    def to_dataset(self) -> xr.Dataset:
+        """Returns an xarray dataset.
+
+        Returns:
+            xr.Dataset: with the data arrays `event_names` and `event_times`.
+        """
         df = self.to_df()
         names = df.name.values
-        start_seconds = df.start_seconds.values.astype(np.float)
-        stop_seconds = df.stop_seconds.values.astype(np.float)
+        start_seconds = df.start_seconds.values.astype(float)
+        stop_seconds = df.stop_seconds.values.astype(float)
 
         da_names = xr.DataArray(name='event_names', data=np.array(names, dtype='U128'), dims=['index',])
         da_times = xr.DataArray(name='event_times', data=np.array([start_seconds, stop_seconds]).T, dims=['index','event_time'], coords={'event_time': ['start_seconds', 'stop_seconds']})
@@ -138,6 +177,16 @@ class Events(UserDict):
         return ds
 
     def add_name(self, name, category='segment', times=None, overwrite: bool = False, append: bool = False, sort_after_append: bool = False):
+        """[summary]
+
+        Args:
+            name ([type]): [description]
+            category (str, optional): [description]. Defaults to 'segment'.
+            times ([type], optional): [description]. Defaults to None.
+            overwrite (bool, optional): [description]. Defaults to False.
+            append (bool, optional): [description]. Defaults to False.
+            sort_after_append (bool, optional): [description]. Defaults to False.
+        """
         if times is None:
             times = np.zeros((0,2))
 
@@ -150,6 +199,11 @@ class Events(UserDict):
                 self[name].sort(axis=0)
 
     def delete_name(self, name):
+        """[summary]
+
+        Args:
+            name ([type]): [description]
+        """
         if name in self:
             del self[name]
         if name in self.categories:
