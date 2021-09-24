@@ -2,12 +2,13 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Annotate song" href="annotate.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Annotate song" href="annotate.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
         <title>Train - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
@@ -37,9 +38,11 @@
   
     }
   }
-</style>
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../_static/pygments_dark.css"></head>
+</style></head>
   <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
@@ -232,7 +235,7 @@
   </aside>
   <div class="main">
     <div class="content">
-      <article role="main">
+      <div class="article-container">
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -247,21 +250,21 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <div class="section" id="train">
+        <article role="main">
+          <section class="tex2jax_ignore mathjax_ignore" id="train">
 <h1>Train<a class="headerlink" href="#train" title="Permalink to this headline">¶</a></h1>
 <p>Training a network involves two steps:</p>
 <ol class="simple">
 <li><p>Make a dataset from exported annotations.</p></li>
 <li><p>Configure and train a network.</p></li>
 </ol>
-<div class="section" id="make-a-dataset-from-exported-annotations">
+<section id="make-a-dataset-from-exported-annotations">
 <h2>Make a dataset from exported annotations<a class="headerlink" href="#make-a-dataset-from-exported-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Training requires data in a specific format in which the audio is split into different parts for use during training to optimize the network and after training to evaluate network performance. The GUI automates the generation of these datasets from audio annotated using the GUI. Alternatively, you can also <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">use your existing annotations</span></a> or <a class="reference internal" href="../tutorials/make_ds_notebook.html"><span class="doc std std-doc">make a dataset yourself</span></a>. For details on the data format itself, see <a class="reference external" href="data_formats.html#dataset-for-training">here</a>.</p>
 <p>In the GUI, make a dataset via <em>DAS/Make dataset for training</em>. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:</p>
-<div class="figure align-default" id="xb-assemble-fig">
-<a class="reference internal image-reference" href="../_images/xb_assemble.png"><img alt="assemble dataset" src="../_images/xb_assemble.png" style="width: 650px;"/></a>
-<p class="caption"><span class="caption-text">Dialog for customizing a dataset for training.</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figure class="align-default">
+<img alt="tutorials_gui/xb_assemble-fig" src="tutorials_gui/xb_assemble-fig"/>
+</figure>
 <ul class="simple">
 <li><p><em>Data folder</em> &amp; <em>Store folder</em>: The data folder contains your exported annotations (annotations as <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code>, audio as <code class="docutils literal notranslate"><span class="pre">*.npz</span></code> or <code class="docutils literal notranslate"><span class="pre">*.wav</span></code>). From these annotations, the dataset will be created and save in the store folder. By default, the store folder is the data folder with <code class="docutils literal notranslate"><span class="pre">.npy</span></code> appended. <em>Important: You can change the name of the store folder but the data folder must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> for DAS to recognize the dataset.</em></p></li>
 <li><p><em>Make individual training targets</em>: By default, the dataset will contain targets for a single network that recognizes all annotated song types. To be able to train a network for specific song types, enable this option. Training specific networks for individual song types, instead of a single network for all song types, can sometimes improve performance.</p></li>
@@ -286,14 +289,13 @@
 <p class="admonition-title">Note</p>
 <p>The dataset can be inspected using the <a class="reference internal" href="../tutorials/inspect_dataset.html"><span class="doc std std-doc">inspect_dataset notebook</span></a> if you are curious or if training fails.</p>
 </div>
-</div>
-<div class="section" id="train-das-using-the-gui">
+</section>
+<section id="train-das-using-the-gui">
 <h2>Train DAS using the GUI<a class="headerlink" href="#train-das-using-the-gui" title="Permalink to this headline">¶</a></h2>
 <p>Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> that you just created. Then, a dialog will allow you to customize the network to be trained.</p>
-<div class="figure align-default" id="xb-train-fig">
-<a class="reference internal image-reference" href="../_images/xb_train.png"><img alt="train" src="../_images/xb_train.png" style="width: 600px;"/></a>
-<p class="caption"><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figure class="align-default">
+<img alt="tutorials_gui/xb_train-fig" src="tutorials_gui/xb_train-fig"/>
+</figure>
 <p>Options are grouped into three sections:</p>
 <p><strong>Data set</strong>:</p>
 <ul class="simple">
@@ -326,7 +328,7 @@
 <li><p><em>Create tensorboard logs</em>: Create tensorboard logs for monitoring training.</p></li>
 </ul>
 <p>Training can be started locally in a separate process or a script can be generated for training on the command line, for instance on a cluster.</p>
-<div class="section" id="train-from-the-command-line">
+<section id="train-from-the-command-line">
 <h3>Train from the command line<a class="headerlink" href="#train-from-the-command-line" title="Permalink to this headline">¶</a></h3>
 <p>The datasets are portable—you can copy the folder with the dataset to another computer with a GPU and run training from the GUI there. If that machine cannot be used with a GUI—for instance if it’s a linux server, the training and network configuration can be exported via the dialog as a command line script and executed via a terminal.</p>
 <p>The script uses the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for training <em>DAS</em> (see also <a class="reference internal" href="../tutorials/train.html"><span class="doc std std-doc">train using command-line scripts</span></a>) and its contents will look like this:</p>
@@ -340,9 +342,9 @@
 <li><p>Add a line to activate a specific conda environment before running <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. For instance, <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">das</span></code>.</p></li>
 <li><p>Activate linux modules, for instance to enable CUDA; or specify parameters for your job scheduler.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="files-generated-during-training">
+</section>
+</section>
+<section id="files-generated-during-training">
 <h2>Files generated during training<a class="headerlink" href="#files-generated-during-training" title="Permalink to this headline">¶</a></h2>
 <p>The following files will be created in the <em>save folder</em>:</p>
 <ul class="simple">
@@ -351,10 +353,11 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">_results.h5</span></code>: results form the test data set.</p></li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> are required for using the network for predictions and need to be copied to your local machine if you train remotely.</p>
-</div>
-</div>
+</section>
+</section>
 
-      </article>
+        </article>
+      </div>
       <footer>
         
         <div class="related-pages">
@@ -381,13 +384,11 @@
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, Jan Clemens
-            |
+              Copyright &#169; 2021, Jan Clemens |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            |
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>. |
             <a class="muted-link" href="../_sources/tutorials_gui/train.md.txt"
                rel="nofollow">
               Show Source
@@ -433,8 +434,6 @@
     <script src="../_static/scripts/main.js"></script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
