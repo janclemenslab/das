@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/jupyter_cache/executors/utils.py", line 56, in single_nb_execution
+    record_timing=False,
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/client.py", line 1112, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/util.py", line 74, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/util.py", line 53, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/clemens10/miniconda3/lib/python3.7/asyncio/base_events.py", line 583, in run_until_complete
+    return future.result()
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/client.py", line 554, in async_execute
+    cell, index, execution_count=self.code_cells_executed + 1
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/client.py", line 857, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/Users/clemens10/miniconda3/lib/python3.7/site-packages/nbclient/client.py", line 760, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+savename = '/Users/janc/Dropbox/das.paper/sober/20200418_215107'
+params = das.utils.load_params(savename)
+store = zarr.open(savename + '.zarr')
+
+fs = 32_000  # Hz
+# sequence of ints - "0" if no song, >0 if syllable 
+# labels_pred = store['labels_pred'][:fs * 500]
+
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mFileNotFoundError[0m                         Traceback (most recent call last)
+[0;32m<ipython-input-2-2a26a5d1a43b>[0m in [0;36m<module>[0;34m[0m
+[1;32m      1[0m [0msavename[0m [0;34m=[0m [0;34m'/Users/janc/Dropbox/das.paper/sober/20200418_215107'[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----> 2[0;31m [0mparams[0m [0;34m=[0m [0mdas[0m[0;34m.[0m[0mutils[0m[0;34m.[0m[0mload_params[0m[0;34m([0m[0msavename[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m      3[0m [0mstore[0m [0;34m=[0m [0mzarr[0m[0;34m.[0m[0mopen[0m[0;34m([0m[0msavename[0m [0;34m+[0m [0;34m'.zarr'[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      4[0m [0;34m[0m[0m
+[1;32m      5[0m [0mfs[0m [0;34m=[0m [0;36m32_000[0m  [0;31m# Hz[0m[0;34m[0m[0;34m[0m[0m
+
+[0;32m/Volumes/shinkansen/Dropbox/code.py/das/src/das/utils.py[0m in [0;36mload_params[0;34m(file_trunk, params_ext)[0m
+[1;32m    125[0m     """
+[1;32m    126[0m     [0mfilename[0m [0;34m=[0m [0m_download_if_url[0m[0;34m([0m[0mfile_trunk[0m [0;34m+[0m [0mparams_ext[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 127[0;31m     [0;32mwith[0m [0mopen[0m[0;34m([0m[0mfilename[0m[0;34m,[0m [0;34m'r'[0m[0;34m)[0m [0;32mas[0m [0mf[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    128[0m         [0;32mtry[0m[0;34m:[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    129[0m             [0mparams[0m [0;34m=[0m [0myaml[0m[0;34m.[0m[0mload[0m[0;34m([0m[0mf[0m[0;34m,[0m [0mLoader[0m[0;34m=[0m[0myaml[0m[0;34m.[0m[0mFullLoader[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mFileNotFoundError[0m: [Errno 2] No such file or directory: '/Users/janc/Dropbox/das.paper/sober/20200418_215107_params.yaml'
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/janc/Dropbox/das.paper/sober/20200418_215107_params.yaml'
+
