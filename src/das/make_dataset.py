@@ -315,6 +315,14 @@ def make_gaps(y: np.ndarray, gap_seconds: float, samplerate: float,
         # there is no gap before the first syll starts and after the last syll ends so ignore those
         gap_onsets = label_change[onset][1:]
         gap_offsets = label_change[offset][:-1]
+
+        # just to be safe - remove all offsets occurring before the first onset and all onsets occurring before the last offset here
+        if len(gap_offsets) > 0 and len(gap_onsets) > 0:
+            gap_offsets = gap_offsets[gap_offsets > np.min(gap_onsets)]
+        # need to check twice since len(gap_offsets) might change above
+        if len(gap_offsets) > 0 and len(gap_onsets) > 0:
+            gap_onsets = gap_onsets[gap_onsets < np.max(gap_offsets)]
+
         gaps = gap_onsets - gap_offsets
 
         for gap, gap_onset, gap_offset in zip(gaps, gap_onsets, gap_offsets):
