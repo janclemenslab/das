@@ -4,12 +4,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.08.17.beta43"/>
+    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
         <title>das.kapre.utils - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=910ac4ccc9d7c023151c34010d7b500fb9777a51" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
@@ -37,9 +38,11 @@
   
     }
   }
-</style>
-    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../_static/pygments_dark.css"></head>
+</style></head>
   <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
     
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="svg-toc" viewBox="0 0 24 24">
@@ -232,7 +235,7 @@
   </aside>
   <div class="main">
     <div class="content">
-      <article role="main">
+      <div class="article-container">
         <div class="content-icon-container">
           <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
@@ -247,7 +250,8 @@
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
-        <h1>Source code for das.kapre.utils</h1><div class="highlight"><pre>
+        <article role="main">
+          <h1>Source code for das.kapre.utils</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -390,7 +394,8 @@
         <span class="n">base_config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Normalization2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">base_config</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div></div>
 </pre></div>
-      </article>
+        </article>
+      </div>
       <footer>
         
         <div class="related-pages">
@@ -399,8 +404,7 @@
         </div>
 
         <div class="related-information">
-              Copyright &#169; 2021, Jan Clemens
-            |
+              Copyright &#169; 2021, Jan Clemens |
             Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
               and
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -421,6 +425,7 @@
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/scripts/main.js"></script>
     <script src="../../../_static/togglebutton.js"></script>
+    <script src="../../../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
