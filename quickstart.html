@@ -255,7 +255,7 @@
           <section class="tex2jax_ignore mathjax_ignore" id="quick-start-tutorial">
 <h1>Quick start tutorial<a class="headerlink" href="#quick-start-tutorial" title="Permalink to this headline">¶</a></h1>
 <p>This quick start tutorial walks through all steps required to make <em>DAS</em> work with your data, using a recording of fly song as an example. A comprehensive documentation of all menus and options can be found in the <a class="reference internal" href="tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">GUI documentation</span></a>.</p>
-<p>In the tutorial, we will train <em>DAS</em> using an iterative and adaptive protocol that allows to quickly create a large dataset of annotations: Annotate a few song events, fast-train a network on those annotations, and then use that network to predict new annotations on a larger part of the recording. Initial, these predictions require manually correction, but correcting is typically much faster than annotating everything from scratch. This correct-train-predict cycle is then repeated with ever larger datasets until network performance is satisfactory.</p>
+<p>In the tutorial, we will train <em>DAS</em> using an iterative and adaptive protocol that allows to quickly create a large dataset of annotations: Annotate a few song events, fast-train a network on those annotations, and then use that network to predict new annotations on a larger part of the recording. These first predictions require manually correction, but correcting is typically much faster than annotating everything from scratch. This correct-train-predict cycle is then repeated with ever larger datasets until network performance is satisfactory.</p>
 <section id="download-example-data">
 <h2>Download example data<a class="headerlink" href="#download-example-data" title="Permalink to this headline">¶</a></h2>
 <p>To follow the tutorial, download and open this <a class="reference external" href="https://github.com/janclemenslab/DAS/releases/download/data/Dmel_male.wav">audio file</a>. The recording is of a <em>Drosophila melanogaster</em> male courting a female, recorded by David Stern (Janelia, part of <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">this dataset</a>). We will walk through loading, annotating, training and predicting using this file as an example.</p>
@@ -288,13 +288,13 @@ das gui
 </section>
 <section id="waveform-and-spectrogram-display">
 <h2>Waveform and spectrogram display<a class="headerlink" href="#waveform-and-spectrogram-display" title="Permalink to this headline">¶</a></h2>
-<p>Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom). You will see the two major modes of fly song—pulse and sine. The recording starts with sine song—a relatively soft oscillation resulting in a spectral power at ~150Hz. Pulse song starts after ~0.75 seconds, evident as trains of brief wavelets with a regular interval.</p>
+<p>Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom). You will see the two major modes of fly song—pulse and sine. The recording starts with sine song—a relatively soft oscillation resulting in a spectral power at ~150 Hz. Pulse song starts after ~0.75 seconds, evident as trains of brief wavelets with a regular interval.</p>
 <p>To navigate the view: Move forward/backward along the time axis via the <code class="docutils literal notranslate"><span class="pre">A</span></code>/<code class="docutils literal notranslate"><span class="pre">D</span></code> keys and zoom in/out the time axis with the <code class="docutils literal notranslate"><span class="pre">W</span></code>/<code class="docutils literal notranslate"><span class="pre">S</span></code> keys (see also the <em>Playback</em> menu). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal and frequency resolution of the spectrogram can be adjusted with the <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">T</span></code> keys.</p>
 <p>You can play back the waveform on display through your headphones/speakers by pressing <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
 <figure class="align-default" id="xb-display-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_view.png"><img alt="waveform and spectrogram display" src="_images/xb_quick_view.png" style="width: 100%;"/></a>
 <figcaption>
-<p><span class="caption-text">Waveform (top) and spectrogram (bottom) display of a single-channel recording of fly song.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">Waveform (top) and spectrogram (bottom) display of fly song.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
 </section>
@@ -302,10 +302,10 @@ das gui
 <h2>Initialize or edit song types<a class="headerlink" href="#initialize-or-edit-song-types" title="Permalink to this headline">¶</a></h2>
 <p>Before you can annotate song, you need to register the sine and pulse song types for annotation. <em>DAS</em> discriminates two principal categories of song types:</p>
 <ul class="simple">
-<li><p><em>Events</em> are defined by a single time of occurrence. The aforementioned pulse song is a song type of the event category.</p></li>
 <li><p><em>Segments</em> are song types that extend over time and are defined by a start and a stop time. The aforementioned sine song and the syllables of mouse and bird vocalizations fall into the segment category.</p></li>
+<li><p><em>Events</em> are defined by a single time of occurrence. The aforementioned pulse song is a song type of the event category.</p></li>
 </ul>
-<p>Add two new song types for annotation via <em>Annotations/Add or edit song types</em>: ‘pulse’ of category ‘event’ and ‘sine’ of category ‘segment’:</p>
+<p>Add two new song types for annotation via the <em>Add/edit</em> button at the top of the windows or via the <em>Annotations/Add or edit song types</em> menu: ‘pulse’ of category ‘event’ and ‘sine’ of category ‘segment’:</p>
 <figure class="align-default" id="xb-make-fig">
 <a class="reference internal image-reference" href="_images/xb_make.png"><img alt="edit annotation types" src="_images/xb_make.png" style="height: 400px;"/></a>
 <figcaption>
@@ -315,7 +315,7 @@ das gui
 </section>
 <section id="create-annotations-manually">
 <h2>Create annotations manually<a class="headerlink" href="#create-annotations-manually" title="Permalink to this headline">¶</a></h2>
-<p>The two new song types “pulse” or “sine” can now be activated for annotation using the dropdown menu on the top left of the main window. The active song type can also be changed with number keys indicated in the dropdown menu—in this case <code class="docutils literal notranslate"><span class="pre">1</span></code> activates pulse, <code class="docutils literal notranslate"><span class="pre">2</span></code> activates sine.</p>
+<p>The two new song types <em>pulse</em> or <em>sine</em> can now be activated for annotation using the dropdown menu on the top left of the window. The active song type can also be changed with the number keys indicated in the dropdown menu—in this case <code class="docutils literal notranslate"><span class="pre">1</span></code> activates pulse, <code class="docutils literal notranslate"><span class="pre">2</span></code> activates sine.</p>
 <p>Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
 <figure class="align-default" id="xb-create-fig">
 <a class="reference internal image-reference" href="_images/xb_create.gif"><img alt="annotate song" src="_images/xb_create.gif" style="width: 700px;"/></a>
@@ -326,7 +326,7 @@ das gui
 </section>
 <section id="annotate-by-thresholding-the-waveform">
 <h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">¶</a></h2>
-<p>Annotation of events can be sped up with a “Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the <em>Annotations</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
+<p>Annotation of events can be sped up with a “Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the <em>Annotations</em> menu. This will display a draggable horizontal line—the detection threshold—and a smooth pink waveform—the envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
 <figure class="align-default" id="xb-thres-fig">
 <a class="reference internal image-reference" href="_images/xb_thres.gif"><img alt="annotate song" src="_images/xb_thres.gif" style="width: 700px;"/></a>
 <figcaption>
@@ -336,8 +336,8 @@ das gui
 </section>
 <section id="edit-annotations">
 <h2>Edit annotations<a class="headerlink" href="#edit-annotations" title="Permalink to this headline">¶</a></h2>
-<p>In case you mis-clicked, you can edit and delete annotations. Edit event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the <em>Audio</em> menu.</p>
-<p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
+<p>In case you misclicked, you can edit and delete annotations. Edit event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the <em>Annotations</em> menu.</p>
+<p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or of only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
 <figure class="align-default" id="xb-edit-fig">
 <a class="reference internal image-reference" href="_images/xb_edit.gif"><img alt="annotate song" src="_images/xb_edit.gif" style="width: 700px;"/></a>
 <figcaption>
@@ -347,28 +347,28 @@ das gui
 </section>
 <section id="export-annotations-and-make-a-dataset">
 <h2>Export annotations and make a dataset<a class="headerlink" href="#export-annotations-and-make-a-dataset" title="Permalink to this headline">¶</a></h2>
-<p><em>DAS</em> achieves good performance with little manual annotation. Once you have completely annotated the song in the first 18 seconds of the tutorial recording—<em>all</em> pulses and sine song segments in that section of the song—you can train a network to help with annotating the rest of the data.</p>
-<p>Training requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code> to a new folder (not the one containing the original audio)—let’s call the folder <code class="docutils literal notranslate"><span class="pre">quickstart</span></code>. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.</p>
+<p><em>DAS</em> achieves good performance from few annotated examples. Once you have completely annotated the song in the first 18 seconds of the tutorial recording—<em>all</em> pulses and sine song segments in that section of the song—you can train a network to help with annotating the rest of the data.</p>
+<p>Training requires the audio data and the to be in a <a class="reference internal" href="technical/data_formats.html"><span class="doc std std-doc">specific format</span></a>. First, export the audio data and the annotations via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code> to a new folder (not the one containing the original audio)—let’s call the folder <code class="docutils literal notranslate"><span class="pre">quickstart</span></code>. In the following dialog set start seconds and end seconds to the annotated time range: 0 and 18 seconds, respectively.</p>
 <figure class="align-default" id="xb-export-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_export.png"><img alt="export audio and annotations" src="_images/xb_quick_export.png" style="width: 450px;"/></a>
 <figcaption>
-<p><span class="caption-text">Export audio data and annotations for the annotated range between 0 and 18 seconds.</span><a class="headerlink" href="#xb-export-fig" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">Export audio data and annotations for the annotated range from 0 to 18 seconds.</span><a class="headerlink" href="#xb-export-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>Then make a dataset, via <em>DAS/Make dataset for training</em>. In the file dialog, select the <code class="docutils literal notranslate"><span class="pre">quickstart</span></code> folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model. To maximize the data available for optimizing the network (training and validation), set the test split to 0.0 (not test) and the validation split to 40:</p>
+<p>Then make a dataset, via <em>DAS/Make dataset for training</em>. In the file dialog, select the <code class="docutils literal notranslate"><span class="pre">quickstart</span></code> folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 40:</p>
 <figure class="align-default" id="xb-assemble-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_make_ds.png"><img alt="assemble dataset" src="_images/xb_quick_make_ds.png" style="width: 600px;"/></a>
 <figcaption>
 <p><span class="caption-text">Make a dataset for training.</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>This will create a dataset folder called <code class="docutils literal notranslate"><span class="pre">quickstart.npy</span></code> that contains the audio data and the annotations read for training.</p>
+<p>This will create a dataset folder called <code class="docutils literal notranslate"><span class="pre">quickstart.npy</span></code> that contains the audio data and the annotations formatted for training.</p>
 </section>
 <section id="fast-training">
 <h2>Fast training<a class="headerlink" href="#fast-training" title="Permalink to this headline">¶</a></h2>
-<p>Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder, <code class="docutils literal notranslate"><span class="pre">quickstart.npy</span></code>. Then, a dialog allows you to configure the network. For the fast training change the following:</p>
+<p>Configure a network and start training via <em>DAS/Train</em>. This will ask you to select folder with the dataset you just created, <code class="docutils literal notranslate"><span class="pre">quickstart.npy</span></code>. Then, a dialog allows you to configure the network. For the fast training change the following:</p>
 <ul class="simple">
-<li><p>Set both <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">filters</span></code> and <code class="docutils literal notranslate"><span class="pre">Filter</span> <span class="pre">duration</span> <span class="pre">(seconds)</span></code> to 16. This will result in a smaller network with fewer parameters, which will be faster to train and requires fewer annotations to achieve adequate performance.</p></li>
+<li><p>Set both <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">filters</span></code> and <code class="docutils literal notranslate"><span class="pre">Filter</span> <span class="pre">duration</span> <span class="pre">(samples)</span></code> to 16. This will result in a smaller network with fewer parameters, which will train faster.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">epochs</span></code> to 10, to finish training earlier.</p></li>
 </ul>
 <figure class="align-default" id="xb-train-fig">
@@ -377,11 +377,11 @@ das gui
 <p><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>Then hit <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">training</span> <span class="pre">in</span> <span class="pre">GUI</span></code> - this will start training in a background process. Monitor training progress in the terminal. Training with this small dataset will finish within fewer than 10 minutes on a CPU and within 2 minutes on a GPU. For larger datasets, we highly recommend training on a machine with a discrete Nvidia GPU.</p>
+<p>Then hit <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">training</span> <span class="pre">in</span> <span class="pre">GUI</span></code>—this will start training in a background process. A small window will display training progress (see also the output in the terminal). Training with this small dataset will finish in 10 minutes on a CPU and in 2 minutes on a GPU. For larger datasets, we highly recommend training on a machine with a discrete Nvidia GPU.</p>
 </section>
 <section id="predict">
 <h2>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h2>
-<p>Once training finished, generate annotations using the trained network via <em>DAS/Predict</em>. This will ask you to select a model file containing the trained. Training creates files in the <code class="docutils literal notranslate"><span class="pre">quickstart.res</span></code> folder, starting with the time stamp of training—select the file ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code>.</p>
+<p>Once training finished, generate annotations using the trained network via <em>DAS/Predict</em>. This will ask you to select a model file containing the trained model. Training creates files in the <code class="docutils literal notranslate"><span class="pre">quickstart.res</span></code> folder, starting with the time stamp of training—select the file ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code>.</p>
 <p>In the next dialog, predict song for 60 seconds starting after your manual annotations:</p>
 <ul class="simple">
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">Start</span> <span class="pre">seconds</span></code> to 18 and <code class="docutils literal notranslate"><span class="pre">End</span> <span class="pre">seconds</span></code> to 78.</p></li>
@@ -394,7 +394,7 @@ das gui
 <p><span class="caption-text">Predict in proof-reading mode on the next 60 seconds.</span><a class="headerlink" href="#xb-predict-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
 </figure>
-<p>In contrast to training, prediction is very fast, and does not require a GPU—should finish within 30 seconds. The proposed annotations should be already good — most pulses should be correctly detected. Sine song is harder to predict and will likely be often missed or chopped up into multiple segments with gaps in between.</p>
+<p>In contrast to training, prediction is very fast, and does not require a GPU—it should finish after 30 seconds. The proposed annotations should be already good. Most pulses should be correctly detected. Sine song is harder to predict and may be often or chopped up into multiple segments with gaps in between.</p>
 </section>
 <section id="proof-reading">
 <h2>Proof reading<a class="headerlink" href="#proof-reading" title="Permalink to this headline">¶</a></h2>
@@ -402,8 +402,7 @@ das gui
 </section>
 <section id="go-back-to-export">
 <h2>Go back to “Export”<a class="headerlink" href="#go-back-to-export" title="Permalink to this headline">¶</a></h2>
-<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
-w</p>
+<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.</p>
 </section>
 </section>
 

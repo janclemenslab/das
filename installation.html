@@ -256,10 +256,10 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <section id="pre-requisites">
 <h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">¶</a></h2>
-<p><strong>Anaconda python</strong>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
-<p><strong>CUDA libraries for using the GPU</strong>: While <em>DAS</em> works well for annotating song using CPUs, GPUs will greatly improve annotation speed and are highly recommended for training. <em>DAS</em> uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the required CUDA libraries need to be installed. See the <a class="reference external" href="https://www.tensorflow.org/install/gpu">tensorflow docs</a> for details.</p>
-<p><strong>Libsoundfile (linux only)</strong>: If you are on linux and want to load audio from a wide range of audio formats (other than wav), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you need to load data from more exotic audio files.</p>
-<p><strong>Visual C++ runtime (windows only)</strong>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
+<p><em>Anaconda python</em>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
+<p><em>CUDA libraries for using the GPU</em>: While <em>DAS</em> works on a standard desktop CPU, a dedicated GPU will greatly improve annotation speed and is highly recommended for training. <em>DAS</em> uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the CUDA and cuDNN libraries need to be installed. See the <a class="reference external" href="https://www.tensorflow.org/install/gpu">tensorflow docs</a> for details.</p>
+<p><em>Libsoundfile (Linux only)</em>: If you are on Linux and want to load audio from a wide range of audio formats (other than <code class="docutils literal notranslate"><span class="pre">wav</span></code>), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you work with more exotic audio files.</p>
+<p><em>Visual C++ runtime (Windows only)</em>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
 </section>
 <section id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">¶</a></h2>
@@ -272,33 +272,31 @@ If you do not need the graphical user interface (for instance, when training _DA
 ```shell
 conda create python=3.8 das-nogui -c conda-forge -c ncb -c fastai -n das
 ``` -->
-<p>Create an anaconda environment called das that contains all the required packages, including the GUI:</p>
+<p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all required packages, including the GUI:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create ncb/das-env -n das
 </pre></div>
 </div>
-<p>If you do not need the graphical user interface (for instance, when training <em>DAS</em> on a server), install the non-GUI version:</p>
+<p>If you do not need the GUI (for instance, when training <em>DAS</em> on a server), install the no-GUI version:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create ncb/das-nogui-env -n das
 </pre></div>
 </div>
-</section>
-<section id="update">
-<h2>Update<a class="headerlink" href="#update" title="Permalink to this headline">¶</a></h2>
-<p>Don’t. It only causes problems in our experience. We recommend installing new versions of <em>DAS</em> into a fresh environment. The brave can update using pip:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate das
-pip install das --update  <span class="c1"># DAS itself</span>
-pip install xarray_behave --update  <span class="c1"># the GUI</span>
-</pre></div>
-</div>
+<!-- ## Update
+Don't. It only causes problems in our experience. We recommend installing new versions of _DAS_ into a fresh environment. The brave can update using pip:
+```shell
+conda activate das
+pip install das --update  # DAS itself
+pip install xarray_behave --update  # the GUI
+``` -->
 </section>
 <section id="test-the-installation-optional">
 <h2>Test the installation (Optional)<a class="headerlink" href="#test-the-installation-optional" title="Permalink to this headline">¶</a></h2>
 <p>To quickly test the installation, run these  commands in the terminal:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate das  <span class="c1"># activate the conda environment</span>
-das train --help  <span class="c1"># test das training</span>
-das gui  <span class="c1"># start the GUI</span>
+das train --help  <span class="c1"># test DAS training</span>
+das gui  <span class="c1"># start the DAS GUI</span>
 </pre></div>
 </div>
-<p>The second command will display the command line arguments for <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. The last command, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>, will start the graphical user interface - this step will <em>not</em> work with the non-GUI install.</p>
+<p>The second command will display the command line arguments for <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. The last command, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>, will start the GUI. This step will <em>not</em> work with the no-GUI install.</p>
 </section>
 <section id="make-a-desktop-icon-optional">
 <h2>Make a desktop icon (Optional)<a class="headerlink" href="#make-a-desktop-icon-optional" title="Permalink to this headline">¶</a></h2>
@@ -380,7 +378,6 @@ das gui
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#pre-requisites">Pre-requisites</a></li>
 <li><a class="reference internal" href="#install-das">Install <em>DAS</em></a></li>
-<li><a class="reference internal" href="#update">Update</a></li>
 <li><a class="reference internal" href="#test-the-installation-optional">Test the installation (Optional)</a></li>
 <li><a class="reference internal" href="#make-a-desktop-icon-optional">Make a desktop icon (Optional)</a></li>
 <li><a class="reference internal" href="#next-steps">Next steps</a></li>
@@ -403,8 +400,6 @@ das gui
     <script src="_static/togglebutton.js"></script>
     <script src="_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -2,7 +2,7 @@
 Welcome to *DAS*
 ================
 
-*DAS* — short for *deep audio segmenter* — is a tool for annotating song
+*DAS* — short for *Deep Audio Segmenter* — is a tool for annotating song
 in audio recordings. At the core of *DAS* is a deep neural network,
 implemented in Tensorflow. The network takes single- and multi-channel
 audio as an input and returns the probability of finding a particular
