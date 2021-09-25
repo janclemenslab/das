@@ -38,7 +38,7 @@ Loading screen.
 Many of these parameters are also exposed via the command-line when starting the GUI. See the [command line docs](/technical/cli) for details.
 ```
 
-## Overview over the display and menus
+## Overview of the display and menus
 The display shows audio data from all channels (gray) in the top panel, with the currently selected channel colored white. The spectrogram of the currently selected channel is shown in the lower panel.
 
 To navigate the view: Move forward/backward along the time axis via the `A`/`D` keys and zoom in/out the time axis with the `W`/`S` keys (See Playback/). The temporal resolution of the spectrogram can be increased at the expense of frequency resolution with the `R` and `T` keys.

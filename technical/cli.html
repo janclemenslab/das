@@ -258,7 +258,7 @@
 <h2>Graphical user interface<a class="headerlink" href="#graphical-user-interface" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!das gui --help
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das gui --help
 </pre></div>
 </div>
 </div>
@@ -305,7 +305,7 @@ optional arguments:
 <h2>Train<a class="headerlink" href="#train" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!das train --help
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das train --help
 </pre></div>
 </div>
 </div>
@@ -317,17 +317,22 @@ optional arguments:
                  [--nb-hist NB_HIST]
                  [-i | --ignore-boundaries | --no-ignore-boundaries]
                  [--batch-norm | --no-batch-norm] [--nb-pre-conv NB_PRE_CONV]
-                 [--pre-kernel-size PRE_KERNEL_SIZE]
+                 [--pre-nb-dft PRE_NB_DFT] [--pre-kernel-size PRE_KERNEL_SIZE]
                  [--pre-nb-filters PRE_NB_FILTERS] [--pre-nb-conv PRE_NB_CONV]
-                 [-v VERBOSE] [--batch-size BATCH_SIZE] [--nb-epoch NB_EPOCH]
+                 [--nb-lstm-units NB_LSTM_UNITS] [--verbose VERBOSE]
+                 [--batch-size BATCH_SIZE] [--nb-epoch NB_EPOCH]
                  [--learning-rate LEARNING_RATE]
                  [--reduce-lr | --no-reduce-lr]
                  [--reduce-lr-patience REDUCE_LR_PATIENCE] [-f FRACTION_DATA]
                  [--seed SEED]
                  [--batch-level-subsampling | --no-batch-level-subsampling]
                  [-t | --tensorboard | --no-tensorboard]
+                 [--neptune-api-token NEPTUNE_API_TOKEN]
+                 [--neptune-project NEPTUNE_PROJECT]
                  [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]
                  [-w | --with-y-hist | --no-with-y-hist] [-x X_SUFFIX]
+                 [--balance | --no-balance]
+                 [--version-data | --no-version-data]
 
 Train a DeepSS network.
 
@@ -377,18 +382,24 @@ optional arguments:
                         Batch normalize.
                         Defaults to True.
   --nb-pre-conv NB_PRE_CONV
-                        Adds downsampling frontend.
-                        TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN - useful for reducing the sampling rate for USV.
-                        TCN_STFT: stft
+                        Downsampling rate. Adds downsampling frontend if not 0.
+                        TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+                        TCN_STFT: adds a trainable STFT frontend.
                         Defaults to 0 (no frontend).
+  --pre-nb-dft PRE_NB_DFT
+                        Number of filters (roughly corresponding to filters) in the STFT frontend.
+                        Defaults to 64.
   --pre-kernel-size PRE_KERNEL_SIZE
-                        [description]. Defaults to 3.
+                        Duration of filters (=kernels) in samples in the pre-processing TCN.
+                        Defaults to 3.
   --pre-nb-filters PRE_NB_FILTERS
-                        [description]. Defaults to 16.
+                        Number of filters per layer in the pre-processing TCN.
+                        Defaults to 16.
   --pre-nb-conv PRE_NB_CONV
-                        [description]. Defaults to 3.
-  -v VERBOSE, --verbose VERBOSE
-                        Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
+  --nb-lstm-units NB_LSTM_UNITS
+                        If &gt;0, adds LSTM with given number of units to the output of the stack of TCN blocks.
+                        Defaults to 0 (no LSTM layer).
+  --verbose VERBOSE     Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
                         Defaults to 2.
   --batch-size BATCH_SIZE
                         Batch size
@@ -417,8 +428,11 @@ optional arguments:
                         If False, select a continuous chunk of the recording.
                         Defaults to False.
   -t, --tensorboard, --no-tensorboard
-                        Write tensorboard logs to save_dir.
-                        Defaults to False.
+                        Write tensorboard logs to save_dir. Defaults to False.
+  --neptune-api-token NEPTUNE_API_TOKEN
+                        API token for logging to neptune.ai. Defaults to None (no logging).
+  --neptune-project NEPTUNE_PROJECT
+                        Project to log to for neptune.ai. Defaults to None (no logging).
   --log-messages, --no-log-messages
                         Sets logging level to INFO.
                         Defaults to False (will follow existing settings).
@@ -429,6 +443,12 @@ optional arguments:
   -x X_SUFFIX, --x-suffix X_SUFFIX
                         Select specific training data based on suffix (e.g. x_suffix).
                         Defaults to '' (will use the standard data 'x')
+  --balance, --no-balance
+                        Balance data. Weights class-wise errors by the inverse of the class frequencies.
+                        Defaults to False.
+  --version-data, --no-version-data
+                        Save MD5 hash of the data_dir to log and params.yaml.
+                        Defaults to True (set to False for large datasets since it can be slow).
 
 </pre></div>
 </div>
@@ -439,7 +459,7 @@ optional arguments:
 <h2>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!das predict --help
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das predict --help
 </pre></div>
 </div>
 </div>
@@ -572,8 +592,6 @@ optional arguments:
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
