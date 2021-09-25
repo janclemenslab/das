@@ -127,6 +127,7 @@ fig*
 docs/
 !/*.toml
 !/.github
+!/colab
 src/*.egg-info/
 src/deepsongsegmenter.egg-info/PKG-INFO
 src/deepsongsegmenter.egg-info/SOURCES.txt
