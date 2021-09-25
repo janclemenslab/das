@@ -288,7 +288,7 @@ For instance, if the parameter file for the model is <code class="docutils liter
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># path with prefix to the files generated during training</span>
-<span class="n">save_name</span> <span class="o">=</span> <span class="s1">'/Users/clemens10/Dropbox/dss.paper/models/dmel_all/20200507_173738'</span>  <span class="c1"># single-channel dmel pulse and sine model</span>
+<span class="n">save_name</span> <span class="o">=</span> <span class="s1">'models/dmel_all/20200507_173738'</span>  <span class="c1"># single-channel dmel pulse and sine model</span>
 
 <span class="c1"># load parameters</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_params</span><span class="p">(</span><span class="n">save_name</span><span class="p">)</span>
@@ -390,35 +390,20 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
                         <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="c1"># Load training data set - path is in params['data_dir']. If you trained on a different machine set a custom path </span>
-    <span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'/Users/clemens10/Dropbox/dss.paper/dat/dmel_single_stern_raw.npy'</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'dat/dmel_single_stern_raw.npy'</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">])</span>
     <span class="n">x_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span>
     <span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
     <span class="c1"># create confidence scores by running the models and predict events and segments</span>
-    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/ops/resource_variable_ops.py:1630: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
-Instructions for updating:
-If using Keras pass *_constraint arguments to layers.
-/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/keras/layers/core.py:895: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow/python/keras/layers/core.py:1061: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
   , UserWarning)
-WARNING:tensorflow:From /Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/ops/math_grad.py:1424: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.where in 2.0, which has the same broadcast rule as np.where
-315/315 [==============================] - 9s 28ms/step
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">1138</span><span class="n">d666c794</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">     </span><span class="mi">14</span>     <span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span>     <span class="c1"># create confidence scores by running the models and predict events and segments</span>
-<span class="ne">---&gt; </span><span class="mi">16</span>     <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
-
-<span class="ne">ValueError</span>: too many values to unpack (expected 3)
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py:2426: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.
+  warnings.warn('`Model.state_updates` will be removed in a future version. '
 </pre></div>
 </div>
 </div>
@@ -432,8 +417,7 @@ Use tf.where in 2.0, which has the same broadcast rule as np.where
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">160_000</span><span class="p">,</span> <span class="mi">270_000</span><span class="p">]:</span>
     <span class="n">t1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t0</span> <span class="o">+</span> <span class="mi">40_000</span><span class="p">)</span>
     
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">211</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
@@ -495,7 +479,7 @@ Use tf.where in 2.0, which has the same broadcast rule as np.where
 <span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">y_test</span><span class="p">[:,</span> <span class="n">pulse_pred_index</span><span class="p">],</span> <span class="n">thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="n">pulsetimes_true</span> <span class="o">=</span>  <span class="n">pulsetimes_true</span> <span class="o">/</span> <span class="n">fs</span>
-    <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">'pulse'</span><span class="p">][</span><span class="s1">'seconds'</span><span class="p">]</span>
+    <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span>
 
     <span class="c1"># Evalute event times (match predicted pulse times to their nearest true pulses)</span>
     <span class="n">d</span><span class="p">,</span> <span class="n">nn_pred_pulse</span><span class="p">,</span> <span class="n">nn_true_pulse</span><span class="p">,</span> <span class="n">nn_dist</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
@@ -505,12 +489,6 @@ Use tf.where in 2.0, which has the same broadcast rule as np.where
     
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"FP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'FP'</span><span class="p">]</span><span class="si">}</span><span class="s2">, TP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'TP'</span><span class="p">]</span><span class="si">}</span><span class="s2">, FN </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'FN'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"precision </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'precision'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, recall </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'recall'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, f1-score </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">'f1_score'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FP 50, TP 635, FN 6
-precision 0.93, recall 0.99, f1-score 0.96
 </pre></div>
 </div>
 </div>
@@ -529,9 +507,6 @@ precision 0.93, recall 0.99, f1-score 0.96
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">fs</span> <span class="o">/</span> <span class="mi">60</span> <span class="o">*</span> <span class="mf">1.01</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/evaluate_fly_11_0.jpg" src="../_images/evaluate_fly_11_0.jpg"/>
 </div>
 </div>
 </section>
@@ -564,9 +539,6 @@ precision 0.93, recall 0.99, f1-score 0.96
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/evaluate_fly_13_0.jpg" src="../_images/evaluate_fly_13_0.jpg"/>
-</div>
 </div>
 </section>
 <section id="event-timing">
@@ -590,9 +562,6 @@ precision 0.93, recall 0.99, f1-score 0.96
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Probability'</span><span class="p">);</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/evaluate_fly_15_0.jpg" src="../_images/evaluate_fly_15_0.jpg"/>
 </div>
 </div>
 </section>
@@ -642,9 +611,6 @@ precision 0.93, recall 0.99, f1-score 0.96
     <span class="n">plot_pulses</span><span class="p">(</span><span class="n">fn_pulses</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="sa">f</span><span class="s1">'False negatives (N=</span><span class="si">{</span><span class="n">fn_pulses</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">)'</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/evaluate_fly_17_0.jpg" src="../_images/evaluate_fly_17_0.jpg"/>
 </div>
 </div>
 </section>
@@ -709,9 +675,6 @@ precision 0.93, recall 0.99, f1-score 0.96
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Freq on chan </span><span class="si">{</span><span class="n">cnt</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/evaluate_fly_20_0.jpg" src="../_images/evaluate_fly_20_0.jpg"/>
 </div>
 </div>
 <section id="sample-wise-performance-metrics">
@@ -781,19 +744,6 @@ precision 0.93, recall 0.99, f1-score 0.96
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
-
-       noise      0.996     0.989     0.993   1060420
-        sine      0.934     0.976     0.955    165628
-
-    accuracy                          0.988   1226048
-   macro avg      0.965     0.983     0.974   1226048
-weighted avg      0.988     0.988     0.988   1226048
-</pre></div>
-</div>
-<img alt="../_images/evaluate_fly_22_1.jpg" src="../_images/evaluate_fly_22_1.jpg"/>
-</div>
 </div>
 </section>
 <section id="evaluate-segment-timing">
@@ -848,16 +798,6 @@ weighted avg      0.988     0.988     0.988   1226048
     
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000
-{'FP': 7, 'TP': 33, 'FN': 6, 'precision': 0.825, 'recall': 0.8461538461538461, 'f1_score': 0.8354430379746836}
-{'FP': 7, 'TP': 33, 'FN': 6, 'precision': 0.825, 'recall': 0.8461538461538461, 'f1_score': 0.8354430379746836}
-Temporal errors of all predicted sine onsets: 8.80 ms
-Temporal errors of all predicted sine offsets: 9.95 ms
-</pre></div>
-</div>
-<img alt="../_images/evaluate_fly_24_1.jpg" src="../_images/evaluate_fly_24_1.jpg"/>
 </div>
 </div>
 </section>
@@ -952,6 +892,8 @@ Temporal errors of all predicted sine offsets: 9.95 ms
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

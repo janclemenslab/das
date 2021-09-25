@@ -286,7 +286,7 @@
 <li><p>The functions for loading the data (song recordings) and the annotations need to be adapted to work with your data.</p></li>
 <li><p>Two lists with the names of data files (consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code>) and the associated annotation files (consumed by <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>) need to be created.</p></li>
 </ol>
-<p>The notebook works with a small toy data set (with song recordings from the data provided with <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">Stern 2014</a>) and with annotations produced by <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a>.</p>
+<p>The notebook works with a small toy data set (with song recordings from the data provided with <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">Stern (2014)</a>) and with annotations produced by <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a>.</p>
 <p><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
 </section>
 <section id="internals">
@@ -371,7 +371,7 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data_dir = '/Users/clemens10/Dropbox/code.py/DAS/tutorials/dat.mat/'</span>
-<span class="n">data_dir</span> <span class="o">=</span> <span class="s1">'../../../DAS/tutorials/dat.mat/'</span>
+<span class="n">data_dir</span> <span class="o">=</span> <span class="s1">'../data/'</span>
 <span class="n">files_data</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">'*_recording.mat'</span><span class="p">)</span>  <span class="c1"># list all data files</span>
 <span class="n">files_annotation</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_recording.mat'</span><span class="p">,</span> <span class="s1">'_song.mat'</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files_data</span><span class="p">]</span>  <span class="c1"># generate the names of associated annotation files</span>
 <span class="p">[</span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'data "</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s1">" with annotations in "</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s1">".'</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">files_data</span><span class="p">,</span> <span class="n">files_annotation</span><span class="p">)];</span>
@@ -379,13 +379,10 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>data "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_song.mat".
-data "../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_recording.mat" with annotations in "../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_song.mat".
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>data "../data/PS_20130625155828_ch7_recording.mat" with annotations in "../data/PS_20130625155828_ch7_song.mat".
+data "../data/PS_20130625111709_ch10_recording.mat" with annotations in "../data/PS_20130625111709_ch10_song.mat".
+data "../data/PS_20130628144304_ch15_recording.mat" with annotations in "../data/PS_20130628144304_ch15_song.mat".
+data "../data/PS_20130625155828_ch11_recording.mat" with annotations in "../data/PS_20130625155828_ch11_song.mat".
 </pre></div>
 </div>
 </div>
@@ -542,13 +539,10 @@ Annotations
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_song.mat
-../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_song.mat
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>../data/PS_20130625155828_ch7_song.mat
+../data/PS_20130625111709_ch10_song.mat
+../data/PS_20130628144304_ch15_song.mat
+../data/PS_20130625155828_ch11_song.mat
 found pulse of type event
 found sine of type segment
 </pre></div>
@@ -574,9 +568,9 @@ found sine of type segment
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Indices of test file(s): [6] 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Indices of test file(s): [3] 
 indices of validation file(s): [2] 
-indices of train files: [1 0 4 3 5]
+indices of train files: [0 1]
 </pre></div>
 </div>
 </div>
@@ -660,14 +654,11 @@ indices of train files: [1 0 4 3 5]
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Assembling data set:
-   ../../../DAS/tutorials/dat.mat/PS_20130625155828_ch7_recording.mat -&gt; train set
-   ../../../DAS/tutorials/dat.mat/PS_20130625111709_ch10_recording.mat -&gt; train set
-   ../../../DAS/tutorials/dat.mat/PS_20130628165930_ch11_recording.mat -&gt; val set
-   ../../../DAS/tutorials/dat.mat/PS_20130702144748_ch15_recording.mat -&gt; train set
-   ../../../DAS/tutorials/dat.mat/PS_20130628144304_ch15_recording.mat -&gt; train set
-   ../../../DAS/tutorials/dat.mat/PS_20130625155828_ch11_recording.mat -&gt; train set
-   ../../../DAS/tutorials/dat.mat/PS_20130702114557_ch13_recording.mat -&gt; test set
-Got (20440005, 1), (4160001, 1), (3980001, 1) train/test/val samples.
+   ../data/PS_20130625155828_ch7_recording.mat -&gt; train set
+   ../data/PS_20130625111709_ch10_recording.mat -&gt; train set
+   ../data/PS_20130628144304_ch15_recording.mat -&gt; val set
+   ../data/PS_20130625155828_ch11_recording.mat -&gt; test set
+Got (8090002, 1), (4150001, 1), (4000001, 1) train/test/val samples.
 </pre></div>
 </div>
 </div>
@@ -704,7 +695,8 @@ Got (20440005, 1), (4160001, 1), (3980001, 1) train/test/val samples.
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/make_ds_notebook_19_0.svg" src="../_images/make_ds_notebook_19_0.svg"/></div>
+<img alt="../_images/make_ds_notebook_19_0.png" src="../_images/make_ds_notebook_19_0.png"/>
+</div>
 </div>
 </section>
 <section id="save-as-npy-dir">
@@ -816,6 +808,8 @@ Got (20440005, 1), (4160001, 1), (3980001, 1) train/test/val samples.
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

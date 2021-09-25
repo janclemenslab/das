@@ -325,10 +325,11 @@ CPUs: [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU')]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow_core/python/ops/resource_variable_ops.py:1635: calling BaseResourceVariable.__init__ (from tensorflow.python.ops.resource_variable_ops) with constraint is deprecated and will be removed in a future version.
-Instructions for updating:
-If using Keras pass *_constraint arguments to layers.
-Model expects input shape 256 samples and 1 channel(s).
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow/python/keras/layers/core.py:1061: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
+  , UserWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model expects input shape 256 samples and 1 channel(s).
 </pre></div>
 </div>
 </div>
@@ -412,7 +413,7 @@ Consuming and plotting 100 chunks...
 </pre></div>
 </div>
 <img alt="../_images/realtime_8_1.jpg" src="../_images/realtime_8_1.jpg"/>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Takes 26.4 ms to return 25.6 ms of audio data.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Takes 26.0 ms to return 25.6 ms of audio data.
 </pre></div>
 </div>
 </div>
@@ -447,10 +448,14 @@ Consuming and plotting 100 chunks...
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7ff3cbde67d0&gt;
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/tensorflow/python/keras/engine/training.py:2426: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.
+  warnings.warn('`Model.state_updates` will be removed in a future version. '
 </pre></div>
 </div>
-<img alt="../_images/realtime_10_1.jpg" src="../_images/realtime_10_1.jpg"/>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7ffdec78f4d0&gt;
+</pre></div>
+</div>
+<img alt="../_images/realtime_10_2.jpg" src="../_images/realtime_10_2.jpg"/>
 </div>
 </div>
 </section>
@@ -461,6 +466,7 @@ Consuming and plotting 100 chunks...
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latencies</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">runs</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">mike</span> <span class="o">=</span> <span class="n">virtual_microphone</span><span class="p">(</span><span class="n">recording</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="k">while</span> <span class="n">runs</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
     <span class="n">runs</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -499,8 +505,8 @@ Consuming and plotting 100 chunks...
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Annotation latencies
-  5, 50, 95 percentiles: [4.7993752  5.7063365  6.88310785] ms
-  min 4.60 ms, max 7.66 ms
+  5, 50, 95 percentiles: [4.6493622 5.443717  6.2767092] ms
+  min 4.53 ms, max 54.00 ms
 </pre></div>
 </div>
 <img alt="../_images/realtime_14_1.jpg" src="../_images/realtime_14_1.jpg"/>
@@ -571,6 +577,8 @@ Consuming and plotting 100 chunks...
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

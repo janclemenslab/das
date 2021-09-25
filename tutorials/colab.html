@@ -252,7 +252,8 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="training-and-inference-with-colab">
+          <p>Let’s make sure we are using tensorflow v2+</p>
+<section class="tex2jax_ignore mathjax_ignore" id="training-and-inference-with-colab">
 <h1>Training and inference with colab<a class="headerlink" href="#training-and-inference-with-colab" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com">Google colab</a> is a free server for running notebooks with GPU/TPU support - this is a great way to use <em>DAS</em> if you do not have a computer with a GPU.</p>
 <p>This notebook demonstrates</p>
@@ -262,8 +263,7 @@
 <li><p>how to train a network and then use that network to label a new audio recording.</p></li>
 </ul>
 <p>Open and edit this notebook in colab by clicking this badge:</p>
-<p><a class="reference external" href="https://colab.research.google.com/github/janclemenslab/DAS_docs/blob/master/docs/tutorials/colab.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
-<p>Let’s make sure we are using tensorflow v2+</p>
+<p><a class="reference external" href="https://colab.research.google.com/github/janclemenslab/das/blob/master/colab/colab.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">tensorflow_version</span> 2.x
@@ -274,85 +274,87 @@
 <p>Install <em>DAS</em>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install DAS
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install das
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting DAS
-?25l  Downloading https://files.pythonhosted.org/packages/f1/87/d9f503b45fe5d34a138ced6d9de238b10b3297e2adf467b407400074becf/DAS-0.16.0-py3-none-any.whl (69kB)
-
-     |████▊                           | 10kB 26.3MB/s eta 0:00:01
-     |█████████▍                      | 20kB 33.2MB/s eta 0:00:01
-     |██████████████                  | 30kB 25.6MB/s eta 0:00:01
-     |██████████████████▉             | 40kB 19.2MB/s eta 0:00:01
-     |███████████████████████▌        | 51kB 14.3MB/s eta 0:00:01
-     |████████████████████████████▏   | 61kB 13.6MB/s eta 0:00:01
-     |████████████████████████████████| 71kB 4.4MB/s 
-?25hCollecting flammkuchen
-  Downloading https://files.pythonhosted.org/packages/e7/a1/302fde5b5a2217f488893d73e3f556f1fc6379beb179faf9f39eecf20e8f/flammkuchen-0.9.2-py2.py3-none-any.whl
-Requirement already satisfied: librosa in /usr/local/lib/python3.6/dist-packages (from DAS) (0.6.3)
-Requirement already satisfied: numpy in /usr/local/lib/python3.6/dist-packages (from DAS) (1.18.5)
-Requirement already satisfied: pyyaml in /usr/local/lib/python3.6/dist-packages (from DAS) (3.13)
-Requirement already satisfied: matplotlib in /usr/local/lib/python3.6/dist-packages (from DAS) (3.2.2)
-Collecting peakutils
-  Downloading https://files.pythonhosted.org/packages/0a/11/6416c8aebba4d5f73e23e1f070a419a8944f3ba17eed9efdf9cdc95f0411/PeakUtils-1.3.3-py3-none-any.whl
-Collecting matplotlib_scalebar
-  Downloading https://files.pythonhosted.org/packages/89/ba/46ae95cc9d2c49f2d13ec6f4322f06a5e7621bee03685fab59c64f321afd/matplotlib_scalebar-0.6.2-py2.py3-none-any.whl
-Requirement already satisfied: sklearn in /usr/local/lib/python3.6/dist-packages (from DAS) (0.0)
-Collecting defopt
-  Downloading https://files.pythonhosted.org/packages/2f/a6/17700394dddbf65f7c84bcee0c99aae6eb581ae3882c6e0eb26cfd23cfaa/defopt-6.0.2.tar.gz
-Requirement already satisfied: scipy in /usr/local/lib/python3.6/dist-packages (from DAS) (1.4.1)
-Requirement already satisfied: pandas in /usr/local/lib/python3.6/dist-packages (from DAS) (1.1.5)
-Requirement already satisfied: h5py in /usr/local/lib/python3.6/dist-packages (from DAS) (2.10.0)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting das
+  Downloading das-0.22.1-py3-none-any.whl (77 kB)
+     |████████████████████████████████| 77 kB 3.0 MB/s eta 0:00:011
+?25hRequirement already satisfied: scipy in /usr/local/lib/python3.7/dist-packages (from das) (1.4.1)
+Requirement already satisfied: numpy in /usr/local/lib/python3.7/dist-packages (from das) (1.19.5)
 Collecting zarr
-?25l  Downloading https://files.pythonhosted.org/packages/60/67/d69a3fcd34254df8dce23e1a4d570509f8a373fc58e40cb8681cf26795f6/zarr-2.6.1-py3-none-any.whl (132kB)
-     |████████████████████████████████| 133kB 20.5MB/s 
-?25hRequirement already satisfied: tables in /usr/local/lib/python3.6/dist-packages (from flammkuchen-&gt;DAS) (3.4.4)
-Requirement already satisfied: scikit-learn!=0.19.0,&gt;=0.14.0 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (0.22.2.post1)
-Requirement already satisfied: joblib&gt;=0.12 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (0.17.0)
-Requirement already satisfied: resampy&gt;=0.2.0 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (0.2.2)
-Requirement already satisfied: decorator&gt;=3.0.0 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (4.4.2)
-Requirement already satisfied: audioread&gt;=2.0.0 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (2.1.9)
-Requirement already satisfied: six&gt;=1.3 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (1.15.0)
-Requirement already satisfied: numba&gt;=0.38.0 in /usr/local/lib/python3.6/dist-packages (from librosa-&gt;DAS) (0.48.0)
-Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.6/dist-packages (from matplotlib-&gt;DAS) (0.10.0)
-Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib-&gt;DAS) (1.3.1)
-Requirement already satisfied: python-dateutil&gt;=2.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib-&gt;DAS) (2.8.1)
-Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib-&gt;DAS) (2.4.7)
-Requirement already satisfied: docutils&gt;=0.10 in /usr/local/lib/python3.6/dist-packages (from defopt-&gt;DAS) (0.16)
+  Downloading zarr-2.10.0-py3-none-any.whl (146 kB)
+     |████████████████████████████████| 146 kB 7.1 MB/s 
+?25hRequirement already satisfied: librosa in /usr/local/lib/python3.7/dist-packages (from das) (0.8.1)
+Requirement already satisfied: pandas in /usr/local/lib/python3.7/dist-packages (from das) (1.1.5)
+Collecting flammkuchen
+  Downloading flammkuchen-0.9.2-py2.py3-none-any.whl (16 kB)
+Requirement already satisfied: matplotlib in /usr/local/lib/python3.7/dist-packages (from das) (3.2.2)
+Requirement already satisfied: scikit-learn in /usr/local/lib/python3.7/dist-packages (from das) (0.22.2.post1)
+Collecting peakutils
+  Downloading PeakUtils-1.3.3-py3-none-any.whl (7.7 kB)
+Collecting defopt
+  Downloading defopt-6.1.0.tar.gz (35 kB)
+Collecting matplotlib_scalebar
+  Downloading matplotlib_scalebar-0.7.2-py2.py3-none-any.whl (17 kB)
+Requirement already satisfied: h5py in /usr/local/lib/python3.7/dist-packages (from das) (3.1.0)
+Requirement already satisfied: pyyaml in /usr/local/lib/python3.7/dist-packages (from das) (3.13)
+Requirement already satisfied: docutils&gt;=0.10 in /usr/local/lib/python3.7/dist-packages (from defopt-&gt;das) (0.17.1)
 Collecting sphinxcontrib-napoleon&gt;=0.7.0
-  Downloading https://files.pythonhosted.org/packages/75/f2/6b7627dfe7b4e418e295e254bb15c3a6455f11f8c0ad0d43113f678049c3/sphinxcontrib_napoleon-0.7-py2.py3-none-any.whl
-Requirement already satisfied: typing_extensions&gt;=3.7.4 in /usr/local/lib/python3.6/dist-packages (from defopt-&gt;DAS) (3.7.4.3)
+  Downloading sphinxcontrib_napoleon-0.7-py2.py3-none-any.whl (17 kB)
+Requirement already satisfied: typing_extensions&gt;=3.7.4 in /usr/local/lib/python3.7/dist-packages (from defopt-&gt;das) (3.7.4.3)
 Collecting typing_inspect&gt;=0.3.1
-  Downloading https://files.pythonhosted.org/packages/42/1c/66402db44184904a2f14722d317a4da0b5c8c78acfc3faf74362566635c5/typing_inspect-0.6.0-py3-none-any.whl
-Requirement already satisfied: pytz&gt;=2017.2 in /usr/local/lib/python3.6/dist-packages (from pandas-&gt;DAS) (2018.9)
-Collecting numcodecs&gt;=0.6.4
-?25l  Downloading https://files.pythonhosted.org/packages/94/dc/0b7ae820c6c5f3a8b79912ec43dd9a1305e33970a05d3c02a1e8203ead9c/numcodecs-0.7.2-cp36-cp36m-manylinux2010_x86_64.whl (5.8MB)
-     |████████████████████████████████| 5.8MB 12.5MB/s 
-?25hCollecting fasteners
-  Downloading https://files.pythonhosted.org/packages/18/bd/55eb2d6397b9c0e263af9d091ebdb756b15756029b3cededf6461481bc63/fasteners-0.15-py2.py3-none-any.whl
-Collecting asciitree
-  Downloading https://files.pythonhosted.org/packages/2d/6a/885bc91484e1aa8f618f6f0228d76d0e67000b0fdd6090673b777e311913/asciitree-0.3.3.tar.gz
-Requirement already satisfied: numexpr&gt;=2.5.2 in /usr/local/lib/python3.6/dist-packages (from tables-&gt;flammkuchen-&gt;DAS) (2.7.1)
-Requirement already satisfied: llvmlite&lt;0.32.0,&gt;=0.31.0dev0 in /usr/local/lib/python3.6/dist-packages (from numba&gt;=0.38.0-&gt;librosa-&gt;DAS) (0.31.0)
-Requirement already satisfied: setuptools in /usr/local/lib/python3.6/dist-packages (from numba&gt;=0.38.0-&gt;librosa-&gt;DAS) (50.3.2)
+  Downloading typing_inspect-0.7.1-py3-none-any.whl (8.4 kB)
+Requirement already satisfied: six&gt;=1.5.2 in /usr/local/lib/python3.7/dist-packages (from sphinxcontrib-napoleon&gt;=0.7.0-&gt;defopt-&gt;das) (1.15.0)
 Collecting pockets&gt;=0.3
-  Downloading https://files.pythonhosted.org/packages/e9/2f/a4583c70fbd8cd04910e2884bcc2bdd670e884061f7b4d70bc13e632a993/pockets-0.9.1-py2.py3-none-any.whl
+  Downloading pockets-0.9.1-py2.py3-none-any.whl (26 kB)
 Collecting mypy-extensions&gt;=0.3.0
-  Downloading https://files.pythonhosted.org/packages/5c/eb/975c7c080f3223a5cdaff09612f3a5221e4ba534f7039db34c35d95fa6a5/mypy_extensions-0.4.3-py2.py3-none-any.whl
-Collecting monotonic&gt;=0.1
-  Downloading https://files.pythonhosted.org/packages/ac/aa/063eca6a416f397bd99552c534c6d11d57f58f2e94c14780f3bbf818c4cf/monotonic-1.5-py2.py3-none-any.whl
+  Downloading mypy_extensions-0.4.3-py2.py3-none-any.whl (4.5 kB)
+Requirement already satisfied: tables in /usr/local/lib/python3.7/dist-packages (from flammkuchen-&gt;das) (3.4.4)
+Requirement already satisfied: cached-property in /usr/local/lib/python3.7/dist-packages (from h5py-&gt;das) (1.5.2)
+Requirement already satisfied: joblib&gt;=0.14 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (1.0.1)
+Requirement already satisfied: soundfile&gt;=0.10.2 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (0.10.3.post1)
+Requirement already satisfied: numba&gt;=0.43.0 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (0.51.2)
+Requirement already satisfied: decorator&gt;=3.0.0 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (4.4.2)
+Requirement already satisfied: packaging&gt;=20.0 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (21.0)
+Requirement already satisfied: pooch&gt;=1.0 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (1.5.1)
+Requirement already satisfied: resampy&gt;=0.2.2 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (0.2.2)
+Requirement already satisfied: audioread&gt;=2.0.0 in /usr/local/lib/python3.7/dist-packages (from librosa-&gt;das) (2.1.9)
+Requirement already satisfied: setuptools in /usr/local/lib/python3.7/dist-packages (from numba&gt;=0.43.0-&gt;librosa-&gt;das) (57.4.0)
+Requirement already satisfied: llvmlite&lt;0.35,&gt;=0.34.0.dev0 in /usr/local/lib/python3.7/dist-packages (from numba&gt;=0.43.0-&gt;librosa-&gt;das) (0.34.0)
+Requirement already satisfied: pyparsing&gt;=2.0.2 in /usr/local/lib/python3.7/dist-packages (from packaging&gt;=20.0-&gt;librosa-&gt;das) (2.4.7)
+Requirement already satisfied: requests in /usr/local/lib/python3.7/dist-packages (from pooch&gt;=1.0-&gt;librosa-&gt;das) (2.23.0)
+Requirement already satisfied: appdirs in /usr/local/lib/python3.7/dist-packages (from pooch&gt;=1.0-&gt;librosa-&gt;das) (1.4.4)
+Requirement already satisfied: cffi&gt;=1.0 in /usr/local/lib/python3.7/dist-packages (from soundfile&gt;=0.10.2-&gt;librosa-&gt;das) (1.14.6)
+Requirement already satisfied: pycparser in /usr/local/lib/python3.7/dist-packages (from cffi&gt;=1.0-&gt;soundfile&gt;=0.10.2-&gt;librosa-&gt;das) (2.20)
+Requirement already satisfied: python-dateutil&gt;=2.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib-&gt;das) (2.8.2)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.7/dist-packages (from matplotlib-&gt;das) (0.10.0)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.7/dist-packages (from matplotlib-&gt;das) (1.3.2)
+Requirement already satisfied: pytz&gt;=2017.2 in /usr/local/lib/python3.7/dist-packages (from pandas-&gt;das) (2018.9)
+Requirement already satisfied: idna&lt;3,&gt;=2.5 in /usr/local/lib/python3.7/dist-packages (from requests-&gt;pooch&gt;=1.0-&gt;librosa-&gt;das) (2.10)
+Requirement already satisfied: chardet&lt;4,&gt;=3.0.2 in /usr/local/lib/python3.7/dist-packages (from requests-&gt;pooch&gt;=1.0-&gt;librosa-&gt;das) (3.0.4)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.7/dist-packages (from requests-&gt;pooch&gt;=1.0-&gt;librosa-&gt;das) (2021.5.30)
+Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /usr/local/lib/python3.7/dist-packages (from requests-&gt;pooch&gt;=1.0-&gt;librosa-&gt;das) (1.24.3)
+Requirement already satisfied: numexpr&gt;=2.5.2 in /usr/local/lib/python3.7/dist-packages (from tables-&gt;flammkuchen-&gt;das) (2.7.3)
+Collecting numcodecs&gt;=0.6.4
+  Downloading numcodecs-0.9.1-cp37-cp37m-manylinux2010_x86_64.whl (6.2 MB)
+     |████████████████████████████████| 6.2 MB 19.4 MB/s 
+?25hCollecting fasteners
+  Downloading fasteners-0.16.3-py2.py3-none-any.whl (28 kB)
+Collecting asciitree
+  Downloading asciitree-0.3.3.tar.gz (4.0 kB)
 Building wheels for collected packages: defopt, asciitree
   Building wheel for defopt (setup.py) ... ?25l?25hdone
-  Created wheel for defopt: filename=defopt-6.0.2-cp36-none-any.whl size=13860 sha256=ddf63f16e8608dab87e5276d50f57b4733544b6af5452bc5474816a655db7c93
-  Stored in directory: /root/.cache/pip/wheels/c3/fc/97/353b31fe86a0166c07e2ca598f20f377f19bd51828865dc971
+  Created wheel for defopt: filename=defopt-6.1.0-py3-none-any.whl size=14367 sha256=e283684ef3edbd107a13b2d88a61e4e1738bc416d8d1fe07af4499c65761f01a
+  Stored in directory: /root/.cache/pip/wheels/8e/80/07/63d08d3ae3870730bdc3f4d639af4a141f50aa0da27e183912
   Building wheel for asciitree (setup.py) ... ?25l?25hdone
-  Created wheel for asciitree: filename=asciitree-0.3.3-cp36-none-any.whl size=5038 sha256=393ac8e6811ddb295bcdb591e895721cce1b958bddb4c5e1d5edebba92acdec5
-  Stored in directory: /root/.cache/pip/wheels/1d/d9/58/9808b306744df0208fccc640d3d9952a5bc7468502d42897d5
+  Created wheel for asciitree: filename=asciitree-0.3.3-py3-none-any.whl size=5051 sha256=8b134871e2a3d88db6eeeb1d6938976d2892be448eff2ecc74944e9eca70293f
+  Stored in directory: /root/.cache/pip/wheels/12/1c/38/0def51e15add93bff3f4bf9c248b94db0839b980b8535e72a0
 Successfully built defopt asciitree
-Installing collected packages: flammkuchen, peakutils, matplotlib-scalebar, pockets, sphinxcontrib-napoleon, mypy-extensions, typing-inspect, defopt, numcodecs, monotonic, fasteners, asciitree, zarr, DAS
-Successfully installed asciitree-0.3.3 DAS-0.16.0 defopt-6.0.2 fasteners-0.15 flammkuchen-0.9.2 matplotlib-scalebar-0.6.2 monotonic-1.5 mypy-extensions-0.4.3 numcodecs-0.7.2 peakutils-1.3.3 pockets-0.9.1 sphinxcontrib-napoleon-0.7 typing-inspect-0.6.0 zarr-2.6.1
+Installing collected packages: pockets, mypy-extensions, typing-inspect, sphinxcontrib-napoleon, numcodecs, fasteners, asciitree, zarr, peakutils, matplotlib-scalebar, flammkuchen, defopt, das
+Successfully installed asciitree-0.3.3 das-0.22.1 defopt-6.1.0 fasteners-0.16.3 flammkuchen-0.9.2 matplotlib-scalebar-0.7.2 mypy-extensions-0.4.3 numcodecs-0.9.1 peakutils-1.3.3 pockets-0.9.1 sphinxcontrib-napoleon-0.7 typing-inspect-0.7.1 zarr-2.10.0
 </pre></div>
 </div>
 </div>
@@ -369,7 +371,7 @@ Successfully installed asciitree-0.3.3 DAS-0.16.0 defopt-6.0.2 fasteners-0.15 fl
 </div>
 </div>
 </div>
-<p>Mount google drive so you can access your own dataasets - this will ask for authentication.</p>
+<p>Mount your google drive so you can access your own datasets - this will ask for authentication.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
@@ -385,10 +387,10 @@ Successfully installed asciitree-0.3.3 DAS-0.16.0 defopt-6.0.2 fasteners-0.15 fl
 </div>
 <section id="train-the-model">
 <h2>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h2>
-<p>Adjust the path to point to your dataset.</p>
+<p>Adjust the variable <code class="docutils literal notranslate"><span class="pre">path_to_data</span></code> to point to the dataset on your own google drive.</p>
 <div class="cell tag_outputPrepend docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_to_data</span> <span class="o">=</span> <span class="s1">'/content/drive/MyDrive/Dmoj.wrigleyi.npy'</span>  <span class="c1"># '/content/drive/MyDrive/tutorial_dataset.npy' </span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_to_data</span> <span class="o">=</span> <span class="s1">'/content/drive/MyDrive/Dmoj.wrigleyi.npy'</span>
 
 <span class="n">das</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s1">'tcn'</span><span class="p">,</span>
                 <span class="n">data_dir</span><span class="o">=</span><span class="n">path_to_data</span><span class="p">,</span>
@@ -406,22 +408,28 @@ Successfully installed asciitree-0.3.3 DAS-0.16.0 defopt-6.0.2 fasteners-0.15 fl
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:loading data
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:Loading data from /content/drive/MyDrive/Dmoj.wrigleyi.npy.
+INFO:root:Version of the data:
+INFO:root:   MD5 hash of /content/drive/MyDrive/Dmoj.wrigleyi.npy is
+INFO:root:   5381c36663f3b7286b0a5c42c0e3e463
 INFO:root:Parameters:
-INFO:root:{'output_stride': 1, 'y_offset': 0, 'stride': 768, 'return_sequences': True, 'data_padding': 128, 'sample_weight_mode': 'temporal', 'x_suffix': '', 'with_y_hist': True, 'nb_stacks': 2, 'log_messages': False, 'tensorboard': False, 'batch_level_subsampling': False, 'seed': None, 'fraction_data': None, 'reduce_lr_patience': 5, 'reduce_lr': False, 'learning_rate': 0.0005, 'nb_epoch': 1000, 'batch_size': 32, 'verbose': 2, 'pre_nb_conv': 2, 'pre_nb_filters': 16, 'pre_kernel_size': 3, 'nb_pre_conv': 0, 'batch_norm': True, 'ignore_boundaries': True, 'nb_hist': 1024, 'use_separable': [True, True, False, False], 'nb_conv': 4, 'kernel_size': 32, 'nb_filters': 32, 'model_name': 'tcn', 'save_prefix': '', 'save_dir': 'res', 'y_suffix': '', 'data_dir': '/content/drive/MyDrive/Dmoj.wrigleyi.npy', 'class_names': ['noise', 'pulse'], 'class_types': ['segment', 'event'], 'filename_endsample_test': [], 'filename_endsample_train': [], 'filename_endsample_val': [], 'filename_startsample_test': [], 'filename_startsample_train': [], 'filename_startsample_val': [], 'filename_train': [], 'filename_val': [], 'samplerate_x_Hz': 10000.0, 'samplerate_y_Hz': 10000.0, 'filename_test': [], 'nb_freq': 16, 'nb_channels': 16, 'nb_classes': 2, 'first_sample_train': 0, 'last_sample_train': None, 'first_sample_val': 0, 'last_sample_val': None}
-INFO:root:preparing data
+INFO:root:{'data_dir': '/content/drive/MyDrive/Dmoj.wrigleyi.npy', 'y_suffix': '', 'save_dir': 'res', 'save_prefix': '', 'model_name': 'tcn', 'nb_filters': 32, 'kernel_size': 32, 'nb_conv': 4, 'use_separable': [True, True, False, False], 'nb_hist': 1024, 'ignore_boundaries': True, 'batch_norm': True, 'nb_pre_conv': 0, 'pre_nb_dft': 64, 'pre_kernel_size': 3, 'pre_nb_filters': 16, 'pre_nb_conv': 2, 'nb_lstm_units': 0, 'verbose': 2, 'batch_size': 32, 'nb_epoch': 1000, 'learning_rate': 0.0005, 'reduce_lr': False, 'reduce_lr_patience': 5, 'fraction_data': None, 'seed': None, 'batch_level_subsampling': False, 'tensorboard': False, 'neptune_api_token': None, 'neptune_project': None, 'log_messages': False, 'nb_stacks': 2, 'with_y_hist': True, 'x_suffix': '', 'balance': False, 'version_data': True, 'sample_weight_mode': 'temporal', 'data_padding': 128, 'return_sequences': True, 'stride': 768, 'y_offset': 0, 'output_stride': 1, 'class_names': ['noise', 'pulse'], 'class_types': ['segment', 'event'], 'filename_endsample_test': [], 'filename_endsample_train': [], 'filename_endsample_val': [], 'filename_startsample_test': [], 'filename_startsample_train': [], 'filename_startsample_val': [], 'filename_train': [], 'filename_val': [], 'samplerate_x_Hz': 10000.0, 'samplerate_y_Hz': 10000.0, 'filename_test': [], 'data_hash': '5381c36663f3b7286b0a5c42c0e3e463', 'nb_freq': 16, 'nb_channels': 16, 'nb_classes': 2, 'first_sample_train': 0, 'last_sample_train': None, 'first_sample_val': 0, 'last_sample_val': None}
+INFO:root:Preparing data
 INFO:root:Training data:
-INFO:root:AudioSequence with 47 batches each with 32 items.
+INFO:root:   AudioSequence with 47 batches each with 32 items.
    Total of 1158000 samples with
    each x=(16,) and
    each y=(2,)
 INFO:root:Validation data:
-INFO:root:AudioSequence with 15 batches each with 32 items.
+INFO:root:   AudioSequence with 15 batches each with 32 items.
    Total of 386000 samples with
    each x=(16,) and
    each y=(2,)
 INFO:root:building network
+/usr/local/lib/python3.7/dist-packages/keras/optimizer_v2/optimizer_v2.py:356: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
+  "The `lr` argument is deprecated, use `learning_rate` instead.")
 INFO:root:None
+INFO:root:Will save to res/20210925_132436.
 INFO:root:start training
 </pre></div>
 </div>
@@ -722,171 +730,218 @@ Trainable params: 431,970
 Non-trainable params: 0
 __________________________________________________________________________________________________
 Epoch 1/1000
-WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow/python/keras/engine/training_v1.py:2048: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
-Instructions for updating:
-This property should not be used in TensorFlow 2.0, as updates are applied automatically.
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:tensorflow:From /usr/local/lib/python3.6/dist-packages/tensorflow/python/keras/engine/training_v1.py:2048: Model.state_updates (from tensorflow.python.keras.engine.training) is deprecated and will be removed in a future version.
-Instructions for updating:
-This property should not be used in TensorFlow 2.0, as updates are applied automatically.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/keras/engine/training.py:2470: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.
+  warnings.warn('`Model.state_updates` will be removed in a future version. '
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 00001: val_loss improved from inf to 0.04757, saving model to res/20201211_155436_model.h5
-47/47 - 11s - loss: 0.0706 - val_loss: 0.0476
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 00001: val_loss improved from inf to 0.04569, saving model to res/20210925_132436_model.h5
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/keras/utils/generic_utils.py:497: CustomMaskWarning: Custom mask layers require a config and must override get_config. When loading, the custom mask layer must be passed to the custom_objects argument.
+  category=CustomMaskWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>47/47 - 68s - loss: 0.0796 - val_loss: 0.0457
 Epoch 2/1000
 
-Epoch 00002: val_loss improved from 0.04757 to 0.04254, saving model to res/20201211_155436_model.h5
-47/47 - 8s - loss: 0.0366 - val_loss: 0.0425
+Epoch 00002: val_loss improved from 0.04569 to 0.04298, saving model to res/20210925_132436_model.h5
+47/47 - 21s - loss: 0.0333 - val_loss: 0.0430
 Epoch 3/1000
 
-Epoch 00003: val_loss improved from 0.04254 to 0.04069, saving model to res/20201211_155436_model.h5
-47/47 - 8s - loss: 0.0324 - val_loss: 0.0407
+Epoch 00003: val_loss improved from 0.04298 to 0.04224, saving model to res/20210925_132436_model.h5
+47/47 - 21s - loss: 0.0325 - val_loss: 0.0422
 Epoch 4/1000
 
-Epoch 00004: val_loss improved from 0.04069 to 0.04036, saving model to res/20201211_155436_model.h5
-47/47 - 8s - loss: 0.0336 - val_loss: 0.0404
+Epoch 00004: val_loss improved from 0.04224 to 0.04108, saving model to res/20210925_132436_model.h5
+47/47 - 21s - loss: 0.0317 - val_loss: 0.0411
 Epoch 5/1000
 
-Epoch 00005: val_loss did not improve from 0.04036
-47/47 - 8s - loss: 0.0313 - val_loss: 0.0408
+Epoch 00005: val_loss did not improve from 0.04108
+47/47 - 21s - loss: 0.0328 - val_loss: 0.0416
 Epoch 6/1000
 
-Epoch 00006: val_loss improved from 0.04036 to 0.04030, saving model to res/20201211_155436_model.h5
-47/47 - 8s - loss: 0.0294 - val_loss: 0.0403
+Epoch 00006: val_loss improved from 0.04108 to 0.04089, saving model to res/20210925_132436_model.h5
+47/47 - 21s - loss: 0.0301 - val_loss: 0.0409
 Epoch 7/1000
 
-Epoch 00007: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0307 - val_loss: 0.0406
+Epoch 00007: val_loss did not improve from 0.04089
+47/47 - 21s - loss: 0.0303 - val_loss: 0.0410
 Epoch 8/1000
 
-Epoch 00008: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0294 - val_loss: 0.0404
+Epoch 00008: val_loss did not improve from 0.04089
+47/47 - 21s - loss: 0.0289 - val_loss: 0.0410
 Epoch 9/1000
 
-Epoch 00009: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0296 - val_loss: 0.0417
+Epoch 00009: val_loss did not improve from 0.04089
+47/47 - 21s - loss: 0.0302 - val_loss: 0.0413
 Epoch 10/1000
 
-Epoch 00010: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0288 - val_loss: 0.0407
+Epoch 00010: val_loss improved from 0.04089 to 0.04059, saving model to res/20210925_132436_model.h5
+47/47 - 21s - loss: 0.0283 - val_loss: 0.0406
 Epoch 11/1000
 
-Epoch 00011: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0282 - val_loss: 0.0418
+Epoch 00011: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0269 - val_loss: 0.0409
 Epoch 12/1000
 
-Epoch 00012: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0300 - val_loss: 0.0415
+Epoch 00012: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0279 - val_loss: 0.0410
 Epoch 13/1000
 
-Epoch 00013: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0276 - val_loss: 0.0425
+Epoch 00013: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0278 - val_loss: 0.0410
 Epoch 14/1000
 
-Epoch 00014: val_loss did not improve from 0.04030
-47/47 - 8s - loss: 0.0285 - val_loss: 0.0413
+Epoch 00014: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0267 - val_loss: 0.0417
 Epoch 15/1000
 
-Epoch 00015: val_loss improved from 0.04030 to 0.04022, saving model to res/20201211_155436_model.h5
-47/47 - 8s - loss: 0.0291 - val_loss: 0.0402
+Epoch 00015: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0267 - val_loss: 0.0409
 Epoch 16/1000
 
-Epoch 00016: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0283 - val_loss: 0.0415
+Epoch 00016: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0265 - val_loss: 0.0408
 Epoch 17/1000
 
-Epoch 00017: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0282 - val_loss: 0.0419
+Epoch 00017: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0266 - val_loss: 0.0415
 Epoch 18/1000
 
-Epoch 00018: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0262 - val_loss: 0.0407
+Epoch 00018: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0271 - val_loss: 0.0424
 Epoch 19/1000
 
-Epoch 00019: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0264 - val_loss: 0.0416
+Epoch 00019: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0287 - val_loss: 0.0429
 Epoch 20/1000
 
-Epoch 00020: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0276 - val_loss: 0.0442
+Epoch 00020: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0268 - val_loss: 0.0412
 Epoch 21/1000
 
-Epoch 00021: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0259 - val_loss: 0.0440
+Epoch 00021: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0272 - val_loss: 0.0423
 Epoch 22/1000
 
-Epoch 00022: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0279 - val_loss: 0.0411
+Epoch 00022: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0276 - val_loss: 0.0417
 Epoch 23/1000
 
-Epoch 00023: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0264 - val_loss: 0.0414
+Epoch 00023: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0268 - val_loss: 0.0417
 Epoch 24/1000
 
-Epoch 00024: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0244 - val_loss: 0.0411
+Epoch 00024: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0271 - val_loss: 0.0418
 Epoch 25/1000
 
-Epoch 00025: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0261 - val_loss: 0.0422
+Epoch 00025: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0269 - val_loss: 0.0421
 Epoch 26/1000
 
-Epoch 00026: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0271 - val_loss: 0.0415
+Epoch 00026: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0258 - val_loss: 0.0420
 Epoch 27/1000
 
-Epoch 00027: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0278 - val_loss: 0.0427
+Epoch 00027: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0259 - val_loss: 0.0421
 Epoch 28/1000
 
-Epoch 00028: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0270 - val_loss: 0.0416
+Epoch 00028: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0256 - val_loss: 0.0424
 Epoch 29/1000
 
-Epoch 00029: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0266 - val_loss: 0.0423
+Epoch 00029: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0281 - val_loss: 0.0438
 Epoch 30/1000
 
-Epoch 00030: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0253 - val_loss: 0.0429
-Epoch 31/1000
-
-Epoch 00031: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0248 - val_loss: 0.0428
-Epoch 32/1000
-
-Epoch 00032: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0260 - val_loss: 0.0451
-Epoch 33/1000
-
-Epoch 00033: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0241 - val_loss: 0.0429
-Epoch 34/1000
-
-Epoch 00034: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0278 - val_loss: 0.0437
-Epoch 35/1000
-
-Epoch 00035: val_loss did not improve from 0.04022
-47/47 - 8s - loss: 0.0240 - val_loss: 0.0425
+Epoch 00030: val_loss did not improve from 0.04059
+47/47 - 21s - loss: 0.0269 - val_loss: 0.0424
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:root:re-loading last best model
 INFO:root:predicting
 INFO:root:evaluating
-INFO:root:[[354787   1530]
- [  1920  10403]]
-INFO:root:              precision    recall  f1-score   support
-
-       noise      0.995     0.996     0.995    356317
-       pulse      0.872     0.844     0.858     12323
-
-    accuracy                          0.991    368640
-   macro avg      0.933     0.920     0.926    368640
-weighted avg      0.991     0.991     0.991    368640
-
-INFO:root:saving to res/20201211_155436_results.h5.
+INFO:root:[[354461   1856]
+ [  1718  10605]]
+INFO:root:{'noise': {'precision': 0.9951765825610157, 'recall': 0.9947911550669769, 'f1-score': 0.9949838314881768, 'support': 356317}, 'pulse': {'precision': 0.8510552925126394, 'recall': 0.8605858962914875, 'f1-score': 0.8557940606843125, 'support': 12323}, 'accuracy': 0.9903049045138889, 'macro avg': {'precision': 0.9231159375368276, 'recall': 0.9276885256792322, 'f1-score': 0.9253889460862447, 'support': 368640}, 'weighted avg': {'precision': 0.9903588561686921, 'recall': 0.9903049045138889, 'f1-score': 0.9903309572867444, 'support': 368640}}
+INFO:root:saving to res/20210925_132436_results.h5.
+/usr/local/lib/python3.7/dist-packages/tables/path.py:112: NaturalNameWarning: object name is not a valid Python identifier: 'f1-score'; it does not match the pattern ``^[a-zA-Z_][a-zA-Z0-9_]*$``; you will not be able to use natural naming to access this object; using ``getattr()`` will still work, though
+  NaturalNameWarning)
+/usr/local/lib/python3.7/dist-packages/tables/path.py:112: NaturalNameWarning: object name is not a valid Python identifier: 'macro avg'; it does not match the pattern ``^[a-zA-Z_][a-zA-Z0-9_]*$``; you will not be able to use natural naming to access this object; using ``getattr()`` will still work, though
+  NaturalNameWarning)
+/usr/local/lib/python3.7/dist-packages/tables/path.py:112: NaturalNameWarning: object name is not a valid Python identifier: 'weighted avg'; it does not match the pattern ``^[a-zA-Z_][a-zA-Z0-9_]*$``; you will not be able to use natural naming to access this object; using ``getattr()`` will still work, though
+  NaturalNameWarning)
+INFO:root:DONE.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;keras.engine.functional.Functional at 0x7f269f6ed290&gt;,
+ {'balance': False,
+  'batch_level_subsampling': False,
+  'batch_norm': True,
+  'batch_size': 32,
+  'class_names': ['noise', 'pulse'],
+  'class_types': ['segment', 'event'],
+  'class_weights': None,
+  'data_dir': '/content/drive/MyDrive/Dmoj.wrigleyi.npy',
+  'data_hash': '5381c36663f3b7286b0a5c42c0e3e463',
+  'data_padding': 128,
+  'filename_endsample_test': [],
+  'filename_endsample_train': [],
+  'filename_endsample_val': [],
+  'filename_startsample_test': [],
+  'filename_startsample_train': [],
+  'filename_startsample_val': [],
+  'filename_test': [],
+  'filename_train': [],
+  'filename_val': [],
+  'first_sample_train': 0,
+  'first_sample_val': 0,
+  'fraction_data': None,
+  'ignore_boundaries': True,
+  'kernel_size': 32,
+  'last_sample_train': None,
+  'last_sample_val': None,
+  'learning_rate': 0.0005,
+  'log_messages': False,
+  'model_name': 'tcn',
+  'nb_channels': 16,
+  'nb_classes': 2,
+  'nb_conv': 4,
+  'nb_epoch': 1000,
+  'nb_filters': 32,
+  'nb_freq': 16,
+  'nb_hist': 1024,
+  'nb_lstm_units': 0,
+  'nb_pre_conv': 0,
+  'nb_stacks': 2,
+  'neptune_project': None,
+  'output_stride': 1,
+  'pre_kernel_size': 3,
+  'pre_nb_conv': 2,
+  'pre_nb_dft': 64,
+  'pre_nb_filters': 16,
+  'reduce_lr': False,
+  'reduce_lr_patience': 5,
+  'return_sequences': True,
+  'sample_weight_mode': 'temporal',
+  'samplerate_x_Hz': 10000.0,
+  'samplerate_y_Hz': 10000.0,
+  'save_dir': 'res',
+  'save_prefix': '',
+  'seed': None,
+  'stride': 768,
+  'tensorboard': False,
+  'use_separable': [True, True, False, False],
+  'verbose': 2,
+  'version_data': True,
+  'with_y_hist': True,
+  'x_suffix': '',
+  'y_offset': 0,
+  'y_suffix': ''})
 </pre></div>
 </div>
 </div>
@@ -894,7 +949,7 @@ INFO:root:saving to res/20201211_155436_results.h5.
 <p>Adjust the name to point to the results:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_name</span> <span class="o">=</span> <span class="s1">'/content/res/20201211_155436'</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_name</span> <span class="o">=</span> <span class="s1">'/content/res/20210925_132436'</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">flammkuchen</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res_name</span><span class="si">}</span><span class="s1">_results.h5'</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -990,19 +1045,25 @@ Attributes:
 <p>Run inference - this will calculate the confidence score and extract segment boundaries and event times.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prepend_padding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/keras/engine/training.py:2470: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.
+  warnings.warn('`Model.state_updates` will be removed in a future version. '
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span> <span class="o">=</span> <span class="mi">40_000</span><span class="p">,</span> <span class="mi">60_000</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Audio'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Prediction'</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span> <span class="o">=</span> <span class="mi">42_000</span><span class="p">,</span> <span class="mi">48_000</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Audio'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Prediction'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">'Audio'</span><span class="p">,</span> <span class="s1">'Prediction'</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -1089,6 +1150,8 @@ Attributes:
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
