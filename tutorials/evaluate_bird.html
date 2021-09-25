@@ -278,7 +278,7 @@
 <h2>Load data<a class="headerlink" href="#load-data" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">savename</span> <span class="o">=</span> <span class="s1">'/Users/janc/Dropbox/dss.paper/sober/20200418_215107'</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">savename</span> <span class="o">=</span> <span class="s1">'../../../../dss.paper/sober/20200418_215107'</span>
 <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_params</span><span class="p">(</span><span class="n">savename</span><span class="p">)</span>
 <span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">savename</span> <span class="o">+</span> <span class="s1">'.zarr'</span><span class="p">)</span>
 
@@ -288,31 +288,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">43</span><span class="n">f51740f1eb</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">savename</span> <span class="o">=</span> <span class="s1">'/Users/janc/Dropbox/dss.paper/sober/20200418_215107'</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_params</span><span class="p">(</span><span class="n">savename</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">savename</span> <span class="o">+</span> <span class="s1">'.zarr'</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> 
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">fs</span> <span class="o">=</span> <span class="mi">32_000</span>  <span class="c1"># Hz</span>
-
-<span class="nn">/Volumes/shinkansen/Dropbox/code.py/das/src/das/utils.py</span> in <span class="ni">load_params</span><span class="nt">(file_trunk, params_ext)</span>
-<span class="g g-Whitespace">    </span><span class="mi">125</span>     <span class="s2">"""</span>
-<span class="g g-Whitespace">    </span><span class="mi">126</span><span class="s2">     filename = _download_if_url(file_trunk + params_ext)</span>
-<span class="ne">--&gt; </span><span class="mi">127</span><span class="s2">     with open(filename, 'r') as f:</span>
-<span class="g g-Whitespace">    </span><span class="mi">128</span><span class="s2">         try:</span>
-<span class="g g-Whitespace">    </span><span class="mi">129</span><span class="s2">             params = yaml.load(f, Loader=yaml.FullLoader)</span>
-
-<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: '/Users/janc/Dropbox/dss.paper/sober/20200418_215107_params.yaml'
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">save_name</span> <span class="o">=</span> <span class="s1">'/Users/janc/Dropbox/dss.paper/models/sober_allInd/20200418_215107'</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">save_name</span> <span class="o">=</span> <span class="s1">'../../../../dss.paper/models/sober_allInd/20200418_215107'</span>
 
 <span class="n">gap_dur</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># 5 ms</span>
 <span class="n">min_len</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">/</span> <span class="mi">1000</span>  <span class="c1"># 30 ms</span>
@@ -423,6 +402,15 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/librosa/display.py:974: MatplotlibDeprecationWarning: The 'basey' parameter of __init__() has been renamed 'base' since Matplotlib 3.3; support for the old name will be dropped two minor releases later.
+  scaler(mode, **kwargs)
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/librosa/display.py:974: MatplotlibDeprecationWarning: The 'linthreshy' parameter of __init__() has been renamed 'linthresh' since Matplotlib 3.3; support for the old name will be dropped two minor releases later.
+  scaler(mode, **kwargs)
+</pre></div>
+</div>
+<img alt="../_images/evaluate_bird_9_1.jpg" src="../_images/evaluate_bird_9_1.jpg"/>
+</div>
 </div>
 </section>
 <section id="performance-metrics">
@@ -435,6 +423,81 @@
                                            <span class="n">output_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                            <span class="n">labels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
+
+           1       0.96      0.96      0.96      8218
+           2       0.99      0.99      0.99     51073
+           3       0.96      0.98      0.97     10210
+           4       1.00      0.98      0.99      3193
+           5       0.99      0.99      0.99     44374
+           6       0.93      0.80      0.86      4208
+           7       0.00      0.00      0.00         0
+           8       0.00      0.00      0.00         0
+           9       0.98      0.98      0.98     29245
+          10       0.00      0.00      0.00         0
+          11       0.00      0.00      0.00         0
+          12       0.00      0.00      0.00         0
+          13       0.00      0.00      0.00         0
+          14       0.96      0.99      0.98      4086
+          15       0.93      0.99      0.96      3850
+          16       0.99      0.99      0.99      6240
+          17       0.99      1.00      0.99      7110
+          18       0.99      0.99      0.99     13206
+          19       1.00      0.99      1.00      8681
+          20       0.99      0.99      0.99      4639
+          21       0.99      0.98      0.98      4200
+          22       0.98      0.99      0.98     32180
+          23       1.00      0.99      0.99      7387
+          24       0.99      0.99      0.99      9382
+          25       0.00      0.00      0.00         0
+          26       0.00      0.00      0.00       250
+          27       0.98      0.87      0.92     15947
+          28       0.70      0.94      0.80      4453
+          29       0.99      1.00      0.99     42700
+          30       0.98      0.99      0.99     19302
+          31       0.98      0.98      0.98     17294
+          32       0.99      0.99      0.99      9594
+          33       1.00      1.00      1.00     22416
+          34       0.00      0.00      0.00         0
+          35       0.98      0.89      0.93     41048
+          36       0.92      0.98      0.95      8352
+          37       0.99      0.99      0.99      6309
+          38       0.83      0.95      0.89     11832
+          39       0.00      0.00      0.00         0
+          40       0.99      0.98      0.99     25383
+          41       0.99      0.99      0.99     32669
+          42       1.00      0.99      1.00     19420
+          43       1.00      0.99      0.99      9953
+          44       1.00      0.99      0.99     12093
+          45       0.98      0.98      0.98      4405
+          46       0.97      0.92      0.95      2842
+          47       0.00      0.00      0.00         0
+          48       0.98      0.96      0.97     28921
+          49       0.00      0.00      0.00         0
+
+   micro avg       0.98      0.97      0.98    586665
+   macro avg       0.73      0.73      0.73    586665
+weighted avg       0.98      0.97      0.98    586665
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
 </pre></div>
 </div>
 </div>
@@ -482,6 +545,71 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/ipykernel_launcher.py:18: RuntimeWarning: divide by zero encountered in log2
+</pre></div>
+</div>
+<img alt="../_images/evaluate_bird_13_1.jpg" src="../_images/evaluate_bird_13_1.jpg"/>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Micro avg 0.9632938342579566
+Global avg 0.9915025106218617
+(38, 38)
+              precision    recall  f1-score   support
+
+           0       0.00      0.00      0.00         0
+           1       0.97      0.98      0.98        63
+           2       1.00      0.99      1.00       363
+           3       1.00      1.00      1.00        47
+           4       1.00      1.00      1.00        14
+           5       1.00      1.00      1.00       217
+           6       1.00      1.00      1.00        28
+           9       0.98      1.00      0.99       118
+          14       1.00      1.00      1.00        35
+          15       1.00      1.00      1.00        35
+          16       1.00      1.00      1.00        35
+          17       1.00      1.00      1.00        35
+          18       1.00      1.00      1.00        70
+          19       1.00      1.00      1.00        35
+          20       1.00      1.00      1.00        34
+          21       1.00      1.00      1.00        34
+          22       0.99      1.00      1.00       114
+          23       1.00      1.00      1.00        34
+          24       1.00      1.00      1.00        33
+          27       1.00      1.00      1.00        40
+          28       1.00      1.00      1.00        29
+          29       1.00      1.00      1.00        82
+          30       0.99      1.00      0.99        81
+          31       1.00      0.99      0.99        72
+          32       1.00      1.00      1.00        43
+          33       1.00      1.00      1.00        43
+          35       0.99      0.93      0.96       176
+          36       0.93      1.00      0.96        40
+          37       1.00      1.00      1.00        38
+          38       0.77      0.96      0.86        28
+          40       1.00      1.00      1.00       131
+          41       0.99      1.00      1.00       117
+          42       1.00      1.00      1.00        55
+          43       1.00      1.00      1.00        48
+          44       1.00      1.00      1.00        31
+          45       1.00      1.00      1.00        31
+          46       1.00      0.94      0.97        17
+          48       0.99      0.99      0.99       142
+
+    accuracy                           0.99      2588
+   macro avg       0.96      0.97      0.97      2588
+weighted avg       0.99      0.99      0.99      2588
+
+FN rate (%)  0.07722007722007722 0.03861003861003861
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/Users/clemens10/miniconda3/lib/python3.7/site-packages/sklearn/metrics/_classification.py:1248: UndefinedMetricWarning: Recall and F-score are ill-defined and being set to 0.0 in labels with no true samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="timing-of-syllable-on-and-offsets">
@@ -521,6 +649,22 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'OFFSETS:'}
+   FP 32, TP 2558, FN 26
+   precision 0.99, recall 0.99, f1-score 0.99
+   jitter: mean 0.74 ms, median 0.47 ms, 95th percentile 2.44 ms
+   jitter full: mean 3.10 ms, median 0.47 ms, 95th percentile 2.77 ms
+{'ONSETS:'}
+   FP 32, TP 2558, FN 26
+   precision 0.99, recall 0.99, f1-score 0.99
+   jitter: mean 0.43 ms, median 0.22 ms, 95th percentile 1.41 ms
+   jitter full: mean 2.86 ms, median 0.22 ms, 95th percentile 1.66 ms
+jitter all full: mean 2.98 ms, median 0.31 ms, 95th percentile 2.44 ms
+</pre></div>
+</div>
+<img alt="../_images/evaluate_bird_15_1.jpg" src="../_images/evaluate_bird_15_1.jpg"/>
 </div>
 </div>
 </section>

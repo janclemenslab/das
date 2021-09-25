@@ -263,8 +263,11 @@
 <h2>Make a dataset from exported annotations<a class="headerlink" href="#make-a-dataset-from-exported-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Training requires data in a specific format in which the audio is split into different parts for use during training to optimize the network and after training to evaluate network performance. The GUI automates the generation of these datasets from audio annotated using the GUI. Alternatively, you can also <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">use your existing annotations</span></a> or <a class="reference internal" href="../tutorials/make_ds_notebook.html"><span class="doc std std-doc">make a dataset yourself</span></a>. For details on the data format itself, see <a class="reference external" href="data_formats.html#dataset-for-training">here</a>.</p>
 <p>In the GUI, make a dataset via <em>DAS/Make dataset for training</em>. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_assemble-fig" src="tutorials_gui/xb_assemble-fig"/>
+<figure class="align-default" id="xb-assemble-fig">
+<a class="reference internal image-reference" href="../_images/xb_assemble.png"><img alt="assemble dataset" src="../_images/xb_assemble.png" style="width: 650px;"/></a>
+<figcaption>
+<p><span class="caption-text">Dialog for customizing a dataset for training.</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <ul class="simple">
 <li><p><em>Data folder</em> &amp; <em>Store folder</em>: The data folder contains your exported annotations (annotations as <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code>, audio as <code class="docutils literal notranslate"><span class="pre">*.npz</span></code> or <code class="docutils literal notranslate"><span class="pre">*.wav</span></code>). From these annotations, the dataset will be created and save in the store folder. By default, the store folder is the data folder with <code class="docutils literal notranslate"><span class="pre">.npy</span></code> appended. <em>Important: You can change the name of the store folder but the data folder must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> for DAS to recognize the dataset.</em></p></li>
@@ -294,8 +297,11 @@
 <section id="train-das-using-the-gui">
 <h2>Train DAS using the GUI<a class="headerlink" href="#train-das-using-the-gui" title="Permalink to this headline">¶</a></h2>
 <p>Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> that you just created. Then, a dialog will allow you to customize the network to be trained.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_train-fig" src="tutorials_gui/xb_train-fig"/>
+<figure class="align-default" id="xb-train-fig">
+<a class="reference internal image-reference" href="../_images/xb_train.png"><img alt="train" src="../_images/xb_train.png" style="width: 600px;"/></a>
+<figcaption>
+<p><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <p>Options are grouped into three sections:</p>
 <p><strong>Data set</strong>:</p>
@@ -436,8 +442,6 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

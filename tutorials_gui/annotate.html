@@ -262,23 +262,32 @@
 <li><p><em>Segments</em> are song types that extend over time and are defined by a start and a stop time. <em>Drosophila</em>  sine song and the syllables of mouse and bird vocalizations fall into the segment category.</p></li>
 </ul>
 <p>If you load audio that has been annotated before, the annotations will be loaded with the audio. Song types can be added, renamed, and deleted via <em>Annotations/Add or edit song types</em>.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_make-fig" src="tutorials_gui/xb_make-fig"/>
+<figure class="align-default" id="xb-make-fig">
+<a class="reference internal image-reference" href="../_images/xb_make.png"><img alt="edit annotation types" src="../_images/xb_make.png" style="height: 500px;"/></a>
+<figcaption>
+<p><span class="caption-text">Create, rename or delete song types for annotation.</span><a class="headerlink" href="#xb-make-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 </section>
 <section id="create-annotations-manually">
 <h2>Create annotations manually<a class="headerlink" href="#create-annotations-manually" title="Permalink to this headline">¶</a></h2>
 <p>The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_create-fig" src="tutorials_gui/xb_create-fig"/>
+<figure class="align-default" id="xb-create-fig">
+<a class="reference internal image-reference" href="../_images/xb_create_opt.gif"><img alt="annotate song" src="../_images/xb_create_opt.gif" style="width: 700px;"/></a>
+<figcaption>
+<p><span class="caption-text">Left clicks in waveform or spectrogram few create annotations.</span><a class="headerlink" href="#xb-create-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <p>Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
 </section>
 <section id="annotate-by-thresholding-the-waveform">
 <h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">¶</a></h2>
 <p>Annotation of events can be sped up with the “Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the <em>Annotations/Toggle thresholding mode</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_thres-fig" src="tutorials_gui/xb_thres-fig"/>
+<figure class="align-default" id="xb-thres-fig">
+<a class="reference internal image-reference" href="../_images/xb_thres_opt.gif"><img alt="annotate song" src="../_images/xb_thres_opt.gif" style="width: 700px;"/></a>
+<figcaption>
+<p><span class="caption-text">Annotations assisted by thresholding and peak detection.</span><a class="headerlink" href="#xb-thres-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <p>The detection of events can be adjusted via <em>Annotations/Adjust thresholding mode</em>:</p>
 <ul class="simple">
@@ -290,15 +299,21 @@
 <h2>Edit annotations<a class="headerlink" href="#edit-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Adjust event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type in the <em>Annotations</em> menu.</p>
 <p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_edit-fig" src="tutorials_gui/xb_edit-fig"/>
+<figure class="align-default" id="xb-edit-fig">
+<a class="reference internal image-reference" href="../_images/xb_edit_opt.gif"><img alt="annotate song" src="../_images/xb_edit_opt.gif" style="width: 700px;"/></a>
+<figcaption>
+<p><span class="caption-text">Dragging moves, right click deletes annotations.</span><a class="headerlink" href="#xb-edit-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 </section>
 <section id="export-and-save-annotations">
 <h2>Export and save annotations<a class="headerlink" href="#export-and-save-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Export audio data and annotations for integration into a training dataset via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>. This will first ask you to select a folder. When making a training dataset, all exported data in the folder will be used, so make sure you do not save data from different projects to the same folder:</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_assemble-fig" src="tutorials_gui/xb_assemble-fig"/>
+<figure class="align-default" id="xb-assemble-fig">
+<a class="reference internal image-reference" href="../_images/xb_export.png"><img alt="export audio and annotations" src="../_images/xb_export.png" style="width: 500px;"/></a>
+<figcaption>
+<p><span class="caption-text">Export audio data and annotations</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <p>After a folder has been selected, a dialog will open with options to customize the data export:</p>
 <ul class="simple">
@@ -403,8 +418,6 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -255,8 +255,11 @@
           <section class="tex2jax_ignore mathjax_ignore" id="predict">
 <h1>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h1>
 <p>Once training finished, generate annotations using the trained network via <em>DAS/Predict</em>. In contrast to training, prediction is very fast and does not require a GPU - if you trained the network remotely on a machine with a GPU, copy the generated files ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> to your local machine.</p>
-<figure class="align-default">
-<img alt="tutorials_gui/xb_predict-fig" src="tutorials_gui/xb_predict-fig"/>
+<figure class="align-default" id="xb-predict-fig">
+<a class="reference internal image-reference" href="../_images/xb_predict.png"><img alt="predict" src="../_images/xb_predict.png" style="width: 750px;"/></a>
+<figcaption>
+<p><span class="caption-text">predict options</span><a class="headerlink" href="#xb-predict-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
 </figure>
 <ul class="simple">
 <li><p><em>Model</em>: Go to the save folder specific during training and select the file ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> with the chosen prefix and timestamp.</p></li>
@@ -357,8 +360,6 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

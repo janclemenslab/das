@@ -17,7 +17,7 @@ If your favorite format is not included in this list, [convert it to a supporte
 ## Customizing loading
 After selecting a file, a menu allows you to adjust things before loading:
 
-:::{figure} xb_load-fig
+:::{figure-md} xb_load-fig
 <img src="/images/xb_load.png" alt="loading screen">
 
 Loading screen.
@@ -45,7 +45,7 @@ To navigate the view: Move forward/backward along the time axis via the `A`/`D` 
 
 You can play back the waveform on display through headphones/speakers by pressing `E`.
 
-:::{figure} xb_display-fig
+:::{figure-md} xb_display-fig
 <img src="/images/xb_display.png" alt="waveform and spectrogram display" width="100%">
 
 Waveform (top) and spectrogram (bottom) display of a multi-channel recording.

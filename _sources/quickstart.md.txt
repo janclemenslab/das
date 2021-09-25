@@ -17,8 +17,8 @@ das gui
 The following window should open:
 
 
-:::{figure} xb_start-fig
-<img src="/images/xb_start.png" alt="start screen" width=450>
+:::{figure-md} xb_start-fig
+<img src="images/xb_start.png" alt="start screen" width=450>
 
 Start screen.
 :::
@@ -44,8 +44,8 @@ To navigate the view: Move forward/backward along the time axis via the `A`/`D` 
 
 You can play back the waveform on display through your headphones/speakers by pressing `E`.
 
-:::{figure} xb_display-fig
-<img src="/images/xb_quick_view.png" alt="waveform and spectrogram display" width="100%">
+:::{figure-md} xb_display-fig
+<img src="images/xb_quick_view.png" alt="waveform and spectrogram display" width="100%">
 
 Waveform (top) and spectrogram (bottom) display of a single-channel recording of fly song.
 :::
@@ -58,8 +58,8 @@ Before you can annotate song, you need to register the sine and pulse song types
 
 Add two new song types for annotation via _Annotations/Add or edit song types_: 'pulse' of category 'event' and 'sine' of category 'segment':
 
-:::{figure} xb_make-fig
-<img src="/images/xb_make.png" alt="edit annotation types" height="400px">
+:::{figure-md} xb_make-fig
+<img src="images/xb_make.png" alt="edit annotation types" height="400px">
 
 Create two new song types for annotation.
 :::
@@ -70,7 +70,7 @@ The two new song types "pulse" or "sine" can now be activated for annotation usi
 
 Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks---one for each boundary of the segment.
 
-:::{figure} xb_create-fig
+:::{figure-md} xb_create-fig
 <img src="/images/xb_create_opt.gif" alt="annotate song" width="700px">
 
 Left clicks in waveform or spectrogram view create annotations.
@@ -79,8 +79,8 @@ Left clicks in waveform or spectrogram view create annotations.
 ## Annotate by thresholding the waveform
 Annotation of events can be sped up with a "Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the _Annotations_ menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press `I` to annotate these peaks as events.
 
-:::{figure} xb_thres-fig
-<img src="/images/xb_thres_opt.gif" alt="annotate song" width="700px">
+:::{figure-md} xb_thres-fig
+<img src="images/xb_thres_opt.gif" alt="annotate song" width="700px">
 
 Annotations assisted by thresholding and peak detection.
 :::
@@ -90,8 +90,8 @@ In case you mis-clicked, you can edit and delete annotations. Edit event times a
 
 Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
 
-:::{figure} xb_edit-fig
-<img src="/images/xb_edit_opt.gif" alt="annotate song" width="700px">
+:::{figure-md} xb_edit-fig
+<img src="images/xb_edit_opt.gif" alt="annotate song" width="700px">
 
 Dragging moves, right click deletes annotations.
 :::
@@ -101,16 +101,16 @@ _DAS_ achieves good performance with little manual annotation. Once you have com
 
 Training requires the audio data and the annotations to be in a specific dataset format. First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`. In the following dialog set start seconds and end seconds to the annotated time range - 0 and 18 seconds, respectively.
 
-:::{figure} xb_export-fig
-<img src="/images/xb_quick_export.png" alt="export audio and annotations" width=450>
+:::{figure-md} xb_export-fig
+<img src="images/xb_quick_export.png" alt="export audio and annotations" width=450>
 
 Export audio data and annotations for the annotated range between 0 and 18 seconds.
 :::
 
 Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model. To maximize the data available for optimizing the network (training and validation), set the test split to 0.0 (not test) and the validation split to 40:
 
-:::{figure} xb_assemble-fig
-<img src="/images/xb_quick_make_ds.png" alt="assemble dataset" width=600>
+:::{figure-md} xb_assemble-fig
+<img src="images/xb_quick_make_ds.png" alt="assemble dataset" width=600>
 
 Make a dataset for training.
 :::
@@ -121,8 +121,8 @@ This will create a dataset folder called `quickstart.npy` that contains the audi
 Configure a network and start training via _DAS/Train_. This will ask you select the dataset folder, `quickstart.npy`. Then, a dialog allows you to configure the network. For the fast training change the following:
 - Set both `Number of filters` and `Filter duration (seconds)` to 16. This will result in a smaller network with fewer parameters, which will be faster to train and requires fewer annotations to achieve adequate performance.
 - Set `Number of epochs` to 10, to finish training earlier.
-:::{figure} xb_train-fig
-<img src="/images/xb_quick_train.png" alt="train" width=500>
+:::{figure-md} xb_train-fig
+<img src="images/xb_quick_train.png" alt="train" width=500>
 
 Train options
 :::
@@ -137,8 +137,8 @@ In the next dialog, predict song for 60 seconds starting after your manual annot
 - Make sure that `Proof reading mode` is enabled. That way, annotations created by the network will be assigned names ending in `_proposals` - in our case `sine_proposals` and `pulse_proposals`. The proposals will be transformed into proper `sine` and `pulse` annotations during proof reading.
 - Enable `Fill gaps shorter than (seconds)` and `Delete segments shorter than (seconds)` by unchecking both check boxes.
 
-:::{figure} xb_predict-fig
-<img src="/images/xb_quick_predict.png" alt="predict" width=750>
+:::{figure-md} xb_predict-fig
+<img src="images/xb_quick_predict.png" alt="predict" width=750>
 
 Predict in proof-reading mode on the next 60 seconds.
 :::

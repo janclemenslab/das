@@ -8,7 +8,7 @@ Training requires data in a specific format in which the audio is split into dif
 
 In the GUI, make a dataset via _DAS/Make dataset for training_. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:
 
-:::{figure} xb_assemble-fig
+:::{figure-md} xb_assemble-fig
 <img src="/images/xb_assemble.png" alt="assemble dataset" width=650>
 
 Dialog for customizing a dataset for training.
@@ -34,7 +34,7 @@ The dataset can be inspected using the [inspect_dataset notebook](/tutorials/ins
 ## Train DAS using the GUI
 Configure a network and start training via _DAS/Train_. This will ask you select the dataset folder ending in `.npy` that you just created. Then, a dialog will allow you to customize the network to be trained.
 
-:::{figure} xb_train-fig
+:::{figure-md} xb_train-fig
 <img src="/images/xb_train.png" alt="train" width=600>
 
 Train options
