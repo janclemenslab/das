@@ -91,7 +91,7 @@ In case you mis-clicked, you can edit and delete annotations. Edit event times a
 Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
 
 :::{figure-md} xb_edit-fig
-<img src="images/xb_edit_opt.gif" alt="annotate song" width="700px">
+<img src="images/xb_edit.gif" alt="annotate song" width="700px">
 
 Dragging moves, right click deletes annotations.
 :::
