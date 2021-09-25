@@ -18,7 +18,7 @@ Create, rename or delete song types for annotation.
 The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.
 
 :::{figure-md} xb_create-fig
-<img src="/images/xb_create_opt.gif" alt="annotate song" width="700px">
+<img src="/images/xb_create.gif" alt="annotate song" width="700px">
 
 Left clicks in waveform or spectrogram few create annotations.
 :::
@@ -29,7 +29,7 @@ Song is annotated by left-clicking the waveform or spectrogram view. If an event
 Annotation of events can be sped up with the "Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the _Annotations/Toggle thresholding mode_ menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press `I` to annotate these peaks as events.
 
 :::{figure-md} xb_thres-fig
-<img src="/images/xb_thres_opt.gif" alt="annotate song" width="700px">
+<img src="/images/xb_thres.gif" alt="annotate song" width="700px">
 
 Annotations assisted by thresholding and peak detection.
 :::
@@ -44,7 +44,7 @@ Adjust event times and segment bounds by dragging the lines or the boundaries of
 Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
 
 :::{figure-md} xb_edit-fig
-<img src="/images/xb_edit_opt.gif" alt="annotate song" width="700px">
+<img src="/images/xb_edit.gif" alt="annotate song" width="700px">
 
 Dragging moves, right click deletes annotations.
 :::

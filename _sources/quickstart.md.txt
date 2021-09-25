@@ -40,7 +40,7 @@ Loading screen.
 ## Waveform and spectrogram display
 Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom). You will see the two major modes of fly song---pulse and sine. The recording starts with sine song---a relatively soft oscillation resulting in a spectral power at ~150Hz. Pulse song starts after ~0.75 seconds, evident as trains of brief wavelets with a regular interval.
 
-To navigate the view: Move forward/backward along the time axis via the `A`/`D` keys and zoom in/out the time axis with the `W`/`S` keys (see also the _Playback_ menu). The temporal and frequency resolution of the spectrogram can be adjusted with the `R` and `T` keys.
+To navigate the view: Move forward/backward along the time axis via the `A`/`D` keys and zoom in/out the time axis with the `W`/`S` keys (see also the _Playback_ menu). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal and frequency resolution of the spectrogram can be adjusted with the `R` and `T` keys.
 
 You can play back the waveform on display through your headphones/speakers by pressing `E`.
 
@@ -71,7 +71,7 @@ The two new song types "pulse" or "sine" can now be activated for annotation usi
 Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks---one for each boundary of the segment.
 
 :::{figure-md} xb_create-fig
-<img src="/images/xb_create_opt.gif" alt="annotate song" width="700px">
+<img src="/images/xb_create.gif" alt="annotate song" width="700px">
 
 Left clicks in waveform or spectrogram view create annotations.
 :::
@@ -80,7 +80,7 @@ Left clicks in waveform or spectrogram view create annotations.
 Annotation of events can be sped up with a "Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the _Annotations_ menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press `I` to annotate these peaks as events.
 
 :::{figure-md} xb_thres-fig
-<img src="images/xb_thres_opt.gif" alt="annotate song" width="700px">
+<img src="images/xb_thres.gif" alt="annotate song" width="700px">
 
 Annotations assisted by thresholding and peak detection.
 :::
@@ -150,3 +150,4 @@ To turn the proposals into proper annotations, fix and approve them. Correct any
 
 ## Go back to "Export"
 Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
+w

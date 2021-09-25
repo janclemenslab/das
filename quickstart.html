@@ -289,7 +289,7 @@ das gui
 <section id="waveform-and-spectrogram-display">
 <h2>Waveform and spectrogram display<a class="headerlink" href="#waveform-and-spectrogram-display" title="Permalink to this headline">¶</a></h2>
 <p>Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom). You will see the two major modes of fly song—pulse and sine. The recording starts with sine song—a relatively soft oscillation resulting in a spectral power at ~150Hz. Pulse song starts after ~0.75 seconds, evident as trains of brief wavelets with a regular interval.</p>
-<p>To navigate the view: Move forward/backward along the time axis via the <code class="docutils literal notranslate"><span class="pre">A</span></code>/<code class="docutils literal notranslate"><span class="pre">D</span></code> keys and zoom in/out the time axis with the <code class="docutils literal notranslate"><span class="pre">W</span></code>/<code class="docutils literal notranslate"><span class="pre">S</span></code> keys (see also the <em>Playback</em> menu). The temporal and frequency resolution of the spectrogram can be adjusted with the <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">T</span></code> keys.</p>
+<p>To navigate the view: Move forward/backward along the time axis via the <code class="docutils literal notranslate"><span class="pre">A</span></code>/<code class="docutils literal notranslate"><span class="pre">D</span></code> keys and zoom in/out the time axis with the <code class="docutils literal notranslate"><span class="pre">W</span></code>/<code class="docutils literal notranslate"><span class="pre">S</span></code> keys (see also the <em>Playback</em> menu). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal and frequency resolution of the spectrogram can be adjusted with the <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">T</span></code> keys.</p>
 <p>You can play back the waveform on display through your headphones/speakers by pressing <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
 <figure class="align-default" id="xb-display-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_view.png"><img alt="waveform and spectrogram display" src="_images/xb_quick_view.png" style="width: 100%;"/></a>
@@ -318,7 +318,7 @@ das gui
 <p>The two new song types “pulse” or “sine” can now be activated for annotation using the dropdown menu on the top left of the main window. The active song type can also be changed with number keys indicated in the dropdown menu—in this case <code class="docutils literal notranslate"><span class="pre">1</span></code> activates pulse, <code class="docutils literal notranslate"><span class="pre">2</span></code> activates sine.</p>
 <p>Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
 <figure class="align-default" id="xb-create-fig">
-<a class="reference internal image-reference" href="_images/xb_create_opt.gif"><img alt="annotate song" src="_images/xb_create_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="_images/xb_create.gif"><img alt="annotate song" src="_images/xb_create.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Left clicks in waveform or spectrogram view create annotations.</span><a class="headerlink" href="#xb-create-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -328,7 +328,7 @@ das gui
 <h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">¶</a></h2>
 <p>Annotation of events can be sped up with a “Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the <em>Annotations</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
 <figure class="align-default" id="xb-thres-fig">
-<a class="reference internal image-reference" href="_images/xb_thres_opt.gif"><img alt="annotate song" src="_images/xb_thres_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="_images/xb_thres.gif"><img alt="annotate song" src="_images/xb_thres.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Annotations assisted by thresholding and peak detection.</span><a class="headerlink" href="#xb-thres-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -339,7 +339,7 @@ das gui
 <p>In case you mis-clicked, you can edit and delete annotations. Edit event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the <em>Audio</em> menu.</p>
 <p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
 <figure class="align-default" id="xb-edit-fig">
-<a class="reference internal image-reference" href="_images/xb_edit_opt.gif"><img alt="annotate song" src="_images/xb_edit_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="images/xb_edit_opt.gif"><img alt="annotate song" src="images/xb_edit_opt.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Dragging moves, right click deletes annotations.</span><a class="headerlink" href="#xb-edit-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -402,7 +402,8 @@ das gui
 </section>
 <section id="go-back-to-export">
 <h2>Go back to “Export”<a class="headerlink" href="#go-back-to-export" title="Permalink to this headline">¶</a></h2>
-<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.</p>
+<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
+w</p>
 </section>
 </section>
 

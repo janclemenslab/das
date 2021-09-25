@@ -273,7 +273,7 @@
 <h2>Create annotations manually<a class="headerlink" href="#create-annotations-manually" title="Permalink to this headline">¶</a></h2>
 <p>The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.</p>
 <figure class="align-default" id="xb-create-fig">
-<a class="reference internal image-reference" href="../_images/xb_create_opt.gif"><img alt="annotate song" src="../_images/xb_create_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="../_images/xb_create.gif"><img alt="annotate song" src="../_images/xb_create.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Left clicks in waveform or spectrogram few create annotations.</span><a class="headerlink" href="#xb-create-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -284,7 +284,7 @@
 <h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">¶</a></h2>
 <p>Annotation of events can be sped up with the “Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the <em>Annotations/Toggle thresholding mode</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
 <figure class="align-default" id="xb-thres-fig">
-<a class="reference internal image-reference" href="../_images/xb_thres_opt.gif"><img alt="annotate song" src="../_images/xb_thres_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="../_images/xb_thres.gif"><img alt="annotate song" src="../_images/xb_thres.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Annotations assisted by thresholding and peak detection.</span><a class="headerlink" href="#xb-thres-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -300,7 +300,7 @@
 <p>Adjust event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type in the <em>Annotations</em> menu.</p>
 <p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
 <figure class="align-default" id="xb-edit-fig">
-<a class="reference internal image-reference" href="../_images/xb_edit_opt.gif"><img alt="annotate song" src="../_images/xb_edit_opt.gif" style="width: 700px;"/></a>
+<a class="reference internal image-reference" href="../_images/xb_edit.gif"><img alt="annotate song" src="../_images/xb_edit.gif" style="width: 700px;"/></a>
 <figcaption>
 <p><span class="caption-text">Dragging moves, right click deletes annotations.</span><a class="headerlink" href="#xb-edit-fig" title="Permalink to this image">¶</a></p>
 </figcaption>
@@ -418,6 +418,8 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -282,7 +282,7 @@
 </ul>
 <section id="proof-reading">
 <h2>Proof reading<a class="headerlink" href="#proof-reading" title="Permalink to this headline">¶</a></h2>
-<p>Since you created predictions in proof reading mode, the predictions will be assigned to two new song types, starting with the original name of the song type and ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code>. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. Once you have corrected all errors, approve annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code> or <code class="docutils literal notranslate"><span class="pre">H</span></code> for approving only the active or all song types, respectively. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>).</p>
+<p>Because you created predictions in proof reading mode, the predictions will be assigned to two new song types, starting with the original name of the song type and ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code>. To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. See <a class="reference external" href="#create-annotations-manually">Create annotations</a> and <a class="reference external" href="#edit-annotations">Edit annotations</a>. Once you have corrected all errors in the view, select the proposals type you want to fix (<code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> or <code class="docutils literal notranslate"><span class="pre">pulse_proposals</span></code>), and approve the corresponding annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code>. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>). Alternatively, <code class="docutils literal notranslate"><span class="pre">H</span></code> will approve proposals of all song types in view.</p>
 </section>
 </section>
 
@@ -360,6 +360,8 @@
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
