@@ -140,7 +140,7 @@ In the next dialog, predict song for 60 seconds starting after your manual annot
 :::{figure-md} xb_predict-fig
 <img src="images/xb_quick_predict.png" alt="predict" width=750>
 
-Predict in proof-reading mode on the next 60 seconds.
+Predict annotations for the next 60 seconds of audio.
 :::
 
 In contrast to training, prediction is very fast, and does not require a GPU---it should finish after 30 seconds. The proposed annotations should be already good. Most pulses should be correctly detected. Sine song is harder to predict and may be often or chopped up into multiple segments with gaps in between.
