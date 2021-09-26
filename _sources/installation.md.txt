@@ -51,7 +51,7 @@ The second command will display the command line arguments for `das train`. The 
 ## Make a desktop icon (Optional)
 To start the _DAS_ GUI without having to use a terminal, create a clickable startup script on the desktop.
 
-On macOS or linux, place a text file called `das.sh` (linux) or `das.command` (macOS) with the following content on the desktop:
+On macOS or Linux, place a text file called `das.sh` (linux) or `das.command` (macOS) with the following content on your desktop:
 ```shell
 # /bin/bash
 source $CONDA_PREFIX/etc/profile.d/conda.sh
