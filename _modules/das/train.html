@@ -280,7 +280,7 @@
     <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../api/das.train.html#das.train.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
+<div class="viewcode-block" id="train"><a class="viewcode-back" href="../../api/das.train.html#das.train.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="n">y_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
           <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'./'</span><span class="p">,</span> <span class="n">save_prefix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'tcn'</span><span class="p">,</span> <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
           <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">use_separable</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
@@ -293,7 +293,7 @@
           <span class="n">learning_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reduce_lr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reduce_lr_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
           <span class="n">fraction_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">batch_level_subsampling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
           <span class="n">tensorboard</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">neptune_api_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">neptune_project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">log_messages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">x_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
+          <span class="n">log_messages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">balance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">version_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">_qt_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="sd">"""Train a DeepSS network.</span>
@@ -302,20 +302,23 @@
 <span class="sd">        data_dir (str): Path to the directory or file with the dataset for training.</span>
 <span class="sd">                        Accepts npy-dirs (recommended), h5 files or zarr files.</span>
 <span class="sd">                        See documentation for how the dataset should be organized.</span>
-<span class="sd">        y_suffix (str): Select training target by suffix.</span>
+<span class="sd">        x_suffix (str): Select dataset used for training in the data_dir by suffix (`y_` + X_SUFFIX).</span>
+<span class="sd">                        Defaults to '' (will use the standard data 'x')</span>
+<span class="sd">        y_suffix (str): Select dataset used as a training target in the data_dir by suffix (`y_` + Y_SUFFIX).</span>
 <span class="sd">                        Song-type specific targets can be created with a training dataset,</span>
 <span class="sd">                        Defaults to '' (will use the standard target 'y')</span>
 <span class="sd">        save_dir (str): Directory to save training outputs.</span>
-<span class="sd">                        The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.</span>
-<span class="sd">                        Defaults to current directory ('./').</span>
+<span class="sd">                        The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,</span>
+<span class="sd">                        and the time stamp of the start of training.</span>
+<span class="sd">                        Defaults to the current directory ('./').</span>
 <span class="sd">        save_prefix (Optional[str]): Prepend to timestamp.</span>
-<span class="sd">                           Name of files created will be SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP</span>
-<span class="sd">                           or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.</span>
+<span class="sd">                           Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP</span>
+<span class="sd">                           or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.</span>
 <span class="sd">                           Defaults to '' (empty).</span>
 <span class="sd">        model_name (str): Network architecture to use.</span>
-<span class="sd">                          Use "tcn" (TCN) or "tcn_stft" (TCN with STFT frontend).</span>
+<span class="sd">                          Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).</span>
 <span class="sd">                          See das.models for a description of all models.</span>
-<span class="sd">                          Defaults to 'tcn'.</span>
+<span class="sd">                          Defaults to `tcn`.</span>
 <span class="sd">        nb_filters (int): Number of filters per layer.</span>
 <span class="sd">                          Defaults to 16.</span>
 <span class="sd">        kernel_size (int): Duration of the filters (=kernels) in samples.</span>
@@ -326,26 +329,28 @@
 <span class="sd">                                    Provide as a space-separated sequence of "False" or "True.</span>
 <span class="sd">                                    For instance: "True False False" will set the first block in a</span>
 <span class="sd">                                    three-block (as given by nb_conv) network to use separable convolutions.</span>
-<span class="sd">                                    Defaults to False (no block uses separable convolution).</span>
-<span class="sd">        nb_hist (int): Number of samples processed at once by the network (a.k.a chunk size).</span>
-<span class="sd">                       Defaults to 1024.</span>
+<span class="sd">                                    Defaults to False (no block uses separable convolutions).</span>
+<span class="sd">        nb_hist (int): Number of samples processed at once by the network (a.k.a chunk duration).</span>
+<span class="sd">                       Defaults to 1024 samples.</span>
 <span class="sd">        ignore_boundaries (bool): Minimize edge effects by discarding predictions at the edges of chunks.</span>
 <span class="sd">                                  Defaults to True.</span>
 <span class="sd">        batch_norm (bool): Batch normalize.</span>
 <span class="sd">                           Defaults to True.</span>
-<span class="sd">        nb_pre_conv (int): Downsampling rate. Adds downsampling frontend if not 0.</span>
-<span class="sd">                           TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.</span>
-<span class="sd">                           TCN_STFT: adds a trainable STFT frontend.</span>
-<span class="sd">                           Defaults to 0 (no frontend).</span>
-<span class="sd">        pre_nb_dft (int): Number of filters (roughly corresponding to filters) in the STFT frontend.</span>
+<span class="sd">        nb_pre_conv (int): Adds fronted with downsampling. The downsampling factor is `2**nb_pre_conv`.</span>
+<span class="sd">                           The type of frontend depends on the model:</span>
+<span class="sd">                           if model is `tcn`: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.</span>
+<span class="sd">                           if model is `tcn_tcn`: adds a frontend of N TCN blocks to the TCN.</span>
+<span class="sd">                           if model is `tcn_stft`: adds a trainable STFT frontend.</span>
+<span class="sd">                           Defaults to 0 (no frontend, no downsampling).</span>
+<span class="sd">        pre_nb_dft (int): Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.</span>
 <span class="sd">                          Defaults to 64.</span>
 <span class="sd">        pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.</span>
 <span class="sd">                              Defaults to 16.</span>
 <span class="sd">        pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.</span>
 <span class="sd">                               Defaults to 3.</span>
-<span class="sd">        nb_lstm_units (int): If &gt;0, adds LSTM with given number of units to the output of the stack of TCN blocks.</span>
+<span class="sd">        nb_lstm_units (int): If &gt;0, adds LSTM with `nb_lstm_units` LSTM units to the output of the stack of TCN blocks.</span>
 <span class="sd">                             Defaults to 0 (no LSTM layer).</span>
-<span class="sd">        verbose (int): Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).</span>
+<span class="sd">        verbose (int): Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).</span>
 <span class="sd">                       Defaults to 2.</span>
 <span class="sd">        batch_size (int): Batch size</span>
 <span class="sd">                          Defaults to 32.</span>
@@ -354,28 +359,29 @@
 <span class="sd">                        Defaults to 400.</span>
 <span class="sd">        learning_rate (Optional[float]): Learning rate of the model. Defaults should work in most cases.</span>
 <span class="sd">                               Values typically range between 0.1 and 0.00001.</span>
-<span class="sd">                               If None, uses per model defaults: "tcn" 0.0001, "tcn_stft" 0.0005).</span>
+<span class="sd">                               If None, uses model specific defaults: `tcn` 0.0001, `tcn_stft` and `tcn_tcn` 0.0005.</span>
 <span class="sd">                               Defaults to None.</span>
-<span class="sd">        reduce_lr (bool): Reduce learning rate on plateau.</span>
+<span class="sd">        reduce_lr (bool): Reduce learning rate when the validation loss plateaus.</span>
 <span class="sd">                          Defaults to False.</span>
-<span class="sd">        reduce_lr_patience (int): Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.</span>
-<span class="sd">                                  Defaults to 5.</span>
-<span class="sd">        fraction_data (Optional[float]): Fraction of training and validation to use for training.</span>
-<span class="sd">                               Defaults to 1.0.</span>
-<span class="sd">        seed (Optional[int]): Random seed to reproducible select fractions of the data.</span>
-<span class="sd">                    Defaults to None (no seed).</span>
+<span class="sd">        reduce_lr_patience (int): Number of epochs w/o a reduction in validation loss after which</span>
+<span class="sd">                                  to trigger a reduction in learning rate.</span>
+<span class="sd">                                  Defaults to 5 epochs.</span>
+<span class="sd">        fraction_data (Optional[float]): Fraction of training and validation data to use.</span>
+<span class="sd">                                         Defaults to 1.0.</span>
+<span class="sd">        seed (Optional[int]): Random seed to reproducibly select fractions of the data.</span>
+<span class="sd">                              Defaults to None (no seed).</span>
 <span class="sd">        batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.</span>
 <span class="sd">                                        If False, select a continuous chunk of the recording.</span>
 <span class="sd">                                        Defaults to False.</span>
 <span class="sd">        tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.</span>
-<span class="sd">        neptune_api_token (Optional[str]): API token for logging to neptune.ai. Defaults to None (no logging).</span>
-<span class="sd">        neptune_project (Optional[str]): Project to log to for neptune.ai. Defaults to None (no logging).</span>
-<span class="sd">        log_messages (bool): Sets logging level to INFO.</span>
+<span class="sd">        neptune_api_token (Optional[str]): API token for logging to neptune.ai.</span>
+<span class="sd">                                           Defaults to None (no logging to neptune.ai).</span>
+<span class="sd">        neptune_project (Optional[str]): Project to log to for neptune.ai.</span>
+<span class="sd">                                         Defaults to None (no logging to neptune.ai).</span>
+<span class="sd">        log_messages (bool): Sets terminal logging level to INFO.</span>
 <span class="sd">                             Defaults to False (will follow existing settings).</span>
-<span class="sd">        nb_stacks (int): Unused if model name is "tcn" or "tcn_stft". Defaults to 2.</span>
-<span class="sd">        with_y_hist (bool): Unused if model name is "tcn" or "tcn_stft". Defaults to True.</span>
-<span class="sd">        x_suffix (str): Select specific training data based on suffix (e.g. x_suffix).</span>
-<span class="sd">                        Defaults to '' (will use the standard data 'x')</span>
+<span class="sd">        nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.</span>
+<span class="sd">        with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.</span>
 <span class="sd">        balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.</span>
 <span class="sd">                        Defaults to False.</span>
 <span class="sd">        version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.</span>
@@ -618,8 +624,6 @@
     <script src="../../_static/togglebutton.js"></script>
     <script src="../../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

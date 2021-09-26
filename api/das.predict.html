@@ -263,13 +263,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>recording_filename</strong> (<em>str</em>) – path to the WAV file with the audio data.</p></li>
-<li><p><strong>model_save_name</strong> (<em>str</em>) – path with the trunk name of the model.</p></li>
-<li><p><strong>save_filename</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – path to save annotations to. [Optional] - will strip extension from recording_filename and add ‘_das.h5’.</p></li>
-<li><p><strong>verbose</strong> (<em>int</em>) – display progress bar during prediction. Defaults to 1.</p></li>
-<li><p><strong>batch_size</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – number of chunks processed at once . Defaults to None (the default used during training).
-Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.</p></li>
-<li><p><strong>event_thres</strong> (<em>float</em>) – Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.</p></li>
+<li><p><strong>recording_filename</strong> (<em>str</em>) – Path to the WAV file with the audio data.</p></li>
+<li><p><strong>model_save_name</strong> (<em>str</em>) – Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.</p></li>
+<li><p><strong>save_filename</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Path to save annotations to.
+If omitted, will construct save_filename by
+stripping the extension from recording_filename and adding ‘_das.h5’.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em>) – Display progress bar during prediction. Defaults to 1.</p></li>
+<li><p><strong>batch_size</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of chunks processed at once.
+Defaults to None (the default used during training).</p></li>
+<li><p><strong>event_thres</strong> (<em>float</em>) – Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.</p></li>
 <li><p><strong>event_dist</strong> (<em>float</em>) – Minimal distance between adjacent events during thresholding.
 Prevents detecting duplicate events when the confidence trace is a little noisy.
 Defaults to 0.01.</p></li>
@@ -278,8 +280,10 @@ Defaults to 0.</p></li>
 <li><p><strong>event_dist_max</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – MAXimal inter-event interval for the event filter run during post processing.
 Defaults to None (no upper limit).</p></li>
 <li><p><strong>segment_thres</strong> (<em>float</em>) – Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.</p></li>
-<li><p><strong>segment_minlen</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Minimal duration of a segment used for filtering out spurious detections. Defaults to None.</p></li>
-<li><p><strong>segment_fillgap</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.</p></li>
+<li><p><strong>segment_minlen</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Minimal duration of a segment used for filtering out spurious detections.
+Defaults to None (keep all segments).</p></li>
+<li><p><strong>segment_fillgap</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Gap between adjacent segments to be filled. Useful for correcting brief lapses.
+Defaults to None (do not fill gaps).</p></li>
 </ul>
 </dd>
 </dl>
@@ -500,8 +504,6 @@ Defaults to None (will use offsets est from class_probabilitieslabels as ref).</
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

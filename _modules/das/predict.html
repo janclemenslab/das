@@ -608,26 +608,27 @@
 <span class="sd">    Saves hdf5 file with keys: events, segments, class_probabilities</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        recording_filename (str): path to the WAV file with the audio data.</span>
-<span class="sd">        model_save_name (str): path with the trunk name of the model.</span>
-<span class="sd">        save_filename (Optional[str]): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.</span>
-
-<span class="sd">        verbose (int): display progress bar during prediction. Defaults to 1.</span>
-<span class="sd">        batch_size (Optional[int]): number of chunks processed at once . Defaults to None (the default used during training).</span>
-<span class="sd">                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.</span>
-
-<span class="sd">        event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.</span>
+<span class="sd">        recording_filename (str): Path to the WAV file with the audio data.</span>
+<span class="sd">        model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.</span>
+<span class="sd">        save_filename (Optional[str]): Path to save annotations to.</span>
+<span class="sd">                                       If omitted, will construct save_filename by</span>
+<span class="sd">                                       stripping the extension from recording_filename and adding '_das.h5'.</span>
+<span class="sd">        verbose (int): Display progress bar during prediction. Defaults to 1.</span>
+<span class="sd">        batch_size (Optional[int]): Number of chunks processed at once.</span>
+<span class="sd">                                    Defaults to None (the default used during training).</span>
+<span class="sd">        event_thres (float): Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.</span>
 <span class="sd">        event_dist (float): Minimal distance between adjacent events during thresholding.</span>
 <span class="sd">                            Prevents detecting duplicate events when the confidence trace is a little noisy.</span>
 <span class="sd">                            Defaults to 0.01.</span>
 <span class="sd">        event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.</span>
 <span class="sd">                                Defaults to 0.</span>
 <span class="sd">        event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.</span>
-<span class="sd">                                Defaults to None (no upper limit).</span>
-
+<span class="sd">                                          Defaults to None (no upper limit).</span>
 <span class="sd">        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.</span>
-<span class="sd">        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.</span>
-<span class="sd">        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.</span>
+<span class="sd">        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections.</span>
+<span class="sd">                                          Defaults to None (keep all segments).</span>
+<span class="sd">        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.</span>
+<span class="sd">                                           Defaults to None (do not fill gaps).</span>
 <span class="sd">    """</span>
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Loading data from </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
@@ -685,8 +686,6 @@
     <script src="../../_static/togglebutton.js"></script>
     <script src="../../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

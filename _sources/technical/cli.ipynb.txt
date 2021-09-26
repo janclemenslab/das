@@ -2,21 +2,23 @@
  "cells": [
   {
    "cell_type": "markdown",
-   "metadata": {},
    "source": [
     "# Command line interfaces\n",
     "\n",
     "## Graphical user interface"
-   ]
+   ],
+   "metadata": {}
   },
   {
    "cell_type": "code",
    "execution_count": 1,
-   "metadata": {},
+   "source": [
+    "!das gui --help"
+   ],
    "outputs": [
     {
-     "name": "stdout",
      "output_type": "stream",
+     "name": "stdout",
      "text": [
       "usage: das gui [-h] [--song-types-string SONG_TYPES_STRING]\n",
       "               [--spec-freq-min SPEC_FREQ_MIN] [--spec-freq-max SPEC_FREQ_MAX]\n",
@@ -54,29 +56,29 @@
      ]
     }
    ],
-   "source": [
-    "!das gui --help"
-   ]
+   "metadata": {}
   },
   {
    "cell_type": "markdown",
-   "metadata": {},
    "source": [
     "## Train"
-   ]
+   ],
+   "metadata": {}
   },
   {
    "cell_type": "code",
    "execution_count": 2,
-   "metadata": {},
+   "source": [
+    "!das train --help"
+   ],
    "outputs": [
     {
-     "name": "stdout",
      "output_type": "stream",
+     "name": "stdout",
      "text": [
-      "usage: das train [-h] -d DATA_DIR [-y Y_SUFFIX] [--save-dir SAVE_DIR]\n",
-      "                 [--save-prefix SAVE_PREFIX] [-m MODEL_NAME]\n",
-      "                 [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]\n",
+      "usage: das train [-h] -d DATA_DIR [-x X_SUFFIX] [-y Y_SUFFIX]\n",
+      "                 [--save-dir SAVE_DIR] [--save-prefix SAVE_PREFIX]\n",
+      "                 [-m MODEL_NAME] [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]\n",
       "                 [--nb-conv NB_CONV] [-u [USE_SEPARABLE [USE_SEPARABLE ...]]]\n",
       "                 [--nb-hist NB_HIST]\n",
       "                 [-i | --ignore-boundaries | --no-ignore-boundaries]\n",
@@ -94,7 +96,7 @@
       "                 [--neptune-api-token NEPTUNE_API_TOKEN]\n",
       "                 [--neptune-project NEPTUNE_PROJECT]\n",
       "                 [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]\n",
-      "                 [-w | --with-y-hist | --no-with-y-hist] [-x X_SUFFIX]\n",
+      "                 [-w | --with-y-hist | --no-with-y-hist]\n",
       "                 [--balance | --no-balance]\n",
       "                 [--version-data | --no-version-data]\n",
       "\n",
@@ -106,23 +108,27 @@
       "                        Path to the directory or file with the dataset for training.\n",
       "                        Accepts npy-dirs (recommended), h5 files or zarr files.\n",
       "                        See documentation for how the dataset should be organized.\n",
+      "  -x X_SUFFIX, --x-suffix X_SUFFIX\n",
+      "                        Select dataset used for training in the data_dir by suffix (\u001b[4my_\u001b[0m + X_SUFFIX).\n",
+      "                        Defaults to '' (will use the standard data 'x')\n",
       "  -y Y_SUFFIX, --y-suffix Y_SUFFIX\n",
-      "                        Select training target by suffix.\n",
+      "                        Select dataset used as a training target in the data_dir by suffix (\u001b[4my_\u001b[0m + Y_SUFFIX).\n",
       "                        Song-type specific targets can be created with a training dataset,\n",
       "                        Defaults to '' (will use the standard target 'y')\n",
       "  --save-dir SAVE_DIR   Directory to save training outputs.\n",
-      "                        The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.\n",
-      "                        Defaults to current directory ('./').\n",
+      "                        The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,\n",
+      "                        and the time stamp of the start of training.\n",
+      "                        Defaults to the current directory ('./').\n",
       "  --save-prefix SAVE_PREFIX\n",
       "                        Prepend to timestamp.\n",
-      "                        Name of files created will be SAVE_DIR/SAVE_PREFIX + \"_\" + TIMESTAMP\n",
-      "                        or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.\n",
+      "                        Name of files created will be start with SAVE_DIR/SAVE_PREFIX + \"_\" + TIMESTAMP\n",
+      "                        or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.\n",
       "                        Defaults to '' (empty).\n",
       "  -m MODEL_NAME, --model-name MODEL_NAME\n",
       "                        Network architecture to use.\n",
-      "                        Use \"tcn\" (TCN) or \"tcn_stft\" (TCN with STFT frontend).\n",
+      "                        Use \u001b[4mtcn\u001b[0m (TCN) or \u001b[4mtcn_stft\u001b[0m (TCN with STFT frontend).\n",
       "                        See das.models for a description of all models.\n",
-      "                        Defaults to 'tcn'.\n",
+      "                        Defaults to \u001b[4mtcn\u001b[0m.\n",
       "  --nb-filters NB_FILTERS\n",
       "                        Number of filters per layer.\n",
       "                        Defaults to 16.\n",
@@ -136,9 +142,9 @@
       "                        Provide as a space-separated sequence of \"False\" or \"True.\n",
       "                        For instance: \"True False False\" will set the first block in a\n",
       "                        three-block (as given by nb_conv) network to use separable convolutions.\n",
-      "                        Defaults to False (no block uses separable convolution).\n",
-      "  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk size).\n",
-      "                        Defaults to 1024.\n",
+      "                        Defaults to False (no block uses separable convolutions).\n",
+      "  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk duration).\n",
+      "                        Defaults to 1024 samples.\n",
       "  -i, --ignore-boundaries, --no-ignore-boundaries\n",
       "                        Minimize edge effects by discarding predictions at the edges of chunks.\n",
       "                        Defaults to True.\n",
@@ -146,12 +152,14 @@
       "                        Batch normalize.\n",
       "                        Defaults to True.\n",
       "  --nb-pre-conv NB_PRE_CONV\n",
-      "                        Downsampling rate. Adds downsampling frontend if not 0.\n",
-      "                        TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.\n",
-      "                        TCN_STFT: adds a trainable STFT frontend.\n",
-      "                        Defaults to 0 (no frontend).\n",
+      "                        Adds fronted with downsampling. The downsampling factor is \u001b[4m2**nb_pre_conv\u001b[0m.\n",
+      "                        The type of frontend depends on the model:\n",
+      "                        if model is \u001b[4mtcn\u001b[0m: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.\n",
+      "                        if model is \u001b[4mtcn_tcn\u001b[0m: adds a frontend of N TCN blocks to the TCN.\n",
+      "                        if model is \u001b[4mtcn_stft\u001b[0m: adds a trainable STFT frontend.\n",
+      "                        Defaults to 0 (no frontend, no downsampling).\n",
       "  --pre-nb-dft PRE_NB_DFT\n",
-      "                        Number of filters (roughly corresponding to filters) in the STFT frontend.\n",
+      "                        Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.\n",
       "                        Defaults to 64.\n",
       "  --pre-kernel-size PRE_KERNEL_SIZE\n",
       "                        Duration of filters (=kernels) in samples in the pre-processing TCN.\n",
@@ -161,9 +169,9 @@
       "                        Defaults to 16.\n",
       "  --pre-nb-conv PRE_NB_CONV\n",
       "  --nb-lstm-units NB_LSTM_UNITS\n",
-      "                        If >0, adds LSTM with given number of units to the output of the stack of TCN blocks.\n",
+      "                        If >0, adds LSTM with \u001b[4mnb_lstm_units\u001b[0m LSTM units to the output of the stack of TCN blocks.\n",
       "                        Defaults to 0 (no LSTM layer).\n",
-      "  --verbose VERBOSE     Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).\n",
+      "  --verbose VERBOSE     Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).\n",
       "                        Defaults to 2.\n",
       "  --batch-size BATCH_SIZE\n",
       "                        Batch size\n",
@@ -174,18 +182,19 @@
       "  --learning-rate LEARNING_RATE\n",
       "                        Learning rate of the model. Defaults should work in most cases.\n",
       "                        Values typically range between 0.1 and 0.00001.\n",
-      "                        If None, uses per model defaults: \"tcn\" 0.0001, \"tcn_stft\" 0.0005).\n",
+      "                        If None, uses model specific defaults: \u001b[4mtcn\u001b[0m 0.0001, \u001b[4mtcn_stft\u001b[0m and \u001b[4mtcn_tcn\u001b[0m 0.0005.\n",
       "                        Defaults to None.\n",
       "  --reduce-lr, --no-reduce-lr\n",
-      "                        Reduce learning rate on plateau.\n",
+      "                        Reduce learning rate when the validation loss plateaus.\n",
       "                        Defaults to False.\n",
       "  --reduce-lr-patience REDUCE_LR_PATIENCE\n",
-      "                        Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.\n",
-      "                        Defaults to 5.\n",
+      "                        Number of epochs w/o a reduction in validation loss after which\n",
+      "                        to trigger a reduction in learning rate.\n",
+      "                        Defaults to 5 epochs.\n",
       "  -f FRACTION_DATA, --fraction-data FRACTION_DATA\n",
-      "                        Fraction of training and validation to use for training.\n",
+      "                        Fraction of training and validation data to use.\n",
       "                        Defaults to 1.0.\n",
-      "  --seed SEED           Random seed to reproducible select fractions of the data.\n",
+      "  --seed SEED           Random seed to reproducibly select fractions of the data.\n",
       "                        Defaults to None (no seed).\n",
       "  --batch-level-subsampling, --no-batch-level-subsampling\n",
       "                        Select fraction of data for training from random subset of shuffled batches.\n",
@@ -194,19 +203,18 @@
       "  -t, --tensorboard, --no-tensorboard\n",
       "                        Write tensorboard logs to save_dir. Defaults to False.\n",
       "  --neptune-api-token NEPTUNE_API_TOKEN\n",
-      "                        API token for logging to neptune.ai. Defaults to None (no logging).\n",
+      "                        API token for logging to neptune.ai.\n",
+      "                        Defaults to None (no logging to neptune.ai).\n",
       "  --neptune-project NEPTUNE_PROJECT\n",
-      "                        Project to log to for neptune.ai. Defaults to None (no logging).\n",
+      "                        Project to log to for neptune.ai.\n",
+      "                        Defaults to None (no logging to neptune.ai).\n",
       "  --log-messages, --no-log-messages\n",
-      "                        Sets logging level to INFO.\n",
+      "                        Sets terminal logging level to INFO.\n",
       "                        Defaults to False (will follow existing settings).\n",
       "  --nb-stacks NB_STACKS\n",
-      "                        Unused if model name is \"tcn\" or \"tcn_stft\". Defaults to 2.\n",
+      "                        Unused if model name is \u001b[4mtcn\u001b[0m, \u001b[4mtcn_tcn\u001b[0m, or \u001b[4mtcn_stft\u001b[0m. Defaults to 2.\n",
       "  -w, --with-y-hist, --no-with-y-hist\n",
-      "                        Unused if model name is \"tcn\" or \"tcn_stft\". Defaults to True.\n",
-      "  -x X_SUFFIX, --x-suffix X_SUFFIX\n",
-      "                        Select specific training data based on suffix (e.g. x_suffix).\n",
-      "                        Defaults to '' (will use the standard data 'x')\n",
+      "                        Unused if model name is \u001b[4mtcn\u001b[0m, \u001b[4mtcn_tcn\u001b[0m, or \u001b[4mtcn_stft\u001b[0m. Defaults to True.\n",
       "  --balance, --no-balance\n",
       "                        Balance data. Weights class-wise errors by the inverse of the class frequencies.\n",
       "                        Defaults to False.\n",
@@ -217,25 +225,25 @@
      ]
     }
    ],
-   "source": [
-    "!das train --help"
-   ]
+   "metadata": {}
   },
   {
    "cell_type": "markdown",
-   "metadata": {},
    "source": [
     "## Predict"
-   ]
+   ],
+   "metadata": {}
   },
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {},
+   "source": [
+    "!das predict --help"
+   ],
    "outputs": [
     {
-     "name": "stdout",
      "output_type": "stream",
+     "name": "stdout",
      "text": [
       "usage: das predict [-h] [--save-filename SAVE_FILENAME] [-v VERBOSE]\n",
       "                   [-b BATCH_SIZE] [--event-thres EVENT_THRES]\n",
@@ -251,20 +259,22 @@
       "Saves hdf5 file with keys: events, segments, class_probabilities\n",
       "\n",
       "positional arguments:\n",
-      "  recording_filename    path to the WAV file with the audio data.\n",
-      "  model_save_name       path with the trunk name of the model.\n",
+      "  recording_filename    Path to the WAV file with the audio data.\n",
+      "  model_save_name       Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.\n",
       "\n",
       "optional arguments:\n",
       "  -h, --help            show this help message and exit\n",
       "  --save-filename SAVE_FILENAME\n",
-      "                        path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.\n",
+      "                        Path to save annotations to.\n",
+      "                        If omitted, will construct save_filename by\n",
+      "                        stripping the extension from recording_filename and adding '_das.h5'.\n",
       "  -v VERBOSE, --verbose VERBOSE\n",
-      "                        display progress bar during prediction. Defaults to 1.\n",
+      "                        Display progress bar during prediction. Defaults to 1.\n",
       "  -b BATCH_SIZE, --batch-size BATCH_SIZE\n",
-      "                        number of chunks processed at once . Defaults to None (the default used during training).\n",
-      "                        Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.\n",
+      "                        Number of chunks processed at once.\n",
+      "                        Defaults to None (the default used during training).\n",
       "  --event-thres EVENT_THRES\n",
-      "                        Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.\n",
+      "                        Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.\n",
       "  --event-dist EVENT_DIST\n",
       "                        Minimal distance between adjacent events during thresholding.\n",
       "                        Prevents detecting duplicate events when the confidence trace is a little noisy.\n",
@@ -278,26 +288,25 @@
       "  --segment-thres SEGMENT_THRES\n",
       "                        Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.\n",
       "  --segment-minlen SEGMENT_MINLEN\n",
-      "                        Minimal duration of a segment used for filtering out spurious detections. Defaults to None.\n",
+      "                        Minimal duration of a segment used for filtering out spurious detections.\n",
+      "                        Defaults to None (keep all segments).\n",
       "  --segment-fillgap SEGMENT_FILLGAP\n",
-      "                        Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.\n",
+      "                        Gap between adjacent segments to be filled. Useful for correcting brief lapses.\n",
+      "                        Defaults to None (do not fill gaps).\n",
       "\u001b[0m"
      ]
     }
    ],
-   "source": [
-    "!das predict --help"
-   ]
+   "metadata": {}
   }
  ],
  "metadata": {
   "interpreter": {
-   "hash": "8b0ab261a56efe1a5fd9591203310bfa777485461dc7aa1d8ccede5021fac1c0"
+   "hash": "97e399eb41f39eece155bd3046c19e1bcac896c178036c5a0e917146c5ea4385"
   },
   "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
+   "name": "python3",
+   "display_name": "Python 3.8.11 64-bit ('miniconda3': virtualenv)"
   },
   "language_info": {
    "codemirror_mode": {

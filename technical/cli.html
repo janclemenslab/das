@@ -310,9 +310,9 @@ optional arguments:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das train [-h] -d DATA_DIR [-y Y_SUFFIX] [--save-dir SAVE_DIR]
-                 [--save-prefix SAVE_PREFIX] [-m MODEL_NAME]
-                 [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das train [-h] -d DATA_DIR [-x X_SUFFIX] [-y Y_SUFFIX]
+                 [--save-dir SAVE_DIR] [--save-prefix SAVE_PREFIX]
+                 [-m MODEL_NAME] [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]
                  [--nb-conv NB_CONV] [-u [USE_SEPARABLE [USE_SEPARABLE ...]]]
                  [--nb-hist NB_HIST]
                  [-i | --ignore-boundaries | --no-ignore-boundaries]
@@ -330,7 +330,7 @@ optional arguments:
                  [--neptune-api-token NEPTUNE_API_TOKEN]
                  [--neptune-project NEPTUNE_PROJECT]
                  [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]
-                 [-w | --with-y-hist | --no-with-y-hist] [-x X_SUFFIX]
+                 [-w | --with-y-hist | --no-with-y-hist]
                  [--balance | --no-balance]
                  [--version-data | --no-version-data]
 
@@ -342,23 +342,27 @@ optional arguments:
                         Path to the directory or file with the dataset for training.
                         Accepts npy-dirs (recommended), h5 files or zarr files.
                         See documentation for how the dataset should be organized.
+  -x X_SUFFIX, --x-suffix X_SUFFIX
+                        Select dataset used for training in the data_dir by suffix (y_ + X_SUFFIX).
+                        Defaults to '' (will use the standard data 'x')
   -y Y_SUFFIX, --y-suffix Y_SUFFIX
-                        Select training target by suffix.
+                        Select dataset used as a training target in the data_dir by suffix (y_ + Y_SUFFIX).
                         Song-type specific targets can be created with a training dataset,
                         Defaults to '' (will use the standard target 'y')
   --save-dir SAVE_DIR   Directory to save training outputs.
-                        The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.
-                        Defaults to current directory ('./').
+                        The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,
+                        and the time stamp of the start of training.
+                        Defaults to the current directory ('./').
   --save-prefix SAVE_PREFIX
                         Prepend to timestamp.
-                        Name of files created will be SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
-                        or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.
+                        Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
+                        or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
                         Defaults to '' (empty).
   -m MODEL_NAME, --model-name MODEL_NAME
                         Network architecture to use.
-                        Use "tcn" (TCN) or "tcn_stft" (TCN with STFT frontend).
+                        Use tcn (TCN) or tcn_stft (TCN with STFT frontend).
                         See das.models for a description of all models.
-                        Defaults to 'tcn'.
+                        Defaults to tcn.
   --nb-filters NB_FILTERS
                         Number of filters per layer.
                         Defaults to 16.
@@ -372,9 +376,9 @@ optional arguments:
                         Provide as a space-separated sequence of "False" or "True.
                         For instance: "True False False" will set the first block in a
                         three-block (as given by nb_conv) network to use separable convolutions.
-                        Defaults to False (no block uses separable convolution).
-  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk size).
-                        Defaults to 1024.
+                        Defaults to False (no block uses separable convolutions).
+  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk duration).
+                        Defaults to 1024 samples.
   -i, --ignore-boundaries, --no-ignore-boundaries
                         Minimize edge effects by discarding predictions at the edges of chunks.
                         Defaults to True.
@@ -382,12 +386,14 @@ optional arguments:
                         Batch normalize.
                         Defaults to True.
   --nb-pre-conv NB_PRE_CONV
-                        Downsampling rate. Adds downsampling frontend if not 0.
-                        TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
-                        TCN_STFT: adds a trainable STFT frontend.
-                        Defaults to 0 (no frontend).
+                        Adds fronted with downsampling. The downsampling factor is 2**nb_pre_conv.
+                        The type of frontend depends on the model:
+                        if model is tcn: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+                        if model is tcn_tcn: adds a frontend of N TCN blocks to the TCN.
+                        if model is tcn_stft: adds a trainable STFT frontend.
+                        Defaults to 0 (no frontend, no downsampling).
   --pre-nb-dft PRE_NB_DFT
-                        Number of filters (roughly corresponding to filters) in the STFT frontend.
+                        Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.
                         Defaults to 64.
   --pre-kernel-size PRE_KERNEL_SIZE
                         Duration of filters (=kernels) in samples in the pre-processing TCN.
@@ -397,9 +403,9 @@ optional arguments:
                         Defaults to 16.
   --pre-nb-conv PRE_NB_CONV
   --nb-lstm-units NB_LSTM_UNITS
-                        If &gt;0, adds LSTM with given number of units to the output of the stack of TCN blocks.
+                        If &gt;0, adds LSTM with nb_lstm_units LSTM units to the output of the stack of TCN blocks.
                         Defaults to 0 (no LSTM layer).
-  --verbose VERBOSE     Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
+  --verbose VERBOSE     Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
                         Defaults to 2.
   --batch-size BATCH_SIZE
                         Batch size
@@ -410,18 +416,19 @@ optional arguments:
   --learning-rate LEARNING_RATE
                         Learning rate of the model. Defaults should work in most cases.
                         Values typically range between 0.1 and 0.00001.
-                        If None, uses per model defaults: "tcn" 0.0001, "tcn_stft" 0.0005).
+                        If None, uses model specific defaults: tcn 0.0001, tcn_stft and tcn_tcn 0.0005.
                         Defaults to None.
   --reduce-lr, --no-reduce-lr
-                        Reduce learning rate on plateau.
+                        Reduce learning rate when the validation loss plateaus.
                         Defaults to False.
   --reduce-lr-patience REDUCE_LR_PATIENCE
-                        Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.
-                        Defaults to 5.
+                        Number of epochs w/o a reduction in validation loss after which
+                        to trigger a reduction in learning rate.
+                        Defaults to 5 epochs.
   -f FRACTION_DATA, --fraction-data FRACTION_DATA
-                        Fraction of training and validation to use for training.
+                        Fraction of training and validation data to use.
                         Defaults to 1.0.
-  --seed SEED           Random seed to reproducible select fractions of the data.
+  --seed SEED           Random seed to reproducibly select fractions of the data.
                         Defaults to None (no seed).
   --batch-level-subsampling, --no-batch-level-subsampling
                         Select fraction of data for training from random subset of shuffled batches.
@@ -430,19 +437,18 @@ optional arguments:
   -t, --tensorboard, --no-tensorboard
                         Write tensorboard logs to save_dir. Defaults to False.
   --neptune-api-token NEPTUNE_API_TOKEN
-                        API token for logging to neptune.ai. Defaults to None (no logging).
+                        API token for logging to neptune.ai.
+                        Defaults to None (no logging to neptune.ai).
   --neptune-project NEPTUNE_PROJECT
-                        Project to log to for neptune.ai. Defaults to None (no logging).
+                        Project to log to for neptune.ai.
+                        Defaults to None (no logging to neptune.ai).
   --log-messages, --no-log-messages
-                        Sets logging level to INFO.
+                        Sets terminal logging level to INFO.
                         Defaults to False (will follow existing settings).
   --nb-stacks NB_STACKS
-                        Unused if model name is "tcn" or "tcn_stft". Defaults to 2.
+                        Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to 2.
   -w, --with-y-hist, --no-with-y-hist
-                        Unused if model name is "tcn" or "tcn_stft". Defaults to True.
-  -x X_SUFFIX, --x-suffix X_SUFFIX
-                        Select specific training data based on suffix (e.g. x_suffix).
-                        Defaults to '' (will use the standard data 'x')
+                        Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to True.
   --balance, --no-balance
                         Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
@@ -478,20 +484,22 @@ Predict song labels in a wav file.
 Saves hdf5 file with keys: events, segments, class_probabilities
 
 positional arguments:
-  recording_filename    path to the WAV file with the audio data.
-  model_save_name       path with the trunk name of the model.
+  recording_filename    Path to the WAV file with the audio data.
+  model_save_name       Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
 
 optional arguments:
   -h, --help            show this help message and exit
   --save-filename SAVE_FILENAME
-                        path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.
+                        Path to save annotations to.
+                        If omitted, will construct save_filename by
+                        stripping the extension from recording_filename and adding '_das.h5'.
   -v VERBOSE, --verbose VERBOSE
-                        display progress bar during prediction. Defaults to 1.
+                        Display progress bar during prediction. Defaults to 1.
   -b BATCH_SIZE, --batch-size BATCH_SIZE
-                        number of chunks processed at once . Defaults to None (the default used during training).
-                        Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
+                        Number of chunks processed at once.
+                        Defaults to None (the default used during training).
   --event-thres EVENT_THRES
-                        Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
+                        Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.
   --event-dist EVENT_DIST
                         Minimal distance between adjacent events during thresholding.
                         Prevents detecting duplicate events when the confidence trace is a little noisy.
@@ -505,9 +513,11 @@ optional arguments:
   --segment-thres SEGMENT_THRES
                         Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
   --segment-minlen SEGMENT_MINLEN
-                        Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
+                        Minimal duration of a segment used for filtering out spurious detections.
+                        Defaults to None (keep all segments).
   --segment-fillgap SEGMENT_FILLGAP
-                        Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+                        Gap between adjacent segments to be filled. Useful for correcting brief lapses.
+                        Defaults to None (do not fill gaps).
 
 </pre></div>
 </div>
@@ -592,8 +602,6 @@ optional arguments:
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
