@@ -26,7 +26,7 @@ except Exception as e:
     logging.exception(e)
 
 
-def train(*, data_dir: str, y_suffix: str = '',
+def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           save_dir: str = './', save_prefix: Optional[str] = None,
           model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
           nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
@@ -39,7 +39,7 @@ def train(*, data_dir: str, y_suffix: str = '',
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
-          log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True, x_suffix: str = '',
+          log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DeepSS network.
@@ -48,20 +48,23 @@ def train(*, data_dir: str, y_suffix: str = '',
         data_dir (str): Path to the directory or file with the dataset for training.
                         Accepts npy-dirs (recommended), h5 files or zarr files.
                         See documentation for how the dataset should be organized.
-        y_suffix (str): Select training target by suffix.
+        x_suffix (str): Select dataset used for training in the data_dir by suffix (`y_` + X_SUFFIX).
+                        Defaults to '' (will use the standard data 'x')
+        y_suffix (str): Select dataset used as a training target in the data_dir by suffix (`y_` + Y_SUFFIX).
                         Song-type specific targets can be created with a training dataset,
                         Defaults to '' (will use the standard target 'y')
         save_dir (str): Directory to save training outputs.
-                        The path of output files will constructed from the SAVE_DIR, an optional prefix, and the time stamp of the start of training.
-                        Defaults to current directory ('./').
+                        The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,
+                        and the time stamp of the start of training.
+                        Defaults to the current directory ('./').
         save_prefix (Optional[str]): Prepend to timestamp.
-                           Name of files created will be SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
-                           or SAVE_DIR/ TIMESTAMP if SAVE_PREFIX is empty.
+                           Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
+                           or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
                            Defaults to '' (empty).
         model_name (str): Network architecture to use.
-                          Use "tcn" (TCN) or "tcn_stft" (TCN with STFT frontend).
+                          Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).
                           See das.models for a description of all models.
-                          Defaults to 'tcn'.
+                          Defaults to `tcn`.
         nb_filters (int): Number of filters per layer.
                           Defaults to 16.
         kernel_size (int): Duration of the filters (=kernels) in samples.
@@ -72,26 +75,28 @@ def train(*, data_dir: str, y_suffix: str = '',
                                     Provide as a space-separated sequence of "False" or "True.
                                     For instance: "True False False" will set the first block in a
                                     three-block (as given by nb_conv) network to use separable convolutions.
-                                    Defaults to False (no block uses separable convolution).
-        nb_hist (int): Number of samples processed at once by the network (a.k.a chunk size).
-                       Defaults to 1024.
+                                    Defaults to False (no block uses separable convolutions).
+        nb_hist (int): Number of samples processed at once by the network (a.k.a chunk duration).
+                       Defaults to 1024 samples.
         ignore_boundaries (bool): Minimize edge effects by discarding predictions at the edges of chunks.
                                   Defaults to True.
         batch_norm (bool): Batch normalize.
                            Defaults to True.
-        nb_pre_conv (int): Downsampling rate. Adds downsampling frontend if not 0.
-                           TCN_TCN: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
-                           TCN_STFT: adds a trainable STFT frontend.
-                           Defaults to 0 (no frontend).
-        pre_nb_dft (int): Number of filters (roughly corresponding to filters) in the STFT frontend.
+        nb_pre_conv (int): Adds fronted with downsampling. The downsampling factor is `2**nb_pre_conv`.
+                           The type of frontend depends on the model:
+                           if model is `tcn`: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+                           if model is `tcn_tcn`: adds a frontend of N TCN blocks to the TCN.
+                           if model is `tcn_stft`: adds a trainable STFT frontend.
+                           Defaults to 0 (no frontend, no downsampling).
+        pre_nb_dft (int): Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.
                           Defaults to 64.
         pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.
                               Defaults to 16.
         pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.
                                Defaults to 3.
-        nb_lstm_units (int): If >0, adds LSTM with given number of units to the output of the stack of TCN blocks.
+        nb_lstm_units (int): If >0, adds LSTM with `nb_lstm_units` LSTM units to the output of the stack of TCN blocks.
                              Defaults to 0 (no LSTM layer).
-        verbose (int): Verbosity of training output (0 - no output(?), 1 - progress bar, 2 - one line per epoch).
+        verbose (int): Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
                        Defaults to 2.
         batch_size (int): Batch size
                           Defaults to 32.
@@ -100,28 +105,29 @@ def train(*, data_dir: str, y_suffix: str = '',
                         Defaults to 400.
         learning_rate (Optional[float]): Learning rate of the model. Defaults should work in most cases.
                                Values typically range between 0.1 and 0.00001.
-                               If None, uses per model defaults: "tcn" 0.0001, "tcn_stft" 0.0005).
+                               If None, uses model specific defaults: `tcn` 0.0001, `tcn_stft` and `tcn_tcn` 0.0005.
                                Defaults to None.
-        reduce_lr (bool): Reduce learning rate on plateau.
+        reduce_lr (bool): Reduce learning rate when the validation loss plateaus.
                           Defaults to False.
-        reduce_lr_patience (int): Number of epochs w/o a reduction in validation loss after which to trigger a reduction in learning rate.
-                                  Defaults to 5.
-        fraction_data (Optional[float]): Fraction of training and validation to use for training.
-                               Defaults to 1.0.
-        seed (Optional[int]): Random seed to reproducible select fractions of the data.
-                    Defaults to None (no seed).
+        reduce_lr_patience (int): Number of epochs w/o a reduction in validation loss after which
+                                  to trigger a reduction in learning rate.
+                                  Defaults to 5 epochs.
+        fraction_data (Optional[float]): Fraction of training and validation data to use.
+                                         Defaults to 1.0.
+        seed (Optional[int]): Random seed to reproducibly select fractions of the data.
+                              Defaults to None (no seed).
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
-        neptune_api_token (Optional[str]): API token for logging to neptune.ai. Defaults to None (no logging).
-        neptune_project (Optional[str]): Project to log to for neptune.ai. Defaults to None (no logging).
-        log_messages (bool): Sets logging level to INFO.
+        neptune_api_token (Optional[str]): API token for logging to neptune.ai.
+                                           Defaults to None (no logging to neptune.ai).
+        neptune_project (Optional[str]): Project to log to for neptune.ai.
+                                         Defaults to None (no logging to neptune.ai).
+        log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
-        nb_stacks (int): Unused if model name is "tcn" or "tcn_stft". Defaults to 2.
-        with_y_hist (bool): Unused if model name is "tcn" or "tcn_stft". Defaults to True.
-        x_suffix (str): Select specific training data based on suffix (e.g. x_suffix).
-                        Defaults to '' (will use the standard data 'x')
+        nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
+        with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.

@@ -354,26 +354,27 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
     Saves hdf5 file with keys: events, segments, class_probabilities
 
     Args:
-        recording_filename (str): path to the WAV file with the audio data.
-        model_save_name (str): path with the trunk name of the model.
-        save_filename (Optional[str]): path to save annotations to. [Optional] - will strip extension from recording_filename and add '_das.h5'.
-
-        verbose (int): display progress bar during prediction. Defaults to 1.
-        batch_size (Optional[int]): number of chunks processed at once . Defaults to None (the default used during training).
-                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
-
-        event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.
+        recording_filename (str): Path to the WAV file with the audio data.
+        model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
+        save_filename (Optional[str]): Path to save annotations to.
+                                       If omitted, will construct save_filename by
+                                       stripping the extension from recording_filename and adding '_das.h5'.
+        verbose (int): Display progress bar during prediction. Defaults to 1.
+        batch_size (Optional[int]): Number of chunks processed at once.
+                                    Defaults to None (the default used during training).
+        event_thres (float): Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.
         event_dist (float): Minimal distance between adjacent events during thresholding.
                             Prevents detecting duplicate events when the confidence trace is a little noisy.
                             Defaults to 0.01.
         event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
                                 Defaults to 0.
         event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.
-                                Defaults to None (no upper limit).
-
+                                          Defaults to None (no upper limit).
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
-        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections. Defaults to None.
-        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections.
+                                          Defaults to None (keep all segments).
+        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.
+                                           Defaults to None (do not fill gaps).
     """
 
     logging.info(f"   Loading data from {recording_filename}.")
