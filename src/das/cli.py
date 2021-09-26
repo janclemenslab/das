@@ -45,7 +45,7 @@ def no_xb_gui():
 
 
 def main():
-    """Command line interface for DeepSS."""
+    """Command line interface for DAS."""
     subcommands = {'train': train.train, 'predict': predict.cli_predict, 'version': version}
 
     try:

@@ -8,12 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       logLevel:
-        description: 'Log level'     
+        description: 'Log level'
         required: true
         default: 'warning'
       tags:
-        description: 'manual run'  
-   
+        description: 'manual run'
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -22,7 +22,7 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: [3.6, 3.7, 3.8, 3.9]
       fail-fast: false
-    name: Python ${{ matrix.python-version }} on ${{ matrix.os }} 
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup conda
@@ -68,7 +68,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           C:\Miniconda\condabin\conda.bat activate das
-          C:\Miniconda\envs\dss\python -m das.cli train --help
+          C:\Miniconda\envs\das\python -m das.cli train --help
           das train --help
           das predict --help
           das gui --help

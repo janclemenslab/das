@@ -42,7 +42,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
-    """Train a DeepSS network.
+    """Train a DAS network.
 
     Args:
         data_dir (str): Path to the directory or file with the dataset for training.
