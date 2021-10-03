@@ -5,7 +5,7 @@ import defopt
 import scipy
 import flammkuchen
 import numpy as np
-from . import utils, data, models, event_utils, segment_utils, evaluate
+from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict
 
 from tensorflow.python.framework.ops import disable_eager_execution
@@ -343,7 +343,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
     return events, segments, class_probabilities, params['class_names']
 
 
-def cli_predict(recording_filename: str, model_save_name: str, *, save_filename: Optional[str] = None,
+def cli_predict(recording_filename: str, model_save_name: str, *,
+                save_filename: Optional[str] = None, save_format: str = 'h5',
                 verbose: int = 1, batch_size: Optional[int] = None,
                 event_thres: float = 0.5, event_dist: float = 0.01,
                 event_dist_min: float = 0, event_dist_max: Optional[float] = None,
@@ -358,7 +359,8 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
         model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
         save_filename (Optional[str]): Path to save annotations to.
                                        If omitted, will construct save_filename by
-                                       stripping the extension from recording_filename and adding '_das.h5'.
+                                       stripping the extension from recording_filename and adding '_das.h5' or '_annotations.csv'.
+        save_format (str): 'csv' or 'h5'. Defaults to 'h5'.
         verbose (int): Display progress bar during prediction. Defaults to 1.
         batch_size (Optional[int]): Number of chunks processed at once.
                                     Defaults to None (the default used during training).
@@ -375,7 +377,12 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
                                           Defaults to None (keep all segments).
         segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.
                                            Defaults to None (do not fill gaps).
+
+    Raises:
+        ValueError on unknown save_format
     """
+    if not (save_format == 'csv' or save_format == 'h5'):
+        raise ValueError(f"Unknown save_format '{save_format}'. Should be either 'csv' or 'h5'.")
 
     logging.info(f"   Loading data from {recording_filename}.")
     _, x = scipy.io.wavfile.read(recording_filename)
@@ -387,14 +394,23 @@ def cli_predict(recording_filename: str, model_save_name: str, *, save_filename:
                                                     event_thres, event_dist, event_dist_min, event_dist_max,
                                                     segment_thres, segment_minlen, segment_fillgap)
 
-    d = {'events': events,
-         'segments': segments,
-         'class_probabilities': class_probabilities,
-         'class_names': class_names}
+    if save_format == 'h5':
+        d = {'events': events,
+            'segments': segments,
+            'class_probabilities': class_probabilities,
+            'class_names': class_names}
 
-    if save_filename is None:
-        save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
+        if save_filename is None:
+            save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
 
-    logging.info(f"   Saving results to {save_filename}.")
-    flammkuchen.save(save_filename, d)
-    logging.info(f"Done.")
+        logging.info(f"   Saving results to {save_filename}.")
+        flammkuchen.save(save_filename, d)
+        logging.info(f"Done.")
+
+    elif save_format == 'csv':
+        df = annot.Events.from_predict(events, segments)
+        if save_filename is None:
+            save_filename = os.path.splitext(recording_filename)[0] + '_annotations.csv'
+        logging.info(f"   Saving results to {save_filename}.")
+        df.to_csv(save_filename)
+        logging.info(f"Done.")
