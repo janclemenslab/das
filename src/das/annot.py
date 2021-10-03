@@ -117,6 +117,14 @@ class Events(UserDict):
             out = cls(out, categories=cats)
         return out
 
+    # @classmethod
+    # def from_predict(events=None, segments=None):
+    #     # to lists or df
+
+    #     out = None
+    #     return out
+
+
     def _init_df(self) -> pd.DataFrame:
         return pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
 
