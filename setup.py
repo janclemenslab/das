@@ -43,9 +43,3 @@ setup(name='das',
       zip_safe=False,
       entry_points = {'console_scripts': ['das=das.cli:main']}
      )
-
-print('IMPORTANT:')
-print('Tensorflow is required to run DeepSS but is not installed automatically,')
-print('to avoid interference with existing installations.')
-print('')
-print('Run `pip install tensorflow` to install tensorflow.')
