@@ -19,21 +19,35 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        # python-version: [3.6, 3.7, 3.8, 3.9]
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        python-version: [3.8]
+        os: [ubuntu-latest]
 
     steps:
     - name: Checkout source
       uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+    # - name: Set up Python ${{ matrix.python-version }}
+    #   uses: actions/setup-python@v2
+    #   with:
+    #     python-version: ${{ matrix.python-version }}
+
+    - name: Setup Mamba
+      # https://github.com/conda-incubator/setup-miniconda
+      uses: conda-incubator/setup-miniconda@v2.0.1
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
+        mamba-version: "*"
+        channels: conda-forge,fastai,ncb
+        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+        environment-file: env/das-env.yml
+        activate-environment: das-env
+        use-mamba: true
 
     - name: Installation (deps and package)
       run: |
-        pip install pytest flit
+        conda install pytest flit -c conda-forge
 
     - name: Install libsndfile (Linux only)
       if: runner.os == 'Linux'
@@ -45,7 +59,13 @@ jobs:
         pip install xarray-behave "tensorflow>=2.1"
         pytest ./tests
 
-  publish:
+    - name: Test CLI
+      run: |
+        das --help
+        das train --help
+        das version
+
+  publish_to_pypi:
     name: Publish to PyPi
     needs: [tests]
     runs-on: ubuntu-latest
@@ -68,3 +88,7 @@ jobs:
       env:
         FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
         FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
+
+  publish_to_anaconda:
+    name: Publish to Anaconda.org
+    needs: [tests]
