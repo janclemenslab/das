@@ -35,6 +35,10 @@ jobs:
       run: |
         pip install pytest flit
 
+    - name: Install libsndfile (Linux only)
+      if: runner.os == 'Linux'
+      run: sudo apt-get install libsndfile1
+
     - name: Run pytest
       run: |
         flit install
