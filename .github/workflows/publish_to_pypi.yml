@@ -38,7 +38,7 @@ jobs:
     - name: Run pytest
       run: |
         flit install
-        pip install xarray-behave
+        pip install xarray-behave "tensorflow>=2.1"
         pytest ./tests
 
   publish:
