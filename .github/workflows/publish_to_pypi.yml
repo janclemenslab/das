@@ -38,6 +38,7 @@ jobs:
     - name: Run pytest
       run: |
         flit install
+        pip install xarray-behave
         pytest ./tests
 
   publish:
@@ -47,19 +48,15 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v2
+
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
+
     - name: Install flit
       run: |
         pip install flit~=3.0
-    - name: Build and publish
-      run: |
-        flit publish
-      env:
-        FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
-        FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
 
     - name: Build and publish
       run: |
