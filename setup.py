@@ -38,7 +38,7 @@ setup(name='das',
       package_dir={'': 'src'},
       install_requires=['numpy', 'h5py', 'scipy', 'scikit-learn', 'pyyaml', 'peakutils', 'zarr',
                         'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
-                        'matplotlib_scalebar', 'peakutils'],
+                        'matplotlib_scalebar', 'peakutils', 'colorcet'],
       include_package_data=True,
       zip_safe=False,
       entry_points = {'console_scripts': ['das=das.cli:main']}
