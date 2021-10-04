@@ -89,6 +89,6 @@ jobs:
         FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
         FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
 
-  publish_to_anaconda:
-    name: Publish to Anaconda.org
-    needs: [tests]
+#   publish_to_anaconda:
+#     name: Publish to Anaconda.org
+#     needs: [tests]
