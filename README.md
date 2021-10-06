@@ -1,4 +1,4 @@
-[![Test install](https://github.com/janclemenslab/das/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/das/actions/workflows/main.yml)
+<!-- [![Test install](https://github.com/janclemenslab/das/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/das/actions/workflows/main.yml) -->
 
 # Deep Audio Segmenter
 _DAS_ is a method for automatically annotating song from raw audio recordings based on a deep neural network. _DAS_ can be used with a graphical user interface, from the terminal, or from within python scripts.
