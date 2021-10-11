@@ -43,7 +43,7 @@ requirements:
     - tensorflow>2.0  # [osx]
     - tensorflow-gpu>2.0  # [not osx]
     - xarray-behave
-
+    - keras-tuner
   run:
     - defopt
     - flammkuchen
@@ -69,6 +69,7 @@ requirements:
     - tensorflow>2.0  # [osx]
     - tensorflow-gpu>2.0  # [not osx]
     - xarray-behave
+    - keras-tuner
 
 test:
   imports:
