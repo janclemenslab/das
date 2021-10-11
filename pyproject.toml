@@ -17,3 +17,7 @@ description-file = "README.md"
 
 [tool.flit.scripts]
 das = "das.cli:main"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests",]
