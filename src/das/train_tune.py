@@ -1,11 +1,11 @@
 """Code for training networks.
 
 Install:
-`mamba create -n das-tune python=3.8 das keras-tuner -c ncb -c conda-forge`
+mamba create -n das-tune python=3.8 das keras-tuner -c ncb -c conda-forge
 conda activate das-tune
 cd DAS_SOURCE_BASEDIR
 pip install -e . --upgrade --no-dependencies
-das tune --data-dir ../docs/tutorials/tutorial_dataset.npy --save-dir tutorial_dataset.res --nb-hist 1024 --no-ignore-boundaries
+das tune --data-dir tutorial_dataset.npy --save-dir tutorial_dataset.res --nb-hist 1024 --no-ignore-boundaries --verbose 2
 """
 # TODO:
 # write custom Tuner that generates datasets and overlap based nb_hist and kernel params
@@ -67,7 +67,7 @@ class DasTuner(kt.Tuner):
         super().__init__(*args, **kwargs)
 
     def run_trial(self, trial, train_x, train_y, val_x=None, val_y=None,
-                  epochs=10, steps_per_epoch=100,
+                  epochs=10, steps_per_epoch=None,
                   verbose=1, class_weight=None,
                   callbacks=None):
         if callbacks is None:
@@ -93,6 +93,8 @@ class DasTuner(kt.Tuner):
                                     **self.params)
         logging.info(f"Hyperparameters:")
         logging.info(trial.hyperparameters.values)
+        if steps_per_epoch is None:
+            steps_per_epoch=min(len(data_gen), 1000)
 
         model = self.hypermodel.build(trial.hyperparameters)
         model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
@@ -337,10 +339,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     logging.info(tuner.search_space_summary())
 
-
     utils.save_params(params, save_name)
     # checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
-
 
     callbacks = [EarlyStopping(monitor='val_loss', patience=20),]
 
@@ -370,7 +370,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         train_x=d['train']['x'], train_y=d['train']['y'],
         val_x=d['val']['x'], val_y=d['val']['y'],
         epochs=nb_epoch,
-        # steps_per_epoch=min(len(data_gen), 1000),
         verbose=verbose,
         callbacks=callbacks,
         class_weight=params['class_weights'],
