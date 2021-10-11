@@ -15,58 +15,58 @@ on:
 
 jobs:
 
-  tests:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        # python-version: [3.6, 3.7, 3.8, 3.9]
-        # os: [ubuntu-latest, windows-latest, macOS-latest]
-        python-version: [3.8]
-        os: [ubuntu-latest]
+#   tests:
+#     runs-on: ${{ matrix.os }}
+#     strategy:
+#       matrix:
+#         # python-version: [3.6, 3.7, 3.8, 3.9]
+#         # os: [ubuntu-latest, windows-latest, macOS-latest]
+#         python-version: [3.8]
+#         os: [ubuntu-latest]
 
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout source
+#         uses: actions/checkout@v2
 
-      # - name: Set up Python ${{ matrix.python-version }}
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
+#       # - name: Set up Python ${{ matrix.python-version }}
+#       #   uses: actions/setup-python@v2
+#       #   with:
+#       #     python-version: ${{ matrix.python-version }}
 
-      - name: Setup Mamba
-        # https://github.com/conda-incubator/setup-miniconda
-        uses: conda-incubator/setup-miniconda@v2.0.1
-        with:
-          python-version: 3.8
-          mamba-version: "*"
-          channels: conda-forge,fastai,ncb
-          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
-          # environment-file: env/das-env.yml
-          # activate-environment: das-env
-          use-mamba: true
+#       - name: Setup Mamba
+#         # https://github.com/conda-incubator/setup-miniconda
+#         uses: conda-incubator/setup-miniconda@v2.0.1
+#         with:
+#           python-version: 3.8
+#           mamba-version: "*"
+#           channels: conda-forge,fastai,ncb
+#           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+#           # environment-file: env/das-env.yml
+#           # activate-environment: das-env
+#           use-mamba: true
 
-      - name: Installation (deps and package)
-        shell: bash -l {0}
-        run: |
-          conda install pytest flit -c conda-forge
+#       - name: Installation (deps and package)
+#         shell: bash -l {0}
+#         run: |
+#           conda install pytest flit -c conda-forge
 
-      - name: Install libsndfile (Linux only)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install libsndfile1
+#       - name: Install libsndfile (Linux only)
+#         if: runner.os == 'Linux'
+#         run: sudo apt-get install libsndfile1
 
-      - name: Run pytest
-        shell: bash -l {0}
-        run: |
-          pip install .
-          pip install xarray-behave[gui] "tensorflow>=2.1"
-          pytest ./tests
+#       - name: Run pytest
+#         shell: bash -l {0}
+#         run: |
+#           pip install .
+#           pip install xarray-behave[gui] "tensorflow>=2.1"
+#           pytest ./tests
 
-      - name: Test CLI
-        shell: bash -l {0}
-        run: |
-          das --help
-          das train --help
-          das version
+#       - name: Test CLI
+#         shell: bash -l {0}
+#         run: |
+#           das --help
+#           das train --help
+#           das version
 
   # check_pypi_version:
   #   needs: [tests]
@@ -109,7 +109,8 @@ jobs:
 #         python-version: [3.6, 3.7, 3.8, 3.9]
         python-version: [3.8]
 #         os: [ubuntu-latest, windows-latest, macOS-latest]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
 
     steps:
       - name: Checkout source
