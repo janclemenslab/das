@@ -68,9 +68,9 @@ jobs:
           das train --help
           das version
 
-  check_pypi_version:
-    needs: [tests]
-    runs-on: ubuntu-latest
+  # check_pypi_version:
+  #   needs: [tests]
+  #   runs-on: ubuntu-latest
 
   # publish_to_pypi:
   #   name: Publish to PyPi
