@@ -46,6 +46,7 @@ jobs:
           use-mamba: true
 
       - name: Installation (deps and package)
+        shell: bash -l {0}
         run: |
           conda install pytest flit -c conda-forge
 
@@ -54,12 +55,14 @@ jobs:
         run: sudo apt-get install libsndfile1
 
       - name: Run pytest
+        shell: bash -l {0}
         run: |
           pip install .
           pip install xarray-behave "tensorflow>=2.1"
           pytest ./tests
 
       - name: Test CLI
+        shell: bash -l {0}
         run: |
           das --help
           das train --help
@@ -79,10 +82,12 @@ jobs:
         python-version: 3.8
 
     - name: Install flit
+      shell: bash -l {0}
       run: |
         pip install flit~=3.0
 
     - name: Build and publish
+      shell: bash -l {0}
       run: |
         flit publish
       env:
