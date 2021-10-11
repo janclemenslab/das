@@ -39,10 +39,10 @@ jobs:
         with:
           python-version: 3.8
           mamba-version: "*"
-          channels: conda-forge,ncb,anaconda
+          channels: conda-forge,fastai,ncb
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
-#           environment-file: env/das-env.yml
-#           activate-environment: das-env
+          # environment-file: env/das-env.yml
+          # activate-environment: das-env
           use-mamba: true
 
       - name: Installation (deps and package)
@@ -57,9 +57,9 @@ jobs:
       - name: Run pytest
         shell: bash -l {0}
         run: |
-          python -m pip install -e .
-          python -m pip install xarray-behave[gui] tensorflow
-          python -m pytest ./tests
+          pip install .
+          pip install xarray-behave[gui] "tensorflow>=2.1"
+          pytest ./tests
 
       - name: Test CLI
         shell: bash -l {0}
@@ -68,32 +68,107 @@ jobs:
           das train --help
           das version
 
-  publish_to_pypi:
-    name: Publish to PyPi
+  check_pypi_version:
     needs: [tests]
     runs-on: ubuntu-latest
+
+  # publish_to_pypi:
+  #   name: Publish to PyPi
+  #   needs: [tests]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout source
+  #     uses: actions/checkout@v2
+
+  #   - name: Set up Python 3.8
+  #     uses: actions/setup-python@v1
+  #     with:
+  #       python-version: 3.8
+
+  #   - name: Install flit
+  #     shell: bash -l {0}
+  #     run: |
+  #       pip install flit~=3.0
+
+  #   - name: Build and publish
+  #     shell: bash -l {0}
+  #     run: |
+  #       flit publish
+  #     env:
+  #       FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
+  #       FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
+
+
+  publish_to_anaconda:
+    name: Publish to Anaconda.org
+#     needs: [tests, publish_to_pypi]
+#     needs: [publish_to_pypi]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+#         python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.8]
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v2
+      - name: Checkout source
+        uses: actions/checkout@v2
 
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
+      - name: Setup Mamba
+        uses: conda-incubator/setup-miniconda@v2
+        # https://github.com/conda-incubator/setup-miniconda
+        with:
+          python-version: ${{ matrix.python-version }}
+          mamba-version: "*"
+          channels: conda-forge,ncb,anaconda
+          use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+          use-mamba: true
 
-    - name: Install flit
-      shell: bash -l {0}
-      run: |
-        pip install flit~=3.0
+      - name: Install build dependencies (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
+          conda config --set anaconda_upload yes
+          conda config --set always_yes yes --set changeps1 no
 
-    - name: Build and publish
-      shell: bash -l {0}
-      run: |
-        flit publish
-      env:
-        FLIT_USERNAME: ${{ secrets.FLIT_USERNAME }}
-        FLIT_PASSWORD: ${{ secrets.FLIT_PASSWORD }}
+      - name: Install build dependencies (*x)
+        if: runner.os != 'Windows'
+        shell: bash -l {0}
+        run: |
+          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
+          conda config --set anaconda_upload yes
+          conda config --set always_yes yes --set changeps1 no
 
-#   publish_to_anaconda:
-#     name: Publish to Anaconda.org
-#     needs: [tests]
+      - name: Build gui and upload to anaconda (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          conda mambabuild conda/das-nogui -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+
+      - name: Build nogui and upload to anaconda (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+
+      - name: Build gui and upload to anaconda (*x)
+        if: runner.os != 'Windows'
+        shell: bash -l {0}
+        run: |
+          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+
+      - name: Build nogui and upload to anaconda (*x)
+        if: runner.os != 'Windows'
+        shell: bash -l {0}
+        run: |
+          conda mambabuild conda/das-nogui -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
