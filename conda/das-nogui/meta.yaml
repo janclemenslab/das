@@ -1,0 +1,88 @@
+{% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
+{% set name = "das" %}
+{% set version = "0.22.3" %}
+# {% set version = data.get('version') %}
+
+package:
+  name: das-nogui
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+
+build:
+  number: 0
+  entry_points:
+    - das=das.cli:main
+
+requirements:
+  host:
+    - defopt
+    - flammkuchen
+    - h5py
+    - librosa
+    - matplotlib
+    - matplotlib-scalebar
+    - numpy
+    - pandas
+    - peakutils
+    - pip
+    - python
+    - pyyaml
+    - scipy
+    - scikit-learn
+    - zarr
+    - xarray
+    - opencv-python-headless
+    - tensorflow>2.0  # [osx]
+    - tensorflow-gpu>2.0  # [not osx]
+    - pip
+    - setuptools
+    - xarray-behave
+    - colorcet
+    - keras-tuner
+
+  run:
+    - defopt
+    - flammkuchen
+    - h5py
+    - librosa
+    - matplotlib
+    - matplotlib-scalebar
+    - numpy
+    - pandas
+    - peakutils
+    - pip
+    - python
+    - pyyaml
+    - scipy
+    - scikit-learn
+    - zarr
+    - xarray
+    - opencv-python-headless
+    - tensorflow>2.0  # [osx]
+    - tensorflow-gpu>2.0  # [not osx]
+    - xarray-behave
+    - colorcet
+    - keras-tuner
+
+test:
+  imports:
+    - das
+    - das.kapre
+    - das.tcn
+  commands:
+    - das --help
+
+about:
+  home: "http://github.com/janclemenslab/das"
+  license: MIT
+  license_family: MIT
+  license_file:
+  summary: "DAS"
+  doc_url: "https://janclemenslab.org/das"
+  dev_url: "http://github.com/janclemenslab/das"
+
+extra:
+  recipe-maintainers:
+    - postpop
