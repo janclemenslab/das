@@ -10,8 +10,20 @@ dependencies:
   - defopt
   - yaml
   - git
-  - h5py<3
-  - numpy=1.18.5
+  - h5py
+  - numpy
+  - tensorflow>=2.1
+  - numpy
+  - scipy
+  - scikit-learn
+  - pyyaml
+  - peakutils
+  - matplotlib
+  - pandas
+  - librosa
+  - matplotlib_scalebar
+  - peakutils
+  - colorcet
+  - keras-tuner
   - pip:
-    - tensorflow==2.3.2
     - das

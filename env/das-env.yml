@@ -7,16 +7,33 @@ dependencies:
   - pip
   - flammkuchen
   - xarray
+  - pysoundfile
+  - libsndfile
   - defopt
   - yaml
   - git
-  - h5py<3
-  - numpy=1.18.5
+  - h5py
+  - numpy
+  - tensorflow>=2.1 [osx]
+  # - tensorflow-gpu>=2.1 [not osx]
+  - numpy
+  - scipy
+  - scikit-learn
+  - pyyaml
+  - peakutils
+  - matplotlib
+  - pandas
+  - librosa
+  - matplotlib-scalebar
+  - peakutils
+  - colorcet
+  - pyqtgraph=0.12.1
+  - pyside2
   - umap-learn
   - hdbscan
-  - python-sounddevice
+  - scikit-image
+  - keras-tuner
   - pip:
-    - tensorflow==2.3.2
     - xarray-behave[gui]
     - das
     - das_unsupervised
