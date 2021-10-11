@@ -5,9 +5,7 @@ import flammkuchen as fl
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
-import defopt
 import os
-from glob import glob
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
 
