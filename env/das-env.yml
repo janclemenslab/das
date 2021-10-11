@@ -2,6 +2,7 @@ name: das-env
 channels:
   - defaults
   - conda-forge
+  - anaconda
 dependencies:
   - zarr
   - pip
@@ -15,7 +16,7 @@ dependencies:
   - h5py
   - numpy
   - tensorflow>=2.1 [osx]
-  # - tensorflow-gpu>=2.1 [not osx]
+  - tensorflow-gpu>=2.1 [not osx]
   - numpy
   - scipy
   - scikit-learn
