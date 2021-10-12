@@ -5,16 +5,20 @@ from . import train, predict, train_tune
 def version():
     import das
     import sys
-    import tensorflow.keras
     import pandas as pd
     import numpy as np
     import scipy
     import h5py
     import sklearn as sk
     import tensorflow as tf
+    import tensorflow.keras
+    import xarray as xr
 
     try:
         import xarray_behave.gui.app
+        import xarray_behave as xb
+        import pyqtgraph
+        import PySide2
         has_gui = True
     except (ImportError, ModuleNotFoundError):
         has_gui = False
@@ -24,6 +28,11 @@ def version():
     print(f"The following versions are available to DAS:")
     print(f"  DAS v{das.__version__}")
     print("     GUI is", "available" if has_gui else "NOT AVAILABLE")
+    if has_gui:
+        print(f"     xarray-behave v{xb.__version__}")
+        print(f"     pyqtgraph v{pyqtgraph.__version__}")
+        print(f"     PySide2 v{PySide2.__version__}")
+
     print("")
     print(f"  tensorflow v{tf.__version__}")
     print(f"  keras v{tensorflow.keras.__version__}")
@@ -35,6 +44,7 @@ def version():
     print(f"  h5py v{h5py.__version__}")
     print(f"  scipy v{scipy.__version__}")
     print(f"  scikit-learn v{sk.__version__}")
+    print(f"  xarray v{xr.__version__}")
 
 
 def no_xb_gui():
