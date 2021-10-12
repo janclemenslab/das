@@ -1,12 +1,4 @@
-"""Code for training networks.
-
-Install:
-mamba create -n das-tune python=3.8 das keras-tuner -c ncb -c conda-forge
-conda activate das-tune
-cd DAS_SOURCE_BASEDIR
-pip install -e . --upgrade --no-dependencies
-das tune --data-dir tutorial_dataset.npy --save-dir tutorial_dataset.res --nb-hist 1024 --no-ignore-boundaries --verbose 2
-"""
+"""Code for tuning the hyperparameters of a network."""
 # TODO:
 # write custom Tuner that generates datasets and overlap based nb_hist and kernel params
 # see: https://keras.io/guides/keras_tuner/custom_tuner/
@@ -117,7 +109,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
-    """Train a DAS network.
+    """Tune the hyperparameters of a DAS network.
 
     Args:
         data_dir (str): Path to the directory or file with the dataset for training.
