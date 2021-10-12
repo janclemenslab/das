@@ -30,11 +30,12 @@ requirements:
     - python
     - pyyaml
     - scipy
+    - numpy>1.19
     - scikit-learn
     - zarr
     - xarray
     - pyside2
-    - pyqtgraph
+    - pyqtgraph>0.12.2
     - colorcet
     - python-sounddevice
     - scikit-image
@@ -58,10 +59,11 @@ requirements:
     - pyyaml
     - scipy
     - scikit-learn
+    - numpy>1.19
     - zarr
     - xarray
     - pyside2
-    - pyqtgraph
+    - pyqtgraph>0.12.2
     - colorcet
     - python-sounddevice
     - scikit-image

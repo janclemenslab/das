@@ -2,6 +2,7 @@ name: das-nogui-env
 channels:
   - defaults
   - conda-forge
+  - anaconda
 dependencies:
   - zarr
   - pip

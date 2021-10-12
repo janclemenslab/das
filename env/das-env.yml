@@ -28,7 +28,7 @@ dependencies:
   - matplotlib-scalebar
   - peakutils
   - colorcet
-  - pyqtgraph=0.12.1
+  - pyqtgraph>0.12.2
   - pyside2
   - umap-learn
   - hdbscan
