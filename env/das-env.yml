@@ -22,16 +22,16 @@ dependencies:
   - pyyaml
   - peakutils
   - matplotlib
+  - matplotlib-scalebar
   - pandas
   - librosa
-  - matplotlib-scalebar
   - peakutils
   - colorcet
   - pyqtgraph>0.12.2
   - pyside2
   # - umap-learn
   # - hdbscan
-  - scikit-image
+  # - scikit-image
   - keras-tuner
   - xarray-behave
   - conda-forge::zarr
