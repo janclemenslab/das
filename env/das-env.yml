@@ -15,8 +15,7 @@ dependencies:
   - git
   - h5py
   - numpy
-  - tensorflow>=2.1 [osx]
-  - tensorflow-gpu>=2.1 [not osx]
+  - tensorflow>=2.1
   - numpy
   - scipy
   - scikit-learn
