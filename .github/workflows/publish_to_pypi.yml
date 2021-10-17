@@ -19,7 +19,7 @@ jobs:
 #     runs-on: ${{ matrix.os }}
 #     strategy:
 #       matrix:
-#         # python-version: [3.6, 3.7, 3.8, 3.9]
+#         # python-version: [3.7, 3.8, 3.9]
 #         # os: [ubuntu-latest, windows-latest, macOS-latest]
 #         python-version: [3.8]
 #         os: [ubuntu-latest]
@@ -107,7 +107,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9]
 #         python-version: [3.8]
 #         os: [ubuntu-latest, windows-latest, macOS-latest]
 #         os: [ubuntu-latest, windows-latest, macOS-latest]
