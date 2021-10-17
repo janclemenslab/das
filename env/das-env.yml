@@ -2,14 +2,15 @@ name: das-env
 channels:
   - defaults
   - conda-forge
+  - ncb
   - anaconda
 dependencies:
   - zarr
   - pip
   - flammkuchen
   - xarray
-  - pysoundfile
-  - libsndfile
+  # - pysoundfile
+  # - libsndfile
   - defopt
   - yaml
   - git
@@ -29,11 +30,12 @@ dependencies:
   - colorcet
   - pyqtgraph>0.12.2
   - pyside2
-  - umap-learn
-  - hdbscan
+  # - umap-learn
+  # - hdbscan
   - scikit-image
   - keras-tuner
+  - xarray-behave
   - pip:
-    - xarray-behave[gui]
     - das
-    - das_unsupervised
+    - pysoundfile
+    # - das_unsupervised
