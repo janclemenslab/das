@@ -1,7 +1,7 @@
 {% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
 {% set name = "das" %}
-# {% set version = "0.22.3" %}
-{% set version = data.get('version') %}
+{% set version = "0.22.4" %}
+# {% set version = data.get('version') %}
 
 package:
   name: das
@@ -23,7 +23,6 @@ requirements:
     - librosa
     - matplotlib
     - matplotlib-scalebar
-    - numpy
     - pandas
     - peakutils
     - pip
@@ -35,16 +34,17 @@ requirements:
     - zarr
     - xarray
     - pyside2
-    - pyqtgraph>0.12.2
+    - pyqtgraph
     - colorcet
     - python-sounddevice
     - scikit-image
     - pyyaml
     - opencv-python-headless
-    - tensorflow>2.0  # [osx]
-    - tensorflow-gpu>2.0  # [not osx]
+    - tensorflow>2.1  # [osx]
+    - tensorflow-gpu>2.1  # [not osx]
     - xarray-behave
     - keras-tuner
+    - numpy>1.19
   run:
     - defopt
     - flammkuchen
@@ -59,19 +59,19 @@ requirements:
     - pyyaml
     - scipy
     - scikit-learn
-    - numpy>1.19
     - zarr
     - xarray
     - pyside2
-    - pyqtgraph>0.12.2
+    - pyqtgraph
     - colorcet
     - python-sounddevice
     - scikit-image
     - opencv-python-headless
-    - tensorflow>2.0  # [osx]
-    - tensorflow-gpu>2.0  # [not osx]
+    - tensorflow>2.1  # [osx]
+    - tensorflow-gpu>2.1  # [not osx]
     - xarray-behave
     - keras-tuner
+    - numpy>1.19
 
 test:
   imports:

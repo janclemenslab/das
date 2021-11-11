@@ -29,4 +29,4 @@ dependencies:
   - keras-tuner
   - pip:
     - das
-    - pysoundfile
+    # - pysoundfile
