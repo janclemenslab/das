@@ -62,6 +62,7 @@ def main():
         import xarray_behave.gui.app
         subcommands['gui'] = xarray_behave.gui.app.main_das
     except (ImportError, ModuleNotFoundError):
+        logging.exception('Failed to import GUI. You can still use the non GUI part of DAS.')
         # fall back to function that displays helpful instructions
         subcommands['gui'] = no_xb_gui
 
