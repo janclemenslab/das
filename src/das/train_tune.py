@@ -33,7 +33,7 @@ class TunableModel(kt.HyperModel):
         self.params = params.copy()
 
     def build(self, hp):
-        hp.Choice('nb_filters', values=np.power(2, np.arange(3, 8)).tolist())
+        hp.Choice('nb_filters', values=np.power(2, np.arange(3, 7)).tolist())
         hp.Choice('kernel_size', values=np.power(2, np.arange(2, 7)).tolist())
         hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])
         hp.Choice('nb_hist', values=np.power(2, np.arange(7, 14)).tolist())
@@ -78,19 +78,19 @@ class DasTuner(kt.Tuner):
             self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
 
         data_gen = data.AudioSequence(train_x, train_y,
-                                    shuffle=True, nb_repeats=1,
-                                    **self.params)
+                                      shuffle=True, nb_repeats=1,
+                                      **self.params)
         val_gen = data.AudioSequence(val_x, val_y,
-                                    shuffle=False,
-                                    **self.params)
-        logging.info(f"Hyperparameters:")
+                                     shuffle=False,
+                                     **self.params)
+        logging.info("Hyperparameters:")
         logging.info(trial.hyperparameters.values)
         if steps_per_epoch is None:
-            steps_per_epoch=min(len(data_gen), 1000)
+            steps_per_epoch = min(len(data_gen), 1000)
 
         model = self.hypermodel.build(trial.hyperparameters)
         model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
-                    callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+                  callbacks=callbacks, verbose=verbose, class_weight=class_weight)
 
 
 def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
@@ -317,7 +317,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, time.strftime('%Y%m%d_%H%M%S'))
     logging.info(f'Will save to {save_name}.')
 
-
     tuner = DasTuner(
         params = params,
         oracle=kt.oracles.BayesianOptimization(
@@ -342,8 +341,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if _qt_progress:
         callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
 
-    # if tensorboard:
-    #     callbacks.append(TensorBoard(log_dir=save_dir))
+    if tensorboard:
+        callbacks.append(TensorBoard(log_dir=save_dir))
 
     del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
