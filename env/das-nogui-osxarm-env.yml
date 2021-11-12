@@ -1,0 +1,46 @@
+name: das-nogui-env
+channels:
+  - defaults
+  - conda-forge
+  - ncb
+  - anaconda
+  - apple
+dependencies:
+  - zarr
+  - pip
+  - flammkuchen
+  - xarray
+  - defopt
+  - yaml
+  - git
+  - h5py
+  - numpy
+  - scipy
+  - scikit-learn
+  - pyyaml
+  - peakutils
+  - matplotlib
+  - matplotlib-scalebar
+  - pandas
+  # - librosa
+  - peakutils
+  - colorcet
+  - keras-tuner
+  # - xarray-behave-nogui
+  - colorcet
+  - keras-tuner
+  # - numpy>1.19
+  - tensorflow-deps
+  - clang
+  - flatbuffers=1.12
+  - pandas=1.3.3
+  # - numba
+  # - llvmlite
+  # - libsndfile
+  # - pysoundfile
+  - pip:
+    # - librosa
+    # - das
+    - tensorflow-macos #=2.5
+    - tensorflow-metal
+
