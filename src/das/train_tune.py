@@ -71,8 +71,6 @@ class DasTuner(kt.Tuner):
 
         # these need updating based on current hyperparameters
         self.params['stride'] = self.params['nb_hist']
-        # self.params['y_offset'] = 0
-        # self.params['sample_weight_mode'] = 'temporal'
         if self.params['ignore_boundaries']:
             self.params['data_padding'] = int(np.ceil(self.params['kernel_size'] * self.params['nb_conv']))  # this does not completely avoid boundary effects but should minimize them sufficiently
             self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
@@ -287,21 +285,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     else:
         shuffle_subset = None
 
-    # data_gen = data.AudioSequence(d['train']['x'], d['train']['y'],
-    #                               shuffle=True, shuffle_subset=shuffle_subset,
-    #                               first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=1,
-    #                               **params)
-    # val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
-    #                              shuffle=False, shuffle_subset=shuffle_subset,
-    #                              first_sample=first_sample_val, last_sample=last_sample_val,
-    #                              **params)
-
-
-    # logging.info(f"Training data:")
-    # logging.info(f"   {data_gen}")
-    # logging.info(f"Validation data:")
-    # logging.info(f"   {val_gen}")
-
     params['class_weights'] = None
     if balance:
         from sklearn.utils import class_weight
@@ -331,7 +314,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     logging.info(tuner.search_space_summary())
 
     utils.save_params(params, save_name)
-    # checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
     callbacks = [EarlyStopping(monitor='val_loss', patience=20),]
 
@@ -342,7 +324,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
 
     if tensorboard:
-        callbacks.append(TensorBoard(log_dir=save_dir))
+        callbacks.append(TensorBoard(log_dir=save_name))
 
     del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
@@ -374,7 +356,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     else:
         logging.info('re-loading last best model')
         model = tuner.get_best_models()[0]
-        # model.load_weights(checkpoint_save_name)
 
         logging.info('predicting')
         # TODO: Need to update params with best hyperparams (e.g. nb-hist)
