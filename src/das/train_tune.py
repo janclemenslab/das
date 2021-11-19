@@ -9,6 +9,7 @@ import numpy as np
 from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import keras_tuner as kt
+import yaml
 import os
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
@@ -29,15 +30,27 @@ except Exception as e:
 
 
 class TunableModel(kt.HyperModel):
-    def __init__(self, params):
+    def __init__(self, params, tune_config=None):
         self.params = params.copy()
+        self.tune_config = tune_config
+        if self.tune_config is None:
+            self.tune_config = {'nb_filters': [4, 8, 16, 32, 64, 128],
+                                'kernel_size': [4, 8, 16, 32, 64, 128],
+                                'learning_rate': [0.01, 0.001, 0.0001],
+                                'nb_hist': [128, 256, 512, 1024, 2048, 4096, 8192],
+                                'nb_conv': [4, 8, 16, 32, 64, 128]}
 
     def build(self, hp):
-        hp.Choice('nb_filters', values=np.power(2, np.arange(3, 7)).tolist())
-        hp.Choice('kernel_size', values=np.power(2, np.arange(2, 7)).tolist())
-        hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])
-        hp.Choice('nb_hist', values=np.power(2, np.arange(7, 14)).tolist())
-        hp.Choice('nb_conv', values=np.arange(1,7).tolist())
+        if self.tune_config is not None:
+            for name, values in self.tune_config.items():
+                hp.Choice(name, values=values)
+        # else:  # defaults
+        #     hp.Choice('nb_filters', values=np.power(2, np.arange(3, 7)).tolist())
+        #     hp.Choice('kernel_size', values=np.power(2, np.arange(2, 7)).tolist())
+        #     hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])
+        #     hp.Choice('nb_hist', values=np.power(2, np.arange(7, 14)).tolist())
+        #     hp.Choice('nb_conv', values=np.arange(1, 7).tolist())
+
         self.params.update(hp.values)
         model = models.model_dict['tcn'](**self.params)
         return model
@@ -77,10 +90,15 @@ class DasTuner(kt.Tuner):
 
         data_gen = data.AudioSequence(train_x, train_y,
                                       shuffle=True, nb_repeats=1,
+                                      last_sample=train_x.shape[0] - 2 * self.params['nb_hist'],
                                       **self.params)
         val_gen = data.AudioSequence(val_x, val_y,
                                      shuffle=False,
                                      **self.params)
+        logging.info("Data:")
+        logging.info(f"training: {data_gen}")
+        logging.info(f"validation: {val_gen}")
+
         logging.info("Hyperparameters:")
         logging.info(trial.hyperparameters.values)
         if steps_per_epoch is None:
@@ -106,6 +124,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
+          tune_config: Optional[str] = None,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Tune the hyperparameters of a DAS network.
 
@@ -194,17 +213,19 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
         with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
-                        Defaults to False.
+                        Defaults to False.G
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
                              Defaults to True (set to False for large datasets since it can be slow).
+        tune_config (Optional[str]): Yaml file with key:value pairs defining the search space for tuning.
+                                     Keys are parameter names, values are lists of possible parameter values.
 
         Returns
             model (keras.Model)
             params (Dict[str, Any])
-        """
-        # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
-        #        The queue is used to transmit progress updates to the GUI,
-        #        the event is set in the GUI to stop training.
+    """
+    # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
+    #        The queue is used to transmit progress updates to the GUI,
+    #        the event is set in the GUI to stop training.
     if log_messages:
         logging.basicConfig(level=logging.INFO)
 
@@ -234,7 +255,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     params = locals()
     del params['_qt_progress']
 
-    if stride <=0:
+    if tune_config is not None:
+        with open(tune_config, "r") as stream:
+            try:
+                tune_config = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                logging.exception(exc)
+
+    if stride <= 0:
         raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
 
     # remove learning rate param if not set so the value from the model def is used
@@ -305,7 +333,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         oracle=kt.oracles.BayesianOptimization(
             objective=kt.Objective("val_loss", "min"), max_trials=100,
         ),
-        hypermodel=TunableModel(params),
+        hypermodel=TunableModel(params, tune_config),
         overwrite=True,
         directory=save_dir,
         project_name=os.path.basename(save_name),
@@ -338,7 +366,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                 logging.exception('Neptune stuff failed.')
 
     # TRAIN NETWORK
-    logging.info('start hyperparameter tunings')
+    logging.info('Start hyperparameter tuning')
     fit_hist = tuner.search(
         train_x=d['train']['x'], train_y=d['train']['y'],
         val_x=d['val']['x'], val_y=d['val']['y'],
