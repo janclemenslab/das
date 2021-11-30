@@ -75,38 +75,41 @@ class DasTuner(kt.Tuner):
                   epochs=10, steps_per_epoch=None,
                   verbose=1, class_weight=None,
                   callbacks=None):
-        if callbacks is None:
-            callbacks = []
-        callbacks.append(OracleCallback(self))
+        try:
+            if callbacks is None:
+                callbacks = []
+            callbacks.append(OracleCallback(self))
 
-        self.params.update(trial.hyperparameters.values)
-        self.current_trial = trial
+            self.params.update(trial.hyperparameters.values)
+            self.current_trial = trial
 
-        # these need updating based on current hyperparameters
-        self.params['stride'] = self.params['nb_hist']
-        if self.params['ignore_boundaries']:
-            self.params['data_padding'] = int(np.ceil(self.params['kernel_size'] * self.params['nb_conv']))  # this does not completely avoid boundary effects but should minimize them sufficiently
-            self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
+            # these need updating based on current hyperparameters
+            self.params['stride'] = self.params['nb_hist']
+            if self.params['ignore_boundaries']:
+                self.params['data_padding'] = int(np.ceil(self.params['kernel_size'] * self.params['nb_conv']))  # this does not completely avoid boundary effects but should minimize them sufficiently
+                self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
 
-        data_gen = data.AudioSequence(train_x, train_y,
-                                      shuffle=True, nb_repeats=1,
-                                      last_sample=train_x.shape[0] - 2 * self.params['nb_hist'],
-                                      **self.params)
-        val_gen = data.AudioSequence(val_x, val_y,
-                                     shuffle=False,
-                                     **self.params)
-        logging.info("Data:")
-        logging.info(f"training: {data_gen}")
-        logging.info(f"validation: {val_gen}")
+            data_gen = data.AudioSequence(train_x, train_y,
+                                          shuffle=True, nb_repeats=1,
+                                          last_sample=train_x.shape[0] - 2 * self.params['nb_hist'],
+                                          **self.params)
+            val_gen = data.AudioSequence(val_x, val_y,
+                                         shuffle=False,
+                                         **self.params)
+            logging.info("Data:")
+            logging.info(f"training: {data_gen}")
+            logging.info(f"validation: {val_gen}")
 
-        logging.info("Hyperparameters:")
-        logging.info(trial.hyperparameters.values)
-        if steps_per_epoch is None:
-            steps_per_epoch = min(len(data_gen), 1000)
+            logging.info("Hyperparameters:")
+            logging.info(trial.hyperparameters.values)
+            if steps_per_epoch is None:
+                steps_per_epoch = min(len(data_gen), 1000)
 
-        model = self.hypermodel.build(trial.hyperparameters)
-        model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
-                  callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+            model = self.hypermodel.build(trial.hyperparameters)
+            model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
+                    callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+        except:
+            logging.exception("Something went wrong. Will try to continue.")
 
 
 def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
