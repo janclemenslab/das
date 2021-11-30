@@ -110,7 +110,7 @@ class DasTuner(kt.Tuner):
 
 
 def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
-          save_dir: str = './', save_prefix: Optional[str] = None,
+          save_dir: str = './', save_prefix: Optional[str] = None, save_name: Optional[str] = None,
           model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
           nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
           ignore_boundaries: bool = True, batch_norm: bool = True,
@@ -145,6 +145,11 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                            Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + TIMESTAMP
                            or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
                            Defaults to '' (empty).
+        save_name (Optional[str]): Append to prefix.
+                           Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + SAVE_NAME
+                           or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
+                           Defaults to TIMESTAMP.
+
         model_name (str): Network architecture to use.
                           Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).
                           See das.models for a description of all models.
@@ -325,7 +330,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     logging.info('building network')
 
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
-    save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, time.strftime('%Y%m%d_%H%M%S'))
+    if save_name is None:
+        save_name = time.strftime('%Y%m%d_%H%M%S')
+    save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
     logging.info(f'Will save to {save_name}.')
 
     tuner = DasTuner(
