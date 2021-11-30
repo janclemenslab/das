@@ -1,6 +1,6 @@
 {% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
 {% set name = "das" %}
-{% set version = "0.22.4" %}
+{% set version = "0.22.7" %}
 # {% set version = data.get('version') %}
 
 package:
