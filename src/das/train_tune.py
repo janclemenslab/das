@@ -339,7 +339,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     logging.info(f'Will save to {save_name}.')
 
     tuner = DasTuner(
-        params = params,
+        params=params,
         oracle=kt.oracles.BayesianOptimization(
             objective=kt.Objective("val_loss", "min"), max_trials=100,
         ),
