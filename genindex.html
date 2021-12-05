@@ -4,9 +4,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/><title>Index - DAS documentation</title>
+    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/><title>Index - DAS documentation</title>
 <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
@@ -197,6 +197,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.evaluate.html">das.evaluate</a></li>
@@ -205,6 +206,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
@@ -212,6 +214,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
@@ -259,6 +262,10 @@
   <h2>A</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.annot.html#das.annot.Events.add_name">add_name() (das.annot.Events method)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.add_time">add_time() (das.annot.Events method)</a>
+</li>
         <li><a href="api/das.kapre.augmentation.html#das.kapre.augmentation.AdditiveNoise">AdditiveNoise (class in das.kapre.augmentation)</a>
 </li>
         <li><a href="api/das.kapre.backend_keras.html#das.kapre.backend_keras.amplitude_to_decibel">amplitude_to_decibel() (in module das.kapre.backend_keras)</a>
@@ -272,6 +279,10 @@
         <li><a href="api/das.utils_plot.html#das.utils_plot.annotate_segments">annotate_segments() (in module das.utils_plot)</a>
 </li>
         <li><a href="api/das.data.html#das.data.AudioSequence">AudioSequence (class in das.data)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.Augmentation">Augmentation (class in das.augmentation)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.Augmentations">Augmentations (class in das.augmentation)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -295,6 +306,8 @@
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.ResidualBlock.build">(das.tcn.tcn_new.ResidualBlock method)</a>
 </li>
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.TCN.build">(das.tcn.tcn_new.TCN method)</a>
+</li>
+          <li><a href="api/das.train_tune.html#das.train_tune.TunableModel.build">(das.train_tune.TunableModel method)</a>
 </li>
         </ul></li>
     </ul></td>
@@ -327,14 +340,16 @@
 </li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.center_of_mass">center_of_mass() (in module das.pulse_utils)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.tcn.tcn.html#das.tcn.tcn.channel_normalization">channel_normalization() (in module das.tcn.tcn)</a>
 
         <ul>
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.channel_normalization">(in module das.tcn.tcn_new)</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.CircShift">CircShift (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.predict.html#das.predict.cli_predict">cli_predict() (in module das.predict)</a>
 </li>
         <li><a href="api/das.models.html#das.models.cnn">cnn() (in module das.models)</a>
@@ -353,6 +368,8 @@
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.TCN.compute_output_shape">(das.tcn.tcn_new.TCN method)</a>
 </li>
         </ul></li>
+        <li><a href="api/das.augmentation.html#das.augmentation.Constant">Constant (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.conv_output_length">conv_output_length() (in module das.kapre.time_frequency)</a>
 </li>
     </ul></td>
@@ -368,6 +385,13 @@
 
         <ul>
           <li><a href="api/das.annot.html#module-das.annot">module</a>
+</li>
+        </ul></li>
+        <li>
+    das.augmentation
+
+        <ul>
+          <li><a href="api/das.augmentation.html#module-das.augmentation">module</a>
 </li>
         </ul></li>
         <li>
@@ -461,8 +485,6 @@
           <li><a href="api/das.make_dataset.html#module-das.make_dataset">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     das.menagerie
 
@@ -475,6 +497,15 @@
 
         <ul>
           <li><a href="api/das.models.html#module-das.models">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    das.models_legacy
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#module-das.models_legacy">module</a>
 </li>
         </ul></li>
         <li>
@@ -541,6 +572,13 @@
 </li>
         </ul></li>
         <li>
+    das.train_tune
+
+        <ul>
+          <li><a href="api/das.train_tune.html#module-das.train_tune">module</a>
+</li>
+        </ul></li>
+        <li>
     das.utils
 
         <ul>
@@ -554,6 +592,12 @@
           <li><a href="api/das.utils_plot.html#module-das.utils_plot">module</a>
 </li>
         </ul></li>
+        <li><a href="api/das.train_tune.html#das.train_tune.DasTuner">DasTuner (class in das.train_tune)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.delete_name">delete_name() (das.annot.Events method)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.delete_range">delete_range() (das.annot.Events method)</a>
+</li>
         <li><a href="api/das.event_utils.html#das.event_utils.detect_events">detect_events() (in module das.event_utils)</a>
 </li>
         <li><a href="api/das.npy_dir.html#das.npy_dir.Dict">Dict (class in das.npy_dir)</a>
@@ -580,6 +624,8 @@
 </li>
         <li><a href="api/das.event_utils.html#das.event_utils.event_interval_filter">event_interval_filter() (in module das.event_utils)</a>
 </li>
+        <li><a href="api/das.annot.html#das.annot.Events">Events (class in das.annot)</a>
+</li>
         <li><a href="api/das.make_dataset.html#das.make_dataset.events_to_probabilities">events_to_probabilities() (in module das.make_dataset)</a>
 </li>
     </ul></td>
@@ -596,15 +642,23 @@
 </li>
         <li><a href="api/das.segment_utils.html#das.segment_utils.fill_gaps">fill_gaps() (in module das.segment_utils)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.annot.html#das.annot.Events.filter_range">filter_range() (das.annot.Events method)</a>
+</li>
         <li><a href="api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank">Filterbank (class in das.kapre.filterbank)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.kapre.backend.html#das.kapre.backend.filterbank_log">filterbank_log() (in module das.kapre.backend)</a>
 </li>
         <li><a href="api/das.kapre.backend.html#das.kapre.backend.filterbank_mel">filterbank_mel() (in module das.kapre.backend)</a>
 </li>
         <li><a href="api/das.event_utils.html#das.event_utils.find_nearest">find_nearest() (in module das.event_utils)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.from_dataset">from_dataset() (das.annot.Events class method)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.from_df">from_df() (das.annot.Events class method)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.from_lists">from_lists() (das.annot.Events class method)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -614,6 +668,8 @@
   <h2>G</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.Gain">Gain (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.generate_colors">generate_colors() (in module das.utils_plot)</a>
 </li>
         <li><a href="api/das.make_dataset.html#das.make_dataset.generate_data_splits">generate_data_splits() (in module das.make_dataset)</a>
@@ -651,6 +707,10 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.data_hash.html#das.data_hash.hash_data">hash_data() (in module das.data_hash)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.HorizontalFlip">HorizontalFlip (class in das.augmentation)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -720,6 +780,10 @@
 </li>
         <li><a href="api/das.make_dataset.html#das.make_dataset.make_gaps">make_gaps() (in module das.make_dataset)</a>
 </li>
+        <li><a href="api/das.augmentation.html#das.augmentation.MaskMean">MaskMean (class in das.augmentation)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.MaskNoise">MaskNoise (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.event_utils.html#das.event_utils.match_events">match_events() (in module das.event_utils)</a>
 </li>
         <li><a href="api/das.kapre.backend.html#das.kapre.backend.mel">mel() (in module das.kapre.backend)</a>
@@ -731,6 +795,8 @@
 
         <ul>
           <li><a href="api/das.annot.html#module-das.annot">das.annot</a>
+</li>
+          <li><a href="api/das.augmentation.html#module-das.augmentation">das.augmentation</a>
 </li>
           <li><a href="api/das.cli.html#module-das.cli">das.cli</a>
 </li>
@@ -762,6 +828,8 @@
 </li>
           <li><a href="api/das.models.html#module-das.models">das.models</a>
 </li>
+          <li><a href="api/das.models_legacy.html#module-das.models_legacy">das.models_legacy</a>
+</li>
           <li><a href="api/das.neptune.html#module-das.neptune">das.neptune</a>
 </li>
           <li><a href="api/das.npy_dir.html#module-das.npy_dir">das.npy_dir</a>
@@ -780,11 +848,17 @@
 </li>
           <li><a href="api/das.train_transfer.html#module-das.train_transfer">das.train_transfer</a>
 </li>
+          <li><a href="api/das.train_tune.html#module-das.train_tune">das.train_tune</a>
+</li>
           <li><a href="api/das.utils.html#module-das.utils">das.utils</a>
 </li>
           <li><a href="api/das.utils_plot.html#module-das.utils_plot">das.utils_plot</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.annot.html#das.annot.Events.move_time">move_time() (das.annot.Events method)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -795,10 +869,12 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.cli.html#das.cli.no_xb_gui">no_xb_gui() (in module das.cli)</a>
 </li>
-        <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D">Normalization2D (class in das.kapre.utils)</a>
+        <li><a href="api/das.augmentation.html#das.augmentation.Normal">Normal (class in das.augmentation)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D">Normalization2D (class in das.kapre.utils)</a>
+</li>
         <li><a href="api/das.make_dataset.html#das.make_dataset.normalize_probabilities">normalize_probabilities() (in module das.make_dataset)</a>
 </li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">normalize_pulse() (in module das.pulse_utils)</a>
@@ -811,11 +887,15 @@
   <h2>O</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.Offset">Offset (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.utils.html#das.utils.LossHistory.on_epoch_begin">on_epoch_begin() (das.utils.LossHistory method)</a>
 </li>
-        <li><a href="api/das.utils.html#das.utils.LossHistory.on_epoch_end">on_epoch_end() (das.utils.LossHistory method)</a>
+        <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback.on_epoch_end">on_epoch_end() (das.train_tune.OracleCallback method)</a>
 
         <ul>
+          <li><a href="api/das.utils.html#das.utils.LossHistory.on_epoch_end">(das.utils.LossHistory method)</a>
+</li>
           <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">(das.utils.QtProgressCallback method)</a>
 </li>
         </ul></li>
@@ -835,6 +915,8 @@
         </ul></li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_end">on_train_end() (das.utils.QtProgressCallback method)</a>
 </li>
+        <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback">OracleCallback (class in das.train_tune)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -843,6 +925,8 @@
   <h2>P</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.Param">Param (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.Pdf">Pdf (class in das.utils_plot)</a>
 </li>
         <li><a href="api/das.neptune.html#das.neptune.Poseidon">Poseidon (class in das.neptune)</a>
@@ -887,6 +971,8 @@
 </li>
         <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.ResidualBlock">ResidualBlock (class in das.tcn.tcn_new)</a>
 </li>
+        <li><a href="api/das.train_tune.html#das.train_tune.DasTuner.run_trial">run_trial() (das.train_tune.DasTuner method)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -901,9 +987,11 @@
 </li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.scalebar">scalebar() (in module das.utils_plot)</a>
 </li>
+        <li><a href="api/das.evaluate.html#das.evaluate.segment_timing">segment_timing() (in module das.evaluate)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/das.evaluate.html#das.evaluate.segment_timing">segment_timing() (in module das.evaluate)</a>
+        <li><a href="api/das.annot.html#das.annot.Events.select_range">select_range() (das.annot.Events method)</a>
 </li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.Spectrogram">Spectrogram (class in das.kapre.time_frequency)</a>
 </li>
@@ -928,25 +1016,41 @@
 </li>
         </ul></li>
         <li><a href="api/das.models.html#das.models.tcn">tcn() (in module das.models)</a>
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn">(in module das.models_legacy)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.models.html#das.models.tcn_multi">tcn_multi() (in module das.models)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.models.html#das.models.tcn_seq">tcn_seq() (in module das.models)</a>
 </li>
         <li><a href="api/das.models.html#das.models.tcn_small">tcn_small() (in module das.models)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.models.html#das.models.tcn_stft">tcn_stft() (in module das.models)</a>
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_stft">(in module das.models_legacy)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.models.html#das.models.tcn_tcn">tcn_tcn() (in module das.models)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.to_dataset">to_dataset() (das.annot.Events method)</a>
+</li>
+        <li><a href="api/das.annot.html#das.annot.Events.to_df">to_df() (das.annot.Events method)</a>
 </li>
         <li><a href="api/das.train.html#das.train.train">train() (in module das.train)</a>
 
         <ul>
           <li><a href="api/das.train_transfer.html#das.train_transfer.train">(in module das.train_transfer)</a>
 </li>
+          <li><a href="api/das.train_tune.html#das.train_tune.train">(in module das.train_tune)</a>
+</li>
         </ul></li>
+        <li><a href="api/das.train_tune.html#das.train_tune.TunableModel">TunableModel (class in das.train_tune)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -955,11 +1059,15 @@
   <h2>U</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.augmentation.html#das.augmentation.Uniform">Uniform (class in das.augmentation)</a>
+</li>
         <li><a href="api/das.data.html#das.data.unpack_batches">unpack_batches() (in module das.data)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.data.html#das.data.AudioSequence.unroll">unroll() (das.data.AudioSequence method)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.Upsampling">Upsampling (class in das.augmentation)</a>
 </li>
     </ul></td>
   </tr></table>

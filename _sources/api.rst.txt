@@ -15,6 +15,7 @@ Developer API
    :toctree: api
 
    das.annot
+   das.augmentation
    das.data
    das.data_hash
    das.evaluate
@@ -23,6 +24,7 @@ Developer API
    das.make_dataset
    das.menagerie
    das.models
+   das.models_legacy
    das.neptune
    das.npy_dir
    das.predict
@@ -30,6 +32,7 @@ Developer API
    das.segment_utils
    das.train
    das.train_transfer
+   das.train_tune
    das.utils
    das.utils_plot
    das.tcn.tcn

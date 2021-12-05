@@ -271,7 +271,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 5,
    "metadata": {
     "collapsed": false,
     "inputHidden": false,
@@ -280,7 +280,19 @@
     },
     "outputHidden": false
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'pulsetimes_true' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-5-5bb25ce5e803>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m     23\u001b[0m \u001b[0;32mif\u001b[0m \u001b[0mpulse_pred_index\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mnot\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     24\u001b[0m \u001b[0;31m#     pulsetimes_true, _ = das.event_utils.detect_events(y_test[:, pulse_pred_index], thres=0.5)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 25\u001b[0;31m     \u001b[0mpulsetimes_true\u001b[0m \u001b[0;34m=\u001b[0m  \u001b[0mpulsetimes_true\u001b[0m \u001b[0;34m/\u001b[0m \u001b[0mfs\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     26\u001b[0m     \u001b[0mpulsetimes_pred\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mevents\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;34m'seconds'\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     27\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mNameError\u001b[0m: name 'pulsetimes_true' is not defined"
+     ]
+    }
+   ],
    "source": [
     "def prc_pulse(pred_pulse, pulsetimes_true, fs, tol, min_dist, thresholds=None):\n",
     "    if thresholds is None:\n",
@@ -311,12 +323,12 @@
     "\n",
     "    # Evalute event times (match predicted pulse times to their nearest true pulses)\n",
     "    d, nn_pred_pulse, nn_true_pulse, nn_dist = das.event_utils.evaluate_eventtimes(pulsetimes_true, pulsetimes_pred, fs, tol)\n",
-    "\n",
-    "    # calc performance metrics (precision, recall, f1 score) for different thresholds\n",
-    "    threshold, precision, recall, f1_score = prc_pulse(y_pred[:, pulse_pred_index], pulsetimes_true, fs, tol, min_dist * fs)\n",
     "    \n",
     "    print(f\"FP {d['FP']}, TP {d['TP']}, FN {d['FN']}\")\n",
-    "    print(f\"precision {d['precision']:1.2f}, recall {d['recall']:1.2f}, f1-score {d['f1_score']:1.2f}\")"
+    "    print(f\"precision {d['precision']:1.2f}, recall {d['recall']:1.2f}, f1-score {d['f1_score']:1.2f}\")\n",
+    "    \n",
+    "    # calc performance metrics (precision, recall, f1 score) for different thresholds\n",
+    "    threshold, precision, recall, f1_score = prc_pulse(y_pred[:, pulse_pred_index], pulsetimes_true, fs, tol, min_dist * fs)"
    ]
   },
   {
@@ -357,24 +369,24 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "if pulse_pred_index is not None:\n",
-    "    plt.subplot(121)\n",
-    "    plt.plot(precision, recall, c='k')\n",
-    "    plt.scatter(precision, recall, c=threshold)\n",
-    "    plt.xlabel('Precision')\n",
-    "    plt.ylabel('Recall')\n",
-    "    plt.axis('square')\n",
-    "    plt.xlim(0, 1.01)\n",
-    "    plt.ylim(0, 1.01)\n",
+    "# if pulse_pred_index is not None:\n",
+    "#     plt.subplot(121)\n",
+    "#     plt.plot(precision, recall, c='k')\n",
+    "#     plt.scatter(precision, recall, c=threshold)\n",
+    "#     plt.xlabel('Precision')\n",
+    "#     plt.ylabel('Recall')\n",
+    "#     plt.axis('square')\n",
+    "#     plt.xlim(0, 1.01)\n",
+    "#     plt.ylim(0, 1.01)\n",
     "\n",
-    "    plt.subplot(122)\n",
-    "    plt.plot(threshold, f1_score, c='k')\n",
-    "    plt.scatter(threshold, f1_score, c=threshold)\n",
-    "    plt.xlabel('Threshold')\n",
-    "    plt.ylabel('F1 score')\n",
-    "    plt.axis('square')\n",
-    "    plt.xlim(0, 1)\n",
-    "    plt.ylim(0, 1.01)"
+    "#     plt.subplot(122)\n",
+    "#     plt.plot(threshold, f1_score, c='k')\n",
+    "#     plt.scatter(threshold, f1_score, c=threshold)\n",
+    "#     plt.xlabel('Threshold')\n",
+    "#     plt.ylabel('F1 score')\n",
+    "#     plt.axis('square')\n",
+    "#     plt.xlim(0, 1)\n",
+    "#     plt.ylim(0, 1.01)"
    ]
   },
   {

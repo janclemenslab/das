@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
+    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
         <title>das.models - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
@@ -198,6 +198,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -206,6 +207,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
@@ -213,6 +215,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
@@ -477,7 +480,8 @@
             <span class="n">dilations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span> <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'norm_relu'</span><span class="p">,</span>
             <span class="n">use_skip_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">return_sequences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
             <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'same'</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">out_activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'softmax'</span><span class="p">,</span>
+            <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">out_activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'softmax'</span><span class="p">,</span>
             <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwignored</span><span class="p">):</span>
     <span class="sd">"""Create TCN network.</span>
@@ -497,6 +501,9 @@
 <span class="sd">        dropout_rate (float, optional): [description]. Defaults to 0.00.</span>
 <span class="sd">        padding (str, optional): [description]. Defaults to 'same'.</span>
 <span class="sd">        nb_pre_conv (int, optional): number of conv-relu-batchnorm-maxpool2 blocks before the TCN - useful for reducing the sample rate. Defaults to 0</span>
+<span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
+<span class="sd">                                   Should generally be True during training and evaluation but my speed up inference .</span>
+<span class="sd">                                   Defaults to True.</span>
 <span class="sd">        out_activation (str, optional): activation type for the output. Defaults to 'softmax'.</span>
 <span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
 <span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ignored</span>
@@ -516,7 +523,7 @@
                       <span class="n">use_separable</span><span class="o">=</span><span class="n">use_separable</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="n">out_activation</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">output_layer</span> <span class="o">=</span> <span class="n">x</span>
 
@@ -528,8 +535,8 @@
 
 <div class="viewcode-block" id="tcn"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn">[docs]</a><span class="nd">@_register_as_model</span>
 <span class="k">def</span> <span class="nf">tcn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">"""Synonym for tcn_seq."""</span>
-    <span class="k">return</span> <span class="n">tcn_seq</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="sd">"""Synonym for tcn_stft."""</span>
+    <span class="k">return</span> <span class="n">tcn_stft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="tcn_tcn"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn_tcn">[docs]</a><span class="nd">@_register_as_model</span>
@@ -695,7 +702,7 @@
 <span class="sd">        learning_rate (float, optional) Defaults to 0.0005</span>
 <span class="sd">        nb_lstm_units (int, optional): Defaults to 0.</span>
 <span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
-<span class="sd">                                   Should generally be True during training and evaluation but my speed up inference.</span>
+<span class="sd">                                   Should generally be True during training and evaluation but may speed up inference.</span>
 <span class="sd">                                   Defaults to True.</span>
 <span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
 <span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred</span>

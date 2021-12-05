@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
+    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
         <title>das.cli - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
@@ -198,6 +198,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -206,6 +207,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
@@ -213,6 +215,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
@@ -254,21 +257,25 @@
           <h1>Source code for das.cli</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">defopt</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">train</span><span class="p">,</span> <span class="n">predict</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">train</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">train_tune</span>
 
 <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
     <span class="kn">import</span> <span class="nn">das</span>
     <span class="kn">import</span> <span class="nn">sys</span>
-    <span class="kn">import</span> <span class="nn">tensorflow.keras</span>
     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">import</span> <span class="nn">scipy</span>
     <span class="kn">import</span> <span class="nn">h5py</span>
     <span class="kn">import</span> <span class="nn">sklearn</span> <span class="k">as</span> <span class="nn">sk</span>
     <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+    <span class="kn">import</span> <span class="nn">tensorflow.keras</span>
+    <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">xarray_behave.gui.app</span>
+        <span class="kn">import</span> <span class="nn">xarray_behave</span> <span class="k">as</span> <span class="nn">xb</span>
+        <span class="kn">import</span> <span class="nn">pyqtgraph</span>
+        <span class="kn">import</span> <span class="nn">PySide2</span>
         <span class="n">has_gui</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
         <span class="n">has_gui</span> <span class="o">=</span> <span class="kc">False</span>
@@ -278,6 +285,11 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The following versions are available to DAS:"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  DAS v</span><span class="si">{</span><span class="n">das</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"     GUI is"</span><span class="p">,</span> <span class="s2">"available"</span> <span class="k">if</span> <span class="n">has_gui</span> <span class="k">else</span> <span class="s2">"NOT AVAILABLE"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_gui</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"     xarray-behave v</span><span class="si">{</span><span class="n">xb</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"     pyqtgraph v</span><span class="si">{</span><span class="n">pyqtgraph</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"     PySide2 v</span><span class="si">{</span><span class="n">PySide2</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
     <span class="nb">print</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  tensorflow v</span><span class="si">{</span><span class="n">tf</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  keras v</span><span class="si">{</span><span class="n">tensorflow</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -289,6 +301,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  h5py v</span><span class="si">{</span><span class="n">h5py</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  scipy v</span><span class="si">{</span><span class="n">scipy</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  scikit-learn v</span><span class="si">{</span><span class="n">sk</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  xarray v</span><span class="si">{</span><span class="n">xr</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="no_xb_gui"><a class="viewcode-back" href="../../api/das.cli.html#das.cli.no_xb_gui">[docs]</a><span class="k">def</span> <span class="nf">no_xb_gui</span><span class="p">():</span>
@@ -300,12 +313,13 @@
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/das.cli.html#das.cli.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">"""Command line interface for DAS."""</span>
-    <span class="n">subcommands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'train'</span><span class="p">:</span> <span class="n">train</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="s1">'predict'</span><span class="p">:</span> <span class="n">predict</span><span class="o">.</span><span class="n">cli_predict</span><span class="p">,</span> <span class="s1">'version'</span><span class="p">:</span> <span class="n">version</span><span class="p">}</span>
+    <span class="n">subcommands</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'train'</span><span class="p">:</span> <span class="n">train</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="s1">'tune'</span><span class="p">:</span> <span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="s1">'predict'</span><span class="p">:</span> <span class="n">predict</span><span class="o">.</span><span class="n">cli_predict</span><span class="p">,</span> <span class="s1">'version'</span><span class="p">:</span> <span class="n">version</span><span class="p">}</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">xarray_behave.gui.app</span>
         <span class="n">subcommands</span><span class="p">[</span><span class="s1">'gui'</span><span class="p">]</span> <span class="o">=</span> <span class="n">xarray_behave</span><span class="o">.</span><span class="n">gui</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">main_das</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">ModuleNotFoundError</span><span class="p">):</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'Failed to import GUI. You can still use the non GUI part of DAS.'</span><span class="p">)</span>
         <span class="c1"># fall back to function that displays helpful instructions</span>
         <span class="n">subcommands</span><span class="p">[</span><span class="s1">'gui'</span><span class="p">]</span> <span class="o">=</span> <span class="n">no_xb_gui</span>
 
@@ -349,6 +363,8 @@
     <script src="../../_static/togglebutton.js"></script>
     <script src="../../_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

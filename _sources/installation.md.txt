@@ -31,14 +31,6 @@ If you do not need the GUI (for instance, when training _DAS_ on a server), inst
 conda env create ncb/das-nogui-env -n das
 ```
 
-<!-- ## Update
-Don't. It only causes problems in our experience. We recommend installing new versions of _DAS_ into a fresh environment. The brave can update using pip:
-```shell
-conda activate das
-pip install das --update  # DAS itself
-pip install xarray_behave --update  # the GUI
-``` -->
-
 ## Test the installation (Optional)
 To quickly test the installation, run these  commands in the terminal:
 ```shell

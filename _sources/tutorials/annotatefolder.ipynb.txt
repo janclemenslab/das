@@ -1,0 +1,292 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "source": [
+    "# Predict\n",
+    "Similar to training, prediction can be done via three interfaces:\n",
+    "- via python, `das.predict.predict`\n",
+    "- via the command line, `das predict`, with audio data from a wav file.\n",
+    "- the GUI - see the [GUI tutorial](/tutorials_gui/predict)\n",
+    "\n",
+    "Prediction will:\n",
+    "\n",
+    "- load the audio data and the network\n",
+    "- run inference to produce confidence scores (`class_probabilties`)\n",
+    "- post-process the confidence score to extract the times of events and label segments.\n"
+   ],
+   "metadata": {}
+  },
+  {
+   "cell_type": "markdown",
+   "source": [
+    "## Prediction using python"
+   ],
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "source": [
+    "import numpy as np\n",
+    "from pprint import pprint\n",
+    "import scipy.io.wavfile\n",
+    "import das.predict, das.annot\n",
+    "from pathlib import Path\n"
+   ],
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "Help on function predict in module das.predict:\n",
+      "\n",
+      "predict(x: <built-in function array>, model_save_name: str = None, verbose: int = 1, batch_size: int = None, model: keras.engine.training.Model = None, params: dict = None, event_thres: float = 0.5, event_dist: float = 0.01, event_dist_min: float = 0, event_dist_max: float = None, segment_thres: float = 0.5, segment_minlen: float = None, segment_fillgap: float = None, pad: bool = True, prepend_data_padding: bool = True)\n",
+      "    [summary]\n",
+      "    \n",
+      "    Usage:\n",
+      "    Calling predict with the path to the model will load the model and the\n",
+      "    associated params and run inference:\n",
+      "    `das.predict.predict(x=data, model_save_name='tata')`\n",
+      "    \n",
+      "    To re-use the same model with multiple recordings, load the modal and params\n",
+      "    once and pass them to `predict`\n",
+      "    ```my_model, my_params = das.utils.load_model_and_params(model_save_name)\n",
+      "    for data in data_list:\n",
+      "        das.predict.predict(x=data, model=my_model, params=my_params)\n",
+      "    ```\n",
+      "    \n",
+      "    Args:\n",
+      "        x (np.array): Audio data [samples, channels]\n",
+      "        model_save_name (str): path with the trunk name of the model. Defaults to None.\n",
+      "        model (keras.model.Models): Defaults to None.\n",
+      "        params (dict): Defaults to None.\n",
+      "    \n",
+      "        verbose (int): display progress bar during prediction. Defaults to 1.\n",
+      "        batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).\n",
+      "                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.\n",
+      "                         Large batch sizes lead to loss of samples since only complete batches are used.\n",
+      "        pad (bool): Append zeros to fill up batch. Otherwise the end can be cut.\n",
+      "                    Defaults to False\n",
+      "    \n",
+      "        event_thres (float): Confidence threshold for detecting peaks. Range 0..1. Defaults to 0.5.\n",
+      "        event_dist (float): Minimal distance between adjacent events during thresholding.\n",
+      "                            Prevents detecting duplicate events when the confidence trace is a little noisy.\n",
+      "                            Defaults to 0.01.\n",
+      "        event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.\n",
+      "                                Defaults to 0.\n",
+      "        event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.\n",
+      "                                Defaults to None (no upper limit).\n",
+      "    \n",
+      "        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.\n",
+      "        segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.\n",
+      "        segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.\n",
+      "        pad (bool): prepend values (repeat last sample value) to fill the last batch. Otherwise, the end of the data will not be annotated because\n",
+      "                    the last, non-full batch will be skipped.\n",
+      "        prepend_data_padding (bool, optional): Restores samples that are ignored\n",
+      "                    in the beginning of the first and the end of the last chunk\n",
+      "                    because of \"ignore_boundaries\". Defaults to True.\n",
+      "    Raises:\n",
+      "        ValueError: [description]\n",
+      "    \n",
+      "    Returns:\n",
+      "        events: [description]\n",
+      "        segments: [description]\n",
+      "        class_probabilities (np.array): [T, nb_classes]\n",
+      "        class_names (List[str]): [nb_classes]\n",
+      "\n"
+     ]
+    }
+   ],
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "source": [
+    "audiofiles = Path().glob(\"audio/*.wav\")\n",
+    "print(f\"Found {audiofiles} audio files.\")"
+   ],
+   "outputs": [],
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "source": [
+    "datename = \"20200430_201821\"\n",
+    "modelpath = f\"model/{datename}\"\n",
+    "model, params = das.utils.load_model_and_params(modelpath)"
+   ],
+   "outputs": [],
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "source": [
+    "def df_to_csv_with_comments(savefilename, df, comments):\n",
+    "    with open(savefilename, 'a') as f:\n",
+    "        for comment in comments:\n",
+    "            f.write(f\"{comment}\\n\")\n",
+    "        df.to_csv(f)\n",
+    "\n",
+    "def from_predict(events: dict = None, segments: dict = None) -> pd.DataFrame:\n",
+    "    \"\"\"[summary]\n",
+    "\n",
+    "    Args:\n",
+    "        events (dict, optional): [description]. Defaults to None.\n",
+    "        segments (dict, optional): [description]. Defaults to None.\n",
+    "\n",
+    "    Returns:\n",
+    "        pd.DataFrame: [description]\n",
+    "    \"\"\"\n",
+    "    names = []\n",
+    "    start_seconds = []\n",
+    "    stop_seconds = []\n",
+    "    possible_event_names = []\n",
+    "\n",
+    "    if segments is not None:\n",
+    "        possible_event_names.append(segments['names'])\n",
+    "        for segment_name, onset_second, offset_second in zip(segments['sequence'], segments['onset_seconds'], segments['offset_seconds']):\n",
+    "            names.append(segment_name)\n",
+    "            start_seconds.append(onset_second)\n",
+    "            stop_seconds.append(offset_second)\n",
+    "\n",
+    "    if events is not None:\n",
+    "        possible_event_names.append(events['names'])\n",
+    "        for event_name, second in zip(events['sequence'], events['seconds']):\n",
+    "            names.append(event_name)\n",
+    "            start_seconds.append(second)\n",
+    "            stop_seconds.append(second)\n",
+    "    \n",
+    "    annot = das.annot.from_lists(names, start_seconds, stop_seconds, possible_event_names)\n",
+    "    df = annot.to_df()\n",
+    "    return df\n"
+   ],
+   "outputs": [],
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "source": [
+    "segment_minlen = 0.02\n",
+    "segment_fillgap = 0.02\n",
+    "annotationfolder = \"annotations\"\n",
+    "\n",
+    "\n",
+    "\n",
+    "for audiofile in audiofiles:\n",
+    "    samplerate, x = scipy.io.wavfile.read(audiofile)\n",
+    "    # DAS requires [T, channels], but single-channel wave files are loaded with shape [T,]\n",
+    "    x = np.atleast_2d(x).T\n",
+    "\n",
+    "    events, segments, class_probabilities, class_names = das.predict.predict(x, \n",
+    "                                                            model=model, params=params,\n",
+    "                                                            verbose=2,\n",
+    "                                                            segment_minlen=segment_minlen,\n",
+    "                                                            segment_fillgap=segment_fillgap)\n",
+    "\n",
+    "    # save annotations\n",
+    "    df = das.annot.Events.from_predict(events, segments)  # need to implement\n",
+    "    savefilename = annotationfolder + audiofile.stem + '_annotations.csv'\n",
+    "    # df.to_csv(savefilename)\n",
+    "    comments = {'segment_minlen': segment_minlen,\n",
+    "                'segment_fillgap': segment_fillgap,\n",
+    "                'modelpath': modelpath,\n",
+    "                'audiofile': audiofile,\n",
+    "                }\n",
+    "    comments_list = []\n",
+    "    for key, val in comments:\n",
+    "        comments_list.append(f\"{key}={val}\")\n",
+    "    df_to_csv_with_comments(savefilename, df, comments_list)\n"
+   ],
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "DAS requires [T, channels], but single-channel wave files are loaded with shape [T,] (data shape is (35000,)).\n"
+     ]
+    },
+    {
+     "output_type": "stream",
+     "name": "stderr",
+     "text": [
+      "/Users/janc/miniconda3/lib/python3.8/site-packages/keras/layers/core.py:1043: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.\n",
+      "  warnings.warn('{} is not loaded, but a Lambda layer uses it. '\n",
+      "/Users/janc/miniconda3/lib/python3.8/site-packages/keras/optimizer_v2/optimizer_v2.py:355: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.\n",
+      "  warnings.warn(\n",
+      "/Users/janc/miniconda3/lib/python3.8/site-packages/keras/engine/training.py:2470: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.\n",
+      "  warnings.warn('`Model.state_updates` will be removed in a future version. '\n"
+     ]
+    },
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "CPU times: user 6.5 s, sys: 419 ms, total: 6.92 s\n",
+      "Wall time: 3.64 s\n"
+     ]
+    }
+   ],
+   "metadata": {
+    "tags": []
+   }
+  },
+  {
+   "cell_type": "markdown",
+   "source": [
+    "### Outputs of `predict`\n",
+    "- `class_probabilties`: `[T, nb_classes]` including noise.\n",
+    "- `segments`: Labelled segments\n",
+    "    - `samplerate_Hz`: \n",
+    "    - `names`: names of all segment types\n",
+    "    - `index`: indices of all segments types into class_probabiltiies\n",
+    "    - `probabilities = class_probabilites[:, index]`\n",
+    "    - `sequence`: sequence of segment names (one entry per detected segment). Excludes noise\n",
+    "    - `samples`: labelled sample trace (label of the sequence occupying each sample)\n",
+    "    - `onsets_seconds`, `offsets_seconds`, `durations_seconds`: Onsets, offsets, and duration of individual segmeents\n",
+    "- `events`: Detected events\n",
+    "    - `samplerate_Hz`: \n",
+    "    - `index`: indices of all events types into class_probabiltiies\n",
+    "    - `names`: names of all event types\n",
+    "    - `probabilities`: probabilities (confidence scores) for detected events. Value of `class_probabilities` for the detected event index at each event time.\n",
+    "    - `seconds`: times (seconds) of detected events\n",
+    "    - `sequence`: sequence of event names (one per detected event)."
+   ],
+   "metadata": {}
+  }
+ ],
+ "metadata": {
+  "file_extension": ".py",
+  "interpreter": {
+   "hash": "8b0ab261a56efe1a5fd9591203310bfa777485461dc7aa1d8ccede5021fac1c0"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.11"
+  },
+  "mimetype": "text/x-python",
+  "name": "python",
+  "npconvert_exporter": "python",
+  "pygments_lexer": "ipython3",
+  "version": 3
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

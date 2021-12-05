@@ -3,12 +3,12 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.data" href="das.data.html" /><link rel="prev" title="Developer API" href="../api.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.augmentation" href="das.augmentation.html" /><link rel="prev" title="Developer API" href="../api.html" />
 
-    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
+    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
         <title>das.annot - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
@@ -199,6 +199,7 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.annot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
@@ -207,6 +208,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
@@ -214,6 +216,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train_transfer.html">das.train_transfer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
@@ -255,6 +258,226 @@
           <section id="module-das.annot">
 <span id="das-annot"></span><h1>das.annot<a class="headerlink" href="#module-das.annot" title="Permalink to this headline">¶</a></h1>
 <p>Utilities for dealing with annotations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="das.annot.Events">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.annot.</span></span><span class="sig-name descname"><span class="pre">Events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_names_from_categories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility class for dealing with annotations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.add_name">
+<span class="sig-name descname"><span class="pre">add_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'segment'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">append</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_after_append</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.add_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.add_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>category</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘segment’.</p></li>
+<li><p><strong>times</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
+<li><p><strong>append</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
+<li><p><strong>sort_after_append</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.add_time">
+<span class="sig-name descname"><span class="pre">add_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_seconds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.add_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.add_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>start_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>stop_seconds</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.delete_name">
+<span class="sig-name descname"><span class="pre">delete_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.delete_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.delete_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.delete_range">
+<span class="sig-name descname"><span class="pre">delete_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.delete_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.delete_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes events within the range.</p>
+<p>Need to start and stop after t0 and before t1 (non-inclusive bounds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>t0</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>t1</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – if true, only matches events that start AND stop within the range,
+if false, matches events that start OR stop within the range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of deleted events</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.filter_range">
+<span class="sig-name descname"><span class="pre">filter_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.filter_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.filter_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns events within the range.</p>
+<p>Need to start and stop after t0 and before t1 (non-inclusive bounds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>t0</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>t1</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>strict</strong> (<em>bool</em>) – if true, only matches events that start AND stop within the range,
+if false, matches events that start OR stop within the range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[N, 2] list of start_seconds and stop_seconds in the range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.from_dataset">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.from_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.from_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.from_df">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible_event_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.from_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.from_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – with columns <code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">end_seconds</span></code>.</p></li>
+<li><p><strong>possible_event_names</strong> (<em>list</em><em>, </em><em>optional</em>) – [description]. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#das.annot.Events" title="das.annot.Events">Events</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.from_lists">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">possible_event_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.from_lists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.from_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>start_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>stop_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>possible_event_names</strong> (<em>list</em><em>, </em><em>optional</em>) – [description]. Defaults to [].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.move_time">
+<span class="sig-name descname"><span class="pre">move_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.move_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.move_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>old_time</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>new_time</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.select_range">
+<span class="sig-name descname"><span class="pre">select_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/annot.html#Events.select_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.select_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get indices of events within the range.</p>
+<p>Need to start and stop after t0 and before t1 (non-inclusive bounds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – [description]</p></li>
+<li><p><strong>t0</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]</p></li>
+<li><p><strong>t1</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]</p></li>
+<li><p><strong>strict</strong> (<em>bool</em><em>, </em><em>optional</em>) – if true, only matches events that start AND stop within the range,
+if false, matches events that start OR stop within the range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of indices of events within the range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[uint]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.to_dataset">
+<span class="sig-name descname"><span class="pre">to_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">xarray.core.dataset.Dataset</span></span></span><a class="reference internal" href="../_modules/das/annot.html#Events.to_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.to_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an xarray dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>with the data arrays <code class="xref py py-obj docutils literal notranslate"><span class="pre">event_names</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">event_times</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>xr.Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.annot.Events.to_df">
+<span class="sig-name descname"><span class="pre">to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preserve_empty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="reference internal" href="../_modules/das/annot.html#Events.to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.annot.Events.to_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert to pandas.DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>preserve_empty</strong> (<em>bool</em><em>, </em><em>optional</em>) – In keeping with the convention that events have identical start and stop times and segments do not,
+empty events are coded with np.nan as both start and stop and
+empty segments are coded as np.nan as start and 0 as stop.
+<a class="reference internal" href="#das.annot.Events.from_df" title="das.annot.Events.from_df"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_df()</span></code></a> will obey this convention - if both start and stop are np.nan,
+the name will be a segment,
+if only the start is np.nan (the stop does not matter), the name will be an event
+Defaults to True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>with columns <code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">stop_seconds</span></code>, one row per event.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
 </section>
 
         </article>
@@ -262,12 +485,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.data.html">
+          <a class="next-page" href="das.augmentation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.data</div>
+                <div class="title">das.augmentation</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
