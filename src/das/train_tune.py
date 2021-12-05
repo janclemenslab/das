@@ -107,7 +107,7 @@ class DasTuner(kt.Tuner):
 
             model = self.hypermodel.build(trial.hyperparameters)
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
-                    callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+                      callbacks=callbacks, verbose=verbose, class_weight=class_weight)
         except:
             logging.exception("Something went wrong. Will try to continue.")
 
@@ -413,14 +413,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
         d = {'fit_hist': fit_hist.history,
-            'confusion_matrix': conf_mat,
-            'classification_report': report,
-            'x_test': x_test,
-            'y_test': y_test,
-            'y_pred': y_pred,
-            'labels_test': labels_test,
-            'labels_pred': labels_pred,
-            'params': params,
+             'confusion_matrix': conf_mat,
+             'classification_report': report,
+             'x_test': x_test,
+             'y_test': y_test,
+             'y_pred': y_pred,
+             'labels_test': labels_test,
+             'labels_pred': labels_pred,
+             'params': params,
             }
 
         fl.save(save_filename, d)
