@@ -37,7 +37,7 @@ conda create python=3.8 das -c conda-forge -c ncb -n das
 
 If you do not need the graphical user interface (for instance, when training _DAS_ on a server), install the non-GUI version:
 ```shell
-conda create python=3.8 das-nogui -c conda-forge -c ncb -c fastai -n das
+conda create python=3.8 das-nogui -c conda-forge -c ncb -n das
 ```
 
 ## Usage
