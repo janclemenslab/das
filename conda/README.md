@@ -25,10 +25,5 @@ conda activate das_build
 conda config --set anaconda_upload yes
 anaconda login
 
-conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.9 --user ncb
-conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.8 --user ncb
-conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.7 --user ncb
-conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.9 --user ncb
-conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.8 --user ncb
-conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.7 --user ncb
+conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.9 --user ncb & conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.8 --user ncb & conda mambabuild das-nogui -c conda-forge -c ncb -c anaconda --python 3.7 --user ncb & conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.9 --user ncb & conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.8 --user ncb & conda mambabuild das -c conda-forge -c ncb -c anaconda --python 3.7 --user ncb
 ```
