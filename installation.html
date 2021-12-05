@@ -208,7 +208,6 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
@@ -260,29 +259,29 @@
 <section id="pre-requisites">
 <h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">¶</a></h2>
 <p><em>Anaconda python</em>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
-<p><em>CUDA libraries for using the GPU</em>: While <em>DAS</em> works on a standard desktop CPU, a dedicated GPU will greatly improve annotation speed and is highly recommended for training. <em>DAS</em> uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the CUDA and cuDNN libraries need to be installed. See the <a class="reference external" href="https://www.tensorflow.org/install/gpu">tensorflow docs</a> for details.</p>
+<!-- _CUDA libraries for using the GPU_: While _DAS_ works on a standard desktop CPU, a dedicated GPU will greatly improve annotation speed and is highly recommended for training. _DAS_ uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the CUDA and cuDNN libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details. -->
 <p><em>Libsoundfile (Linux only)</em>: If you are on Linux and want to load audio from a wide range of audio formats (other than <code class="docutils literal notranslate"><span class="pre">wav</span></code>), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you work with more exotic audio files.</p>
 <p><em>Visual C++ runtime (Windows only)</em>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
 </section>
 <section id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">¶</a></h2>
-<!-- Create an anaconda environment called `das` that contains all the required packages, including the GUI:
+<p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages, including the GUI:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das -c conda-forge -c ncb -n das
+</pre></div>
+</div>
+<p>If you do not need the graphical user interface (for instance, when training <em>DAS</em> on a server), install the non-GUI version:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das-nogui -c conda-forge -c ncb -c fastai -n das
+</pre></div>
+</div>
+<!-- Create an anaconda environment called `das` that contains all required packages, including the GUI:
 ```shell
-conda create python=3.8 das -c conda-forge -c ncb -c fastai -n das
+conda env create ncb/das-env -n das
 ```
 
-If you do not need the graphical user interface (for instance, when training _DAS_ on a server), install the non-GUI version:
+If you do not need the GUI (for instance, when training _DAS_ on a server), install the no-GUI version:
 ```shell
-conda create python=3.8 das-nogui -c conda-forge -c ncb -c fastai -n das
+conda env create ncb/das-nogui-env -n das
 ``` -->
-<p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all required packages, including the GUI:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create ncb/das-env -n das
-</pre></div>
-</div>
-<p>If you do not need the GUI (for instance, when training <em>DAS</em> on a server), install the no-GUI version:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda env create ncb/das-nogui-env -n das
-</pre></div>
-</div>
 </section>
 <section id="test-the-installation-optional">
 <h2>Test the installation (Optional)<a class="headerlink" href="#test-the-installation-optional" title="Permalink to this headline">¶</a></h2>
@@ -396,8 +395,6 @@ das gui
     <script src="_static/togglebutton.js"></script>
     <script src="_static/tabs.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

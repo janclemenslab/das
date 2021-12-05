@@ -24,7 +24,6 @@ Developer API
    das.make_dataset
    das.menagerie
    das.models
-   das.models_legacy
    das.neptune
    das.npy_dir
    das.predict
