@@ -24,20 +24,20 @@ curl https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o mi
 sh miniconda.sh -b -p $HOME/miniconda
 export PATH="$HOME/miniconda/bin:$PATH"
 ``` -->
-
-__CUDA libraries for using the GPU__: While _DAS_ works well for annotating song using the CPU, a GPU will greatly improve annotation speed and is recommended for training a _DAS_ network. The network is implemented in the deep-learning framework Tensorflow. To make sure that Tensorflow can use your GPU, the required CUDA libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details.
+<!--
+__CUDA libraries for using the GPU__: While _DAS_ works well for annotating song using the CPU, a GPU will greatly improve annotation speed and is recommended for training a _DAS_ network. The network is implemented in the deep-learning framework Tensorflow. To make sure that Tensorflow can use your GPU, the required CUDA libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details. -->
 
 __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data using [soundfile](http://pysoundfile.readthedocs.io/), which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Note that _DAS_ will work w/o `libsndfile` but will not be able to load exotic audio formats.
 
 ### Install _DAS_ with or without the GUI
 Create an anaconda environment called `das` that contains all the required packages, including the GUI:
 ```shell
-conda env create ncb/das-env -n das
+conda create python=3.8 das -c conda-forge -c ncb -n das
 ```
 
-If you do not need the graphical user interface, for instance, when training _DAS_ on a server, install the plain version:
+If you do not need the graphical user interface (for instance, when training _DAS_ on a server), install the non-GUI version:
 ```shell
-conda env create ncb/das-nogui-env -n das
+conda create python=3.8 das-nogui -c conda-forge -c ncb -c fastai -n das
 ```
 
 ## Usage
