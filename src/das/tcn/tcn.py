@@ -149,8 +149,9 @@ class TCN:
             use_separable = [use_separable] * nb_stacks
 
         if len(use_separable) < nb_stacks:
-            use_separable = use_separable * nb_stacks
-        self.use_separable = use_separable # use_separable
+            use_separable.extend(use_separable[-1] * nb_stacks)
+        self.use_separable = use_separable
+
         self.activation = activation
         self.dilations = dilations
         self.nb_stacks = nb_stacks
