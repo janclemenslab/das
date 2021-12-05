@@ -223,7 +223,8 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0001, out_activation: str = 'softmax',
+            nb_pre_conv: int = 0, learning_rate: float = 0.0001, upsample: bool = True,
+            out_activation: str = 'softmax',
             use_separable: bool = False,
             **kwignored):
     """Create TCN network.
@@ -243,6 +244,9 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         dropout_rate (float, optional): [description]. Defaults to 0.00.
         padding (str, optional): [description]. Defaults to 'same'.
         nb_pre_conv (int, optional): number of conv-relu-batchnorm-maxpool2 blocks before the TCN - useful for reducing the sample rate. Defaults to 0
+        upsample (bool, optional): whether or not to restore the model output to the input samplerate.
+                                   Should generally be True during training and evaluation but my speed up inference .
+                                   Defaults to True.
         out_activation (str, optional): activation type for the output. Defaults to 'softmax'.
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ignored
@@ -262,7 +266,7 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
                       use_separable=use_separable)(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation(out_activation)(x)
-    if nb_pre_conv > 0:
+    if nb_pre_conv > 0 and upsample:
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
 
@@ -274,8 +278,8 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
 
 @_register_as_model
 def tcn(*args, **kwargs):
-    """Synonym for tcn_seq."""
-    return tcn_seq(*args, **kwargs)
+    """Synonym for tcn_stft."""
+    return tcn_stft(*args, **kwargs)
 
 
 @_register_as_model
@@ -441,7 +445,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         learning_rate (float, optional) Defaults to 0.0005
         nb_lstm_units (int, optional): Defaults to 0.
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
-                                   Should generally be True during training and evaluation but my speed up inference.
+                                   Should generally be True during training and evaluation but may speed up inference.
                                    Defaults to True.
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred

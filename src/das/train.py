@@ -31,6 +31,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           ignore_boundaries: bool = True, batch_norm: bool = True,
           nb_pre_conv: int = 0, pre_nb_dft: int = 64,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
+          upsample: bool = True,
           nb_lstm_units: int = 0,
           verbose: int = 2, batch_size: int = 32,
           nb_epoch: int = 400,
@@ -92,6 +93,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                               Defaults to 16.
         pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.
                                Defaults to 3.
+        upsample (bool): whether or not to restore the model output to the input samplerate.
+                         Should generally be True during training and evaluation but my speed up inference.
+                         Defaults to True.
         nb_lstm_units (int): If >0, adds LSTM with `nb_lstm_units` LSTM units to the output of the stack of TCN blocks.
                              Defaults to 0 (no LSTM layer).
         verbose (int): Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
@@ -157,7 +161,10 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         stride = 1  # should take every sample, since sampling rates of both x and y are now the same
         y_offset = int(round(nb_hist / 2))
 
-    output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
+    if not upsample:
+        output_stride = int(2**nb_pre_conv)
+    else:
+        output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
 
     if save_prefix is None:
         save_prefix = ''

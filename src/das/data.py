@@ -130,6 +130,8 @@ class AudioSequence(keras.utils.Sequence):
         else:
             self.weights = np.ones((self.batch_size,))
 
+        self.weights = self.weights[:, ::output_stride]
+
     def unroll(self, return_x=True, merge_batches=True):
         """[summary]
 
