@@ -10,13 +10,13 @@ class Events(UserDict):
 
     def __init__(self, data: Optional[Dict[str, List[float]]] = None, categories: Optional[Dict[str, str]] = None,
                  add_names_from_categories: bool = True):
-        """Initializes Events class. Do not use. Use `from_df` for `from_lists` instead.
+        # """Initializes Events class. Do not use. Use `from_df` for `from_lists` instead.
 
-        Args:
-            data (Optional[Dict[str, List[float]]], optional): [description]. Defaults to None.
-            categories (Optional[Dict[str, str]], optional): [description]. Defaults to None.
-            add_names_from_categories (bool, optional): [description]. Defaults to True.
-        """
+        # Args:
+        #     data (Optional[Dict[str, List[float]]], optional): [description]. Defaults to None.
+        #     categories (Optional[Dict[str, str]], optional): [description]. Defaults to None.
+        #     add_names_from_categories (bool, optional): [description]. Defaults to True.
+        # """
         if data is None:
             data = dict()
 
