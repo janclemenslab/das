@@ -6,6 +6,7 @@ from collections import UserDict
 from typing import Optional, List, Dict, Any, Union
 
 class Events(UserDict):
+    """Utility class for dealing with annotations."""
 
     def __init__(self, data: Optional[Dict[str, List[float]]] = None, categories: Optional[Dict[str, str]] = None,
                  add_names_from_categories: bool = True):
