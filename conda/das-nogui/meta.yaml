@@ -37,7 +37,7 @@ requirements:
     - tensorflow-gpu>2.1  # [not osx]
     - pip
     - setuptools
-    - xarray-behave-nogui
+    - xarray-behave-nogui>=0.28.3
     - colorcet
     - keras-tuner
     - numpy>1.19
@@ -61,7 +61,7 @@ requirements:
     # - opencv-python-headless
     - tensorflow>2.1  # [osx]
     - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave
+    - xarray-behave-nogui>=0.28.3
     - colorcet
     - keras-tuner
     - numpy>1.19

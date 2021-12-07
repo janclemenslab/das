@@ -42,7 +42,7 @@ requirements:
     - opencv-python-headless
     - tensorflow>2.1  # [osx]
     - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave
+    - xarray-behave>=0.28.3
     - keras-tuner
     - numpy>1.19
   run:
@@ -69,7 +69,7 @@ requirements:
     - opencv-python-headless
     - tensorflow>2.1  # [osx]
     - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave
+    - xarray-behave>=0.28.3
     - keras-tuner
     - numpy>1.19
 
