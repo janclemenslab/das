@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Ultrasonic vocalizations from mice" href="mice.html" /><link rel="prev" title="Courtship song of flies" href="flies.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Ultrasonic vocalizations from mice" href="mice.html" /><link rel="prev" title="Courtship song of flies" href="flies.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Song of Bengalese finches - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,7 +253,7 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="song-of-bengalese-finches">
+          <div class="section" id="song-of-bengalese-finches">
 <h1>Song of Bengalese finches<a class="headerlink" href="#song-of-bengalese-finches" title="Permalink to this headline">¶</a></h1>
 <p>The song of bengalese finches has beens show to cluster into discrete syllable types, which are recoverable using unsupervised methods.</p>
 <p>We here closely follow the procedure described in Sainburg et al. (2020): Finding, visualizing, and quantifying latent structure across (see code on <a class="reference external" href="https://github.com/timsainb/avgn_paper">github</a>).</p>
@@ -282,7 +280,7 @@
 </div>
 </div>
 </div>
-<section id="download-audio-data">
+<div class="section" id="download-audio-data">
 <h2>Download audio data<a class="headerlink" href="#download-audio-data" title="Permalink to this headline">¶</a></h2>
 <p>Data of four Bengalese finches from: D Nicholson, JE Queen, S Sober (2017). Bengalese finch song repository. See <a class="reference external" href="https://doi.org/10.6084/m9.figshare.4805749.v5%5D">data repo</a> on figshare.</p>
 <div class="cell docutils container">
@@ -301,8 +299,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="pre-processing">
+</div>
+<div class="section" id="pre-processing">
 <h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
 <p>Noise reduction</p>
 <div class="cell docutils container">
@@ -385,8 +383,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="dimensionality-reduction-and-clustering">
+</div>
+<div class="section" id="dimensionality-reduction-and-clustering">
 <h2>Dimensionality reduction and clustering<a class="headerlink" href="#dimensionality-reduction-and-clustering" title="Permalink to this headline">¶</a></h2>
 <p>Embed the feature vectors into a 2D space using <a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP</a> and cluster the resulting groups of syllables with <a class="reference external" href="https://hdbscan.readthedocs.io/">hdbscan</a>.</p>
 <div class="cell docutils container">
@@ -403,8 +401,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="plot-results">
+</div>
+<div class="section" id="plot-results">
 <h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
 <p>Syllable spectrograms embedded into a 2D space, colored by manual syllable labels (left) and by the unsupervised cluster labels (right).
 Syllables fall into separate groups, which are consistent with the grouping imposed by manual labelling (left, syllables of the same label are grouped together). The clustering (right) recovers the manual separation by tends to find  more subdivisions.</p>
@@ -482,8 +480,8 @@ Syllables fall into separate groups, which are consistent with the grouping impo
 <img alt="../_images/birds_21_0.jpg" src="../_images/birds_21_0.jpg"/>
 </div>
 </div>
-</section>
-</section>
+</div>
+</div>
 <script type="application/vnd.jupyter.widget-state+json">
 {"state": {"123c3506fe0a4123a5cb4bd0ebbf0711": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "2db4a4c8c4a741db818f0069a230f2f7": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HBoxModel", "state": {"_view_module_version": "1.5.0", "_model_name": "HBoxModel", "_model_module": "@jupyter-widgets/controls", "_view_name": "HBoxView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_3caa773b27364fd38173ed21589e962a", "_view_count": null, "_model_module_version": "1.5.0", "box_style": "", "children": ["IPY_MODEL_8dc0fcf8407a46b085e0cac24b4347cb", "IPY_MODEL_68166486a1864ac894978a614f16d0a3"]}}, "3caa773b27364fd38173ed21589e962a": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "3d99753c1815404784b4f80fc71d881e": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "68166486a1864ac894978a614f16d0a3": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_view_module_version": "1.5.0", "description_tooltip": null, "_model_name": "HTMLModel", "_model_module": "@jupyter-widgets/controls", "_view_name": "HTMLView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_998c2e046fc540a69743425b74532c65", "value": " 449/449 [16:18&lt;00:00,  2.18s/it]", "style": "IPY_MODEL_123c3506fe0a4123a5cb4bd0ebbf0711", "placeholder": "\u200b", "_view_count": null, "_model_module_version": "1.5.0", "description": ""}}, "8dc0fcf8407a46b085e0cac24b4347cb": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "FloatProgressModel", "state": {"_view_module_version": "1.5.0", "description_tooltip": null, "_model_name": "FloatProgressModel", "_model_module": "@jupyter-widgets/controls", "max": 449, "bar_style": "success", "_view_name": "ProgressView", "_view_module": "@jupyter-widgets/controls", "_dom_classes": [], "layout": "IPY_MODEL_3d99753c1815404784b4f80fc71d881e", "orientation": "horizontal", "value": 449, "style": "IPY_MODEL_a753e1ac6662434789c649c801346837", "min": 0, "_view_count": null, "_model_module_version": "1.5.0", "description": "100%"}}, "998c2e046fc540a69743425b74532c65": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_view_module_version": "1.2.0", "_model_name": "LayoutModel", "grid_row": null, "_model_module": "@jupyter-widgets/base", "overflow": null, "max_height": null, "display": null, "grid_auto_flow": null, "grid_template_rows": null, "align_self": null, "grid_auto_columns": null, "width": null, "grid_area": null, "align_items": null, "_view_name": "LayoutView", "left": null, "height": null, "_view_module": "@jupyter-widgets/base", "object_position": null, "justify_content": null, "bottom": null, "max_width": null, "border": null, "margin": null, "order": null, "grid_column": null, "grid_auto_rows": null, "padding": null, "grid_template_columns": null, "justify_items": null, "object_fit": null, "visibility": null, "_view_count": null, "flex_flow": null, "min_height": null, "top": null, "min_width": null, "flex": null, "_model_module_version": "1.2.0", "grid_template_areas": null, "overflow_x": null, "right": null, "overflow_y": null, "grid_gap": null, "align_content": null}}, "a753e1ac6662434789c649c801346837": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "ProgressStyleModel", "state": {"_view_module_version": "1.2.0", "_model_name": "ProgressStyleModel", "_model_module": "@jupyter-widgets/controls", "description_width": "initial", "_view_name": "StyleView", "_view_module": "@jupyter-widgets/base", "_view_count": null, "bar_color": null, "_model_module_version": "1.5.0"}}}, "version_major": 2, "version_minor": 0}
 </script>

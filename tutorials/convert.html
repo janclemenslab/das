@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Programming documentation" href="tutorials.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Programming documentation" href="tutorials.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Convert your own annotations and audio data - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,12 +253,12 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="convert-your-own-annotations-and-audio-data">
+          <div class="section" id="convert-your-own-annotations-and-audio-data">
 <h1>Convert your own annotations and audio data<a class="headerlink" href="#convert-your-own-annotations-and-audio-data" title="Permalink to this headline">¶</a></h1>
 <p>If you start from scratch—with non-annotated audio recording—use the GUI. See the <a class="reference internal" href="../tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">GUI tutorial</span></a> for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training…</p>
 <p>However, often annotations exist, from old manual annotations or produced by other tools. <em>DAS</em> can be used with existing annotations, by converting the existing annotations into the das format.</p>
 <p>If audio data is in a format supported by das (see <a class="reference internal" href="../tutorials_gui/load.html"><span class="doc std std-doc">here</span></a>), open in GUI and export to a folder. For processing large sets of recordings use the <a class="reference internal" href="make_ds_notebook.html"><span class="doc std std-doc">notebook</span></a>.</p>
-<section id="format-of-exported-annotations-and-audio">
+<div class="section" id="format-of-exported-annotations-and-audio">
 <h2>Format of exported annotations and audio<a class="headerlink" href="#format-of-exported-annotations-and-audio" title="Permalink to this headline">¶</a></h2>
 <p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
 <p>Audio and annotations are exported into <code class="docutils literal notranslate"><span class="pre">csv</span></code> (comma-separated values) and <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files):</p>
@@ -291,7 +289,7 @@ There are two types of song elements:
 - `events` have not extent in time, `start_seconds=stop_seconds`, and are best used for brief, pulsatile signals like fly pulse song
 - `segments` extend in time, `start_seconds>stop_seconds`, and should be used for normal syllables or fly sine song -->
 <p>The <code class="docutils literal notranslate"><span class="pre">csv</span></code> format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created <code class="docutils literal notranslate"><span class="pre">csv</span></code> files from your own annotation format in python using a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html">pandas DataFrames</a>. Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file for use with <em>DAS</em>.</p>
-<section id="examples-of-transforming-custom-annotation-formats">
+<div class="section" id="examples-of-transforming-custom-annotation-formats">
 <h3>Examples of transforming custom annotation formats<a class="headerlink" href="#examples-of-transforming-custom-annotation-formats" title="Permalink to this headline">¶</a></h3>
 <p>Say we have read annotation data into python as three lists containing the names, start and stop of a song type:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'bip'</span><span class="p">,</span> <span class="s1">'bop'</span><span class="p">,</span> <span class="s1">'bip'</span><span class="p">]</span>
@@ -361,8 +359,8 @@ Use <code class="docutils literal notranslate"><span class="pre">xb.annot</span>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'filename.csv'</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="convert-audio-data">
+</div>
+<div class="section" id="convert-audio-data">
 <h3>Convert audio data<a class="headerlink" href="#convert-audio-data" title="Permalink to this headline">¶</a></h3>
 <p>The GUI can read many formats (see <a class="reference internal" href="../tutorials_gui/load.html"><span class="doc std std-doc">list of supported audio formats</span></a>) and data can always be exported in the correct format via the GUI.
 However, if you want to assemble many of your own recordings into dataset for training, a programmatic approach is more efficient.</p>
@@ -381,9 +379,9 @@ However, if you want to assemble many of your own recordings into dataset for tr
 <p class="admonition-title">Warning</p>
 <p>Clipping can occur when saving certain data types as wav files. see docs of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy.io.wavfile.write</a> for a list of the range of values available when saving audio of different types to wav.</p>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
         </article>
       </div>

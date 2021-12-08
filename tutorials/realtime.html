@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Annotate audio in realtime - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,9 +253,9 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="annotate-audio-in-realtime">
+          <div class="section" id="annotate-audio-in-realtime">
 <h1>Annotate audio in realtime<a class="headerlink" href="#annotate-audio-in-realtime" title="Permalink to this headline">¶</a></h1>
-<section id="setup">
+<div class="section" id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>Test the latency of realtime annotations on a GPU (if you have one) or a CPU.</p>
 <p>Disabling eager execution is crucial for low latency annotation - eager execution increases latencies 6-fold, from 5 ms to 30 ms.</p>
@@ -309,8 +307,8 @@ CPUs: [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU')]
 </div>
 </div>
 </div>
-</section>
-<section id="load-the-model-and-runtime-parameters">
+</div>
+<div class="section" id="load-the-model-and-runtime-parameters">
 <h2>Load the model and runtime parameters<a class="headerlink" href="#load-the-model-and-runtime-parameters" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -337,8 +335,8 @@ CPUs: [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU')]
 </div>
 </div>
 </div>
-</section>
-<section id="load-a-recording">
+</div>
+<div class="section" id="load-a-recording">
 <h2>Load a recording<a class="headerlink" href="#load-a-recording" title="Permalink to this headline">¶</a></h2>
 <p>Samplerates of the recording and of the data the model was trained with should match. Otherwise resample the recording to match the model using <code class="docutils literal notranslate"><span class="pre">scipy.signal.resample_poly(x=recording,</span> <span class="pre">up=int(recording_samplerate),</span> <span class="pre">down=int(samplerate),</span> <span class="pre">axis=0)</span></code></p>
 <div class="cell docutils container">
@@ -361,8 +359,8 @@ CPUs: [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU')]
 </div>
 </div>
 </div>
-</section>
-<section id="define-a-virtual-microphone">
+</div>
+<div class="section" id="define-a-virtual-microphone">
 <h2>Define a virtual microphone<a class="headerlink" href="#define-a-virtual-microphone" title="Permalink to this headline">¶</a></h2>
 <p>The microphone takes a full recording and returns chunks of data at a rate determined by the chunk duration. In a real experimental setup, this would be a function that runs the data acquisition or a multi-processing queue that gets fed by the acquisition system.</p>
 <div class="cell docutils container">
@@ -421,8 +419,8 @@ Consuming and plotting 100 chunks...
 </div>
 </div>
 </div>
-</section>
-<section id="test-annotation">
+</div>
+<div class="section" id="test-annotation">
 <h2>Test annotation<a class="headerlink" href="#test-annotation" title="Permalink to this headline">¶</a></h2>
 <p>Test the model and a simple song detection routing with a chunk that contains song. A specific song type is detect if the corresponding confidence is exceeds 0.7 during a chunk.</p>
 <div class="cell docutils container">
@@ -461,8 +459,8 @@ Consuming and plotting 100 chunks...
 <img alt="../_images/realtime_10_2.jpg" src="../_images/realtime_10_2.jpg"/>
 </div>
 </div>
-</section>
-<section id="run-annotation">
+</div>
+<div class="section" id="run-annotation">
 <h2>Run annotation<a class="headerlink" href="#run-annotation" title="Permalink to this headline">¶</a></h2>
 <p>Run the virtual microphone for 100 chunks to estimate annotation latencies.</p>
 <div class="cell docutils container">
@@ -485,8 +483,8 @@ Consuming and plotting 100 chunks...
 </div>
 </div>
 </div>
-</section>
-<section id="evaluate-latencies">
+</div>
+<div class="section" id="evaluate-latencies">
 <h2>Evaluate latencies<a class="headerlink" href="#evaluate-latencies" title="Permalink to this headline">¶</a></h2>
 <p>Timing on GPUs can be more variable than on CPUs since a major contributor to latency is the transfer of data from/to the GPU.</p>
 <p>Subtract the recording latency to get an estimate of the annotation latency.</p>
@@ -515,8 +513,8 @@ Consuming and plotting 100 chunks...
 <img alt="../_images/realtime_14_1.jpg" src="../_images/realtime_14_1.jpg"/>
 </div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
         </article>
       </div>

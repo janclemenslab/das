@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.npy_dir" href="das.npy_dir.html" /><link rel="prev" title="das.models_legacy" href="das.models_legacy.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.npy_dir" href="das.npy_dir.html" /><link rel="prev" title="das.models" href="das.models.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.neptune - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
@@ -255,12 +253,12 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-das.neptune">
+          <div class="section" id="module-das.neptune">
 <span id="das-neptune"></span><h1>das.neptune<a class="headerlink" href="#module-das.neptune" title="Permalink to this headline">¶</a></h1>
 <p>Utilities for logging to neptune.ai.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.neptune.Poseidon">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.neptune.</span></span><span class="sig-name descname"><span class="pre">Poseidon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.neptune.</span></span><span class="sig-name descname"><span class="pre">Poseidon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility class for logging to neptune.ai in <a class="reference internal" href="das.train.html#das.train.train" title="das.train.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.train.train</span></code></a>.</p>
 <p>Set up neptune run and log params.</p>
 <dl class="field-list simple">
@@ -282,7 +280,7 @@ Defaults to False.</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.neptune.Poseidon.log_test_results">
-<span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon.log_test_results" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/neptune.html#Poseidon.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.neptune.Poseidon.log_test_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log final classification result from test data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -291,7 +289,7 @@ Defaults to False.</p></li>
 </dl>
 </dd></dl>
 </dd></dl>
-</section>
+</div>
 
         </article>
       </div>
@@ -307,14 +305,14 @@ Defaults to False.</p></li>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="das.models_legacy.html">
+          <a class="prev-page" href="das.models.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">das.models_legacy</div>
+                <div class="title">das.models</div>
                 
               </div>
             </a>

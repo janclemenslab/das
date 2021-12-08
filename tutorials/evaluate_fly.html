@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Evaluate a bird song network" href="evaluate_bird.html" /><link rel="prev" title="Generate segment labels" href="label_segments.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Evaluate a bird song network" href="evaluate_bird.html" /><link rel="prev" title="Generate segment labels" href="label_segments.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Evaluate a sine and pulse network - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,7 +253,7 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="evaluate-a-sine-and-pulse-network">
+          <div class="section" id="evaluate-a-sine-and-pulse-network">
 <h1>Evaluate a sine and pulse network<a class="headerlink" href="#evaluate-a-sine-and-pulse-network" title="Permalink to this headline">¶</a></h1>
 <p>Shows how to:</p>
 <ul class="simple">
@@ -376,7 +374,7 @@ model predicts pulses at index 2
 </div>
 </div>
 </div>
-<section id="predict-song">
+<div class="section" id="predict-song">
 <h2>Predict song<a class="headerlink" href="#predict-song" title="Permalink to this headline">¶</a></h2>
 <p>Either load audio (<code class="docutils literal notranslate"><span class="pre">x_test</span></code>), ground truth labels (<code class="docutils literal notranslate"><span class="pre">y_test</span></code>), and confidence scores (<code class="docutils literal notranslate"><span class="pre">y_pred</span></code>) from <code class="docutils literal notranslate"><span class="pre">_results.h5</span></code> generated after training or load the data set and run the model.</p>
 <p>The confidence scores are post-processed to detect events and label segments. During postprocessing events can be filtered by interval (<code class="docutils literal notranslate"><span class="pre">event_dist_min</span></code>, <code class="docutils literal notranslate"><span class="pre">event_dist_max</span></code>, not used here),
@@ -413,8 +411,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="inspect-the-raw-confidence-scores">
+</div>
+<div class="section" id="inspect-the-raw-confidence-scores">
 <h2>Inspect the raw confidence scores<a class="headerlink" href="#inspect-the-raw-confidence-scores" title="Permalink to this headline">¶</a></h2>
 <p>The DAS network produces a confidence score for each sample, which correspond to the probability of finding a specific song type at that sample. The confidence score is post-processed to create annotations - detect the times of events  and label segments.</p>
 <div class="cell docutils container">
@@ -453,8 +451,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 <img alt="../_images/evaluate_fly_7_1.jpg" src="../_images/evaluate_fly_7_1.jpg"/>
 </div>
 </div>
-</section>
-<section id="evaluate-events">
+</div>
+<div class="section" id="evaluate-events">
 <h2>Evaluate events<a class="headerlink" href="#evaluate-events" title="Permalink to this headline">¶</a></h2>
 <p>Evaluate event timing and compute performance metrics.</p>
 <div class="cell docutils container">
@@ -512,7 +510,7 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-<section id="event-sequences">
+<div class="section" id="event-sequences">
 <h3>Event sequences<a class="headerlink" href="#event-sequences" title="Permalink to this headline">¶</a></h3>
 <p>First, inspect the sequences of true and the predicted event times. They should track each other closely.</p>
 <div class="cell docutils container">
@@ -528,8 +526,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="performance-metrics">
+</div>
+<div class="section" id="performance-metrics">
 <h3>Performance metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
@@ -559,8 +557,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="event-timing">
+</div>
+<div class="section" id="event-timing">
 <h3>Event timing<a class="headerlink" href="#event-timing" title="Permalink to this headline">¶</a></h3>
 <p>The sequence (left) and the distribution (right) of temporal errors (dist to nearest event). Black lines indicate the distance threshold within which true and predicted events are matched. This will reveal drifts in event timing.</p>
 <div class="cell docutils container">
@@ -583,8 +581,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="event-shapes">
+</div>
+<div class="section" id="event-shapes">
 <h3>Event shapes<a class="headerlink" href="#event-shapes" title="Permalink to this headline">¶</a></h3>
 <p>Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from wrong annotations</p>
 <div class="cell docutils container">
@@ -632,8 +630,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="troubleshooting">
+</div>
+<div class="section" id="troubleshooting">
 <h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>Things to do when the predictions look weird:</p>
 <ul class="simple">
@@ -641,9 +639,9 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 <li><p>Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the groundtruth (manual annotation).</p></li>
 <li><p>Inspect the amplitude and frequency of false negative and false positive pulses and look for patterns. Maybe the network fails for soft pulses</p></li>
 </ul>
-</section>
-</section>
-<section id="evaluate-segments">
+</div>
+</div>
+<div class="section" id="evaluate-segments">
 <h2>Evaluate segments<a class="headerlink" href="#evaluate-segments" title="Permalink to this headline">¶</a></h2>
 <p>Inspect the post-processed segment labels</p>
 <div class="cell docutils container">
@@ -696,7 +694,7 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-<section id="sample-wise-performance-metrics">
+<div class="section" id="sample-wise-performance-metrics">
 <h3>Sample-wise performance metrics<a class="headerlink" href="#sample-wise-performance-metrics" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
@@ -764,8 +762,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-<section id="evaluate-segment-timing">
+</div>
+<div class="section" id="evaluate-segment-timing">
 <h3>Evaluate segment timing<a class="headerlink" href="#evaluate-segment-timing" title="Permalink to this headline">¶</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -819,9 +817,9 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 </div>
-</section>
-</section>
-</section>
+</div>
+</div>
+</div>
 
         </article>
       </div>

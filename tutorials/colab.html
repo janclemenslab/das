@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Generate segment labels" href="label_segments.html" /><link rel="prev" title="Predict" href="predict.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Generate segment labels" href="label_segments.html" /><link rel="prev" title="Predict" href="predict.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Training and inference with colab - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -256,7 +254,7 @@
         </div>
         <article role="main">
           <p>Let’s make sure we are using tensorflow v2+</p>
-<section class="tex2jax_ignore mathjax_ignore" id="training-and-inference-with-colab">
+<div class="section" id="training-and-inference-with-colab">
 <h1>Training and inference with colab<a class="headerlink" href="#training-and-inference-with-colab" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com">Google colab</a> is a free server for running notebooks with GPU/TPU support - this is a great way to use <em>DAS</em> if you do not have a computer with a GPU.</p>
 <p>This notebook demonstrates</p>
@@ -388,7 +386,7 @@ Successfully installed asciitree-0.3.3 das-0.22.1 defopt-6.1.0 fasteners-0.16.3 
 </div>
 </div>
 </div>
-<section id="train-the-model">
+<div class="section" id="train-the-model">
 <h2>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">¶</a></h2>
 <p>Adjust the variable <code class="docutils literal notranslate"><span class="pre">path_to_data</span></code> to point to the dataset on your own google drive.</p>
 <div class="cell tag_outputPrepend docutils container">
@@ -1002,8 +1000,8 @@ INFO:root:DONE.
 </div>
 </div>
 <p>You can download the model results via the file tab on the left, from <code class="docutils literal notranslate"><span class="pre">/contest/res</span></code></p>
-</section>
-<section id="predict-on-new-data">
+</div>
+<div class="section" id="predict-on-new-data">
 <h2>Predict on new data<a class="headerlink" href="#predict-on-new-data" title="Permalink to this headline">¶</a></h2>
 <p>Load a new recording for prediction</p>
 <div class="cell docutils container">
@@ -1075,8 +1073,8 @@ Attributes:
 <img alt="../_images/colab_22_0.png" src="../_images/colab_22_0.png"/>
 </div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
         </article>
       </div>

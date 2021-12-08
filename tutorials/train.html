@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Make a dataset from custom data formats" href="make_ds_notebook.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Make a dataset from custom data formats" href="make_ds_notebook.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Train - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,7 +253,7 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="train">
+          <div class="section" id="train">
 <h1>Train<a class="headerlink" href="#train" title="Permalink to this headline">¶</a></h1>
 <p>The network can be trained using three interfaces:</p>
 <ul class="simple">
@@ -277,7 +275,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">*_model.h5</span></code> -  model architecture and weights</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">*_results.h5</span></code> - predictions and evaluation results for the test set (only created if the training dataset contains a test set)</p></li>
 </ul>
-<section id="training-using-python">
+<div class="section" id="training-using-python">
 <h2>Training using python<a class="headerlink" href="#training-using-python" title="Permalink to this headline">¶</a></h2>
 <p>Training is done using the <code class="docutils literal notranslate"><span class="pre">train</span></code> function in the <code class="docutils literal notranslate"><span class="pre">das.train</span></code> module:</p>
 <div class="cell docutils container">
@@ -709,8 +707,8 @@ INFO:root:DONE.
 </div>
 </div>
 </div>
-</section>
-<section id="training-using-command-line-scripts">
+</div>
+<div class="section" id="training-using-command-line-scripts">
 <h2>Training using command-line scripts<a class="headerlink" href="#training-using-command-line-scripts" title="Permalink to this headline">¶</a></h2>
 <p>The training function <code class="docutils literal notranslate"><span class="pre">das.train.train</span></code> and all its arguments are also accessible from the command line via <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for use on the terminal. See <a class="reference external" href="/technical/cli#train">here</a> for a description of all command-line arguments. The command-line interface is generated with <a class="reference external" href="https://defopt.readthedocs.io/en/stable/index.html">defopt</a>.</p>
 <p>For instance, training command above can be invoked from the command line:</p>
@@ -892,8 +890,8 @@ optional arguments:
 </div>
 </div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
         </article>
       </div>

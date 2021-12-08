@@ -17,7 +17,7 @@ If you use *DAS*, please cite:
 Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan
 Clemens (2021). *Fast and accurate annotation of acoustic signals with
 deep neural networks*, eLife,
-`https://elifesciences.org/articles/61475 <https://elifesciences.org/articles/61475>`__
+`https://doi.org/10.7554/eLife.68837 <https://doi.org/10.7554/eLife.68837>`__
 
 .. panels ::
 

@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Technical details" href="../technical/technical.html" /><link rel="prev" title="Song of Bengalese finches" href="birds.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Technical details" href="../technical/technical.html" /><link rel="prev" title="Song of Bengalese finches" href="birds.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>Ultrasonic vocalizations from mice - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
@@ -255,7 +253,7 @@
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="ultrasonic-vocalizations-from-mice">
+          <div class="section" id="ultrasonic-vocalizations-from-mice">
 <h1>Ultrasonic vocalizations from mice<a class="headerlink" href="#ultrasonic-vocalizations-from-mice" title="Permalink to this headline">¶</a></h1>
 <p>Mouse USVs do not cluster into discrete types but lie on a continuous, low-dimensional manifold.</p>
 <p>We here closely follow the procedure described in Sainburg et al. (2020): Finding, visualizing, and quantifying latent structure across (see code on <a class="reference external" href="https://github.com/timsainb/avgn_paper">github</a>).</p>
@@ -278,7 +276,7 @@
 </div>
 </div>
 </div>
-<section id="download-audio-data">
+<div class="section" id="download-audio-data">
 <h2>Download audio data<a class="headerlink" href="#download-audio-data" title="Permalink to this headline">¶</a></h2>
 <p>Data kindly provided by Kurt Hammerschmidt and published in A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz (2020) Classifying sex and strain from mouse ultrasonic vocalizations using deep learning. PLoS Comput Biol 16(6): e1007918.</p>
 <div class="cell docutils container">
@@ -296,8 +294,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="pre-processing">
+</div>
+<div class="section" id="pre-processing">
 <h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">¶</a></h2>
 <p>Compute the spectrogram</p>
 <div class="cell docutils container">
@@ -393,8 +391,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="dimensionality-reduction-and-clustering">
+</div>
+<div class="section" id="dimensionality-reduction-and-clustering">
 <h2>Dimensionality reduction and clustering<a class="headerlink" href="#dimensionality-reduction-and-clustering" title="Permalink to this headline">¶</a></h2>
 <p>Embed the feature vectors into a 2D space using <a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP</a> and group similar syllables usign <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html">kmeans</a>.</p>
 <div class="cell docutils container">
@@ -411,8 +409,8 @@
 </div>
 </div>
 </div>
-</section>
-<section id="plot-results">
+</div>
+<div class="section" id="plot-results">
 <h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">¶</a></h2>
 <p>Syllable spectrograms embedded into a 2D space  (left) and colored by the unsupervised cluster labels (right). Syllables do not fall into separate groups, but can be grouped by similarity using clustering.</p>
 <div class="cell docutils container">
@@ -460,8 +458,8 @@
 <img alt="../_images/mice_19_0.jpg" src="../_images/mice_19_0.jpg"/>
 </div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
         </article>
       </div>

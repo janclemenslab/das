@@ -2,10 +2,9 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.time_frequency" href="das.kapre.time_frequency.html" /><link rel="prev" title="das.kapre.backend_keras" href="das.kapre.backend_keras.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.time_frequency" href="das.kapre.time_frequency.html" /><link rel="prev" title="das.kapre.backend_keras" href="das.kapre.backend_keras.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.kapre.filterbank - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -208,7 +207,6 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
@@ -255,11 +253,11 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-das.kapre.filterbank">
+          <div class="section" id="module-das.kapre.filterbank">
 <span id="das-kapre-filterbank"></span><h1>das.kapre.filterbank<a class="headerlink" href="#module-das.kapre.filterbank" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.kapre.filterbank.</span></span><span class="sig-name descname"><span class="pre">Filterbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.kapre.filterbank.</span></span><span class="sig-name descname"><span class="pre">Filterbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank" title="Permalink to this definition">¶</a></dt>
 <dd><p>### <a class="reference internal" href="#das.kapre.filterbank.Filterbank" title="das.kapre.filterbank.Filterbank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Filterbank</span></code></a></p>
 <dl>
 <dt><a href="#id1"><span class="problematic" id="id2">`</span></a>kapre.filterbank.Filterbank(n_fbs, trainable_fb, sr=None, init=’mel’, fmin=0., fmax=None,</dt><dd><p>bins_per_octave=12, image_data_format=’default’, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)`</p>
@@ -348,45 +346,9 @@ method to support masking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – <p>Input tensor, or dict/list/tuple of input tensors.
-The first positional <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> argument is subject to special rules:
-- <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> must be explicitly passed. A layer cannot have zero</p>
-<blockquote>
-<div><p>arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
-of a keyword argument.</p>
-</div></blockquote>
-<ul>
-<li><p>NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
-<li><p>Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
-using shape info from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
-If a layer has tensor arguments in <code class="xref py py-obj docutils literal notranslate"><span class="pre">*args</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">**kwargs</span></code>, their
-casting behavior in mixed precision should be handled manually.</p></li>
-<li><p>The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
-TF.js, etc is only supported for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and not for tensors in
-positional and keyword arguments.</p></li>
-</ul>
-</p></li>
-<li><p><strong>*args</strong> – Additional positional arguments. May contain tensors, although
-this is not recommended, for the reasons above.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional keyword arguments. May contain tensors, although
-this is not recommended, for the reasons above.
-The following optional keyword arguments are reserved:
-- <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code>: Boolean scalar tensor of Python boolean indicating</p>
-<blockquote>
-<div><p>whether the <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
-</div></blockquote>
-<ul>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code> argument, its default value will be set to the mask generated
-for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> by the previous layer (if <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code> did come from a layer
-that generated a corresponding mask, i.e. if it came from a Keras
-layer with masking support).</p></li>
-</ul>
-</p></li>
+<li><p><strong>inputs</strong> – Input tensor, or list/tuple of input tensors.</p></li>
+<li><p><strong>*args</strong> – Additional positional arguments. Currently unused.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments. Currently unused.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -434,7 +396,7 @@ if they want to modify it.</p>
 </dl>
 </dd></dl>
 </dd></dl>
-</section>
+</div>
 
         </article>
       </div>
