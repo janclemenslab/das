@@ -1,6 +1,5 @@
 {% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
 {% set name = "das" %}
-# {% set version = "0.22.7" %}
 {% set version = data.get('version') %}
 
 package:
@@ -29,7 +28,6 @@ requirements:
     - python
     - pyyaml
     - scipy
-    - numpy>1.19
     - scikit-learn
     - zarr
     - xarray
@@ -40,9 +38,9 @@ requirements:
     - scikit-image
     - pyyaml
     - opencv-python-headless
-    - tensorflow>2.1  # [osx]
-    - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave>=0.28.3
+    - tensorflow>2.4  # [osx]
+    - tensorflow-gpu>2.4  # [not osx]
+    - xarray-behave
     - keras-tuner
     - numpy>1.19
   run:
@@ -67,9 +65,9 @@ requirements:
     - python-sounddevice
     - scikit-image
     - opencv-python-headless
-    - tensorflow>2.1  # [osx]
-    - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave>=0.28.3
+    - tensorflow>2.4  # [osx]
+    - tensorflow-gpu>2.4  # [not osx]
+    - xarray-behave
     - keras-tuner
     - numpy>1.19
 
