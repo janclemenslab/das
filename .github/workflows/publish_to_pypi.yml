@@ -139,7 +139,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
-          conda config --set anaconda_upload yes
+          conda config --set anaconda_upload no
           conda config --set always_yes yes --set changeps1 no
 
       - name: Build gui and upload to anaconda (win)
@@ -147,6 +147,13 @@ jobs:
         shell: cmd /C CALL {0}
         run: |
           conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+
+      - name: Upload to anaconda (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
           ananconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
