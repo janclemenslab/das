@@ -145,18 +145,21 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN_NEW
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
 
       - name: Upload to anaconda (win)
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
           conda install -y -n base -c conda-forge anaconda-client
+          anaconda -t $ANACONDA_TOKEN_NEW upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
           anaconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
 
       - name: Build nogui and upload to anaconda (win)
         if: runner.os == 'Windows'
