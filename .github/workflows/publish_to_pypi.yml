@@ -154,7 +154,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          ananconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
+          anaconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
