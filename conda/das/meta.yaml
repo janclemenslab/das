@@ -38,6 +38,8 @@ requirements:
     - scikit-image
     - pyyaml
     - opencv-python-headless
+    - cudatoolkit # [not osx]
+    - cudnn # [not osx]
     - tensorflow>2.4  # [osx]
     - tensorflow-gpu>2.4  # [not osx]
     - xarray-behave
@@ -65,6 +67,8 @@ requirements:
     - python-sounddevice
     - scikit-image
     - opencv-python-headless
+    - cudatoolkit # [not osx]
+    - cudnn # [not osx]
     - tensorflow>2.4  # [osx]
     - tensorflow-gpu>2.4  # [not osx]
     - xarray-behave
