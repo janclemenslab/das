@@ -107,10 +107,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
-#         python-version: [3.8]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-#         os: [windows-latest]
+#         python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8]
+#         os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [windows-latest]
 
     steps:
       - name: Checkout source
@@ -147,6 +147,7 @@ jobs:
         shell: cmd /C CALL {0}
         run: |
           conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          ananconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.1-py38_0.tar.bz2" --user ncb
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
