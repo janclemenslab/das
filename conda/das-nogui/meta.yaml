@@ -32,12 +32,11 @@ requirements:
     - scikit-learn
     - zarr
     - xarray
-    # - opencv-python-headless
-    - tensorflow>2.1  # [osx]
-    - tensorflow-gpu>2.1  # [not osx]
+    - tensorflow>2.4  # [osx]
+    - tensorflow-gpu>2.4  # [not osx]
     - pip
     - setuptools
-    - xarray-behave-nogui>=0.28.3
+    - xarray-behave-nogui
     - colorcet
     - keras-tuner
     - numpy>1.19
@@ -58,10 +57,9 @@ requirements:
     - scikit-learn
     - zarr
     - xarray
-    # - opencv-python-headless
-    - tensorflow>2.1  # [osx]
-    - tensorflow-gpu>2.1  # [not osx]
-    - xarray-behave-nogui>=0.28.3
+    - tensorflow>2.4  # [osx]
+    - tensorflow-gpu>2.4  # [not osx]
+    - xarray-behave-nogui
     - colorcet
     - keras-tuner
     - numpy>1.19
