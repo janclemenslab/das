@@ -40,8 +40,8 @@ requirements:
     - opencv-python-headless
     - cudatoolkit # [not osx]
     - cudnn # [not osx]
-    - tensorflow>2.4  # [osx]
-    - tensorflow-gpu>2.4  # [not osx]
+    - tensorflow>2.4 # [osx]
+    - tensorflow-gpu>2.4 # [not osx]
     - xarray-behave
     - keras-tuner
     - numpy>1.19
@@ -69,8 +69,8 @@ requirements:
     - opencv-python-headless
     - cudatoolkit # [not osx]
     - cudnn # [not osx]
-    - tensorflow>2.4  # [osx]
-    - tensorflow-gpu>2.4  # [not osx]
+    - tensorflow>2.4 # [osx]
+    - tensorflow-gpu>2.4 # [not osx]
     - xarray-behave
     - keras-tuner
     - numpy>1.19

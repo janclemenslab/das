@@ -32,6 +32,8 @@ requirements:
     - scikit-learn
     - zarr
     - xarray
+    - cudatoolkit # [not osx]
+    - cudnn # [not osx]
     - tensorflow>2.4  # [osx]
     - tensorflow-gpu>2.4  # [not osx]
     - pip
@@ -57,6 +59,8 @@ requirements:
     - scikit-learn
     - zarr
     - xarray
+    - cudatoolkit # [not osx]
+    - cudnn # [not osx]
     - tensorflow>2.4  # [osx]
     - tensorflow-gpu>2.4  # [not osx]
     - xarray-behave-nogui
