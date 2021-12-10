@@ -130,9 +130,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify &
-          conda config --set anaconda_upload yes &
-          conda config --set always_yes yes --set changeps1 no
+          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify & conda config --set anaconda_upload yes & conda config --set always_yes yes --set changeps1 no
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
@@ -149,8 +147,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda config --set anaconda_upload yes &
-          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN_NEW
+          conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN_NEW
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
@@ -159,9 +156,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda install -y -n base -c conda-forge anaconda-client &
-          anaconda -t $ANACONDA_TOKEN_NEW upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb &
-          anaconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb
+          conda install -y -n base -c conda-forge anaconda-client & anaconda -t $ANACONDA_TOKEN_NEW upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb & anaconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
