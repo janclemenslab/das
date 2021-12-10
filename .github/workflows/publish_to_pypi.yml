@@ -153,31 +153,31 @@ jobs:
           TEST: test text
 
 
-#       - name: Install build dependencies (*x)
-#         if: runner.os != 'Windows'
-#         shell: bash -l {0}
-#         run: |
-#           conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
-#           conda config --set anaconda_upload yes
-#           conda config --set always_yes yes --set changeps1 no
+      - name: Install build dependencies (*x)
+        if: runner.os != 'Windows'
+        shell: bash -l {0}
+        run: |
+          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
+          conda config --set anaconda_upload yes
+          conda config --set always_yes yes --set changeps1 no
 
-#       - name: Build gui and upload to anaconda (win)
-#         if: runner.os == 'Windows'
-#         shell: cmd /C CALL {0}
-#         run: |
-#           conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN_NEW
-#         env:
-#           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-#           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
+      - name: Build gui and upload to anaconda (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
 
-#       - name: Upload to anaconda (win)
-#         if: runner.os == 'Windows'
-#         shell: cmd /C CALL {0}
-#         run: |
-#           conda install -y -n base -c conda-forge anaconda-client & anaconda -t $ANACONDA_TOKEN_NEW upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb & anaconda -t $ANACONDA_TOKEN upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb
-#         env:
-#           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-#           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
+      - name: Upload to anaconda (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          conda install -y -n base -c conda-forge anaconda-client & anaconda -t %ANACONDA_TOKEN% upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb & anaconda -t %ANACONDA_TOKEN_NEW% upload "C:\Miniconda\conda-bld\win-64\das-0.23.2-py38_0.tar.bz2" --user ncb
+        env:
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
 
 #       - name: Build nogui and upload to anaconda (win)
 #         if: runner.os == 'Windows'
