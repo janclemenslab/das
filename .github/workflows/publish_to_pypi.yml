@@ -135,6 +135,17 @@ jobs:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
 
+
+      - name: Install build dependencies (win)
+        if: runner.os == 'Windows'
+        shell: cmd /C CALL {0}
+        run: |
+          echo $env.TEST
+        env:
+          TEST: test text
+          ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
+
       - name: Install build dependencies (*x)
         if: runner.os != 'Windows'
         shell: bash -l {0}
