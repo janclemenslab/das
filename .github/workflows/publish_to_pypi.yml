@@ -133,25 +133,6 @@ jobs:
           conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify & conda config --set anaconda_upload yes & conda config --set always_yes yes --set changeps1 no
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-          ANACONDA_TOKEN_NEW: ${{ secrets.ANACONDA_TOKEN_NEW }}
-
-
-      - name: Install build dependencies (win)
-        if: runner.os == 'Windows'
-        shell: cmd /C CALL {0}
-        run: |
-          echo %env.SECRET%
-        env:
-          SECRET: ${{ secrets.SUPER_NOT_SECRET }}
-
-      - name: Install build dependencies (win)
-        if: runner.os == 'Windows'
-        shell: cmd /C CALL {0}
-        run: |
-          echo %env.TEST%
-        env:
-          TEST: test text
-
 
       - name: Install build dependencies (*x)
         if: runner.os != 'Windows'
@@ -165,7 +146,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+          conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
@@ -173,7 +154,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda mambabuild conda/das-nogui -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+          conda mambabuild conda/das-nogui -c conda-forge -c ncb --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
@@ -181,7 +162,7 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash -l {0}
         run: |
-          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          conda mambabuild conda/das -c conda-forge -c ncb --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
@@ -189,6 +170,6 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash -l {0}
         run: |
-          conda mambabuild conda/das-nogui -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          conda mambabuild conda/das-nogui -c conda-forge -c ncb --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
