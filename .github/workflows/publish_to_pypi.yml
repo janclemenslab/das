@@ -140,7 +140,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          echo env.SECRET
+          echo %env.SECRET%
         env:
           SECRET: ${{ secrets.SUPER_NOT_SECRET }}
 
@@ -148,7 +148,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          echo env.TEST
+          echo %env.TEST%
         env:
           TEST: test text
 
