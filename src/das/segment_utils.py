@@ -72,9 +72,10 @@ def label_syllables_by_majority(labels: np.array,
     for onset_seconds, offset_seconds in zip(onsets_seconds, offsets_seconds):
         onset_sample = int(onset_seconds * samplerate)
         offset_sample = int(offset_seconds * samplerate)
-
-        syllables.append(int(scipy.stats.mode(labels[onset_sample:offset_sample])[0]))
-        labels_clean[onset_sample:offset_sample] = syllables[-1]
+        majority_label = scipy.stats.mode(labels[onset_sample:offset_sample])[0]
+        if len(majority_label):
+            syllables.append(int(majority_label))
+            labels_clean[onset_sample:offset_sample] = syllables[-1]
 
     syllables = np.array(syllables)
 
