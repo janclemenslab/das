@@ -37,7 +37,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           nb_epoch: int = 400,
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
-          tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
+          tensorboard: bool = False,
+          neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
+          wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
@@ -126,6 +128,12 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                                            Defaults to None (no logging to neptune.ai).
         neptune_project (Optional[str]): Project to log to for neptune.ai.
                                          Defaults to None (no logging to neptune.ai).
+        wandb_api_token (Optional[str]): API token for logging to wandb.
+                                           Defaults to None (no logging to wandb).
+        wandb_project (Optional[str]): Project to log to for wandb.
+                                         Defaults to None (no logging to wandb).
+        wandb_entity (Optional[str]): Entiti to log to for wandb.
+                                        Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
         nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
@@ -287,6 +295,17 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
             try:
                 poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
                 callbacks.append(poseidon.callback())
+            except Exception as e:
+                logging.exception('Neptune stuff failed.')
+
+    del params['wandb_api_token']
+    if wandb_api_token and wandb_project:  # could also get those from env vars!
+        if not neptune.HAS_WANDB:
+            logging.error('Could not import neptune in das.neptune.')
+        else:
+            try:
+                magic = neptune.Magic(wandb_project, wandb_api_token, wandb_entity, params)
+                callbacks.append(magic.callback())
             except Exception as e:
                 logging.exception('Neptune stuff failed.')
 
