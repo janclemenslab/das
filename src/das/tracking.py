@@ -1,4 +1,9 @@
-"""Utilities for logging to neptune.ai."""
+"""Utilities for logging training runs.
+
+We currenlty have integrations for `tensorboard <https://www.tensorflow.org/tensorboard>`_, `wandb.ai <https://wandb.ai>`_, and `neptune.ai <https://neptune.ai>`_.
+While tensorboard is integrated with tensorflow. To use wandb and neptune you'll
+have to install the respective APIs.
+"""
 import logging
 import os
 from typing import Optional, Dict
@@ -15,7 +20,7 @@ HAS_NEPTUNE = True
 
 
 try:
-    import wandb as neptune
+    import wandb
     from wandb.keras import WandbCallback
     HAS_WANDB = True
 except ImportError as e:
@@ -24,15 +29,12 @@ except ImportError as e:
 HAS_WANDB = True
 
 
-
-
-class Poseidon():
-    """Utility class for logging to neptune.ai in `das.train.train`."""
+class Neptune():
+    """Utility class for logging to neptune.ai during training."""
 
     def __init__(self, project: Optional[str] = None, api_token: Optional[str] = None,
                  params: Optional[Dict] = None, infer_from_env: bool = False):
-        """Set up neptune run and log params.
-
+        """
         Args:
             project (Optional[str], optional): Project to log to. Defaults to None.
             api_token (Optional[str], optional): Neptune api token. Defaults to None.
@@ -55,9 +57,9 @@ class Poseidon():
 
         except:
             self.run = None
-            logging.exception('NEPTUNE stuff went wrong.')
+            logging.exception('Neptune stuff went wrong.')
 
-    def callback(self):
+    def callback(self) -> Optional[NeptuneCallback]:
         """Get callback for auto-logging from tensorfow/keras."""
         if self.run is not None:
             return NeptuneCallback(run=self.run, base_namespace='metrics')
@@ -74,24 +76,22 @@ class Poseidon():
             self.run['classification_report'] = report
 
 
-class Magic():
-    """Utility class for logging to wandb in `das.train.train`."""
+class Wandb():
+    """Utility class for logging to wandb.ai during training."""
 
     def __init__(self, project: Optional[str] = None, api_token: Optional[str] = None,
                  entity: Optional[str] = None,
                  params: Optional[Dict] = None, infer_from_env: bool = False):
-        """Set up wandb run and log params.
-
+        """
         Args:
             project (Optional[str], optional): Project to log to. Defaults to None.
             api_token (Optional[str], optional):  api token. Defaults to None.
-            entity (Optional[str], optional):  Entity (user name). Defaults to None.
-            params (Optional[Dict], optional): Dict to log to `hyper-parameters`. Defaults to None.
+            entity (Optional[str], optional):  Entity (user/team name). Defaults to None.
+            params (Optional[Dict], optional): Dict to log to `config`. Defaults to None.
             infer_from_env (bool, optional): read project and api_token from environment variables
                                              WANDB_PROJECT and WANDB_API_TOKEN.
                                              Defaults to False.
         """
-
         try:
             if project is None:
                 project = os.environ['WANDB_PROJECT']
@@ -106,12 +106,12 @@ class Magic():
 
         except:
             self.run = None
-            logging.exception('WANDB stuff went wrong.')
+            logging.exception('Wandb stuff went wrong.')
 
-    def callback(self):
+    def callback(self, save_model=False) -> Optional[WandbCallback]:
         """Get callback for auto-logging from tensorfow/keras."""
         if self.run is not None:
-            return WandbCallback(run=self.run, base_namespace='metrics')
+            return WandbCallback(save_model=save_model)
         else:
             pass
 
@@ -122,4 +122,4 @@ class Magic():
             report (Dict): dictionary containing the classification report.
         """
         if self.run is not None:
-            self.run.summary.update(report)
+            wandb.summary.update(report)
