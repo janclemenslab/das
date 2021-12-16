@@ -6,8 +6,9 @@ import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import os
+import yaml
 from typing import List, Optional, Tuple, Dict, Any
-from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
+from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation  #, timeseries
 
 try:  # disabling eager execution speeds up everything
     from tensorflow.python.framework.ops import disable_eager_execution
@@ -37,6 +38,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           nb_epoch: int = 400,
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
+          augmentations: Optional[str] = None,
           tensorboard: bool = False,
           neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
@@ -123,6 +125,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
+        augmentations (Optional[str]): yaml file with augmentations. Defaults to None (no augmentations).
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
         neptune_api_token (Optional[str]): API token for logging to neptune.ai.
                                            Defaults to None (no logging to neptune.ai).
@@ -233,9 +236,19 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     else:
         shuffle_subset = None
 
+    if augmentations:
+        logging.info(f'Initializing augmentations from {augmentations}.')
+        aug_params = yaml.safe_load(open(augmentations, 'r'))
+        params['augmentations'] = aug_params
+        augs = augmentation.Augmentations.from_dict(params['augmentations'])
+        logging.info(f'   Got {len(augs)} augmentations.')
+    else:
+        augs = None
+
     data_gen = data.AudioSequence(d['train']['x'], d['train']['y'],
                                   shuffle=True, shuffle_subset=shuffle_subset,
                                   first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=1,
+                                  batch_processor=augs,
                                   **params)
     val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
                                  shuffle=False, shuffle_subset=shuffle_subset,
@@ -289,25 +302,25 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
-        if not neptune.HAS_NEPTUNE:
-            logging.error('Could not import neptune in das.neptune.')
+        if not tracking.HAS_NEPTUNE:
+            tracking.error('Could not import neptune in das.logging.')
         else:
             try:
-                poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
+                poseidon = tracking.Neptune(neptune_project, neptune_api_token, params)
                 callbacks.append(poseidon.callback())
             except Exception as e:
                 logging.exception('Neptune stuff failed.')
 
     del params['wandb_api_token']
     if wandb_api_token and wandb_project:  # could also get those from env vars!
-        if not neptune.HAS_WANDB:
-            logging.error('Could not import neptune in das.neptune.')
+        if not tracking.HAS_WANDB:
+            logging.error('Could not import wandb in das.logging.')
         else:
             try:
-                magic = neptune.Magic(wandb_project, wandb_api_token, wandb_entity, params)
-                callbacks.append(magic.callback())
+                wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+                callbacks.append(wandb.callback())
             except Exception as e:
-                logging.exception('Neptune stuff failed.')
+                logging.exception('wandb stuff failed.')
 
     # TRAIN NETWORK
     logging.info('start training')
@@ -340,8 +353,11 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
+
         if neptune_api_token and neptune_project:  # could also get those from env vars!
             poseidon.log_test_results(report)
+        if wandb_api_token and wandb_project:  # could also get those from env vars!
+            wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')

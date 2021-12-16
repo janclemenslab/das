@@ -12,7 +12,7 @@ import keras_tuner as kt
 import yaml
 import os
 from typing import List, Optional, Tuple, Dict, Any
-from . import data, models, utils, predict, io, evaluate, neptune, data_hash  #, timeseries
+from . import data, models, utils, predict, io, evaluate, tracking, data_hash  #, timeseries
 
 try:  # disabling eager execution speeds up everything
     from tensorflow.python.framework.ops import disable_eager_execution
@@ -34,11 +34,11 @@ class TunableModel(kt.HyperModel):
         self.params = params.copy()
         self.tune_config = tune_config
         if self.tune_config is None:
-            self.tune_config = {'nb_filters': [4, 8, 16, 32, 64, 128],
-                                'kernel_size': [4, 8, 16, 32, 64, 128],
+            self.tune_config = {'nb_filters': [4, 8, 16, 32, 64],
+                                'kernel_size': [4, 8, 16, 32, 64],
                                 'learning_rate': [0.01, 0.001, 0.0001],
-                                'nb_hist': [128, 256, 512, 1024, 2048, 4096, 8192],
-                                'nb_conv': [4, 8, 16, 32, 64, 128]}
+                                'nb_hist': [128, 256, 512, 1024, 2048],
+                                'nb_conv': [1, 2, 3, 4, 6, 8]}
 
     def build(self, hp):
         if self.tune_config is not None:
@@ -124,7 +124,10 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           nb_epoch: int = 400,
           learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
-          tensorboard: bool = False, neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
+          augmentations: str = None,
+          tensorboard: bool = False,
+          neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
+          wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
           tune_config: Optional[str] = None,
@@ -216,6 +219,12 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                                            Defaults to None (no logging to neptune.ai).
         neptune_project (Optional[str]): Project to log to for neptune.ai.
                                          Defaults to None (no logging to neptune.ai).
+        wandb_api_token (Optional[str]): API token for logging to wandb.
+                                           Defaults to None (no logging to wandb).
+        wandb_project (Optional[str]): Project to log to for wandb.
+                                         Defaults to None (no logging to wandb).
+        wandb_entity (Optional[str]): Entiti to log to for wandb.
+                                        Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
         nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
@@ -366,14 +375,25 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
-        if not neptune.HAS_NEPTUNE:
-            logging.error('Could not import neptune in das.neptune.')
+        if not tracking.HAS_NEPTUNE:
+            logging.error('Could not import neptune in das.logging.')
         else:
             try:
-                poseidon = neptune.Poseidon(neptune_project, neptune_api_token, params)
+                poseidon = tracking.Neptune(neptune_project, neptune_api_token, params)
                 callbacks.append(poseidon.callback())
             except Exception as e:
                 logging.exception('Neptune stuff failed.')
+
+    del params['wandb_api_token']
+    if wandb_api_token and wandb_project:  # could also get those from env vars!
+        if not tracking.HAS_WANDB:
+            logging.error('Could not import wandb in das.logging.')
+        else:
+            try:
+                wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+                callbacks.append(wandb.callback())
+            except Exception as e:
+                logging.exception('wandb stuff failed.')
 
     # TRAIN NETWORK
     logging.info('Start hyperparameter tuning')
@@ -409,6 +429,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         logging.info(report)
         if neptune_api_token and neptune_project:  # could also get those from env vars!
             poseidon.log_test_results(report)
+        if wandb_api_token and wandb_project:  # could also get those from env vars!
+            wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
