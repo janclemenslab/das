@@ -325,7 +325,6 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
         # pad with end val to fill
         x = np.pad(x, ((0, pad_len), (0,0)), mode='edge')
 
-
     class_probabilities = predict_probabililties(x, model, params, verbose, prepend_data_padding)
 
     if pad: # set all song probs in padded section to zero to avoid out of bounds detections!

@@ -30,7 +30,7 @@ def _select(data, x_suffix, y_suffix):
 
 def _to_dict(data):
     "Convert dict-like zarr or h5 store `data` to python dictionary."
-    d = npy_dir.Dict()
+    d = npy_dir.DictClass()
     d.attrs = dict(data.attrs)  # cast to dict since data.attrs are read-only for zarr stores
     for key_top in data.keys():
         d[key_top] = dict()

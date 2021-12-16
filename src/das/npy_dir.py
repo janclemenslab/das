@@ -20,9 +20,10 @@ import numpy as np
 import os
 import os.path
 from glob import glob
+from typing import Any, List, Dict
 
 
-class Dict(dict):
+class DictClass(dict):
     """Wrap dict in class so we can attach attrs to it."""
     def __str__(self):
         out = f'Data:\n'
@@ -36,7 +37,7 @@ class Dict(dict):
         return out
 
 
-def load(location, memmap_dirs=['train']):
+def load(location: str, memmap_dirs: List[str] = ['train']) -> Dict[str, Any]:
     """Load hierarchy of npy files into dict of dicts.
 
     Args:
@@ -53,7 +54,7 @@ def load(location, memmap_dirs=['train']):
     dir_names = [os.path.join(location, name)
                  for name in os.listdir(location)
                  if os.path.isdir(os.path.join(location, name))]
-    data = Dict()
+    data = DictClass()
     data.attrs = dict()
     attrs_path = os.path.join(location, 'attrs.npy')
     if os.path.exists(attrs_path):
@@ -72,17 +73,13 @@ def load(location, memmap_dirs=['train']):
     return data
 
 
-def save(location, data):
+def save(location: str, data: Dict[str, Any]):
     """Save nested dict in data to location as a directory with npy files dir.
 
     Args:
         location ([type]): [description]
         data ([type]): [description]
     """
-    def path_to_key(path):
-        key = os.path.splitext(os.path.basename(path))[0]
-        return key
-
     os.makedirs(location, exist_ok=True)
     if hasattr(data, 'attrs'):
         np.save(os.path.join(location, 'attrs'), dict(data.attrs), allow_pickle=True)

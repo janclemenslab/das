@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Union
 
 
-def hash_data(data_path: Union[str, Path], chunk_size: int = 65536):
+def hash_data(data_path: Union[str, Path], chunk_size: int = 65536) -> str:
     """Compute MD5 hash of the data_path (dir or file) for data versioning.
 
     Args:
@@ -14,7 +14,7 @@ def hash_data(data_path: Union[str, Path], chunk_size: int = 65536):
         ValueError: [description]
 
     Returns:
-        [type]: [description]
+        str: hexadecimal string containing the hash code
     """
     if Path(data_path).is_dir():
         hash = _hash_dir(data_path, chunk_size)
