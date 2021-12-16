@@ -1,9 +1,10 @@
 """Utils for loading and manipulating data for training and prediction."""
 import numpy as np
 import tensorflow.keras as keras
+from typing import Optional, Callable
 
 
-def unpack_batches(x, padding=0):
+def unpack_batches(x: np.ndarray, padding: int = 0):
     """[summary]
 
     Args:
@@ -55,10 +56,11 @@ class AudioSequence(keras.utils.Sequence):
         ...
     """
 
-    def __init__(self, x, y=None, batch_size=32, shuffle=True, nb_hist=1, y_offset=None,
-                 stride=1, cut_trailing_dim=False, with_y_hist=False, data_padding=0,
-                 first_sample=0, last_sample=None, output_stride=1, nb_repeats=1,
-                 shuffle_subset=None, unpack_channels=False, mask_input=None,
+    def __init__(self, x: np.ndarray, y: Optional[np.ndarray] = None, batch_size: int = 32, shuffle: bool = True, nb_hist: int = 1, y_offset: Optional[int] = None,
+                 stride: int = 1, cut_trailing_dim: bool = False, with_y_hist: bool = False, data_padding: int = 0,
+                 first_sample: int = 0, last_sample: Optional[int] = None, output_stride: int = 1, nb_repeats: int = 1,
+                 shuffle_subset: Optional[float] = None, unpack_channels: bool = False, mask_input: Optional[int] = None,
+                 batch_processor: Optional[Callable[[np.ndarray], np.ndarray]] = None,
                  **kwargs):
         """[summary]
 
@@ -70,20 +72,21 @@ class AudioSequence(keras.utils.Sequence):
             batch_size (int, optional): number of batches to return. Defaults to 32.
             shuffle (bool, optional): randomize order of batches. Defaults to True.
             nb_hist (int, optional): nb of time steps per batch. Defaults to 1.
-            y_offset ([type], optional): time offset between x and y. nb_hist/2 if None (predict central sample in each batch). Defaults to None.
+            y_offset (int, optional): time offset between x and y. nb_hist/2 if None (predict central sample in each batch). Defaults to None.
             stride (int, optional): nb of time steps between batches. Defaults to 1.
             cut_trailing_dim (bool, optional): Remove trailing dimension. Defaults to False.
             with_y_hist (bool, optional): y as central value of the x_hist window (False) or the full sequence covering
                                           the x_hist window (True). Defaults to False.
             data_padding (int, optional): if > 0, will set weight of as many samples at start and end of nb_hist window to zero. Defaults to 0.
             first_sample (int): 0
-            last_sample (int): None - last_sample in x, otherwise last_sample
+            last_sample (int, optional): None - last_sample in x, otherwise last_sample
             output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1 (every sample).
             nb_repeats (int): Number of repeats before the dataset runs out of data. Defaults to 1 (no repeats).
             shuffle_subset (float): Fraction of batches to use - only works if shuffle=True
             unpack_channels (bool): For multi-channel models with single-channel preprocessing -
                                     unpack [nb_hist, nb_channels] -> [nb_channels * [nb_hist, 1]]
-            mask_input (int): halfwidth of the number of central samples to mask. Defaults to None (no masking).
+            mask_input (int): half width of the number of central samples to mask. Defaults to None (no masking).
+            batch_processor (Callable[[np.ndarray], np.ndarray], optional): For augmentations. Defaults to None.
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -131,6 +134,8 @@ class AudioSequence(keras.utils.Sequence):
             self.weights = np.ones((self.batch_size,))
 
         self.weights = self.weights[:, ::output_stride]
+
+        self.batch_processor = batch_processor
 
     def unroll(self, return_x=True, merge_batches=True):
         """[summary]
@@ -227,6 +232,9 @@ class AudioSequence(keras.utils.Sequence):
         # "mask" input
         if self.mask_input is not None:
             batch_x[:, int(batch_x.shape[1]/2 - self.mask_input):int(batch_x.shape[1]/2 + self.mask_input), :] = 0
+
+        if self.batch_processor is not None:
+            batch_x = self.batch_processor(batch_x)
 
         if self.with_y:
             out = (batch_x, batch_y)
