@@ -11,16 +11,36 @@ Random parameters will be sampled from a given distribution anew for each augmen
 import numpy as np
 from typing import List, Optional, Callable
 import scipy.signal
+import yaml
+from dataclasses import dataclass
+from typing import Dict
 
 
+aug_dict = dict()
+params_dict = dict()
+
+
+def _register_augmentation(func):
+    """Adds func to model_dict Dict[augname: augfunc]. For selecting augs by string."""
+    aug_dict[func.__name__] = func
+    return func
+
+
+def _register_param(func):
+    """Adds func to model_dict Dict[paramname: paramfunc]. For selecting params by string."""
+    params_dict[func.__name__] = func
+    return func
+
+
+@dataclass
 class Param():
     """Base class for all parameters.
 
     Parameters are callables that return parameter values.
     """
-    pass
 
 
+@_register_param
 class Constant(Param):
     """Constant parameter."""
 
@@ -35,6 +55,7 @@ class Constant(Param):
         return self.value * np.ones(shape)
 
 
+@_register_param
 class Normal(Param):
     """Normally distributed parameter."""
 
@@ -50,7 +71,15 @@ class Normal(Param):
     def __call__(self, shape=1) -> np.ndarray:
         return np.random.normal(self.mean, self.std, size=shape)
 
+    def __str__(self):
+        return f"{self.__class__.__name__}(mean={self.mean}, std={self.std})"
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(mean={self.mean}, std={self.std})"
+
+
+
+@_register_param
 class Uniform(Param):
     """Uniformly distributed parameter."""
     def __init__(self, lower: float = -1.0, upper: float = 1.0):
@@ -66,6 +95,7 @@ class Uniform(Param):
         return np.random.uniform(self.lower, self.upper, size=shape)
 
 
+@dataclass
 class Augmentation(Callable):
     """Base class for all augmentations.
 
@@ -81,6 +111,7 @@ class Augmentation(Callable):
             return this_batch_x, batch_y
 
 
+@_register_augmentation
 class Gain(Augmentation):
     """Multiply signal with gain factor."""
 
@@ -95,7 +126,11 @@ class Gain(Augmentation):
         x *= self.gain()
         return x
 
+    # def __repr__(self):
+    #     return f"{self.__class__.__name__}(gain={self.gain.__repr__()})"
 
+
+@_register_augmentation
 class Offset(Augmentation):
     """Add horizontal offset."""
 
@@ -111,6 +146,7 @@ class Offset(Augmentation):
         return x
 
 
+@_register_augmentation
 class HorizontalFlip(Augmentation):
     """Horizontally flip signal."""
 
@@ -127,6 +163,7 @@ class HorizontalFlip(Augmentation):
         return x
 
 
+@_register_augmentation
 class Upsampling(Augmentation):
     """Upsample signal."""
 
@@ -149,6 +186,7 @@ class Upsampling(Augmentation):
         return x
 
 
+@_register_augmentation
 class MaskNoise(Augmentation):
     """Add noise or replace signal by noise for the full duration or a part of it."""
 
@@ -176,14 +214,18 @@ class MaskNoise(Augmentation):
         else:
             duration = int(self.duration())
             mask_start = np.random.randint(low=0, high=len_x - duration)
-        noise = np.random.randn(duration) * self.std() + self.mean(shape=(1, *x.shape[1:]))
+        noise = np.random.randn(duration, *x.shape[1:]) * self.std() + self.mean()
         if self.add:
-            x[mask_start:mask_start + duration] += noise
+            x[mask_start:mask_start + duration, :] += noise
         else:
-            x[mask_start:mask_start + duration] = noise
+            x[mask_start:mask_start + duration, :] = noise
         return x
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(std={self.mean}, mean={self.mean})"
 
+
+@_register_augmentation
 class MaskMean(Augmentation):
     """Replaces stretch of `duration` samples with mean over that stretch."""
 
@@ -201,6 +243,7 @@ class MaskMean(Augmentation):
         return x
 
 
+@_register_augmentation
 class CircShift(Augmentation):
     """Circularly shift input along the first axis."""
 
@@ -233,3 +276,29 @@ class Augmentations():
             return batch_x
         else:
             return batch_x, batch_y
+
+    def __len__(self):
+        return len(self.augmentations)
+
+    @classmethod
+    def from_yaml(cls, filename: str):
+        aug_spec = yaml.safe_load(open(filename, 'r'))
+        return cls.from_dict(aug_spec)
+
+    @classmethod
+    def from_dict(cls, aug_spec: Dict):
+        augs = []
+        for name, args in aug_spec.items():
+            params = dict()
+            for a_name, a_arg in args.items():
+                p_name = list(a_arg.keys())[0]
+                p_args = a_arg[p_name]
+                # if no args for Params are provided, use defaults
+                if p_args is None:
+                    p_args = {}
+                params[a_name] = params_dict[p_name](**p_args)
+            print(params)
+            aug = aug_dict[name](**params)
+            print(aug)
+            augs.append(aug)
+        return cls(augs)
