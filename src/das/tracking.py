@@ -59,7 +59,7 @@ class Neptune():
             self.run = None
             logging.exception('Neptune stuff went wrong.')
 
-    def callback(self)  # -> Optional[NeptuneCallback]:
+    def callback(self):  # -> Optional[NeptuneCallback]:
         """Get callback for auto-logging from tensorfow/keras."""
         if self.run is not None:
             return NeptuneCallback(run=self.run, base_namespace='metrics')
@@ -108,7 +108,7 @@ class Wandb():
             self.run = None
             logging.exception('Wandb stuff went wrong.')
 
-    def callback(self, save_model=False)  # -> Optional[WandbCallback]:
+    def callback(self, save_model=False):  # -> Optional[WandbCallback]:
         """Get callback for auto-logging from tensorfow/keras."""
         if self.run is not None:
             return WandbCallback(save_model=save_model)
