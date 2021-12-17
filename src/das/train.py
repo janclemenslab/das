@@ -288,6 +288,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     utils.save_params(params, save_name)
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
+    # SET UP CALLBACKS
     callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
                  EarlyStopping(monitor='val_loss', patience=20),]
 
@@ -300,27 +301,17 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
 
-    del params['neptune_api_token']
     if neptune_api_token and neptune_project:  # could also get those from env vars!
-        if not tracking.HAS_NEPTUNE:
-            tracking.error('Could not import neptune in das.logging.')
-        else:
-            try:
-                poseidon = tracking.Neptune(neptune_project, neptune_api_token, params)
-                callbacks.append(poseidon.callback())
-            except Exception as e:
-                logging.exception('Neptune stuff failed.')
+        del params['neptune_api_token']
+        neptune = tracking.Neptune(neptune_project, neptune_api_token, params)
+        if neptune:
+            callbacks.append(neptune.callback())
 
-    del params['wandb_api_token']
     if wandb_api_token and wandb_project:  # could also get those from env vars!
-        if not tracking.HAS_WANDB:
-            logging.error('Could not import wandb in das.logging.')
-        else:
-            try:
-                wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
-                callbacks.append(wandb.callback())
-            except Exception as e:
-                logging.exception('wandb stuff failed.')
+        del params['wandb_api_token']
+        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+        if wandb:
+            callbacks.append(wandb.callback())
 
     # TRAIN NETWORK
     logging.info('start training')

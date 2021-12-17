@@ -67,8 +67,9 @@ class OracleCallback(Callback):
 
 class DasTuner(kt.Tuner):
 
-    def __init__(self, params, *args, **kwargs):
+    def __init__(self, params, *args, tracker=None, **kwargs):
         self.params = params.copy()
+        self.tracker = tracker
         super().__init__(*args, **kwargs)
 
     def run_trial(self, trial, train_x, train_y, val_x=None, val_y=None,
@@ -105,9 +106,11 @@ class DasTuner(kt.Tuner):
             if steps_per_epoch is None:
                 steps_per_epoch = min(len(data_gen), 1000)
 
+            self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
                       callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+            self.tracker.finish()
         except:
             logging.exception("Something went wrong. Will try to continue.")
 
@@ -215,10 +218,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
-        neptune_api_token (Optional[str]): API token for logging to neptune.ai.
-                                           Defaults to None (no logging to neptune.ai).
-        neptune_project (Optional[str]): Project to log to for neptune.ai.
-                                         Defaults to None (no logging to neptune.ai).
         wandb_api_token (Optional[str]): API token for logging to wandb.
                                            Defaults to None (no logging to wandb).
         wandb_project (Optional[str]): Project to log to for wandb.
@@ -347,21 +346,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
     logging.info(f'Will save to {save_name}.')
 
-    tuner = DasTuner(
-        params=params,
-        oracle=kt.oracles.BayesianOptimization(
-            objective=kt.Objective("val_loss", "min"), max_trials=100,
-        ),
-        hypermodel=TunableModel(params, tune_config),
-        overwrite=True,
-        directory=save_dir,
-        project_name=os.path.basename(save_name),
-    )
-
-    logging.info(tuner.search_space_summary())
-
-    utils.save_params(params, save_name)
-
+    # setup callbacks
     callbacks = [EarlyStopping(monitor='val_loss', patience=20),]
 
     if reduce_lr:
@@ -373,27 +358,26 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_name))
 
-    del params['neptune_api_token']
-    if neptune_api_token and neptune_project:  # could also get those from env vars!
-        if not tracking.HAS_NEPTUNE:
-            logging.error('Could not import neptune in das.logging.')
-        else:
-            try:
-                poseidon = tracking.Neptune(neptune_project, neptune_api_token, params)
-                callbacks.append(poseidon.callback())
-            except Exception as e:
-                logging.exception('Neptune stuff failed.')
-
-    del params['wandb_api_token']
     if wandb_api_token and wandb_project:  # could also get those from env vars!
-        if not tracking.HAS_WANDB:
-            logging.error('Could not import wandb in das.logging.')
-        else:
-            try:
-                wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+            del params['wandb_api_token']
+            wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+            if wandb:
                 callbacks.append(wandb.callback())
-            except Exception as e:
-                logging.exception('wandb stuff failed.')
+
+    tuner = DasTuner(
+        params=params,
+        oracle=kt.oracles.BayesianOptimization(
+            objective=kt.Objective("val_loss", "min"), max_trials=100,
+        ),
+        hypermodel=TunableModel(params, tune_config),
+        overwrite=True,
+        directory=save_dir,
+        project_name=os.path.basename(save_name),
+        tracker=wandb,
+    )
+
+    logging.info(tuner.search_space_summary())
+    utils.save_params(params, save_name)
 
     # TRAIN NETWORK
     logging.info('Start hyperparameter tuning')

@@ -43,6 +43,10 @@ class Neptune():
                                              NEPTUNE_PROJECT and NEPTUNE_API_TOKEN.
                                              Defaults to False.
         """
+        if not HAS_NEPTUNE:
+            self.run = None
+            logging.error('Could not import neptune in das.tracking.')
+            return
 
         try:
             if project is None:
@@ -92,6 +96,11 @@ class Wandb():
                                              WANDB_PROJECT and WANDB_API_TOKEN.
                                              Defaults to False.
         """
+        if not HAS_WANDB:
+            self.run = None
+            logging.error('Could not import wandb in das.tracking.')
+            return
+
         try:
             if project is None:
                 project = os.environ['WANDB_PROJECT']
@@ -99,7 +108,9 @@ class Wandb():
                 api_token = os.environ['WANDB_API_TOKEN']
 
             wandb.login(key=api_token)
-            self.run = wandb.init(project=project, entity=entity)
+            self.project = project
+            self.entity = entity
+            self.run = wandb.init(project=self.project, entity=self.entity)
 
             if params is not None:
                 wandb.config.update(params)
@@ -108,8 +119,17 @@ class Wandb():
             self.run = None
             logging.exception('Wandb stuff went wrong.')
 
+    def reinit(self, params=None):
+        self.run = wandb.init(reinit=True, project=self.project, entity=self.entity)
+        if params is not None:
+            wandb.config.update(params)
+
+    def finish(self):
+        self.run.finish()
+
     def callback(self, save_model=False):  # -> Optional[WandbCallback]:
         """Get callback for auto-logging from tensorfow/keras."""
+        # CHECK: Is callback re-usable across reinits?
         if self.run is not None:
             return WandbCallback(save_model=save_model)
         else:
