@@ -11,6 +11,7 @@ from tensorflow import keras
 import keras_tuner as kt
 import yaml
 import os
+import sys
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash  #, timeseries
 
@@ -82,6 +83,9 @@ class DasTuner(kt.Tuner):
             callbacks.append(OracleCallback(self))
 
             self.params.update(trial.hyperparameters.values)
+
+            trial.metrics.update('val_loss', np.nan, step=0)
+            trial.status = 'INVALID'
             self.current_trial = trial
 
             # these need updating based on current hyperparameters
@@ -106,11 +110,19 @@ class DasTuner(kt.Tuner):
             if steps_per_epoch is None:
                 steps_per_epoch = min(len(data_gen), 1000)
 
-            self.tracker.reinit(self.params)
+            if self.tracker is not None:
+                self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
+            if self.params['nb_hist'] > 256:
+                error
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
                       callbacks=callbacks, verbose=verbose, class_weight=class_weight)
-            self.tracker.finish()
+            if self.tracker is not None:
+                self.tracker.finish()
+            self.current_trial.status = 'RUNNING'
+        except KeyboardInterrupt:
+            logging.exception('Interrupted')
+            sys.exit(0)
         except:
             logging.exception("Something went wrong. Will try to continue.")
 
@@ -129,7 +141,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           augmentations: str = None,
           tensorboard: bool = False,
-          neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
@@ -222,14 +233,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                                            Defaults to None (no logging to wandb).
         wandb_project (Optional[str]): Project to log to for wandb.
                                          Defaults to None (no logging to wandb).
-        wandb_entity (Optional[str]): Entiti to log to for wandb.
+        wandb_entity (Optional[str]): Entity to log to for wandb.
                                         Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
         nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
         with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
-                        Defaults to False.G
+                        Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
                              Defaults to True (set to False for large datasets since it can be slow).
         tune_config (Optional[str]): Yaml file with key:value pairs defining the search space for tuning.
@@ -363,6 +374,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
             wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
             if wandb:
                 callbacks.append(wandb.callback())
+    else:
+        wandb = None
 
     tuner = DasTuner(
         params=params,
@@ -370,7 +383,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
             objective=kt.Objective("val_loss", "min"), max_trials=100,
         ),
         hypermodel=TunableModel(params, tune_config),
-        overwrite=True,
+        overwrite=False,
         directory=save_dir,
         project_name=os.path.basename(save_name),
         tracker=wandb,
