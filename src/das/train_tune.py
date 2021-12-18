@@ -113,8 +113,6 @@ class DasTuner(kt.Tuner):
             if self.tracker is not None:
                 self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
-            if self.params['nb_hist'] > 256:
-                error
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
                       callbacks=callbacks, verbose=verbose, class_weight=class_weight)
             if self.tracker is not None:
