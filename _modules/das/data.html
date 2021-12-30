@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.data - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -207,14 +207,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_transfer.html">das.train_transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
@@ -258,9 +256,10 @@
 <span></span><span class="sd">"""Utils for loading and manipulating data for training and prediction."""</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
 
 
-<div class="viewcode-block" id="unpack_batches"><a class="viewcode-back" href="../../api/das.data.html#das.data.unpack_batches">[docs]</a><span class="k">def</span> <span class="nf">unpack_batches</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="unpack_batches"><a class="viewcode-back" href="../../api/das.data.html#das.data.unpack_batches">[docs]</a><span class="k">def</span> <span class="nf">unpack_batches</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
     <span class="sd">"""[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -312,10 +311,11 @@
 <span class="sd">        ...</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nb_hist</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cut_trailing_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">first_sample</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">last_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nb_repeats</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">shuffle_subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unpack_channels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mask_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y_offset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">stride</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cut_trailing_dim</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">data_padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                 <span class="n">first_sample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">last_sample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_stride</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_repeats</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">shuffle_subset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unpack_channels</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">mask_input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">batch_processor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""[summary]</span>
 
@@ -327,20 +327,21 @@
 <span class="sd">            batch_size (int, optional): number of batches to return. Defaults to 32.</span>
 <span class="sd">            shuffle (bool, optional): randomize order of batches. Defaults to True.</span>
 <span class="sd">            nb_hist (int, optional): nb of time steps per batch. Defaults to 1.</span>
-<span class="sd">            y_offset ([type], optional): time offset between x and y. nb_hist/2 if None (predict central sample in each batch). Defaults to None.</span>
+<span class="sd">            y_offset (int, optional): time offset between x and y. nb_hist/2 if None (predict central sample in each batch). Defaults to None.</span>
 <span class="sd">            stride (int, optional): nb of time steps between batches. Defaults to 1.</span>
 <span class="sd">            cut_trailing_dim (bool, optional): Remove trailing dimension. Defaults to False.</span>
 <span class="sd">            with_y_hist (bool, optional): y as central value of the x_hist window (False) or the full sequence covering</span>
 <span class="sd">                                          the x_hist window (True). Defaults to False.</span>
 <span class="sd">            data_padding (int, optional): if &gt; 0, will set weight of as many samples at start and end of nb_hist window to zero. Defaults to 0.</span>
 <span class="sd">            first_sample (int): 0</span>
-<span class="sd">            last_sample (int): None - last_sample in x, otherwise last_sample</span>
+<span class="sd">            last_sample (int, optional): None - last_sample in x, otherwise last_sample</span>
 <span class="sd">            output_stride (int): Take every Nth sample as output. Useful in combination with a "downsampling frontend". Defaults to 1 (every sample).</span>
 <span class="sd">            nb_repeats (int): Number of repeats before the dataset runs out of data. Defaults to 1 (no repeats).</span>
 <span class="sd">            shuffle_subset (float): Fraction of batches to use - only works if shuffle=True</span>
 <span class="sd">            unpack_channels (bool): For multi-channel models with single-channel preprocessing -</span>
 <span class="sd">                                    unpack [nb_hist, nb_channels] -&gt; [nb_channels * [nb_hist, 1]]</span>
-<span class="sd">            mask_input (int): halfwidth of the number of central samples to mask. Defaults to None (no masking).</span>
+<span class="sd">            mask_input (int): half width of the number of central samples to mask. Defaults to None (no masking).</span>
+<span class="sd">            batch_processor (Callable[[np.ndarray], np.ndarray], optional): For augmentations. Defaults to None.</span>
 <span class="sd">        """</span>
         <span class="c1"># TODO clarify "channels" semantics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
@@ -388,6 +389,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[:,</span> <span class="p">::</span><span class="n">output_stride</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_processor</span> <span class="o">=</span> <span class="n">batch_processor</span>
 
 <div class="viewcode-block" id="AudioSequence.unroll"><a class="viewcode-back" href="../../api/das.data.html#das.data.AudioSequence.unroll">[docs]</a>    <span class="k">def</span> <span class="nf">unroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">merge_batches</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">"""[summary]</span>
@@ -484,6 +487,9 @@
         <span class="c1"># "mask" input</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">batch_x</span><span class="p">[:,</span> <span class="nb">int</span><span class="p">(</span><span class="n">batch_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_input</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">batch_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_input</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_processor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">batch_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_processor</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_y</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>

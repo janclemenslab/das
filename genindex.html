@@ -206,13 +206,12 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.train_transfer.html">das.train_transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
@@ -335,8 +334,12 @@
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.TCN.call">(das.tcn.tcn_new.TCN method)</a>
 </li>
         </ul></li>
-        <li><a href="api/das.neptune.html#das.neptune.Poseidon.callback">callback() (das.neptune.Poseidon method)</a>
+        <li><a href="api/das.tracking.html#das.tracking.Neptune.callback">callback() (das.tracking.Neptune method)</a>
+
+        <ul>
+          <li><a href="api/das.tracking.html#das.tracking.Wandb.callback">(das.tracking.Wandb method)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.center_of_mass">center_of_mass() (in module das.pulse_utils)</a>
 </li>
         <li><a href="api/das.tcn.tcn.html#das.tcn.tcn.channel_normalization">channel_normalization() (in module das.tcn.tcn)</a>
@@ -501,13 +504,6 @@
 </li>
         </ul></li>
         <li>
-    das.neptune
-
-        <ul>
-          <li><a href="api/das.neptune.html#module-das.neptune">module</a>
-</li>
-        </ul></li>
-        <li>
     das.npy_dir
 
         <ul>
@@ -550,17 +546,17 @@
 </li>
         </ul></li>
         <li>
+    das.tracking
+
+        <ul>
+          <li><a href="api/das.tracking.html#module-das.tracking">module</a>
+</li>
+        </ul></li>
+        <li>
     das.train
 
         <ul>
           <li><a href="api/das.train.html#module-das.train">module</a>
-</li>
-        </ul></li>
-        <li>
-    das.train_transfer
-
-        <ul>
-          <li><a href="api/das.train_transfer.html#module-das.train_transfer">module</a>
 </li>
         </ul></li>
         <li>
@@ -592,7 +588,7 @@
 </li>
         <li><a href="api/das.event_utils.html#das.event_utils.detect_events">detect_events() (in module das.event_utils)</a>
 </li>
-        <li><a href="api/das.npy_dir.html#das.npy_dir.Dict">Dict (class in das.npy_dir)</a>
+        <li><a href="api/das.npy_dir.html#das.npy_dir.DictClass">DictClass (class in das.npy_dir)</a>
 </li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.downsample_plot">downsample_plot() (in module das.utils_plot)</a>
 </li>
@@ -742,10 +738,10 @@
           <li><a href="api/das.npy_dir.html#das.npy_dir.load">(in module das.npy_dir)</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.utils.html#das.utils.load_from">load_from() (in module das.utils)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.utils.html#das.utils.load_model">load_model() (in module das.utils)</a>
 </li>
         <li><a href="api/das.utils.html#das.utils.load_model_and_params">load_model_and_params() (in module das.utils)</a>
@@ -754,8 +750,12 @@
 </li>
         <li><a href="api/das.utils.html#das.utils.load_params">load_params() (in module das.utils)</a>
 </li>
-        <li><a href="api/das.neptune.html#das.neptune.Poseidon.log_test_results">log_test_results() (das.neptune.Poseidon method)</a>
+        <li><a href="api/das.tracking.html#das.tracking.Neptune.log_test_results">log_test_results() (das.tracking.Neptune method)</a>
+
+        <ul>
+          <li><a href="api/das.tracking.html#das.tracking.Wandb.log_test_results">(das.tracking.Wandb method)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.utils.html#das.utils.LossHistory">LossHistory (class in das.utils)</a>
 </li>
     </ul></td>
@@ -820,8 +820,6 @@
 </li>
           <li><a href="api/das.models.html#module-das.models">das.models</a>
 </li>
-          <li><a href="api/das.neptune.html#module-das.neptune">das.neptune</a>
-</li>
           <li><a href="api/das.npy_dir.html#module-das.npy_dir">das.npy_dir</a>
 </li>
           <li><a href="api/das.predict.html#module-das.predict">das.predict</a>
@@ -834,9 +832,9 @@
 </li>
           <li><a href="api/das.tcn.tcn_new.html#module-das.tcn.tcn_new">das.tcn.tcn_new</a>
 </li>
-          <li><a href="api/das.train.html#module-das.train">das.train</a>
+          <li><a href="api/das.tracking.html#module-das.tracking">das.tracking</a>
 </li>
-          <li><a href="api/das.train_transfer.html#module-das.train_transfer">das.train_transfer</a>
+          <li><a href="api/das.train.html#module-das.train">das.train</a>
 </li>
           <li><a href="api/das.train_tune.html#module-das.train_tune">das.train_tune</a>
 </li>
@@ -857,6 +855,8 @@
   <h2>N</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.tracking.html#das.tracking.Neptune">Neptune (class in das.tracking)</a>
+</li>
         <li><a href="api/das.cli.html#das.cli.no_xb_gui">no_xb_gui() (in module das.cli)</a>
 </li>
         <li><a href="api/das.augmentation.html#das.augmentation.Normal">Normal (class in das.augmentation)</a>
@@ -918,8 +918,6 @@
         <li><a href="api/das.augmentation.html#das.augmentation.Param">Param (class in das.augmentation)</a>
 </li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.Pdf">Pdf (class in das.utils_plot)</a>
-</li>
-        <li><a href="api/das.neptune.html#das.neptune.Poseidon">Poseidon (class in das.neptune)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.predict">predict() (in module das.predict)</a>
 </li>
@@ -1026,8 +1024,6 @@
         <li><a href="api/das.train.html#das.train.train">train() (in module das.train)</a>
 
         <ul>
-          <li><a href="api/das.train_transfer.html#das.train_transfer.train">(in module das.train_transfer)</a>
-</li>
           <li><a href="api/das.train_tune.html#das.train_tune.train">(in module das.train_tune)</a>
 </li>
         </ul></li>
@@ -1058,6 +1054,10 @@
 <section id="W" class="genindex-section">
   <h2>W</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.tracking.html#das.tracking.Wandb">Wandb (class in das.tracking)</a>
+</li>
+    </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.tcn.tcn.html#das.tcn.tcn.wave_net_activation">wave_net_activation() (in module das.tcn.tcn)</a>
 </li>

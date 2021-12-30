@@ -24,13 +24,12 @@ Developer API
    das.make_dataset
    das.menagerie
    das.models
-   das.neptune
    das.npy_dir
    das.predict
    das.pulse_utils
    das.segment_utils
+   das.tracking
    das.train
-   das.train_transfer
    das.train_tune
    das.utils
    das.utils_plot

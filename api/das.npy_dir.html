@@ -2,7 +2,7 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.predict" href="das.predict.html" /><link rel="prev" title="das.neptune" href="das.neptune.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.predict" href="das.predict.html" /><link rel="prev" title="das.models" href="das.models.html" />
 
     <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.npy_dir - DAS documentation</title>
@@ -207,13 +207,12 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.train_transfer.html">das.train_transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
@@ -270,13 +269,13 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">responses.npy</span></code> containing <code class="xref py py-obj docutils literal notranslate"><span class="pre">some_other_data</span></code>. The <code class="xref py py-obj docutils literal notranslate"><span class="pre">attrs</span></code> attribute can be used to store metadata and will be stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">song_responses.npy/attrs.npy</span></code>)</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">das.npy.load('song_responses.npy')</span></code> will restore the data with the metadata.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="das.npy_dir.Dict">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">Dict</span></span><a class="reference internal" href="../_modules/das/npy_dir.html#Dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.Dict" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="das.npy_dir.DictClass">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">DictClass</span></span><a class="reference internal" href="../_modules/das/npy_dir.html#DictClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.DictClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wrap dict in class so we can attach attrs to it.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.load">
-<span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memmap_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['train']</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/npy_dir.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.load" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memmap_dirs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">['train']</span></span></em><span class="sig-paren">)</span> → <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="../_modules/das/npy_dir.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load hierarchy of npy files into dict of dicts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -295,7 +294,7 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.save">
-<span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/npy_dir.html#save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.save" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/npy_dir.html#save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save nested dict in data to location as a directory with npy files dir.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -322,14 +321,14 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="das.neptune.html">
+          <a class="prev-page" href="das.models.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">das.neptune</div>
+                <div class="title">das.models</div>
                 
               </div>
             </a>

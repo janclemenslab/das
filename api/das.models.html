@@ -2,7 +2,7 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.neptune" href="das.neptune.html" /><link rel="prev" title="das.menagerie" href="das.menagerie.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.npy_dir" href="das.npy_dir.html" /><link rel="prev" title="das.menagerie" href="das.menagerie.html" />
 
     <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.models - DAS documentation</title>
@@ -207,13 +207,12 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.train_transfer.html">das.train_transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
@@ -274,7 +273,7 @@
 <li><p><strong>loss</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to “categorical_crossentropy”.</p></li>
 <li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
 <li><p><strong>return_sequences</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id1"><span class="problematic" id="id2">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id1"><span class="problematic" id="id2">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -307,7 +306,7 @@
 <li><p><strong>loss</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to “categorical_crossentropy”.</p></li>
 <li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
 <li><p><strong>return_sequences</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id3"><span class="problematic" id="id4">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id3"><span class="problematic" id="id4">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -340,7 +339,7 @@
 <li><p><strong>loss</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to “categorical_crossentropy”.</p></li>
 <li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
 <li><p><strong>return_sequences</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id5"><span class="problematic" id="id6">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id5"><span class="problematic" id="id6">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -369,7 +368,7 @@
 <li><p><strong>loss</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to “categorical_crossentropy”.</p></li>
 <li><p><strong>batch_norm</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
 <li><p><strong>return_sequences</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id7"><span class="problematic" id="id8">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id7"><span class="problematic" id="id8">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -413,7 +412,7 @@ Defaults to 0 (no downsampling)</p></li>
 <li><p><strong>pre_nb_filters</strong> – </p></li>
 <li><p><strong>pre_kernelsize</strong> – </p></li>
 <li><p><strong>pre_nb_conv</strong> – </p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id9"><span class="problematic" id="id10">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id9"><span class="problematic" id="id10">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -450,7 +449,7 @@ Should generally be True during training and evaluation but my speed up inferenc
 Defaults to True.</p></li>
 <li><p><strong>out_activation</strong> (<em>str</em><em>, </em><em>optional</em>) – activation type for the output. Defaults to ‘softmax’.</p></li>
 <li><p><strong>use_separable</strong> (<em>bool</em><em>, </em><em>optional</em>) – use separable convs in residual block. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id11"><span class="problematic" id="id12">**</span></a>params) to be ignored</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id11"><span class="problematic" id="id12">**</span></a>params) to be ignored</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -490,7 +489,7 @@ Defaults to 0 (no downsampling)</p></li>
 Should generally be True during training and evaluation but my speed up inference .
 Defaults to True.</p></li>
 <li><p><strong>use_separable</strong> (<em>bool</em><em>, </em><em>optional</em>) – use separable convs in residual block. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id13"><span class="problematic" id="id14">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id13"><span class="problematic" id="id14">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -532,7 +531,7 @@ Defaults to 64.</p></li>
 Should generally be True during training and evaluation but may speed up inference.
 Defaults to True.</p></li>
 <li><p><strong>use_separable</strong> (<em>bool</em><em>, </em><em>optional</em>) – use separable convs in residual block. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id15"><span class="problematic" id="id16">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id15"><span class="problematic" id="id16">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -572,7 +571,7 @@ Defaults to 0 (no downsampling)</p></li>
 Should generally be True during training and evaluation but my speed up inference .
 Defaults to True.</p></li>
 <li><p><strong>use_separable</strong> (<em>bool</em><em>, </em><em>optional</em>) – use separable convs in residual block. Defaults to False.</p></li>
-<li><p><strong>kwignored</strong> (<a class="reference internal" href="das.npy_dir.html#das.npy_dir.Dict" title="das.npy_dir.Dict"><em>Dict</em></a><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id17"><span class="problematic" id="id18">**</span></a>params) to be ingonred</p></li>
+<li><p><strong>kwignored</strong> (<em>Dict</em><em>, </em><em>optional</em>) – additional kw args in the param dict used for calling m(<a href="#id17"><span class="problematic" id="id18">**</span></a>params) to be ingonred</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -590,12 +589,12 @@ Defaults to True.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.neptune.html">
+          <a class="next-page" href="das.npy_dir.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.neptune</div>
+                <div class="title">das.npy_dir</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>

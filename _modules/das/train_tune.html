@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.3.1, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
         <title>das.train_tune - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -207,14 +207,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.neptune.html">das.neptune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_transfer.html">das.train_transfer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
@@ -268,8 +266,9 @@
 <span class="kn">import</span> <span class="nn">keras_tuner</span> <span class="k">as</span> <span class="nn">kt</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">neptune</span><span class="p">,</span> <span class="n">data_hash</span>  <span class="c1">#, timeseries</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">tracking</span><span class="p">,</span> <span class="n">data_hash</span>  <span class="c1">#, timeseries</span>
 
 <span class="k">try</span><span class="p">:</span>  <span class="c1"># disabling eager execution speeds up everything</span>
     <span class="kn">from</span> <span class="nn">tensorflow.python.framework.ops</span> <span class="kn">import</span> <span class="n">disable_eager_execution</span>
@@ -291,11 +290,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="o">=</span> <span class="n">tune_config</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'nb_filters'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
-                                <span class="s1">'kernel_size'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'nb_filters'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
+                                <span class="s1">'kernel_size'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span>
                                 <span class="s1">'learning_rate'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">],</span>
-                                <span class="s1">'nb_hist'</span><span class="p">:</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">4096</span><span class="p">,</span> <span class="mi">8192</span><span class="p">],</span>
-                                <span class="s1">'nb_conv'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">]}</span>
+                                <span class="s1">'nb_hist'</span><span class="p">:</span> <span class="p">[</span><span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">],</span>
+                                <span class="s1">'nb_conv'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 
 <div class="viewcode-block" id="TunableModel.build"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.TunableModel.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hp</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -324,8 +323,9 @@
 
 <div class="viewcode-block" id="DasTuner"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.DasTuner">[docs]</a><span class="k">class</span> <span class="nc">DasTuner</span><span class="p">(</span><span class="n">kt</span><span class="o">.</span><span class="n">Tuner</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">tracker</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="o">=</span> <span class="n">tracker</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DasTuner.run_trial"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.DasTuner.run_trial">[docs]</a>    <span class="k">def</span> <span class="nf">run_trial</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">,</span> <span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">val_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">val_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -338,6 +338,9 @@
             <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">OracleCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">hyperparameters</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="n">trial</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">trial</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">'INVALID'</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span> <span class="o">=</span> <span class="n">trial</span>
 
             <span class="c1"># these need updating based on current hyperparameters</span>
@@ -362,9 +365,17 @@
             <span class="k">if</span> <span class="n">steps_per_epoch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_gen</span><span class="p">),</span> <span class="mi">1000</span><span class="p">)</span>
 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">reinit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypermodel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">)</span>
             <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_gen</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="n">steps_per_epoch</span><span class="p">,</span>
                       <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">'RUNNING'</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'Interrupted'</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Something went wrong. Will try to continue."</span><span class="p">)</span></div></div>
 
@@ -381,7 +392,9 @@
           <span class="n">nb_epoch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
           <span class="n">learning_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reduce_lr</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">reduce_lr_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
           <span class="n">fraction_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">batch_level_subsampling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-          <span class="n">tensorboard</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">neptune_api_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">neptune_project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">augmentations</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">tensorboard</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+          <span class="n">wandb_api_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wandb_project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wandb_entity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">log_messages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">balance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">version_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">tune_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -469,16 +482,18 @@
 <span class="sd">                                        If False, select a continuous chunk of the recording.</span>
 <span class="sd">                                        Defaults to False.</span>
 <span class="sd">        tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.</span>
-<span class="sd">        neptune_api_token (Optional[str]): API token for logging to neptune.ai.</span>
-<span class="sd">                                           Defaults to None (no logging to neptune.ai).</span>
-<span class="sd">        neptune_project (Optional[str]): Project to log to for neptune.ai.</span>
-<span class="sd">                                         Defaults to None (no logging to neptune.ai).</span>
+<span class="sd">        wandb_api_token (Optional[str]): API token for logging to wandb.</span>
+<span class="sd">                                           Defaults to None (no logging to wandb).</span>
+<span class="sd">        wandb_project (Optional[str]): Project to log to for wandb.</span>
+<span class="sd">                                         Defaults to None (no logging to wandb).</span>
+<span class="sd">        wandb_entity (Optional[str]): Entity to log to for wandb.</span>
+<span class="sd">                                        Defaults to None (no logging to wandb).</span>
 <span class="sd">        log_messages (bool): Sets terminal logging level to INFO.</span>
 <span class="sd">                             Defaults to False (will follow existing settings).</span>
 <span class="sd">        nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.</span>
 <span class="sd">        with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.</span>
 <span class="sd">        balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.</span>
-<span class="sd">                        Defaults to False.G</span>
+<span class="sd">                        Defaults to False.</span>
 <span class="sd">        version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.</span>
 <span class="sd">                             Defaults to True (set to False for large datasets since it can be slow).</span>
 <span class="sd">        tune_config (Optional[str]): Yaml file with key:value pairs defining the search space for tuning.</span>
@@ -595,21 +610,7 @@
     <span class="n">save_name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">/</span><span class="si">{1}{2}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">save_prefix</span><span class="p">,</span> <span class="n">save_name</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Will save to </span><span class="si">{</span><span class="n">save_name</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
-    <span class="n">tuner</span> <span class="o">=</span> <span class="n">DasTuner</span><span class="p">(</span>
-        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
-        <span class="n">oracle</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">oracles</span><span class="o">.</span><span class="n">BayesianOptimization</span><span class="p">(</span>
-            <span class="n">objective</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="s2">"val_loss"</span><span class="p">,</span> <span class="s2">"min"</span><span class="p">),</span> <span class="n">max_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">hypermodel</span><span class="o">=</span><span class="n">TunableModel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">tune_config</span><span class="p">),</span>
-        <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">directory</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span>
-        <span class="n">project_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">save_name</span><span class="p">),</span>
-    <span class="p">)</span>
-
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">tuner</span><span class="o">.</span><span class="n">search_space_summary</span><span class="p">())</span>
-
-    <span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">save_name</span><span class="p">)</span>
-
+    <span class="c1"># setup callbacks</span>
     <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">20</span><span class="p">),]</span>
 
     <span class="k">if</span> <span class="n">reduce_lr</span><span class="p">:</span>
@@ -621,16 +622,28 @@
     <span class="k">if</span> <span class="n">tensorboard</span><span class="p">:</span>
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TensorBoard</span><span class="p">(</span><span class="n">log_dir</span><span class="o">=</span><span class="n">save_name</span><span class="p">))</span>
 
-    <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">'neptune_api_token'</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">neptune_api_token</span> <span class="ow">and</span> <span class="n">neptune_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">neptune</span><span class="o">.</span><span class="n">HAS_NEPTUNE</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">'Could not import neptune in das.neptune.'</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">poseidon</span> <span class="o">=</span> <span class="n">neptune</span><span class="o">.</span><span class="n">Poseidon</span><span class="p">(</span><span class="n">neptune_project</span><span class="p">,</span> <span class="n">neptune_api_token</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-                <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">poseidon</span><span class="o">.</span><span class="n">callback</span><span class="p">())</span>
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'Neptune stuff failed.'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wandb_api_token</span> <span class="ow">and</span> <span class="n">wandb_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
+            <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">'wandb_api_token'</span><span class="p">]</span>
+            <span class="n">wandb</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">Wandb</span><span class="p">(</span><span class="n">wandb_project</span><span class="p">,</span> <span class="n">wandb_api_token</span><span class="p">,</span> <span class="n">wandb_entity</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">wandb</span><span class="p">:</span>
+                <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wandb</span><span class="o">.</span><span class="n">callback</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">wandb</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">tuner</span> <span class="o">=</span> <span class="n">DasTuner</span><span class="p">(</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">oracle</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">oracles</span><span class="o">.</span><span class="n">BayesianOptimization</span><span class="p">(</span>
+            <span class="n">objective</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="s2">"val_loss"</span><span class="p">,</span> <span class="s2">"min"</span><span class="p">),</span> <span class="n">max_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">hypermodel</span><span class="o">=</span><span class="n">TunableModel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">tune_config</span><span class="p">),</span>
+        <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">directory</span><span class="o">=</span><span class="n">save_dir</span><span class="p">,</span>
+        <span class="n">project_name</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">save_name</span><span class="p">),</span>
+        <span class="n">tracker</span><span class="o">=</span><span class="n">wandb</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">tuner</span><span class="o">.</span><span class="n">search_space_summary</span><span class="p">())</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">save_name</span><span class="p">)</span>
 
     <span class="c1"># TRAIN NETWORK</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Start hyperparameter tuning'</span><span class="p">)</span>
@@ -666,6 +679,8 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">neptune_api_token</span> <span class="ow">and</span> <span class="n">neptune_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
             <span class="n">poseidon</span><span class="o">.</span><span class="n">log_test_results</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wandb_api_token</span> <span class="ow">and</span> <span class="n">wandb_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
+            <span class="n">wandb</span><span class="o">.</span><span class="n">log_test_results</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
 
         <span class="n">save_filename</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{0}</span><span class="s2">_results.h5"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_name</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'saving to '</span> <span class="o">+</span> <span class="n">save_filename</span> <span class="o">+</span> <span class="s1">'.'</span><span class="p">)</span>
