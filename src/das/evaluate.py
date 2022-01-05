@@ -1,9 +1,10 @@
 import sklearn.metrics
 import numpy as np
 import pandas as pd
-from typing import Union, Dict
+from typing import Optional, Dict
+import logging
 
-from . import predict, data, utils, models
+from . import predict, data, utils, models, io
 from .event_utils import evaluate_eventtimes
 
 
@@ -11,7 +12,6 @@ from .event_utils import evaluate_eventtimes
 def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: bool = False,
                       report_as_dict: bool = False, labels=None):
     """
-
 
     Args:
         labels_test (List): [nb_samples,]
@@ -43,7 +43,7 @@ def evaluate_segments(labels_test, labels_pred, class_names, confmat_as_pandas: 
     return conf_mat, report
 
 
-def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate, event_tol):
+def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate: float, event_tol: float):
     """[summary]
 
     Args:
@@ -65,9 +65,8 @@ def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate
     return segment_onsets_report, segment_offsets_report, nearest_predicted_onsets, nearest_predicted_offsets
 
 
-
 # TODO: move to das.segment_utils
-def segment_timing(labels, samplerate):
+def segment_timing(labels, samplerate: float):
     """Get onset and offset time (in seconds) for each segment."""
     segment_onset_times = np.where(np.diff(labels) == 1)[0].astype(np.float) / samplerate  # explicit cast required?
     segment_offset_times = np.where(np.diff(labels) == -1)[0].astype(np.float) / samplerate
@@ -75,7 +74,7 @@ def segment_timing(labels, samplerate):
 
 
 # def evaluate_probabilities(x, y, model, params, verbose=None):
-def evaluate_probabilities(x, y, model: Union[models.keras.models.Model] = None, params: Union[Dict] = None, model_savename: Union[str] = None, verbose: int = 1):
+def evaluate_probabilities(x, y, model: Optional[models.keras.models.Model] = None, params: Optional[Dict] = None, model_savename: Optional[str] = None, verbose: int = 1):
     """[summary]
 
     evaluate_probabilities(x, y, model=keras_model, params=params_dict)
@@ -106,3 +105,28 @@ def evaluate_probabilities(x, y, model: Union[models.keras.models.Model] = None,
     x, y = data.get_data_from_gen(eval_gen)
 
     return x, y, y_pred
+
+
+def evaluate(savename: str):
+    logging.info('Loading last best model.')
+    model, params = utils.load_model_and_params(savename)
+    print(model.summary())
+    logging.info(f"Loading data from {params['data_dir']}.")
+    d = io.load(params['data_dir'], x_suffix=params['x_suffix'], y_suffix=params['y_suffix'])
+
+    # if len(d['test']['x']) < params['nb_hist']:
+    #     logging.info('No test data - skipping final evaluation step.')
+    #     return None, None
+    # else:
+    logging.info('predicting')
+    x_test, y_test, y_pred = evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
+                                                                model=model, params=params)
+
+    labels_test = predict.labels_from_probabilities(y_test)
+    labels_pred = predict.labels_from_probabilities(y_pred)
+
+    logging.info('evaluating')
+    conf_mat, report = evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+    logging.info(conf_mat)
+    logging.info(report)
+    return conf_mat, report
