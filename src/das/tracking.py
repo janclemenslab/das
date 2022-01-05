@@ -110,7 +110,8 @@ class Wandb():
             wandb.login(key=api_token)
             self.project = project
             self.entity = entity
-            self.run = wandb.init(project=self.project, entity=self.entity)
+            self.run = wandb.init(project=self.project, entity=self.entity,
+                                  settings=wandb.Settings(start_method="fork"))
 
             if params is not None:
                 wandb.config.update(params)
