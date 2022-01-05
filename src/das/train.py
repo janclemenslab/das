@@ -346,7 +346,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         logging.info(report)
 
         if neptune_api_token and neptune_project:  # could also get those from env vars!
-            poseidon.log_test_results(report)
+            neptune.log_test_results(report)
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
 
