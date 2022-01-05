@@ -36,7 +36,7 @@ def predict_probabililties(x, model, params, verbose=None, prepend_data_padding:
     return y_pred
 
 
-def labels_from_probabilities(probabilities, threshold=None):
+def labels_from_probabilities(probabilities, threshold: Optional[float] = None):
     """Convert class-wise probabilities into labels.
 
     Args:
