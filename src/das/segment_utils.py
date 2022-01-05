@@ -20,7 +20,9 @@ def fill_gaps(labels: np.array, gap_dur: int = 100) -> np.array:
     offsets = np.where(np.diff(labels.astype(np.int))==-1)[0]
     if len(onsets) and len(offsets):
         onsets = onsets[onsets<offsets[-1]]
+    if len(onsets) and len(offsets):
         offsets = offsets[offsets>onsets[0]]
+    if len(onsets) and len(offsets) and len(onsets) == len(offsets):
         durations = offsets - onsets
         for idx, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
             if idx>0 and offsets[idx-1]>onsets[idx]-gap_dur:
@@ -44,9 +46,11 @@ def remove_short(labels: np.array, min_len: int = 100) -> np.array:
     offsets = np.where(np.diff(labels.astype(np.int)) == -1)[0]
     if len(onsets) and len(offsets):
         onsets = onsets[onsets < offsets[-1]]
+    if len(onsets) and len(offsets):
         offsets = offsets[offsets > onsets[0]]
+    if len(onsets) and len(offsets) and len(onsets) == len(offsets):
         durations = offsets - onsets
-        for cnt, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
+        for onset, offset, duration in zip(onsets, offsets, durations):
             if duration < min_len:
                 labels[onset:offset + 1] = 0
     return labels
