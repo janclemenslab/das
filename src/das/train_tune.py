@@ -6,6 +6,12 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
+
+try:
+    from tensorflow.python.keras.utils import tf_utils
+except ImportError:
+    from tensorflow.keras.utils import tf_utils
+
 from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import keras_tuner as kt
@@ -66,6 +72,68 @@ class OracleCallback(Callback):
         self.tuner.on_epoch_end(self.tuner.current_trial, self.model, epoch, logs=logs)
 
 
+class ModelParamsCheckpoint(ModelCheckpoint):
+    """
+    """
+
+    def _save_model(self, epoch, logs):
+        """Saves the model.
+        Args:
+                epoch: the epoch this iteration is in.
+                logs: the `logs` dict passed in to `on_batch_end` or `on_epoch_end`.
+        """
+        logs = logs or {}
+
+        if isinstance(self.save_freq,
+                                    int) or self.epochs_since_last_save >= self.period:
+            # Block only when saving interval is reached.
+            logs = tf_utils.sync_to_numpy_or_python_type(logs)
+            self.epochs_since_last_save = 0
+            filepath = self._get_file_path(epoch, logs)
+
+            try:
+                if self.save_best_only:
+                    current = logs.get(self.monitor)
+                    if current is None:
+                        logging.warning('Can save best model only with %s available, '
+                                                        'skipping.', self.monitor)
+                    else:
+                        if self.monitor_op(current, self.best):
+                            if self.verbose > 0:
+                                print('\nEpoch %05d: %s improved from %0.5f to %0.5f,'
+                                            ' saving model to %s' % (epoch + 1, self.monitor,
+                                                                                             self.best, current, filepath))
+                            self.best = current
+                            if self.save_weights_only:
+                                self.model.save_weights(
+                                        filepath + '_model.h5', overwrite=True, options=self._options)
+                            else:
+                                self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                                utils.save_params(self.model.params, filepath)
+                        else:
+                            if self.verbose > 0:
+                                print('\nEpoch %05d: %s did not improve from %0.5f' %
+                                            (epoch + 1, self.monitor, self.best))
+                else:
+                    if self.verbose > 0:
+                        print('\nEpoch %05d: saving model to %s' % (epoch + 1, filepath))
+                    if self.save_weights_only:
+                        self.model.save_weights(
+                                filepath + '_model.h5', overwrite=True, options=self._options)
+                    else:
+                        self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                        utils.save_params(self.model.params, filepath)
+                self._maybe_remove_file()
+            except IOError as e:
+                # `e.errno` appears to be `None` so checking the content of `e.args[0]`.
+                if 'is a directory' in str(e.args[0]).lower():
+                    raise IOError('Please specify a non-directory filepath for '
+                                                'ModelCheckpoint. Filepath used is an existing '
+                                                'directory: {}'.format(filepath))
+                # Re-throw the error for any other causes.
+                raise e
+
+
 class DasTuner(kt.Tuner):
 
     def __init__(self, params, *args, tracker=None, **kwargs):
@@ -113,6 +181,7 @@ class DasTuner(kt.Tuner):
             if self.tracker is not None:
                 self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
+            model.params = self.params  # attach params to model so we can save them in ModelParamsCheckpoint
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
                       callbacks=callbacks, verbose=verbose, class_weight=class_weight)
             if self.tracker is not None:
@@ -123,6 +192,7 @@ class DasTuner(kt.Tuner):
             sys.exit(0)
         except:
             logging.exception("Something went wrong. Will try to continue.")
+            self.current_trial.status = 'INVALID'
 
 
 def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
@@ -142,7 +212,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
-          tune_config: Optional[str] = None,
+          tune_config: Optional[str] = None, nb_tune_trials: int = 1_000,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Tune the hyperparameters of a DAS network.
 
@@ -243,6 +313,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                              Defaults to True (set to False for large datasets since it can be slow).
         tune_config (Optional[str]): Yaml file with key:value pairs defining the search space for tuning.
                                      Keys are parameter names, values are lists of possible parameter values.
+        nb_tune_trials (int): Number of model variants to test during hyper parameter tuning. Defaults to 1_000.
 
         Returns
             model (keras.Model)
@@ -353,10 +424,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if save_name is None:
         save_name = time.strftime('%Y%m%d_%H%M%S')
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
+    params['save_name'] = save_name
+    # checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
+
     logging.info(f'Will save to {save_name}.')
 
     # setup callbacks
-    callbacks = [EarlyStopping(monitor='val_loss', patience=20),]
+    callbacks = [ModelParamsCheckpoint(save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
+                 EarlyStopping(monitor='val_loss', patience=15)]
 
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
@@ -378,7 +453,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     tuner = DasTuner(
         params=params,
         oracle=kt.oracles.BayesianOptimization(
-            objective=kt.Objective("val_loss", "min"), max_trials=100,
+            objective=kt.Objective("val_loss", "min"), max_trials=nb_tune_trials,
         ),
         hypermodel=TunableModel(params, tune_config),
         overwrite=False,
@@ -400,7 +475,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         callbacks=callbacks,
         class_weight=params['class_weights'],
     )
-    tuner.results_summary()
+    logging.info(tuner.results_summary())
 
     # TEST
     if len(d['test']['x']) < nb_hist:
@@ -408,7 +483,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         return
     else:
         logging.info('re-loading last best model')
-        model = tuner.get_best_models()[0]
+        model, params = utils.load_model_and_params(params['save_name'])
 
         logging.info('predicting')
         # TODO: Need to update params with best hyperparams (e.g. nb-hist)
@@ -422,8 +497,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
-        if neptune_api_token and neptune_project:  # could also get those from env vars!
-            poseidon.log_test_results(report)
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
 
