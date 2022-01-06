@@ -48,15 +48,8 @@ class TunableModel(kt.HyperModel):
                                 'nb_conv': [1, 2, 3, 4, 6, 8]}
 
     def build(self, hp):
-        if self.tune_config is not None:
-            for name, values in self.tune_config.items():
-                hp.Choice(name, values=values)
-        # else:  # defaults
-        #     hp.Choice('nb_filters', values=np.power(2, np.arange(3, 7)).tolist())
-        #     hp.Choice('kernel_size', values=np.power(2, np.arange(2, 7)).tolist())
-        #     hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])
-        #     hp.Choice('nb_hist', values=np.power(2, np.arange(7, 14)).tolist())
-        #     hp.Choice('nb_conv', values=np.arange(1, 7).tolist())
+        for name, values in self.tune_config.items():
+            hp.Choice(name, values=values)
 
         self.params.update(hp.values)
         model = models.model_dict['tcn'](**self.params)
@@ -76,7 +69,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
     """
     """
 
-    def _save_model(self, epoch, logs):
+    def _save_model(self, epoch=None, batch=None, logs=None):
         """Saves the model.
         Args:
                 epoch: the epoch this iteration is in.
@@ -109,6 +102,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                                         filepath + '_model.h5', overwrite=True, options=self._options)
                             else:
                                 self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                                # TODO: clean up params dict
                                 utils.save_params(self.model.params, filepath)
                         else:
                             if self.verbose > 0:
@@ -122,6 +116,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                                 filepath + '_model.h5', overwrite=True, options=self._options)
                     else:
                         self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                        # TODO: clean up params dict
                         utils.save_params(self.model.params, filepath)
                 self._maybe_remove_file()
             except IOError as e:
