@@ -41,11 +41,15 @@ class TunableModel(kt.HyperModel):
         self.params = params.copy()
         self.tune_config = tune_config
         if self.tune_config is None:
-            self.tune_config = {'nb_filters': [4, 8, 16, 32, 64],
-                                'kernel_size': [4, 8, 16, 32, 64],
-                                'learning_rate': [0.01, 0.001, 0.0001],
-                                'nb_hist': [128, 256, 512, 1024, 2048],
-                                'nb_conv': [1, 2, 3, 4, 6, 8]}
+            self.tune_config = {'nb_filters': [4, 8],
+                                'kernel_size': [8, 16],
+                                'nb_hist': [128, 256, 512],
+                                'nb_conv': [1, 2]}
+            # self.tune_config = {'nb_filters': [4, 8, 16, 32, 64],
+            #                     'kernel_size': [4, 8, 16, 32, 64],
+            #                     'learning_rate': [0.01, 0.001, 0.0001],
+            #                     'nb_hist': [128, 256, 512, 1024, 2048],
+            #                     'nb_conv': [1, 2, 3, 4, 6, 8]}
 
     def build(self, hp):
         for name, values in self.tune_config.items():
@@ -77,29 +81,26 @@ class ModelParamsCheckpoint(ModelCheckpoint):
         """
         logs = logs or {}
 
-        if isinstance(self.save_freq,
-                                    int) or self.epochs_since_last_save >= self.period:
+        if isinstance(self.save_freq, int) or self.epochs_since_last_save >= self.period:
             # Block only when saving interval is reached.
             logs = tf_utils.sync_to_numpy_or_python_type(logs)
             self.epochs_since_last_save = 0
-            filepath = self._get_file_path(epoch, logs)
+            filepath = self._get_file_path(epoch, batch, logs)
 
             try:
                 if self.save_best_only:
                     current = logs.get(self.monitor)
                     if current is None:
                         logging.warning('Can save best model only with %s available, '
-                                                        'skipping.', self.monitor)
+                                        'skipping.', self.monitor)
                     else:
                         if self.monitor_op(current, self.best):
                             if self.verbose > 0:
                                 print('\nEpoch %05d: %s improved from %0.5f to %0.5f,'
-                                            ' saving model to %s' % (epoch + 1, self.monitor,
-                                                                                             self.best, current, filepath))
+                                      ' saving model to %s' % (epoch + 1, self.monitor, self.best, current, filepath))
                             self.best = current
                             if self.save_weights_only:
-                                self.model.save_weights(
-                                        filepath + '_model.h5', overwrite=True, options=self._options)
+                                self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
                             else:
                                 self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                                 # TODO: clean up params dict
@@ -107,24 +108,27 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                         else:
                             if self.verbose > 0:
                                 print('\nEpoch %05d: %s did not improve from %0.5f' %
-                                            (epoch + 1, self.monitor, self.best))
+                                      (epoch + 1, self.monitor, self.best))
                 else:
                     if self.verbose > 0:
                         print('\nEpoch %05d: saving model to %s' % (epoch + 1, filepath))
                     if self.save_weights_only:
-                        self.model.save_weights(
-                                filepath + '_model.h5', overwrite=True, options=self._options)
+                        self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
                     else:
                         self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                         # TODO: clean up params dict
                         utils.save_params(self.model.params, filepath)
                 self._maybe_remove_file()
+            except IsADirectoryError as e:  # h5py 3.x
+                raise IOError('Please specify a non-directory filepath for '
+                              'ModelCheckpoint. Filepath used is an existing '
+                              'directory: {}'.format(filepath))
             except IOError as e:
                 # `e.errno` appears to be `None` so checking the content of `e.args[0]`.
                 if 'is a directory' in str(e.args[0]).lower():
                     raise IOError('Please specify a non-directory filepath for '
-                                                'ModelCheckpoint. Filepath used is an existing '
-                                                'directory: {}'.format(filepath))
+                                  'ModelCheckpoint. Filepath used is an existing '
+                                  'directory: {}'.format(filepath))
                 # Re-throw the error for any other causes.
                 raise e
 
