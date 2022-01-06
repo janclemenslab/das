@@ -104,7 +104,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                             else:
                                 self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                                 # TODO: clean up params dict
-                                utils.save_params(self.model.params, filepath)
+                                utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
                         else:
                             if self.verbose > 0:
                                 print('\nEpoch %05d: %s did not improve from %0.5f' %
@@ -117,7 +117,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                     else:
                         self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                         # TODO: clean up params dict
-                        utils.save_params(self.model.params, filepath)
+                        utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
                 self._maybe_remove_file()
             except IsADirectoryError as e:  # h5py 3.x
                 raise IOError('Please specify a non-directory filepath for '
@@ -131,6 +131,13 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                                   'directory: {}'.format(filepath))
                 # Re-throw the error for any other causes.
                 raise e
+
+    def _normalize_tf_dict(self, d):
+        d = dict(d)
+        for key, val in d.items():
+            if isinstance(val, list):
+                d[key] = list(val)
+        return d
 
 
 class DasTuner(kt.Tuner):
@@ -466,7 +473,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     # TRAIN NETWORK
     logging.info('Start hyperparameter tuning')
-    fit_hist = tuner.search(
+    tuner.search(
         train_x=d['train']['x'], train_y=d['train']['y'],
         val_x=d['val']['x'], val_y=d['val']['y'],
         epochs=nb_epoch,
@@ -501,7 +508,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
-        d = {'fit_hist': fit_hist.history,
+        d = {'fit_hist': [],
              'confusion_matrix': conf_mat,
              'classification_report': report,
              'x_test': x_test,
