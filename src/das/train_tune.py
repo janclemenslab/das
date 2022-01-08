@@ -41,10 +41,6 @@ class TunableModel(kt.HyperModel):
         self.params = params.copy()
         self.tune_config = tune_config
         if self.tune_config is None:
-            # self.tune_config = {'nb_filters': [4, 8],
-            #                     'kernel_size': [8, 16],
-            #                     'nb_hist': [128, 256, 512],
-            #                     'nb_conv': [1, 2]}
             self.tune_config = {'nb_filters': [4, 8, 16, 32, 64],
                                 'kernel_size': [4, 8, 16, 32, 64],
                                 'learning_rate': [0.01, 0.001, 0.0001],

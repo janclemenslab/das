@@ -8,7 +8,7 @@ import h5py
 from . import kapre
 from . import tcn
 from . import models
-from typing import Dict, Callable, Any, List, Tuple
+from typing import Dict, Callable, Any, List, Tuple, Optional
 
 
 class LossHistory(keras.callbacks.Callback):
@@ -41,7 +41,8 @@ class LossHistory(keras.callbacks.Callback):
 def load_model(file_trunk: str, model_dict: Dict[str, Callable],
                model_ext: str = '_model.h5',
                params_ext: str = '_params.yaml',
-               compile: bool = True):
+               compile: bool = True,
+               custom_objects: Optional[Dict[str, Callable]] = None):
     """Load model with weights.
 
     First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
@@ -53,16 +54,20 @@ def load_model(file_trunk: str, model_dict: Dict[str, Callable],
         model_ext (str, optional): [description]. Defaults to '_weights.h5'.
         params_ext (str, optional): [description]. Defaults to '_params.yaml'.
         compile (bool, optional): [description]. Defaults to True.
+        custom_objects (dict, optional): ...
 
     Returns:
         keras.Model
     """
 
+    if custom_objects is None:
+        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
+                        'TCN': tcn.tcn_new.TCN}
+
     try:
         model_filename = _download_if_url(file_trunk + model_ext)
         model = keras.models.load_model(model_filename,
-                                        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
-                                                        'TCN': tcn.tcn_new.TCN})
+                                        custom_objects=custom_objects)
     except (SystemError, ValueError, AttributeError):
         logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.', exc_info=False)
         logging.debug('', exc_info=True)
@@ -132,18 +137,19 @@ def load_params(file_trunk: str,
     return params
 
 
-def load_model_and_params(model_save_name, model_dict=models.model_dict) -> Tuple[keras.Model, Dict[str, Any]]:
+def load_model_and_params(model_save_name, model_dict=models.model_dict, custom_objects=None) -> Tuple[keras.Model, Dict[str, Any]]:
     """[summary]
 
     Args:
         model_save_name ([type]): [description]
         model_dict ([type], optional): [description]. Defaults to models.model_dict.
+        custom_objects
 
     Returns:
         keras.Model, Dict[str, Any]: [description]
     """
     params = load_params(model_save_name)
-    model = load_model(model_save_name, model_dict)
+    model = load_model(model_save_name, model_dict=model_dict, custom_objects=custom_objects)
     return model, params
 
 
