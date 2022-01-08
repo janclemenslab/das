@@ -66,13 +66,13 @@ class OracleCallback(Callback):
 
 
 class ModelParamsCheckpoint(ModelCheckpoint):
-    """
-    """
+    """Callback to save the DAS model or model weights and parameters at some frequency."""
 
     def _save_model(self, epoch=None, batch=None, logs=None):
         """Saves the model.
         Args:
                 epoch: the epoch this iteration is in.
+                batch: the batch this iteration is in. `None` if the `save_freq` is set to `epoch`.
                 logs: the `logs` dict passed in to `on_batch_end` or `on_epoch_end`.
         """
         logs = logs or {}
@@ -239,7 +239,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                            Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + SAVE_NAME
                            or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
                            Defaults to TIMESTAMP.
-
         model_name (str): Network architecture to use.
                           Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).
                           See das.models for a description of all models.
@@ -427,7 +426,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         save_name = time.strftime('%Y%m%d_%H%M%S')
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
     params['save_name'] = save_name
-    # checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
 
     logging.info(f'Will save to {save_name}.')
 
