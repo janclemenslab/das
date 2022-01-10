@@ -238,8 +238,9 @@ class MaskMean(Augmentation):
 
     def _apply(self, x):
         len_x = x.shape[0]
-        mask_start = np.random.randint(low=0, high=len_x - self.duration)
-        x[mask_start:mask_start + self.duration, :] = np.mean(x[mask_start:mask_start + self.duration], axis=0)
+        duration = int(self.duration())
+        mask_start = np.random.randint(low=0, high=len_x - duration)
+        x[mask_start:mask_start + duration, :] = np.mean(x[mask_start:mask_start + duration], axis=0)
         return x
 
 
