@@ -7,6 +7,29 @@ Augmentation parameters can be `Constant`, or random with `Normal` or `Uniform` 
 Random parameters will be sampled from a given distribution anew for each augmentation.
 
 `aug = Gain(gain=Normal(mean=1, std=0.5)); augmented_signal = aug(signal)`
+
+Can be configured using a yaml file:
+```yaml
+Gain:  # Name of the augmentation class
+  gain:  # arg for the augmentation class
+    Uniform:  # Param type
+       lower: 0.5  # param args
+       upper: 2  # param args
+
+MaskNoise:
+  std:
+    Normal:
+      mean: 0
+      std: 0.05
+  mean:
+    Constant:
+       value: 0
+```
+Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the class name if you want to use a class multiple times
+
+`augs = Augmentations.from_yaml(filename)`
+
+
 """
 import numpy as np
 from typing import List, Optional, Callable
@@ -54,6 +77,12 @@ class Constant(Param):
     def __call__(self, shape=1) -> np.ndarray:
         return self.value * np.ones(shape)
 
+    def __str__(self):
+        return f"{self.__class__.__name__}(value={self.value})"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(value={self.value})"
+
 
 @_register_param
 class Normal(Param):
@@ -78,7 +107,6 @@ class Normal(Param):
         return f"{self.__class__.__name__}(mean={self.mean}, std={self.std})"
 
 
-
 @_register_param
 class Uniform(Param):
     """Uniformly distributed parameter."""
@@ -93,6 +121,12 @@ class Uniform(Param):
 
     def __call__(self, shape=1) -> np.ndarray:
         return np.random.uniform(self.lower, self.upper, size=shape)
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(lower={self.lower}, upper={self.upper})"
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(lower={self.lower}, upper={self.upper})"
 
 
 @dataclass
@@ -266,7 +300,7 @@ class Augmentations():
     def __init__(self, augmentations: List[Augmentation]):
         """
         Args:
-            augmentations (List[Augmentation]): List of augmentations.
+            augmentations (List[Augmentation]): List of Augmentation instances.
         """
         self.augmentations = augmentations
 
@@ -290,6 +324,7 @@ class Augmentations():
     def from_dict(cls, aug_spec: Dict):
         augs = []
         for name, args in aug_spec.items():
+            name = name.split('-', 1)[0]
             params = dict()
             for a_name, a_arg in args.items():
                 p_name = list(a_arg.keys())[0]
