@@ -24,6 +24,14 @@ MaskNoise:
   mean:
     Constant:
        value: 0
+
+NotchFilter:
+  freq:  # Param-type arg
+    Uniform:
+      lower: 100
+      upper: 600
+  Q: 30  # standard arg
+  samplerate_Hz: 10_000  # standard arg
 ```
 Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the class name if you want to use a class multiple times
 
@@ -37,6 +45,7 @@ import scipy.signal
 import yaml
 from dataclasses import dataclass
 from typing import Dict
+import logging
 
 
 aug_dict = dict()
@@ -134,7 +143,11 @@ class Augmentation(Callable):
     """Base class for all augmentations.
 
     Augmentations are callables that return the augmented input.
-    Can optionally pass through a second input."""
+    Can optionally pass through a second input.
+
+    batch_x is expected to be [batch, time, channel].
+    _apply works on [time, channel] inputs
+    """
     def __call__(self, batch_x, batch_y=None):
         this_batch_x = batch_x.copy()
         for batch in range(batch_x.shape[0]):
@@ -294,6 +307,25 @@ class CircShift(Augmentation):
         return x
 
 
+@_register_augmentation
+class NotchFilter(Augmentation):
+    """Notch filter."""
+
+    def __init__(self, freq: Param, Q: float = 30, samplerate_Hz: float = 10_000):
+        """
+        Args:
+            freq (Param): freq to remove, in Hz.
+        """
+        self.freq = freq
+        self.Q = Q
+        self.samplerate_Hz = samplerate_Hz
+
+    def _apply(self, x):
+        b, a = scipy.signal.iirnotch(self.freq(), self.Q, self.samplerate_Hz)
+        x = scipy.signal.filtfilt(b, a, x, axis=0)
+        return x
+
+
 class Augmentations():
     """Bundles several augmentations."""
 
@@ -324,15 +356,19 @@ class Augmentations():
     def from_dict(cls, aug_spec: Dict):
         augs = []
         for name, args in aug_spec.items():
-            name = name.split('-', 1)[0]
+            name = name.split('-', 1)[0]  # split off "-WHATEVER" suffix
             params = dict()
             for a_name, a_arg in args.items():
-                p_name = list(a_arg.keys())[0]
-                p_args = a_arg[p_name]
-                # if no args for Params are provided, use defaults
-                if p_args is None:
-                    p_args = {}
-                params[a_name] = params_dict[p_name](**p_args)
+                if isinstance(a_arg, dict): # Param-type arg
+                    p_name = list(a_arg.keys())[0]
+                    p_args = a_arg[p_name]
+                    # if no args for Params are provided, use defaults
+                    if p_args is None:
+                        p_args = {}
+                    params[a_name] = params_dict[p_name](**p_args)
+                else:  # standard arg
+                    params[a_name] = a_arg
+
             print(params)
             aug = aug_dict[name](**params)
             print(aug)
