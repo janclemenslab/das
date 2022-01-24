@@ -40,7 +40,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
           augmentations: Optional[str] = None,
           tensorboard: bool = False,
-          neptune_api_token: Optional[str] = None, neptune_project: Optional[str] = None,
           wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
           log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
           balance: bool = False, version_data: bool = True,
@@ -131,10 +130,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                                         Defaults to False.
         augmentations (Optional[str]): yaml file with augmentations. Defaults to None (no augmentations).
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
-        neptune_api_token (Optional[str]): API token for logging to neptune.ai.
-                                           Defaults to None (no logging to neptune.ai).
-        neptune_project (Optional[str]): Project to log to for neptune.ai.
-                                         Defaults to None (no logging to neptune.ai).
         wandb_api_token (Optional[str]): API token for logging to wandb.
                                            Defaults to None (no logging to wandb).
         wandb_project (Optional[str]): Project to log to for wandb.
@@ -307,12 +302,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if tensorboard:
         callbacks.append(TensorBoard(log_dir=save_dir))
 
-    if neptune_api_token and neptune_project:  # could also get those from env vars!
-        del params['neptune_api_token']
-        neptune = tracking.Neptune(neptune_project, neptune_api_token, params)
-        if neptune:
-            callbacks.append(neptune.callback())
-
     if wandb_api_token and wandb_project:  # could also get those from env vars!
         del params['wandb_api_token']
         wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
@@ -351,8 +340,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         logging.info(conf_mat)
         logging.info(report)
 
-        if neptune_api_token and neptune_project:  # could also get those from env vars!
-            neptune.log_test_results(report)
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
 
