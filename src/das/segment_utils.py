@@ -68,7 +68,7 @@ def label_syllables_by_majority(labels: np.array,
         samplerate (float): Samplerate of `labels`, in Hz.
 
     Returns:
-        Tuple[np.array, np.array]: Sequence of syllables, clean sequence of per sample labels.
+        Tuple[np.array, np.array]: Sequence of syllables, clean sequence of per-sample labels.
     """
     syllables = []
     labels_clean = np.zeros_like(labels, dtype=np.int)
