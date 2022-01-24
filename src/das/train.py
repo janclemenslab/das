@@ -32,7 +32,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
           ignore_boundaries: bool = True, batch_norm: bool = True,
           nb_pre_conv: int = 0, pre_nb_dft: int = 64,
           pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-          upsample: bool = True,
+          upsample: bool = True, dilations: Optional[List[int]] = None,
           nb_lstm_units: int = 0,
           verbose: int = 2, batch_size: int = 32,
           nb_epoch: int = 400,
@@ -94,7 +94,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                            if model is `tcn_tcn`: adds a frontend of N TCN blocks to the TCN.
                            if model is `tcn_stft`: adds a trainable STFT frontend.
                            Defaults to 0 (no frontend, no downsampling).
-        pre_nb_dft (int): Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.
+        pre_nb_dft (int): Duration of filters (in samples) for the STFT frontend.
+                          Number of filters is pre_nb_dft // 2 + 1.
                           Defaults to 64.
         pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.
                               Defaults to 16.
@@ -103,6 +104,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         upsample (bool): whether or not to restore the model output to the input samplerate.
                          Should generally be True during training and evaluation but my speed up inference.
                          Defaults to True.
+        dilations (List[int]): List of dilation rate, defaults to [1, 2, 4, 8, 16] (5 layer with 2x dilation per TCN block)
         nb_lstm_units (int): If >0, adds LSTM with `nb_lstm_units` LSTM units to the output of the stack of TCN blocks.
                              Defaults to 0 (no LSTM layer).
         verbose (int): Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
@@ -155,6 +157,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if log_messages:
         logging.basicConfig(level=logging.INFO)
 
+    if dilations is None:
+        dilations = [1, 2, 4, 8, 16]
+
     # FIXME THIS IS NOT GREAT:
     sample_weight_mode = None
     data_padding = 0
@@ -171,10 +176,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         stride = 1  # should take every sample, since sampling rates of both x and y are now the same
         y_offset = int(round(nb_hist / 2))
 
+    if stride <= 0:
+        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
+
     if not upsample:
         output_stride = int(2**nb_pre_conv)
     else:
         output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
+
 
     if save_prefix is None:
         save_prefix = ''
@@ -183,9 +192,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         save_prefix = save_prefix + '_'
     params = locals()
     del params['_qt_progress']
-
-    if stride <=0:
-        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
 
     # remove learning rate param if not set so the value from the model def is used
     if params['learning_rate'] is None:
