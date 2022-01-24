@@ -1,29 +1,22 @@
-# [build-system]
-# requires = ["flit_core >=2,<3"]
-# build-backend = "flit_core.buildapi"
+[build-system]
+requires = ["flit_core >=2,<3"]
+build-backend = "flit_core.buildapi"
 
-# [tool.flit.metadata]
-[project]
+[tool.flit.metadata]
 dist-name = "das"
 module = "das"
 author = "Jan Clemens"
 author-email = "clemensjan@googlemail.com"
 home-page = "https://github.com/janclemenslab/das"
 classifiers = ["License :: OSI Approved :: MIT License"]
-requires-python = ">3.6"
+requires-python = ">=3.6"
 requires = ['numpy', 'h5py', 'scipy', 'scikit-learn', 'pyyaml', 'peakutils', 'zarr',
             'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
             'matplotlib_scalebar', 'colorcet', 'keras-tuner']
 description-file = "README.md"
-readme = "README.md"
 
-# [tool.flit.scripts]
-[project.scripts]
+[tool.flit.scripts]
 das = "das.cli:main"
-
-[project.urls]
-Documentation = "https://janclemenslab.org/das/"
-Source = "https://github.com/janclemenslab/das"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
