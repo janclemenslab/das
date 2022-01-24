@@ -107,27 +107,51 @@ def evaluate_probabilities(x, y, model: Optional[models.keras.models.Model] = No
     return x, y, y_pred
 
 
-def evaluate(savename: str, custom_objects=None):
+def evaluate(savename: str,
+             custom_objects: Optional[Dict[str, Callable]] = None,
+             full_output: bool = True,
+             verbose: int = 1):
     logging.info('Loading last best model.')
-    model, params = utils.load_model_and_params(savename, custom_objects=custom_objects)
+    model, params = utils.load_model_and_params(savename,
+                                                custom_objects=custom_objects)
     logging.info(model.summary())
 
     logging.info(f"Loading data from {params['data_dir']}.")
-    d = io.load(params['data_dir'], x_suffix=params['x_suffix'], y_suffix=params['y_suffix'])
+    d = io.load(params['data_dir'],
+                x_suffix=params['x_suffix'],
+                y_suffix=params['y_suffix'])
 
+    output = dict()
     if len(d['test']['x']) < params['nb_hist']:
         logging.info('No test data - skipping final evaluation step.')
-        return None, None
+        if full_output:
+            return None, None, output
+        else:
+            return None, None
     else:
         logging.info('predicting')
-        x_test, y_test, y_pred = evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
-                                                                    model=model, params=params)
+        x_test, y_test, y_pred = evaluate_probabilities(x=d['test']['x'],
+                                                        y=d['test']['y'],
+                                                        model=model,
+                                                        params=params,
+                                                        verbose=verbose)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
         logging.info('evaluating')
-        conf_mat, report = evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+        conf_mat, report = evaluate_segments(labels_test,
+                                             labels_pred,
+                                             params['class_names'],
+                                             report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
-        return conf_mat, report
+        output['x_test'] = x_test
+        output['y_test'] = y_test
+        output['y_pred'] = y_pred
+        output['labels_test'] = labels_test
+        output['labels_pred'] = labels_pred
+        if full_output:
+            return conf_mat, report, output
+        else:
+            return conf_mat, report
