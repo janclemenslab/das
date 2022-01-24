@@ -3,15 +3,16 @@ channels:
   - defaults
   - conda-forge
   - ncb
-  - anaconda
   - apple
 dependencies:
+  - python=3.9.7
   - zarr
   - pip
   - flammkuchen
   - xarray
   - defopt
   - yaml
+  - pyyaml
   - git
   - h5py
   - numpy
@@ -26,21 +27,22 @@ dependencies:
   - peakutils
   - colorcet
   - keras-tuner
-  # - xarray-behave-nogui
   - colorcet
   - keras-tuner
-  # - numpy>1.19
   - tensorflow-deps
-  - clang
-  - flatbuffers=1.12
-  - pandas=1.3.3
-  # - numba
-  # - llvmlite
-  # - libsndfile
-  # - pysoundfile
+  - pandas=1.3.3  # pin
   - pip:
-    # - librosa
-    # - das
+    - kt-legacy
+    - pyside6
+    - pyqtgraph
     - tensorflow-macos #=2.5
     - tensorflow-metal
 
+# mamba env create -n das_dev2 -f env/das-nogui-osxarm-env.yml
+# mamba activate das_dev2
+# mamba install librosa -c conda-forge -y # <- install after env was created and pip deps were installed
+# pip install -e . --no-dependencies
+# cd ../xarray-behave
+# pip install -e . --no-dependencies
+# pip install samplestamps pyvideoreader
+# mamba install scikit-image
