@@ -103,15 +103,15 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
 
 
 @_register_as_model
-def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-              nb_conv: int = 1, loss: str = "categorical_crossentropy",
-              dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
-              use_skip_connections: bool = True, return_sequences: bool = True,
-              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-              learning_rate: float = 0.0005, use_separable: bool = False,
-              pre_kernel_size: int = 16, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-              **kwignored):
-    """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
+def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
+            nb_conv: int = 1, loss: str = "categorical_crossentropy",
+            dilations: Optional[List[int]] = None, activation: str = 'norm_relu',
+            use_skip_connections: bool = True, return_sequences: bool = True,
+            dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
+            nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
+            use_separable: bool = False,
+            **kwignored):
+    """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
     Args:
         nb_freq (int): [description]
@@ -127,53 +127,43 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         return_sequences (bool, optional): [description]. Defaults to True.
         dropout_rate (float, optional): [description]. Defaults to 0.00.
         padding (str, optional): [description]. Defaults to 'same'.
-        learning_rate (float, optional) Defaults to 0.0005
-        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
-        nb_pre_conv (int, optional): If >0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.
+        nb_pre_conv (int, optional): If >0 adds a single TCN layer with a final maxpooling layer
+                                     with block size of `2**nb_pre_conv` before the TCN.
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
-        pre_nb_filters, pre_kernelsize, pre_nb_conv
+        learning_rate (float, optional) Defaults to 0.0005
+        upsample (bool, optional): whether or not to restore the model output to the input samplerate.
+                                   Should generally be True during training and evaluation but my speed up inference .
+                                   Defaults to True.
+        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
-
 
     Returns:
         [keras.models.Model]: Compiled TCN network model.
     """
+    if dilations is None:
+        dilations = [1, 2, 4, 8, 16]
 
-
-    # define the per-channel model
-    nb_channels = nb_freq
-    channels_in = []
-    for chan in range(nb_channels):
-        channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
-
-    # channel model will be shared, weights and all
-    channel_model = tcn_layer.TCN_new(nb_filters=pre_nb_filters, kernel_size=pre_kernel_size, nb_stacks=pre_nb_conv, dilations=dilations,
-                                      activation='relu', use_skip_connections=use_skip_connections, padding=padding,
-                                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                                      use_separable=use_separable)#, name='channel')
-    # if nb_pre_conv > 0:
-    #     out = tcn_layer.TCN(nb_filters=32, kernel_size=3, nb_stacks=1, dilations=dilations,
-    #                         activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-    #                         dropout_rate=dropout_rate, return_sequences=return_sequences,
-    #                         use_separable=use_separable, name='frontend')(out)
-    #     out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
-    channels_out = []
-    for chan in channels_in:
-        channels_out.append(channel_model(chan))
-
-    out = kl.concatenate(channels_out)
+    input_layer = kl.Input(shape=(nb_hist, nb_freq))
+    out = input_layer
+    if nb_pre_conv > 0:
+        out = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_pre_conv, dilations=dilations,
+                            activation=activation, use_skip_connections=use_skip_connections, padding=padding,
+                            dropout_rate=dropout_rate, return_sequences=return_sequences,
+                            use_separable=use_separable, name='frontend')(out)
+        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
                       activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences, name='merge',
+                      dropout_rate=dropout_rate, return_sequences=return_sequences,
                       use_separable=use_separable)(out)
-
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation('softmax')(x)
+    if nb_pre_conv > 0 and upsample:
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
+    model = keras.models.Model(input_layer, output_layer, name='TCN')
 
-    model = keras.models.Model(channels_in, output_layer, name='TCN')
     model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
                   loss=loss, sample_weight_mode=sample_weight_mode)
     return model
