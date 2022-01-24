@@ -1,7 +1,7 @@
 """Defines the network architectures."""
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
-from typing import List
+from typing import List, Optional
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
 from .kapre.utils import AmplitudeToDB
@@ -25,7 +25,7 @@ def tcn(*args, **kwargs):
 @_register_as_model
 def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
              nb_conv: int = 1, loss: str = "categorical_crossentropy",
-             dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
+             dilations: Optional[List[int]] = None, activation: str = 'norm_relu',
              use_skip_connections: bool = True, return_sequences: bool = True,
              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
              nb_pre_conv: int = 0, pre_nb_dft: int = 64,
@@ -52,7 +52,8 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         nb_pre_conv (int, optional): If >0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
-        pre_nb_dft (int, optional): Number of filters (roughly corresponding to filters) in the STFT frontend.
+        pre_nb_dft (int, optional): Duration of filters (in samples) for the STFT frontend.
+                                    Number of filters is pre_nb_dft // 2 + 1.
                                     Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
         nb_lstm_units (int, optional): Defaults to 0.
@@ -65,10 +66,13 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     Returns:
         [keras.models.Model]: Compiled TCN network model.
     """
+    if dilations is None:
+        dilations = [1, 2, 4, 8, 16]
     # if nb_freq > 1:
     #     raise ValueError(f'This model only works with single channel data but last dim of inputs has len {nb_freq} (should be 1).')
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
+
     if nb_pre_conv > 0:
         out = Spectrogram(n_dft=pre_nb_dft, n_hop=2**nb_pre_conv,
                           return_decibel_spectrogram=True, power_spectrogram=1.0,
