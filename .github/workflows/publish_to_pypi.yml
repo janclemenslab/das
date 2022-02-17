@@ -1,4 +1,4 @@
-name: Publish to PyPI using flit
+name: Publish to anaconda.org
 
 on:
   release:
