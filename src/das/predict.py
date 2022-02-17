@@ -391,33 +391,53 @@ def cli_predict(path: str, model_save_name: str, *,
     if not (save_format == 'csv' or save_format == 'h5'):
         raise ValueError(f"Unknown save_format '{save_format}'. Should be either 'csv' or 'h5'.")
 
-    logging.info(f"   Loading data from {recording_filename}.")
-    _, x = scipy.io.wavfile.read(recording_filename)
-    x = np.atleast_2d(x).T
+    if os.path.isdir(path) and save_filename is not None:
+        logging.warning(f'{path} is a folder. Will ignore save_filename argument {save_filename}.')
 
-    logging.info(f"   Annotating using model at {model_save_name}.")
-    events, segments, class_probabilities, class_names = predict(x, model_save_name, verbose, batch_size,
-                                                    None, None,
-                                                    event_thres, event_dist, event_dist_min, event_dist_max,
-                                                    segment_thres, segment_minlen, segment_fillgap)
+    # if path is folder: glob contents - all files
+    if os.path.isdir(path):
+        filenames = glob.glob(f'{path}/*.wav')
+        filenames = [filename for filename in filenames if not os.path.isdir(filename)]
+    elif os.path.isfile(path):
+        filenames = [path]
 
-    if save_format == 'h5':
-        d = {'events': events,
-            'segments': segments,
-            'class_probabilities': class_probabilities,
-            'class_names': class_names}
+    for recording_filename in filenames:
+        logging.info(f"   Loading data from {recording_filename}.")
+        try:
+            # else if path is file - predict only on file but make it single-item list
+            _, x = scipy.io.wavfile.read(recording_filename)
+            x = np.atleast_2d(x).T
 
-        if save_filename is None:
-            save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
+            logging.info(f"   Annotating using model at {model_save_name}.")
+            # TODO: load model once, provide as direct arg
+            events, segments, class_probabilities, class_names = predict(x, model_save_name, verbose, batch_size,
+                                                            None, None,
+                                                            event_thres, event_dist, event_dist_min, event_dist_max,
+                                                            segment_thres, segment_minlen, segment_fillgap)
 
-        logging.info(f"   Saving results to {save_filename}.")
-        flammkuchen.save(save_filename, d)
-        logging.info(f"Done.")
+            if save_format == 'h5':
+                # turn events and segments into df!
+                d = {'events': events,
+                    'segments': segments,
+                    'class_probabilities': class_probabilities,
+                    'class_names': class_names}
+                if save_filename is None:
+                    save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
+                logging.info(f"   Saving results to {save_filename}.")
+                flammkuchen.save(save_filename, d)
+                logging.info(f"Done.")
+            elif save_format == 'csv':
+                # TODO: implement from_predict
+                evt = annot.Events.from_predict(events, segments)
+                if save_filename is None:
+                    save_filename = os.path.splitext(recording_filename)[0] + '_annotations.csv'
+                logging.info(f"   Saving results to {save_filename}.")
+                evt.to_df().to_csv(save_filename)
+                logging.info(f"Done.")
 
-    elif save_format == 'csv':
-        df = annot.Events.from_predict(events, segments)
-        if save_filename is None:
-            save_filename = os.path.splitext(recording_filename)[0] + '_annotations.csv'
-        logging.info(f"   Saving results to {save_filename}.")
-        df.to_csv(save_filename)
-        logging.info(f"Done.")
+            # reset
+            if os.path.isdir(path):
+                save_filename = None
+        except Exception as e:
+            logging.exception(f'Error processing file {recording_filename}.')
+
