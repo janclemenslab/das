@@ -8,7 +8,7 @@ from tensorflow import keras
 import os
 import yaml
 from typing import List, Optional, Tuple, Dict, Any
-from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation  #, timeseries
+from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
 
 try:  # disabling eager execution speeds up everything
     from tensorflow.python.framework.ops import disable_eager_execution
@@ -25,24 +25,49 @@ except Exception as e:
     logging.exception(e)
 
 
-def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
-          save_dir: str = './', save_prefix: Optional[str] = None, save_name: Optional[str] = None,
-          model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
-          nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
-          ignore_boundaries: bool = True, batch_norm: bool = True,
-          nb_pre_conv: int = 0, pre_nb_dft: int = 64,
-          pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-          upsample: bool = True, dilations: Optional[List[int]] = None,
+def train(*,
+          data_dir: str,
+          x_suffix: str = '',
+          y_suffix: str = '',
+          save_dir: str = './',
+          save_prefix: Optional[str] = None,
+          save_name: Optional[str] = None,
+          model_name: str = 'tcn',
+          nb_filters: int = 16,
+          kernel_size: int = 16,
+          nb_conv: int = 3,
+          use_separable: List[bool] = False,
+          nb_hist: int = 1024,
+          ignore_boundaries: bool = True,
+          batch_norm: bool = True,
+          nb_pre_conv: int = 0,
+          pre_nb_dft: int = 64,
+          pre_kernel_size: int = 3,
+          pre_nb_filters: int = 16,
+          pre_nb_conv: int = 2,
+          upsample: bool = True,
+          dilations: Optional[List[int]] = None,
           nb_lstm_units: int = 0,
-          verbose: int = 2, batch_size: int = 32,
+          verbose: int = 2,
+          batch_size: int = 32,
           nb_epoch: int = 400,
-          learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
-          fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
+          learning_rate: Optional[float] = None,
+          reduce_lr: bool = False,
+          reduce_lr_patience: int = 5,
+          fraction_data: Optional[float] = None,
+          seed: Optional[int] = None,
+          batch_level_subsampling: bool = False,
           augmentations: Optional[str] = None,
           tensorboard: bool = False,
-          wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
-          log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
-          balance: bool = False, version_data: bool = True,
+          wandb_api_token: Optional[str] = None,
+          wandb_project: Optional[str] = None,
+          wandb_entity: Optional[str] = None,
+          log_messages: bool = False,
+          nb_stacks: int = 2,
+          with_y_hist: bool = True,
+          balance: bool = False,
+          version_data: bool = True,
+          post_opt: bool = False,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DAS network.
 
@@ -146,14 +171,16 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                         Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
                              Defaults to True (set to False for large datasets since it can be slow).
+        post_opt (bool): Optimize post processing (delete short detections, fill brief gaps).
+                        Defaults to False.
 
         Returns
             model (keras.Model)
             params (Dict[str, Any])
         """
-        # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
-        #        The queue is used to transmit progress updates to the GUI,
-        #        the event is set in the GUI to stop training.
+    # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
+    #        The queue is used to transmit progress updates to the GUI,
+    #        the event is set in the GUI to stop training.
     if log_messages:
         logging.basicConfig(level=logging.INFO)
 
@@ -169,7 +196,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         y_offset = 0
         sample_weight_mode = 'temporal'
         if ignore_boundaries:
-            data_padding = int(np.ceil(kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
+            data_padding = int(np.ceil(
+                kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
             stride = stride - 2 * data_padding
     else:  # classification
         return_sequences = False
@@ -177,13 +205,14 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         y_offset = int(round(nb_hist / 2))
 
     if stride <= 0:
-        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
+        raise ValueError(
+            'Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries'
+        )
 
     if not upsample:
         output_stride = int(2**nb_pre_conv)
     else:
         output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
-
 
     if save_prefix is None:
         save_prefix = ''
@@ -213,24 +242,34 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     if fraction_data is not None:
         if fraction_data > 1.0:  # seconds
-            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
+            logging.info(
+                f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data."
+            )
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         elif fraction_data < 1.0:
             logging.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
     if fraction_data is not None and not batch_level_subsampling:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0],
+                                                               fraction_data,
+                                                               min_nb_samples,
+                                                               seed=seed)
         first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
     else:
         first_sample_train, last_sample_train = 0, None
         first_sample_val, last_sample_val = 0, None
 
     # TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data
-    params.update({'nb_freq': d['train']['x'].shape[1], 'nb_channels': d['train']['x'].shape[-1], 'nb_classes': len(params['class_names']),
-                   'first_sample_train': first_sample_train, 'last_sample_train': last_sample_train,
-                   'first_sample_val': first_sample_val, 'last_sample_val': last_sample_val,
-                   })
+    params.update({
+        'nb_freq': d['train']['x'].shape[1],
+        'nb_channels': d['train']['x'].shape[-1],
+        'nb_classes': len(params['class_names']),
+        'first_sample_train': first_sample_train,
+        'last_sample_train': last_sample_train,
+        'first_sample_val': first_sample_val,
+        'last_sample_val': last_sample_val,
+    })
     logging.info('Parameters:')
     logging.info(params)
 
@@ -250,14 +289,21 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     else:
         augs = None
 
-    data_gen = data.AudioSequence(d['train']['x'], d['train']['y'],
-                                  shuffle=True, shuffle_subset=shuffle_subset,
-                                  first_sample=first_sample_train, last_sample=last_sample_train, nb_repeats=1,
+    data_gen = data.AudioSequence(d['train']['x'],
+                                  d['train']['y'],
+                                  shuffle=True,
+                                  shuffle_subset=shuffle_subset,
+                                  first_sample=first_sample_train,
+                                  last_sample=last_sample_train,
+                                  nb_repeats=1,
                                   batch_processor=augs,
                                   **params)
-    val_gen = data.AudioSequence(d['val']['x'], d['val']['y'],
-                                 shuffle=False, shuffle_subset=shuffle_subset,
-                                 first_sample=first_sample_val, last_sample=last_sample_val,
+    val_gen = data.AudioSequence(d['val']['x'],
+                                 d['val']['y'],
+                                 shuffle=False,
+                                 shuffle_subset=shuffle_subset,
+                                 first_sample=first_sample_val,
+                                 last_sample=last_sample_val,
                                  **params)
     # data_gen = timeseries.timeseries_dataset_from_array(d['train']['x'], d['train']['y'],
     #                               sequence_length=params['nb_hist'], sequence_stride=stride,
@@ -277,9 +323,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     if balance:
         from sklearn.utils import class_weight
         y_train = np.argmax(d['train']['y'], axis=1)
-        params['class_weights'] = class_weight.compute_class_weight('balanced',
-                                                        np.unique(y_train),
-                                                        y_train)
+        params['class_weights'] = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
         logging.info(f"Balancing classes: {params['class_weights']}")
 
     logging.info('building network')
@@ -292,12 +336,12 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
     logging.info(f'Will save to {save_name}.')
 
-    utils.save_params(params, save_name)
-    checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
-
     # SET UP CALLBACKS
-    callbacks = [ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-                 EarlyStopping(monitor='val_loss', patience=20),]
+    checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
+    callbacks = [
+        ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
+        EarlyStopping(monitor='val_loss', patience=20),
+    ]
 
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
@@ -314,6 +358,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         if wandb:
             callbacks.append(wandb.callback())
 
+    utils.save_params(params, save_name)
+
     # TRAIN NETWORK
     logging.info('start training')
     fit_hist = model.fit(
@@ -326,22 +372,44 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         class_weight=params['class_weights'],
     )
 
+    # OPTIMIZE POSTPROCESSING
+    if post_opt:
+        logging.info('OPTIMIZING POSTPROCESSING:')
+        best_gap_dur, best_min_len, score_train_pre, score_train, score_val = postprocessing.optimize(dataset_path=data_dir,
+                                                                                     model_save_name=save_name)
+        logging.info(f'  Score changed from {score_train_pre:1.4} to {score_train:1.4}.')
+        logging.info('  Optimal parameters for postprocessing:')
+        logging.info(f'     gap_dur={best_gap_dur} seconds')
+        logging.info(f'     min_len={best_min_len} seconds')
+
+        params['post_opt'] = {
+            'gap_dur': best_gap_dur,
+            'min_len': best_min_len,
+            'score_train': score_train,
+            'score_val': score_val
+        }
+
+        logging.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
+        utils.save_params(params, save_name)
+        logging.info('DONE')
+
     # TEST
+    # TODO use postprocessing params
+    logging.info('TESTING:')
     if len(d['test']['x']) < nb_hist:
-        logging.info('No test data - skipping final evaluation step.')
+        logging.info('   No test data - skipping final evaluation step.')
         return
     else:
-        logging.info('re-loading last best model')
+        logging.info('   Re-loading last best model from {checkpoint_save_name}.')
         model.load_weights(checkpoint_save_name)
 
-        logging.info('predicting')
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
-                                                                 model=model, params=params)
+        logging.info('   Predicting.')
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logging.info('evaluating')
+        logging.info('   Evaluating.')
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
@@ -350,8 +418,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
             wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
-        logging.info('saving to ' + save_filename + '.')
-        d = {'fit_hist': fit_hist.history,
+        logging.info(f'   Saving to {save_filename}.')
+        d = {
+            'fit_hist': fit_hist.history,
             'confusion_matrix': conf_mat,
             'classification_report': report,
             'x_test': x_test,
@@ -360,7 +429,7 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
             'labels_test': labels_test,
             'labels_pred': labels_pred,
             'params': params,
-            }
+        }
 
         fl.save(save_filename, d)
 
