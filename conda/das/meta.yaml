@@ -42,7 +42,7 @@ requirements:
     - cudnn # [not osx]
     - tensorflow>2.4 # [osx]
     - tensorflow-gpu>2.4 # [not osx]
-    - xarray-behave
+    - xarray-behave>=0.30
     - keras-tuner
     - numpy>1.19
   run:
@@ -71,7 +71,7 @@ requirements:
     - cudnn # [not osx]
     - tensorflow>2.4 # [osx]
     - tensorflow-gpu>2.4 # [not osx]
-    - xarray-behave
+    - xarray-behave>=0.30
     - keras-tuner
     - numpy>1.19
 
