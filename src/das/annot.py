@@ -118,12 +118,30 @@ class Events(UserDict):
             out = cls(out, categories=cats)
         return out
 
-    # @classmethod
-    # def from_predict(events=None, segments=None):
-    #     # to lists or df
+    @classmethod
+    def from_predict(cls, events=None, segments=None):
+        # to lists or df
+        event_names = []
+        start_seconds = []
+        stop_seconds = []
+        possible_event_names = []
 
-    #     out = None
-    #     return out
+        if len(segments) and 'sequence' in segments and 'names' in segments:
+            if type(segments['names'][0]) is not str and type(segments['names'][0]) is not np.str_:
+                names = [segments['names'][ii] for ii in segments['sequence']]  # from ints to names
+            else:
+                names = segments['names']
+            event_names.extend(names)
+            start_seconds.extend(segments['onsets_seconds'])
+            stop_seconds.extend(segments['offsets_seconds'])
+            possible_event_names.extend(segments['names'])
+
+        if len(events) and 'sequence' in events and 'names' in events:
+            pass
+
+
+        out = cls.from_lists(names, start_seconds, stop_seconds, possible_event_names)
+        return out
 
 
     def _init_df(self) -> pd.DataFrame:
