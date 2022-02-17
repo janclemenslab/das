@@ -7,6 +7,7 @@ import flammkuchen
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict
+import glob
 
 from tensorflow.python.framework.ops import disable_eager_execution
 disable_eager_execution()
@@ -86,13 +87,15 @@ def predict_segments(class_probabilities: np.array,
         segment_dims (Optional[List[int]], optional): set of indices into class_probabilities corresponding
                                                       to segment-like song types.
                                                       Needs to include the noise dim.
-                                                      Defaults to None.
-        segment_names (Optional[List[str]], optional): [description]. Defaults to None.
+                                                      Required to ignore event-like song types.
+                                                      Defaults to None (all classes are considered segment-like).
+        segment_names (Optional[List[str]], optional): Names for segment-like classes.
+                                                       Defaults to None (use indices of segment-like classes).
         segment_ref_onsets (Optional[List[float]], optional):
-                            Use onsets (in seconds) as ref for estimating labels.
+                            Syllable onsets (in seconds) to use for estimating labels.
                             Defaults to None (will use onsets est from class_probabilitieslabels as ref).
         segment_ref_offsets (Optional[List[float]], optional): [description].
-                            Use offsets (in seconds) as ref for estimating labels.
+                            Syllable offsets (in seconds) to use for estimating labels.
                             Defaults to None (will use offsets est from class_probabilitieslabels as ref).
         segment_thres (float, optional): [description]. Defaults to 0.5.
         segment_minlen (Optional[float], optional): seconds. Defaults to None.
@@ -342,24 +345,29 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
     return events, segments, class_probabilities, params['class_names']
 
 
-def cli_predict(recording_filename: str, model_save_name: str, *,
-                save_filename: Optional[str] = None, save_format: str = 'h5',
+def cli_predict(path: str, model_save_name: str, *,
+                save_filename: Optional[str] = None, save_format: str = 'csv',
                 verbose: int = 1, batch_size: Optional[int] = None,
                 event_thres: float = 0.5, event_dist: float = 0.01,
                 event_dist_min: float = 0, event_dist_max: Optional[float] = None,
                 segment_thres: float = 0.5, segment_minlen: Optional[float] = None,
                 segment_fillgap: Optional[float] = None):
-    """Predict song labels in a wav file.
+    """Predict song labels for a wav file or a folder of wav files.
 
-    Saves hdf5 file with keys: events, segments, class_probabilities
+    Saves hdf5 files with keys: events, segments, class_probabilities
+    OR csv files with columns: label/start_seconds/stop_seconds
 
     Args:
-        recording_filename (str): Path to the WAV file with the audio data.
+        path (str): Path to a single WAV file with the audio data or to a folder with WAV files.
         model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
         save_filename (Optional[str]): Path to save annotations to.
                                        If omitted, will construct save_filename by
                                        stripping the extension from recording_filename and adding '_das.h5' or '_annotations.csv'.
-        save_format (str): 'csv' or 'h5'. Defaults to 'h5'.
+                                       Will be ignored if `path` is a folder.
+        save_format (str): 'csv' or 'h5'.
+                           csv: tabular text file with label, start and end seconds for each predicted song.
+                           h5: same information as in csv plus confidence values for each sample and song type.
+                           Defaults to 'csv'.
         verbose (int): Display progress bar during prediction. Defaults to 1.
         batch_size (Optional[int]): Number of chunks processed at once.
                                     Defaults to None (the default used during training).

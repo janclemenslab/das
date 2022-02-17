@@ -111,7 +111,7 @@ def levenshtein(seq1: str, seq2: str) -> float:
     return thisrow[len(seq2) - 1]
 
 
-def syllable_error_rate(true, pred) -> float:
+def syllable_error_rate(true: str, pred: str) -> float:
     """Compute the Levenshtein edit distance normalized by length of `true`.
 
     Args:
