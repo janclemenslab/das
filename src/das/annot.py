@@ -127,10 +127,10 @@ class Events(UserDict):
         possible_event_names = []
 
         if len(segments) and 'sequence' in segments and 'names' in segments:
-            if type(segments['names'][0]) is not str and type(segments['names'][0]) is not np.str_:
+            if type(segments['sequence'][0]) is not str and type(segments['sequence'][0]) is not np.str_:
                 names = [segments['names'][ii] for ii in segments['sequence']]  # from ints to names
             else:
-                names = segments['names']
+                names = segments['sequence']
             event_names.extend(names)
             start_seconds.extend(segments['onsets_seconds'])
             stop_seconds.extend(segments['offsets_seconds'])
