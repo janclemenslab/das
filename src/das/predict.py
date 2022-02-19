@@ -401,6 +401,8 @@ def cli_predict(path: str, model_save_name: str, *,
     elif os.path.isfile(path):
         filenames = [path]
 
+    model, params = utils.load_model_and_params(model_save_name)
+
     for recording_filename in filenames:
         logging.info(f"   Loading data from {recording_filename}.")
         try:
@@ -410,10 +412,10 @@ def cli_predict(path: str, model_save_name: str, *,
 
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
-            events, segments, class_probabilities, class_names = predict(x, model_save_name, verbose, batch_size,
-                                                            None, None,
+            events, segments, class_probabilities, class_names = predict(x, None, verbose, batch_size,
+                                                            model, params,
                                                             event_thres, event_dist, event_dist_min, event_dist_max,
-                                                            segment_thres, segment_minlen, segment_fillgap)
+                                                            segment_thres, segment_use_optimized, segment_minlen, segment_fillgap)
 
             if save_format == 'h5':
                 # turn events and segments into df!
