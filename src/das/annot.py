@@ -137,8 +137,17 @@ class Events(UserDict):
             possible_event_names.extend(segments['names'])
 
         if len(events) and 'sequence' in events and 'names' in events:
-            pass
+            if type(events['sequence'][0]) is not str and type(events['sequence'][0]) is not np.str_:
+                names = [events['names'][ii] for ii in events['sequence']]  # from ints to names
+            else:
+                names = events['sequence']
+            event_names.extend(names)
+            start_seconds.extend(events['seconds'])
+            stop_seconds.extend(events['seconds'])
+            possible_event_names.extend(events['names'])
 
+        # only keep unique
+        possible_event_names = list(set(possible_event_names))
 
         out = cls.from_lists(names, start_seconds, stop_seconds, possible_event_names)
         return out
