@@ -68,6 +68,12 @@ def train(*,
           balance: bool = False,
           version_data: bool = True,
           post_opt: bool = False,
+          fill_gaps_min: Optional[float] = None,
+          fill_gaps_max: Optional[float] = None,
+          fill_gaps_steps: Optional[float] = None,
+          min_len_min: Optional[float] = None,
+          min_len_max: Optional[float] = None,
+          min_len_steps: Optional[float] = None,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DAS network.
 
@@ -156,6 +162,7 @@ def train(*,
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
         augmentations (Optional[str]): yaml file with augmentations. Defaults to None (no augmentations).
+
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
         wandb_api_token (Optional[str]): API token for logging to wandb.
                                            Defaults to None (no logging to wandb).
@@ -165,14 +172,22 @@ def train(*,
                                         Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
+
         nb_stacks (int): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to 2.
         with_y_hist (bool): Unused if model name is `tcn`, `tcn_tcn`, or `tcn_stft`. Defaults to True.
         balance (bool): Balance data. Weights class-wise errors by the inverse of the class frequencies.
                         Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
                              Defaults to True (set to False for large datasets since it can be slow).
+
         post_opt (bool): Optimize post processing (delete short detections, fill brief gaps).
                         Defaults to False.
+        fill_gaps_min (Optional[float]): None
+        fill_gaps_max (Optional[float]): None
+        fill_gaps_steps (Optional[float]): None
+        min_len_min (Optional[float]): None
+        min_len_max (Optional[float]): None
+        min_len_steps (Optional[float]): None
 
         Returns
             model (keras.Model)
@@ -383,8 +398,8 @@ def train(*,
         logging.info(f'     min_len={best_min_len} seconds')
 
         params['post_opt'] = {
-            'gap_dur': best_gap_dur,
-            'min_len': best_min_len,
+            'gap_dur': float(best_gap_dur),
+            'min_len': float(best_min_len),
             'score_train': score_train,
             'score_val': score_val
         }
