@@ -256,8 +256,8 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
             event_dist_min: float = 0, event_dist_max: float = None,
-            segment_thres: float = 0.5, segment_minlen: float = None,
-            segment_fillgap: float = None,
+            segment_thres: float = 0.5, segment_use_optimized: bool = True,
+            segment_minlen: float = None, segment_fillgap: float = None,
             pad: bool = True, prepend_data_padding: bool = True):
     """[summary]
 
@@ -296,8 +296,13 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
                                 Defaults to None (no upper limit).
 
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
+        segment_use_optimized (bool): Use minlen and fillgap values from param file if they exist.
+                                      If segment_minlen and segment_fillgap are provided,
+                                      then they will override the values from the param file.
+                                      Defaults to True.
         segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.
         segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+
         pad (bool): prepend values (repeat last sample value) to fill the last batch. Otherwise, the end of the data will not be annotated because
                     the last, non-full batch will be skipped.
         prepend_data_padding (bool, optional): Restores samples that are ignored
@@ -318,6 +323,13 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
     else:
         assert isinstance(model, models.keras.models.Model)
         assert isinstance(params, dict)
+
+    # use postprocessing values from params and/or args
+    if segment_use_optimized and 'post_opt' in params and isinstance(params['post_opt'], dict):
+        if segment_minlen is None:
+            segment_minlen = params['post_opt']['min_len']
+        if segment_fillgap is None:
+            segment_fillgap = params['post_opt']['gap_dur']
 
     if batch_size is not None:
         params['batch_size'] = batch_size
@@ -350,8 +362,8 @@ def cli_predict(path: str, model_save_name: str, *,
                 verbose: int = 1, batch_size: Optional[int] = None,
                 event_thres: float = 0.5, event_dist: float = 0.01,
                 event_dist_min: float = 0, event_dist_max: Optional[float] = None,
-                segment_thres: float = 0.5, segment_minlen: Optional[float] = None,
-                segment_fillgap: Optional[float] = None):
+                segment_thres: float = 0.5, segment_use_optimized: Optional[bool] = None,
+                segment_minlen: Optional[float] = None, segment_fillgap: Optional[float] = None):
     """Predict song labels for a wav file or a folder of wav files.
 
     Saves hdf5 files with keys: events, segments, class_probabilities
@@ -371,6 +383,7 @@ def cli_predict(path: str, model_save_name: str, *,
         verbose (int): Display progress bar during prediction. Defaults to 1.
         batch_size (Optional[int]): Number of chunks processed at once.
                                     Defaults to None (the default used during training).
+
         event_thres (float): Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.
         event_dist (float): Minimal distance between adjacent events during thresholding.
                             Prevents detecting duplicate events when the confidence trace is a little noisy.
@@ -379,7 +392,12 @@ def cli_predict(path: str, model_save_name: str, *,
                                 Defaults to 0.
         event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.
                                           Defaults to None (no upper limit).
+
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
+        segment_use_optimized (Optional[bool]): Use minlen and fillgap values from param file if they exist.
+                                      If segment_minlen and segment_fillgap are provided,
+                                      then they will override the values from the param file.
+                                      Defaults to True.
         segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections.
                                           Defaults to None (keep all segments).
         segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.
@@ -429,7 +447,6 @@ def cli_predict(path: str, model_save_name: str, *,
                 flammkuchen.save(save_filename, d)
                 logging.info(f"Done.")
             elif save_format == 'csv':
-                # TODO: implement from_predict
                 evt = annot.Events.from_predict(events, segments)
                 if save_filename is None:
                     save_filename = os.path.splitext(recording_filename)[0] + '_annotations.csv'
