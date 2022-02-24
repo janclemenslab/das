@@ -1,5 +1,6 @@
 import pytest
 
+
 def test_import():
     from das import annot
     from das import cli
@@ -20,7 +21,6 @@ def test_import():
     from das import utils
     from das import utils_plot
     from das import augmentation
+    from das import block_stratify
     import das.kapre
     import das.tcn
-
-
