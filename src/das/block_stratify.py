@@ -54,7 +54,7 @@ def score_grouping(block_stats, groups: List[Group]):
     # we want the individual groups to have stats as close as possible to the global stats
     global_stats = np.mean(block_stats, axis=0)
     # exclude groups with zero occurrence from score
-    non_zero_stats = np.where(glGobal_stats > 0)[0]
+    non_zero_stats = np.where(global_stats > 0)[0]
 
     # score each group
     group_stats = groupstats(block_stats, groups)
