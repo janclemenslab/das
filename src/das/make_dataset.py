@@ -1,10 +1,13 @@
 import numpy as np
 import zarr
-from typing import List, Iterable, Mapping, Optional
+from typing import List, Dict, Mapping, Optional
 import pandas as pd
 import scipy.signal
 import logging
 import sklearn.model_selection
+
+
+logger = logging.getLogger(__name__)
 
 
 def init_store(nb_channels: int,
@@ -182,7 +185,7 @@ def make_annotation_matrix(df: pd.DataFrame,
         if start_index < stop_index:
             class_matrix[start_index:stop_index, class_index] = 1
         else:
-            logging.warning(
+            logger.warning(
                 f'{start_index} should be greater than {stop_index} for row {row}'
             )
     return class_matrix
@@ -283,66 +286,6 @@ def do_block_stratify(y: np.ndarray,
     return split_points, split_names
 
 
-def generate_data_splits(arrays: Mapping[str, np.ndarray],
-                         splits: List[float],
-                         split_names: List[str],
-                         shuffle: bool = True,
-                         block_stratify: Optional[np.ndarray] = None,
-                         block_size: Optional[int] = None,
-                         seed: Optional[float] = None):
-    """[summary]
-
-    Args:
-        arrays (Mapping[str, np.ndarray]): [description], e.g. {'x': [...], 'y': [...]}
-        splits (List[float]): [description], e.g. [0.6, 0.2, 0.2]
-        split_names (List[str]): [description], e.g. ['train', 'val', 'test']
-        shuffle (bool, optional): Shuffle the splits, (does not shuffle samples). Defaults to True.
-        block_stratify (np.ndarray, optional): Label for each sample in arrays used for stratification. Defaults to None (no stratification).
-        block_size(int, optional): Size of blocks (in samples) used for stratified sampling. Defaults to None (100_000 samples).
-        seed (float, optional): Defaults to None (do not seed random number generator).
-
-    Returns:
-        [type]: [description]
-    """
-    if seed is not None:
-        np.random.seed(seed)
-
-    splits = np.array(splits)
-    names = np.array(split_names)
-
-    # if not all([len(arrays[0]) == len(a) for a in arrays]):
-    #     ValueError('All arrays should have same length')
-
-    split_points = np.cumsum(splits)
-    if shuffle and block_stratify is None:
-        order = np.random.permutation(np.arange(len(names)))
-        splits = splits[order]
-        names = names[order]
-        split_points = np.cumsum(splits)
-    elif block_stratify is not None:
-        if block_stratify.ndim < 2:
-            raise ValueError(
-                'Data for stratification should be one-hot-encoded.')
-        if block_size is None:
-            block_size = 100_000  # samples
-        split_points, names = do_block_stratify(block_stratify, splits,
-                                                block_size)
-
-    split_arrays = dict()
-    for key, array in arrays.items():
-        nb_samples = array.shape[0]
-        nb_dims = array.shape[1]
-        split_arrays[key] = {name: np.empty((0, nb_dims)) for name in names}
-        train_val_test_split = (split_points * nb_samples).astype(np.int)[:-1]
-        x_splits = np.split(array, train_val_test_split)
-
-        # distribute splits across train/val/test sets
-        for x_split, name in zip(x_splits, names):
-            split_arrays[key][name] = np.concatenate(
-                (split_arrays[key][name], x_split))
-    return split_arrays
-
-
 def normalize_probabilities(p: np.ndarray) -> np.ndarray:
     """[summary]
 
@@ -358,69 +301,6 @@ def normalize_probabilities(p: np.ndarray) -> np.ndarray:
       1:] = p[p_song > 1.0, 1:] / p_song[p_song > 1.0, np.newaxis]
     p[:, 0] = 1 - np.sum(p[:, 1:], axis=-1)
     return p
-
-
-def generate_file_splits(file_list: List,
-                         splits: List[float],
-                         split_names: List[str],
-                         shuffle: bool = True,
-                         seed: Optional[float] = None) -> List:
-    """[summary]
-
-    Args:
-        file_list (List): [description]
-        splits (List[float]): [description]
-        split_names (List[str]): [description]
-        shuffle (bool, optional): [description]. Defaults to True.
-        seed (float, optional): Defaults to None (do not seed random number generator)
-
-    Raises:
-        ValueError: [description]
-        ValueError: [description]
-
-    Returns:
-        List: [description]
-    """
-
-    if seed is not None:
-        np.random.seed(seed)
-
-    if len(splits) != len(split_names):
-        raise ValueError(
-            f'there must be one name per split. but there are {len(split_names)} names and {len(splits)} splits.'
-        )
-
-    file_list = np.array(file_list)
-    nb_files = len(file_list)
-    if shuffle:
-        order = np.random.permutation(np.arange(nb_files))
-        file_list = file_list[order]
-
-    splits = np.concatenate(
-        ([0], np.array(splits)))  # prepend 0 as split anchor
-
-    if np.sum(splits) != 1:
-        logging.warn(
-            f'probs should sum to 1 - but sum({splits}={np.sum(splits)}. Normalizing to {splits / np.sum(splits)}'
-        )
-        splits /= np.sum(splits)
-
-    file_counts = splits * nb_files
-    if not np.all(file_counts[1:] >= 1):
-        raise ValueError(
-            f'too few files for probs - with {nb_files} files, probs should not be smaller than 1/{nb_files}={1/nb_files} but smallest prob is {np.min(splits[1:])}'
-        )
-
-    indices = dict()
-    split_files = dict()
-    cum_counts = np.cumsum(file_counts)
-    file_counts, cum_counts, len(file_list)
-
-    for start, end, name in zip(cum_counts[:-1], cum_counts[1:], split_names):
-        indices[name] = list(range(int(np.ceil(start)), int(np.ceil(end))))
-        split_files[name] = list(file_list[indices[name]])
-
-    return split_files
 
 
 def make_gaps(y: np.ndarray,
