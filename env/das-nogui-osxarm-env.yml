@@ -1,42 +1,48 @@
-name: das-nogui-env
+name: das-osxarm
 channels:
-  - defaults
   - conda-forge
+  - defaults
   - ncb
+  - anaconda
   - apple
 dependencies:
-  - python=3.9.7
+  - python>=3.9
   - zarr
+  - python-sounddevice
   - pip
-  - flammkuchen
-  - xarray
-  - defopt
-  - yaml
-  - pyyaml
   - git
-  - h5py
+  - pyqtgraph>0.12.2
+  - qtpy
+  - colorcet
+  - pyyaml
+  - peakutils
+  - defopt
   - numpy
   - scipy
-  - scikit-learn
-  - pyyaml
-  - peakutils
+  - pandas
+  - xarray
+  - h5py
+  - zarr
+  - dask
+  - flammkuchen
+  - toolz
+  - scikit-image
+  - samplestamps
+  - librosa
   - matplotlib
   - matplotlib-scalebar
-  - pandas
-  # - librosa
-  - peakutils
-  - colorcet
-  - keras-tuner
-  - colorcet
   - keras-tuner
   - tensorflow-deps
-  - pandas=1.3.3  # pin
   - pip:
     - kt-legacy
+    - qtpy
+    - opencv-python-headless
+    - pyvideoreader
     - pyside6
-    - pyqtgraph
     - tensorflow-macos #=2.5
     - tensorflow-metal
+    - das
+    - xarray-behave
 
 # mamba env create -n das_dev2 -f env/das-nogui-osxarm-env.yml
 # mamba activate das_dev2
