@@ -130,10 +130,10 @@ class AudioSequence(keras.utils.Sequence):
             if self.data_padding > 0:
                 self.weights[:, :self.data_padding] = 0
                 self.weights[:, -self.data_padding:] = 0
+            self.weights = self.weights[:, ::output_stride]
         else:
             self.weights = np.ones((self.batch_size,))
 
-        self.weights = self.weights[:, ::output_stride]
 
         self.batch_processor = batch_processor
 
