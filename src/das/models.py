@@ -4,7 +4,6 @@ import tensorflow.keras.layers as kl
 from typing import List, Optional
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
-from .kapre.utils import AmplitudeToDB
 
 
 model_dict = dict()
@@ -77,7 +76,6 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
         out = Spectrogram(n_dft=pre_nb_dft, n_hop=2**nb_pre_conv,
                           return_decibel_spectrogram=True, power_spectrogram=1.0,
                           trainable_kernel=True, name='trainable_stft', image_data_format='channels_last')(out)
-        # out = AmplitudeToDB()(out)
         out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
 
     x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
