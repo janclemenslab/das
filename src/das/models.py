@@ -31,6 +31,7 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
              nb_lstm_units: int = 0,
              learning_rate: float = 0.0005, upsample: bool = True,
              use_separable: bool = False,
+             compile: bool = True,
              **kwignored):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -95,8 +96,9 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     output_layer = x
 
     model = keras.models.Model(input_layer, output_layer, name='TCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    if compile:
+        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+                      loss=loss, sample_weight_mode=sample_weight_mode)
     return model
 
 
@@ -107,7 +109,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
             use_skip_connections: bool = True, return_sequences: bool = True,
             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
             nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
-            use_separable: bool = False,
+            use_separable: bool = False, compile: bool = True,
             **kwignored):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -134,6 +136,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
                                    Should generally be True during training and evaluation but my speed up inference .
                                    Defaults to True.
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
+        compile (bool, optional):
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -161,7 +164,7 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name='TCN')
-
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    if compile:
+        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+                      loss=loss, sample_weight_mode=sample_weight_mode)
     return model
