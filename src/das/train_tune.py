@@ -7,11 +7,7 @@ import logging
 import flammkuchen as fl
 import numpy as np
 
-try:
-    from tensorflow.python.keras.utils import tf_utils
-except ImportError:
-    from tensorflow.keras.utils import tf_utils
-
+from tensorflow.python.keras.utils import tf_utils
 from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import keras_tuner as kt
