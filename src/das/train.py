@@ -390,9 +390,11 @@ def train(*,
     # OPTIMIZE POSTPROCESSING
     if post_opt:
         logging.info('OPTIMIZING POSTPROCESSING:')
-        best_gap_dur, best_min_len, score_train_pre, score_train, score_val = postprocessing.optimize(dataset_path=data_dir,
-                                                                                     model_save_name=save_name)
-        logging.info(f'  Score changed from {score_train_pre:1.4} to {score_train:1.4}.')
+        best_gap_dur, best_min_len, scores = postprocessing.optimize(
+            dataset_path=data_dir, model_save_name=save_name)
+        logging.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
+        if scores['val_pre'] is not None:
+            logging.info(f"  Score on validation data changed from {scores['val_pre']:1.4} to {scores['val']:1.4}.")
         logging.info('  Optimal parameters for postprocessing:')
         logging.info(f'     gap_dur={best_gap_dur} seconds')
         logging.info(f'     min_len={best_min_len} seconds')
@@ -400,8 +402,8 @@ def train(*,
         params['post_opt'] = {
             'gap_dur': float(best_gap_dur),
             'min_len': float(best_min_len),
-            'score_train': score_train,
-            'score_val': score_val
+            'score_train': float(scores['train']),
+            'score_val': float(scores['val']),
         }
 
         logging.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
