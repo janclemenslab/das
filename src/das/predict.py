@@ -9,9 +9,6 @@ from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict
 import glob
 
-from tensorflow.python.framework.ops import disable_eager_execution
-disable_eager_execution()
-
 
 def predict_probabililties(x, model, params, verbose=None, prepend_data_padding: bool = True):
     """[summary]
@@ -107,7 +104,6 @@ def predict_segments(class_probabilities: np.array,
     """
 
     probs_are_labels = class_probabilities.ndim == 1
-
     if segment_dims is None:
         if not probs_are_labels:  # class_probabilities is [T, nb_classes]
             nb_classes = class_probabilities.shape[1]

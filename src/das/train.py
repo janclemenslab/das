@@ -10,12 +10,6 @@ import yaml
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
 
-try:  # disabling eager execution speeds up everything
-    from tensorflow.python.framework.ops import disable_eager_execution
-    disable_eager_execution()
-except Exception as e:
-    logging.exception(e)
-
 try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
     physical_devices = tf.config.list_physical_devices('GPU')
