@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.train_tune - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -261,6 +264,8 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">flammkuchen</span> <span class="k">as</span> <span class="nn">fl</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">tensorflow.python.keras.utils</span> <span class="kn">import</span> <span class="n">tf_utils</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">EarlyStopping</span><span class="p">,</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="n">ReduceLROnPlateau</span><span class="p">,</span> <span class="n">TensorBoard</span>
 <span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
 <span class="kn">import</span> <span class="nn">keras_tuner</span> <span class="k">as</span> <span class="nn">kt</span>
@@ -269,12 +274,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">tracking</span><span class="p">,</span> <span class="n">data_hash</span>  <span class="c1">#, timeseries</span>
-
-<span class="k">try</span><span class="p">:</span>  <span class="c1"># disabling eager execution speeds up everything</span>
-    <span class="kn">from</span> <span class="nn">tensorflow.python.framework.ops</span> <span class="kn">import</span> <span class="n">disable_eager_execution</span>
-    <span class="n">disable_eager_execution</span><span class="p">()</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>  <span class="c1"># fixes cuDNN error when using LSTM layer</span>
     <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
@@ -297,15 +296,8 @@
                                 <span class="s1">'nb_conv'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">]}</span>
 
 <div class="viewcode-block" id="TunableModel.build"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.TunableModel.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hp</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">hp</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
-        <span class="c1"># else:  # defaults</span>
-        <span class="c1">#     hp.Choice('nb_filters', values=np.power(2, np.arange(3, 7)).tolist())</span>
-        <span class="c1">#     hp.Choice('kernel_size', values=np.power(2, np.arange(2, 7)).tolist())</span>
-        <span class="c1">#     hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4])</span>
-        <span class="c1">#     hp.Choice('nb_hist', values=np.power(2, np.arange(7, 14)).tolist())</span>
-        <span class="c1">#     hp.Choice('nb_conv', values=np.arange(1, 7).tolist())</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tune_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">hp</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">[</span><span class="s1">'tcn'</span><span class="p">](</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
@@ -319,6 +311,77 @@
 
 <div class="viewcode-block" id="OracleCallback.on_epoch_end"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.OracleCallback.on_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tuner</span><span class="o">.</span><span class="n">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tuner</span><span class="o">.</span><span class="n">current_trial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="n">logs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ModelParamsCheckpoint"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.ModelParamsCheckpoint">[docs]</a><span class="k">class</span> <span class="nc">ModelParamsCheckpoint</span><span class="p">(</span><span class="n">ModelCheckpoint</span><span class="p">):</span>
+    <span class="sd">"""Callback to save the DAS model or model weights and parameters at some frequency."""</span>
+
+    <span class="k">def</span> <span class="nf">_save_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">"""Saves the model.</span>
+<span class="sd">        Args:</span>
+<span class="sd">                epoch: the epoch this iteration is in.</span>
+<span class="sd">                batch: the batch this iteration is in. `None` if the `save_freq` is set to `epoch`.</span>
+<span class="sd">                logs: the `logs` dict passed in to `on_batch_end` or `on_epoch_end`.</span>
+<span class="sd">        """</span>
+        <span class="n">logs</span> <span class="o">=</span> <span class="n">logs</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_freq</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">period</span><span class="p">:</span>
+            <span class="c1"># Block only when saving interval is reached.</span>
+            <span class="n">logs</span> <span class="o">=</span> <span class="n">tf_utils</span><span class="o">.</span><span class="n">sync_to_numpy_or_python_type</span><span class="p">(</span><span class="n">logs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_file_path</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_best_only</span><span class="p">:</span>
+                    <span class="n">current</span> <span class="o">=</span> <span class="n">logs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Can save best model only with </span><span class="si">%s</span><span class="s1"> available, '</span>
+                                        <span class="s1">'skipping.'</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor_op</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">best</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Epoch </span><span class="si">%05d</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> improved from </span><span class="si">%0.5f</span><span class="s1"> to </span><span class="si">%0.5f</span><span class="s1">,'</span>
+                                      <span class="s1">' saving model to </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">best</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">filepath</span><span class="p">))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="n">current</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_weights_only</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span>
+                                <span class="c1"># TODO: clean up params dict</span>
+                                <span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_normalize_tf_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">),</span> <span class="n">filepath</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Epoch </span><span class="si">%05d</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> did not improve from </span><span class="si">%0.5f</span><span class="s1">'</span> <span class="o">%</span>
+                                      <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">best</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Epoch </span><span class="si">%05d</span><span class="s1">: saving model to </span><span class="si">%s</span><span class="s1">'</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filepath</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_weights_only</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filepath</span> <span class="o">+</span> <span class="s1">'_model.h5'</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="p">)</span>
+                        <span class="c1"># TODO: clean up params dict</span>
+                        <span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_normalize_tf_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">),</span> <span class="n">filepath</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_remove_file</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">IsADirectoryError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># h5py 3.x</span>
+                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'Please specify a non-directory filepath for '</span>
+                              <span class="s1">'ModelCheckpoint. Filepath used is an existing '</span>
+                              <span class="s1">'directory: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c1"># `e.errno` appears to be `None` so checking the content of `e.args[0]`.</span>
+                <span class="k">if</span> <span class="s1">'is a directory'</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'Please specify a non-directory filepath for '</span>
+                                  <span class="s1">'ModelCheckpoint. Filepath used is an existing '</span>
+                                  <span class="s1">'directory: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
+                <span class="c1"># Re-throw the error for any other causes.</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span> <span class="nf">_normalize_tf_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">d</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div>
 
 
 <div class="viewcode-block" id="DasTuner"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.DasTuner">[docs]</a><span class="k">class</span> <span class="nc">DasTuner</span><span class="p">(</span><span class="n">kt</span><span class="o">.</span><span class="n">Tuner</span><span class="p">):</span>
@@ -368,6 +431,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">reinit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypermodel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">)</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span>  <span class="c1"># attach params to model so we can save them in ModelParamsCheckpoint</span>
             <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_gen</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="n">steps_per_epoch</span><span class="p">,</span>
                       <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -377,7 +441,8 @@
             <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'Interrupted'</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Something went wrong. Will try to continue."</span><span class="p">)</span></div></div>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">"Something went wrong. Will try to continue."</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">'INVALID'</span></div></div>
 
 
 <div class="viewcode-block" id="train"><a class="viewcode-back" href="../../api/das.train_tune.html#das.train_tune.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="n">y_suffix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span>
@@ -387,6 +452,7 @@
           <span class="n">ignore_boundaries</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">batch_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
           <span class="n">pre_kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">pre_nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">pre_nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">dilations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">nb_lstm_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
           <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
           <span class="n">nb_epoch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
@@ -397,7 +463,7 @@
           <span class="n">wandb_api_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wandb_project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">wandb_entity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">log_messages</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">with_y_hist</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">balance</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">version_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-          <span class="n">tune_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">tune_config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">nb_tune_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000</span><span class="p">,</span>
           <span class="n">_qt_progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="sd">"""Tune the hyperparameters of a DAS network.</span>
 
@@ -422,7 +488,6 @@
 <span class="sd">                           Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + SAVE_NAME</span>
 <span class="sd">                           or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.</span>
 <span class="sd">                           Defaults to TIMESTAMP.</span>
-
 <span class="sd">        model_name (str): Network architecture to use.</span>
 <span class="sd">                          Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).</span>
 <span class="sd">                          See das.models for a description of all models.</span>
@@ -450,12 +515,17 @@
 <span class="sd">                           if model is `tcn_tcn`: adds a frontend of N TCN blocks to the TCN.</span>
 <span class="sd">                           if model is `tcn_stft`: adds a trainable STFT frontend.</span>
 <span class="sd">                           Defaults to 0 (no frontend, no downsampling).</span>
-<span class="sd">        pre_nb_dft (int): Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.</span>
+<span class="sd">        pre_nb_dft (int): Duration of filters (in samples) for the STFT frontend.</span>
+<span class="sd">                          Number of filters is pre_nb_dft // 2 + 1.</span>
 <span class="sd">                          Defaults to 64.</span>
 <span class="sd">        pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.</span>
 <span class="sd">                              Defaults to 16.</span>
 <span class="sd">        pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.</span>
 <span class="sd">                               Defaults to 3.</span>
+<span class="sd">        upsample (bool): whether or not to restore the model output to the input samplerate.</span>
+<span class="sd">                         Should generally be True during training and evaluation but my speed up inference.</span>
+<span class="sd">                         Defaults to True.</span>
+<span class="sd">        dilations (List[int]): List of dilation rate, defaults to [1, 2, 4, 8, 16] (5 layer with 2x dilation per TCN block)</span>
 <span class="sd">        nb_lstm_units (int): If &gt;0, adds LSTM with `nb_lstm_units` LSTM units to the output of the stack of TCN blocks.</span>
 <span class="sd">                             Defaults to 0 (no LSTM layer).</span>
 <span class="sd">        verbose (int): Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).</span>
@@ -498,6 +568,7 @@
 <span class="sd">                             Defaults to True (set to False for large datasets since it can be slow).</span>
 <span class="sd">        tune_config (Optional[str]): Yaml file with key:value pairs defining the search space for tuning.</span>
 <span class="sd">                                     Keys are parameter names, values are lists of possible parameter values.</span>
+<span class="sd">        nb_tune_trials (int): Number of model variants to test during hyper parameter tuning. Defaults to 1_000.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">            model (keras.Model)</span>
@@ -525,7 +596,13 @@
         <span class="n">stride</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># should take every sample, since sampling rates of both x and y are now the same</span>
         <span class="n">y_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">nb_hist</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
 
-    <span class="n">output_stride</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling</span>
+    <span class="k">if</span> <span class="n">stride</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Stride &lt;=0 - needs to be &gt;0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">upsample</span><span class="p">:</span>
+        <span class="n">output_stride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_stride</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling</span>
 
     <span class="k">if</span> <span class="n">save_prefix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">save_prefix</span> <span class="o">=</span> <span class="s1">''</span>
@@ -608,10 +685,13 @@
     <span class="k">if</span> <span class="n">save_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">save_name</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">'%Y%m</span><span class="si">%d</span><span class="s1">_%H%M%S'</span><span class="p">)</span>
     <span class="n">save_name</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{0}</span><span class="s1">/</span><span class="si">{1}{2}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">save_prefix</span><span class="p">,</span> <span class="n">save_name</span><span class="p">)</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">'save_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_name</span>
+
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Will save to </span><span class="si">{</span><span class="n">save_name</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
     <span class="c1"># setup callbacks</span>
-    <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">20</span><span class="p">),]</span>
+    <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span><span class="n">ModelParamsCheckpoint</span><span class="p">(</span><span class="n">save_name</span><span class="p">,</span> <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+                 <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">15</span><span class="p">)]</span>
 
     <span class="k">if</span> <span class="n">reduce_lr</span><span class="p">:</span>
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">patience</span><span class="o">=</span><span class="n">reduce_lr_patience</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -633,7 +713,7 @@
     <span class="n">tuner</span> <span class="o">=</span> <span class="n">DasTuner</span><span class="p">(</span>
         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
         <span class="n">oracle</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">oracles</span><span class="o">.</span><span class="n">BayesianOptimization</span><span class="p">(</span>
-            <span class="n">objective</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="s2">"val_loss"</span><span class="p">,</span> <span class="s2">"min"</span><span class="p">),</span> <span class="n">max_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+            <span class="n">objective</span><span class="o">=</span><span class="n">kt</span><span class="o">.</span><span class="n">Objective</span><span class="p">(</span><span class="s2">"val_loss"</span><span class="p">,</span> <span class="s2">"min"</span><span class="p">),</span> <span class="n">max_trials</span><span class="o">=</span><span class="n">nb_tune_trials</span><span class="p">,</span>
         <span class="p">),</span>
         <span class="n">hypermodel</span><span class="o">=</span><span class="n">TunableModel</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">tune_config</span><span class="p">),</span>
         <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -647,7 +727,7 @@
 
     <span class="c1"># TRAIN NETWORK</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Start hyperparameter tuning'</span><span class="p">)</span>
-    <span class="n">fit_hist</span> <span class="o">=</span> <span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+    <span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
         <span class="n">train_x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">train_y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span>
         <span class="n">val_x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">val_y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span>
         <span class="n">epochs</span><span class="o">=</span><span class="n">nb_epoch</span><span class="p">,</span>
@@ -655,7 +735,7 @@
         <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
         <span class="n">class_weight</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">],</span>
     <span class="p">)</span>
-    <span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">()</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">())</span>
 
     <span class="c1"># TEST</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">nb_hist</span><span class="p">:</span>
@@ -663,7 +743,7 @@
         <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'re-loading last best model'</span><span class="p">)</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">tuner</span><span class="o">.</span><span class="n">get_best_models</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'save_name'</span><span class="p">])</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'predicting'</span><span class="p">)</span>
         <span class="c1"># TODO: Need to update params with best hyperparams (e.g. nb-hist)</span>
@@ -677,14 +757,12 @@
         <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">neptune_api_token</span> <span class="ow">and</span> <span class="n">neptune_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
-            <span class="n">poseidon</span><span class="o">.</span><span class="n">log_test_results</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">wandb_api_token</span> <span class="ow">and</span> <span class="n">wandb_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
             <span class="n">wandb</span><span class="o">.</span><span class="n">log_test_results</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
 
         <span class="n">save_filename</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{0}</span><span class="s2">_results.h5"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_name</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'saving to '</span> <span class="o">+</span> <span class="n">save_filename</span> <span class="o">+</span> <span class="s1">'.'</span><span class="p">)</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'fit_hist'</span><span class="p">:</span> <span class="n">fit_hist</span><span class="o">.</span><span class="n">history</span><span class="p">,</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'fit_hist'</span><span class="p">:</span> <span class="p">[],</span>
              <span class="s1">'confusion_matrix'</span><span class="p">:</span> <span class="n">conf_mat</span><span class="p">,</span>
              <span class="s1">'classification_report'</span><span class="p">:</span> <span class="n">report</span><span class="p">,</span>
              <span class="s1">'x_test'</span><span class="p">:</span> <span class="n">x_test</span><span class="p">,</span>

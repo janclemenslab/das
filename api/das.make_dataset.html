@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.menagerie" href="das.menagerie.html" /><link rel="prev" title="das.io" href="das.io.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.menagerie" href="das.menagerie.html" /><link rel="prev" title="das.io" href="das.io.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.make_dataset - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
@@ -252,11 +256,11 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-das.make_dataset">
+          <section id="module-das.make_dataset">
 <span id="das-make-dataset"></span><h1>das.make_dataset<a class="headerlink" href="#module-das.make_dataset" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.blur_events">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">blur_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_trace</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_std_seconds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/das/make_dataset.html#blur_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.blur_events" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">blur_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_trace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_std_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/make_dataset.html#blur_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.blur_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blur event trace with a gaussian.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -276,7 +280,7 @@
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.events_to_probabilities">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">events_to_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventsamples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">61</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#events_to_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.events_to_probabilities" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">events_to_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventsamples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">61</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#events_to_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.events_to_probabilities" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts list of events to one-hot-encoded probability vectors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -304,58 +308,8 @@ and <code class="xref py py-obj docutils literal notranslate"><span class="pre">
 </dl>
 </dd></dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="das.make_dataset.generate_data_splits">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">generate_data_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrays</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#generate_data_splits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.generate_data_splits" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>arrays</strong> (<em>Mapping</em>) – [description]</p></li>
-<li><p><strong>splits</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>split_names</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
-<li><p><strong>seed</strong> (<em>float</em><em>, </em><em>optional</em>) – Defaults to None (do not seed random number generator)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>[description]</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[type]</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="das.make_dataset.generate_file_splits">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">generate_file_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_list</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">List</span><a class="reference internal" href="../_modules/das/make_dataset.html#generate_file_splits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.generate_file_splits" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_list</strong> (<em>List</em>) – [description]</p></li>
-<li><p><strong>splits</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – [description]</p></li>
-<li><p><strong>split_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – [description]</p></li>
-<li><p><strong>shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
-<li><p><strong>seed</strong> (<em>float</em><em>, </em><em>optional</em>) – Defaults to None (do not seed random number generator)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>ValueError</strong> – [description]</p></li>
-<li><p><strong>ValueError</strong> – [description]</p></li>
-</ul>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>[description]</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>List</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.infer_class_info">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">infer_class_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#infer_class_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.infer_class_info" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">infer_class_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#infer_class_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.infer_class_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -371,7 +325,7 @@ and <code class="xref py py-obj docutils literal notranslate"><span class="pre">
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.init_store">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">init_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">nb_channels</span></em>, <em class="sig-param"><span class="pre">nb_classes</span></em>, <em class="sig-param"><span class="pre">samplerate=None</span></em>, <em class="sig-param"><span class="pre">make_single_class_datasets=False</span></em>, <em class="sig-param"><span class="pre">class_names=None</span></em>, <em class="sig-param"><span class="pre">class_types=None</span></em>, <em class="sig-param"><span class="pre">store_type=&lt;class</span> <span class="pre">'zarr.storage.TempStore'&gt;</span></em>, <em class="sig-param"><span class="pre">store_name='store.zarr'</span></em>, <em class="sig-param"><span class="pre">chunk_len=1000000</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#init_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.init_store" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">init_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_channels:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_classes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate:</span> <span class="pre">Optional[float]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_single_class_datasets:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names:</span> <span class="pre">Optional[List[str]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_types:</span> <span class="pre">Optional[List[str]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_type=&lt;class</span> <span class="pre">'zarr.storage.TempStore'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_name:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'store.zarr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_len:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/make_dataset.html#init_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.init_store" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -403,29 +357,38 @@ and <code class="xref py py-obj docutils literal notranslate"><span class="pre">
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.make_annotation_matrix">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">make_annotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_samples</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/das/make_dataset.html#make_annotation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.make_annotation_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">make_annotation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/make_dataset.html#make_annotation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.make_annotation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>One-hot encode a list of song timings to a binary matrix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>nb_samples</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
-<li><p><strong>samplerate</strong> – </p></li>
-<li><p><strong>class_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – will take only events in class_names, order in class_names determines order in class_matrix
-if not provided, will take the names in df</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame with the following columns:
+- name: class name of the syllable/song event
+- start_seconds: start of the song event in the audio recording in seconds.
+- stop_seconds: stop of the song event in the audio recording in seconds.</p></li>
+<li><p><strong>nb_samples</strong> (<em>[</em><em>type</em><em>]</em>) – Length of the annotation matrix in samples.</p></li>
+<li><p><strong>samplerate</strong> (<em>float</em>) – Sample rate for the annotation matrix in Hz.</p></li>
+<li><p><strong>class_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of class names.
+If provided, the annotation matrix will be built only for the events in class_names.
+Otherwise, the matrix will be build for all class names in the df.
+Order in class_names determines order in class_matrix</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>[description]</p>
+<dd class="field-even"><p><dl class="simple">
+<dt>Binary matrix [nb_samples, nb_classes]</dt><dd><p>with 1 indicating the presence of a class at a specific sample.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>[type]</p>
+<dd class="field-odd"><p>nd.array</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.make_gaps">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">make_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_seconds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_seconds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_seconds</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/das/make_dataset.html#make_gaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.make_gaps" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">make_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/make_dataset.html#make_gaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.make_gaps" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <p>0011112222000111100 -&gt; 0011100222000111100 (gap_fullwidth=2)</p>
 <dl class="field-list simple">
@@ -448,7 +411,7 @@ if not provided, will take the names in df</p></li>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.make_dataset.normalize_probabilities">
-<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">normalize_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> → <span class="pre">numpy.ndarray</span><a class="reference internal" href="../_modules/das/make_dataset.html#normalize_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.normalize_probabilities" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.make_dataset.</span></span><span class="sig-name descname"><span class="pre">normalize_probabilities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/make_dataset.html#normalize_probabilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.make_dataset.normalize_probabilities" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -462,7 +425,7 @@ if not provided, will take the names in df</p></li>
 </dd>
 </dl>
 </dd></dl>
-</div>
+</section>
 
         </article>
       </div>

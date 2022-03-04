@@ -16,6 +16,7 @@ Developer API
 
    das.annot
    das.augmentation
+   das.block_stratify
    das.data
    das.data_hash
    das.evaluate
@@ -24,7 +25,9 @@ Developer API
    das.make_dataset
    das.menagerie
    das.models
+   das.models_legacy
    das.npy_dir
+   das.postprocessing
    das.predict
    das.pulse_utils
    das.segment_utils

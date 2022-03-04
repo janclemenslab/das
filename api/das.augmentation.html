@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.data" href="das.data.html" /><link rel="prev" title="das.annot" href="das.annot.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.block_stratify" href="das.block_stratify.html" /><link rel="prev" title="das.annot" href="das.annot.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.augmentation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
@@ -252,7 +256,7 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-das.augmentation">
+          <section id="module-das.augmentation">
 <span id="das-augmentation"></span><h1>das.augmentation<a class="headerlink" href="#module-das.augmentation" title="Permalink to this headline">¶</a></h1>
 <p>Waveform level augmentations.</p>
 <p>Individual implementations of <a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Augmentation</span></code></a> are callables that accept
@@ -260,26 +264,71 @@ the signal to augment as an argument and return the augmented signal.</p>
 <p>Augmentation parameters can be <a class="reference internal" href="#das.augmentation.Constant" title="das.augmentation.Constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constant</span></code></a>, or random with <a class="reference internal" href="#das.augmentation.Normal" title="das.augmentation.Normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Normal</span></code></a> or <a class="reference internal" href="#das.augmentation.Uniform" title="das.augmentation.Uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Uniform</span></code></a> distribution.
 Random parameters will be sampled from a given distribution anew for each augmentation.</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aug</span> <span class="pre">=</span> <span class="pre">Gain(gain=Normal(mean=1,</span> <span class="pre">std=0.5));</span> <span class="pre">augmented_signal</span> <span class="pre">=</span> <span class="pre">aug(signal)</span></code></p>
+<p>Can be configured using a yaml file:
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>yaml
+Gain:  # Name of the augmentation class</p>
+<blockquote>
+<div><dl class="simple">
+<dt>gain:  # arg for the augmentation class</dt><dd><dl class="simple">
+<dt>Uniform:  # Param type</dt><dd><p>lower: 0.5  # param args
+upper: 2  # param args</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl>
+<dt>MaskNoise:</dt><dd><dl class="simple">
+<dt>std:</dt><dd><dl class="simple">
+<dt>Normal:</dt><dd><p>mean: 0
+std: 0.05</p>
+</dd>
+</dl>
+</dd>
+<dt>mean:</dt><dd><dl class="simple">
+<dt>Constant:</dt><dd><p>value: 0</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>NotchFilter:</dt><dd><dl class="simple">
+<dt>freq:  # Param-type arg</dt><dd><dl class="simple">
+<dt>Uniform:</dt><dd><p>lower: 100
+upper: 600</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Q: 30  # standard arg
+samplerate_Hz: 10_000  # standard arg</p>
+</dd>
+</dl>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
+Caution: You need to add a suffix starting with ‘-’ (like “MaskNoise-1”) to the class name if you want to use a class multiple times</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">augs</span> <span class="pre">=</span> <span class="pre">Augmentations.from_yaml(filename)</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Augmentation">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentation</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentation" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentation</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all augmentations.</p>
 <p>Augmentations are callables that return the augmented input.
 Can optionally pass through a second input.</p>
+<p>batch_x is expected to be [batch, time, channel].
+_apply works on [time, channel] inputs</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Augmentations">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">augmentations</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><span class="pre">das.augmentation.Augmentation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentations" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">augmentations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><span class="pre">das.augmentation.Augmentation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bundles several augmentations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>augmentations</strong> (<em>List</em><em>[</em><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><em>Augmentation</em></a><em>]</em>) – List of augmentations.</p>
+<dd class="field-odd"><p><strong>augmentations</strong> (<em>List</em><em>[</em><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><em>Augmentation</em></a><em>]</em>) – List of Augmentation instances.</p>
 </dd>
 </dl>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.CircShift">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">CircShift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#CircShift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.CircShift" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">CircShift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#CircShift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.CircShift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Circularly shift input along the first axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -289,7 +338,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Constant">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Constant" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Constant" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constant parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -299,7 +348,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Gain">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Gain" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Gain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiply signal with gain factor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -309,7 +358,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.HorizontalFlip">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">HorizontalFlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#HorizontalFlip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.HorizontalFlip" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">HorizontalFlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#HorizontalFlip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.HorizontalFlip" title="Permalink to this definition">¶</a></dt>
 <dd><p>Horizontally flip signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -319,7 +368,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.MaskMean">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskMean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskMean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskMean" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskMean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskMean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskMean" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replaces stretch of <code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code> samples with mean over that stretch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -329,7 +378,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.MaskNoise">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskNoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskNoise" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskNoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskNoise" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add noise or replace signal by noise for the full duration or a part of it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -344,7 +393,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Normal">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Normal" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Normal" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normally distributed parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -356,8 +405,18 @@ Can optionally pass through a second input.</p>
 </dl>
 </dd></dl>
 <dl class="py class">
+<dt class="sig sig-object py" id="das.augmentation.NotchFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">NotchFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate_Hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#NotchFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.NotchFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notch filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>freq</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – freq to remove, in Hz.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Offset">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Offset" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add horizontal offset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -367,13 +426,13 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Param">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Param</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Param" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Param</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for all parameters.</p>
 <p>Parameters are callables that return parameter values.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Uniform">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Uniform" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Uniform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uniformly distributed parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -386,7 +445,7 @@ Can optionally pass through a second input.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Upsampling">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Upsampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Upsampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Upsampling" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Upsampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Upsampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Upsampling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Upsample signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -397,19 +456,19 @@ Can optionally pass through a second input.</p>
 </dd>
 </dl>
 </dd></dl>
-</div>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.data.html">
+          <a class="next-page" href="das.block_stratify.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.data</div>
+                <div class="title">das.block_stratify</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>

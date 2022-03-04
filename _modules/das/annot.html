@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.annot - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -373,12 +376,39 @@
             <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">categories</span><span class="o">=</span><span class="n">cats</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
-    <span class="c1"># @classmethod</span>
-    <span class="c1"># def from_predict(events=None, segments=None):</span>
-    <span class="c1">#     # to lists or df</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_predict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">events</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segments</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># to lists or df</span>
+        <span class="n">event_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start_seconds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">stop_seconds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">possible_event_names</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1">#     out = None</span>
-    <span class="c1">#     return out</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">'sequence'</span> <span class="ow">in</span> <span class="n">segments</span> <span class="ow">and</span> <span class="s1">'names'</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">]]</span>  <span class="c1"># from ints to names</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">]</span>
+            <span class="n">event_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">start_seconds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">'onsets_seconds'</span><span class="p">])</span>
+            <span class="n">stop_seconds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">'offsets_seconds'</span><span class="p">])</span>
+            <span class="n">possible_event_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">'sequence'</span> <span class="ow">in</span> <span class="n">events</span> <span class="ow">and</span> <span class="s1">'names'</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">str_</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">events</span><span class="p">[</span><span class="s1">'names'</span><span class="p">][</span><span class="n">ii</span><span class="p">]</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">events</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">]]</span>  <span class="c1"># from ints to names</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">'sequence'</span><span class="p">]</span>
+            <span class="n">event_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">start_seconds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">])</span>
+            <span class="n">stop_seconds</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">])</span>
+            <span class="n">possible_event_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
+
+        <span class="c1"># only keep unique</span>
+        <span class="n">possible_event_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">possible_event_names</span><span class="p">))</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_lists</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="p">,</span> <span class="n">possible_event_names</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>
 
 
     <span class="k">def</span> <span class="nf">_init_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>

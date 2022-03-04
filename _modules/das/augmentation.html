@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.augmentation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -262,6 +265,37 @@
 <span class="sd">Random parameters will be sampled from a given distribution anew for each augmentation.</span>
 
 <span class="sd">`aug = Gain(gain=Normal(mean=1, std=0.5)); augmented_signal = aug(signal)`</span>
+
+<span class="sd">Can be configured using a yaml file:</span>
+<span class="sd">```yaml</span>
+<span class="sd">Gain:  # Name of the augmentation class</span>
+<span class="sd">  gain:  # arg for the augmentation class</span>
+<span class="sd">    Uniform:  # Param type</span>
+<span class="sd">       lower: 0.5  # param args</span>
+<span class="sd">       upper: 2  # param args</span>
+
+<span class="sd">MaskNoise:</span>
+<span class="sd">  std:</span>
+<span class="sd">    Normal:</span>
+<span class="sd">      mean: 0</span>
+<span class="sd">      std: 0.05</span>
+<span class="sd">  mean:</span>
+<span class="sd">    Constant:</span>
+<span class="sd">       value: 0</span>
+
+<span class="sd">NotchFilter:</span>
+<span class="sd">  freq:  # Param-type arg</span>
+<span class="sd">    Uniform:</span>
+<span class="sd">      lower: 100</span>
+<span class="sd">      upper: 600</span>
+<span class="sd">  Q: 30  # standard arg</span>
+<span class="sd">  samplerate_Hz: 10_000  # standard arg</span>
+<span class="sd">```</span>
+<span class="sd">Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the class name if you want to use a class multiple times</span>
+
+<span class="sd">`augs = Augmentations.from_yaml(filename)`</span>
+
+
 <span class="sd">"""</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
@@ -269,6 +303,7 @@
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 
 
 <span class="n">aug_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -307,7 +342,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(value=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(value=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">)"</span></div>
 
 
 <div class="viewcode-block" id="Normal"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Normal">[docs]</a><span class="nd">@_register_param</span>
@@ -333,7 +374,6 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(mean=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="si">}</span><span class="s2">, std=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="si">}</span><span class="s2">)"</span></div>
 
 
-
 <div class="viewcode-block" id="Uniform"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Uniform">[docs]</a><span class="nd">@_register_param</span>
 <span class="k">class</span> <span class="nc">Uniform</span><span class="p">(</span><span class="n">Param</span><span class="p">):</span>
     <span class="sd">"""Uniformly distributed parameter."""</span>
@@ -347,7 +387,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">=</span> <span class="n">upper</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(lower=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2">, upper=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(lower=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span><span class="si">}</span><span class="s2">, upper=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span><span class="si">}</span><span class="s2">)"</span></div>
 
 
 <div class="viewcode-block" id="Augmentation"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentation">[docs]</a><span class="nd">@dataclass</span>
@@ -355,7 +401,11 @@
     <span class="sd">"""Base class for all augmentations.</span>
 
 <span class="sd">    Augmentations are callables that return the augmented input.</span>
-<span class="sd">    Can optionally pass through a second input."""</span>
+<span class="sd">    Can optionally pass through a second input.</span>
+
+<span class="sd">    batch_x is expected to be [batch, time, channel].</span>
+<span class="sd">    _apply works on [time, channel] inputs</span>
+<span class="sd">    """</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">this_batch_x</span> <span class="o">=</span> <span class="n">batch_x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -493,8 +543,9 @@
 
     <span class="k">def</span> <span class="nf">_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">len_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">mask_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">len_x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">())</span>
+        <span class="n">mask_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">len_x</span> <span class="o">-</span> <span class="n">duration</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span></div>
 
 
@@ -514,13 +565,32 @@
         <span class="k">return</span> <span class="n">x</span></div>
 
 
+<div class="viewcode-block" id="NotchFilter"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.NotchFilter">[docs]</a><span class="nd">@_register_augmentation</span>
+<span class="k">class</span> <span class="nc">NotchFilter</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
+    <span class="sd">"""Notch filter."""</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">Param</span><span class="p">,</span> <span class="n">Q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">samplerate_Hz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10_000</span><span class="p">):</span>
+        <span class="sd">"""</span>
+<span class="sd">        Args:</span>
+<span class="sd">            freq (Param): freq to remove, in Hz.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq</span> <span class="o">=</span> <span class="n">freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">samplerate_Hz</span> <span class="o">=</span> <span class="n">samplerate_Hz</span>
+
+    <span class="k">def</span> <span class="nf">_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">iirnotch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">freq</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">samplerate_Hz</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">filtfilt</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+
+
 <div class="viewcode-block" id="Augmentations"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentations">[docs]</a><span class="k">class</span> <span class="nc">Augmentations</span><span class="p">():</span>
     <span class="sd">"""Bundles several augmentations."""</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">augmentations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Augmentation</span><span class="p">]):</span>
         <span class="sd">"""</span>
 <span class="sd">        Args:</span>
-<span class="sd">            augmentations (List[Augmentation]): List of augmentations.</span>
+<span class="sd">            augmentations (List[Augmentation]): List of Augmentation instances.</span>
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">augmentations</span> <span class="o">=</span> <span class="n">augmentations</span>
 
@@ -544,14 +614,19 @@
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">aug_spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
         <span class="n">augs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">aug_spec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'-'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># split off "-WHATEVER" suffix</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">a_name</span><span class="p">,</span> <span class="n">a_arg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">p_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">a_arg</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">p_args</span> <span class="o">=</span> <span class="n">a_arg</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span>
-                <span class="c1"># if no args for Params are provided, use defaults</span>
-                <span class="k">if</span> <span class="n">p_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">p_args</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="n">params</span><span class="p">[</span><span class="n">a_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">params_dict</span><span class="p">[</span><span class="n">p_name</span><span class="p">](</span><span class="o">**</span><span class="n">p_args</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a_arg</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span> <span class="c1"># Param-type arg</span>
+                    <span class="n">p_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">a_arg</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">p_args</span> <span class="o">=</span> <span class="n">a_arg</span><span class="p">[</span><span class="n">p_name</span><span class="p">]</span>
+                    <span class="c1"># if no args for Params are provided, use defaults</span>
+                    <span class="k">if</span> <span class="n">p_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">p_args</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">a_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">params_dict</span><span class="p">[</span><span class="n">p_name</span><span class="p">](</span><span class="o">**</span><span class="n">p_args</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># standard arg</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">a_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">a_arg</span>
+
             <span class="nb">print</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
             <span class="n">aug</span> <span class="o">=</span> <span class="n">aug_dict</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">aug</span><span class="p">)</span>

@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Annotate song" href="annotate.html" /><link rel="prev" title="GUI documentation" href="tutorials_gui.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Annotate song" href="annotate.html" /><link rel="prev" title="GUI documentation" href="tutorials_gui.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>Load and view data - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -252,10 +256,10 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="load-and-view-data">
+          <section class="tex2jax_ignore mathjax_ignore" id="load-and-view-data">
 <h1>Load and view data<a class="headerlink" href="#load-and-view-data" title="Permalink to this headline">¶</a></h1>
 <p>In the window that opens, choose <em>Load audio from file</em> and select the downloaded recording of fly song. Alternatively, use the menu  <em>File/New from file</em>.</p>
-<div class="section" id="supported-formats">
+<section id="supported-formats">
 <h2>Supported formats<a class="headerlink" href="#supported-formats" title="Permalink to this headline">¶</a></h2>
 <p>Currently, the GUI can load audio data from a wide range of file types:</p>
 <ul class="simple">
@@ -267,14 +271,16 @@
 <p class="admonition-title">Note</p>
 <p>If your favorite format is not included in this list, <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">convert it to a supported format</span></a>.</p>
 </div>
-</div>
-<div class="section" id="customizing-loading">
+</section>
+<section id="customizing-loading">
 <h2>Customizing loading<a class="headerlink" href="#customizing-loading" title="Permalink to this headline">¶</a></h2>
 <p>After selecting a file, a menu allows you to adjust things before loading:</p>
-<div class="figure align-default" id="xb-load-fig">
+<figure class="align-default" id="xb-load-fig">
 <img alt="loading screen" src="../_images/xb_load.png"/>
-<p class="caption"><span class="caption-text">Loading screen.</span><a class="headerlink" href="#xb-load-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Loading screen.</span><a class="headerlink" href="#xb-load-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <ul class="simple">
 <li><p><em>Dataset with audio</em>: Select the variable in the <code class="docutils literal notranslate"><span class="pre">npz</span></code>, <code class="docutils literal notranslate"><span class="pre">mat</span></code> or <code class="docutils literal notranslate"><span class="pre">h5</span></code> file that contains the audio data. For audio (e.g. wav) and <code class="docutils literal notranslate"><span class="pre">npy</span></code> files, this field will be empty since they do not contain multiple datasets.</p></li>
 <li><p><em>Data format</em>: The format for loading the file is inferred automatically but can be overridden here.</p></li>
@@ -291,24 +297,26 @@
 <p class="admonition-title">Note</p>
 <p>Many of these parameters are also exposed via the command-line when starting the GUI. See the <a class="reference internal" href="../technical/cli.html"><span class="doc std std-doc">command line docs</span></a> for details.</p>
 </div>
-</div>
-<div class="section" id="overview-of-the-display-and-menus">
+</section>
+<section id="overview-of-the-display-and-menus">
 <h2>Overview of the display and menus<a class="headerlink" href="#overview-of-the-display-and-menus" title="Permalink to this headline">¶</a></h2>
 <p>The display shows audio data from all channels (gray) in the top panel, with the currently selected channel colored white. The spectrogram of the currently selected channel is shown in the lower panel.</p>
 <p>To navigate the view: Move forward/backward along the time axis via the <code class="docutils literal notranslate"><span class="pre">A</span></code>/<code class="docutils literal notranslate"><span class="pre">D</span></code> keys and zoom in/out the time axis with the <code class="docutils literal notranslate"><span class="pre">W</span></code>/<code class="docutils literal notranslate"><span class="pre">S</span></code> keys (See Playback/). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal resolution of the spectrogram can be increased at the expense of frequency resolution with the <code class="docutils literal notranslate"><span class="pre">R</span></code> and <code class="docutils literal notranslate"><span class="pre">T</span></code> keys.</p>
 <p>You can play back the waveform on display through headphones/speakers by pressing <code class="docutils literal notranslate"><span class="pre">E</span></code>.</p>
-<div class="figure align-default" id="xb-display-fig">
+<figure class="align-default" id="xb-display-fig">
 <a class="reference internal image-reference" href="../_images/xb_display.png"><img alt="waveform and spectrogram display" src="../_images/xb_display.png" style="width: 100%;"/></a>
-<p class="caption"><span class="caption-text">Waveform (top) and spectrogram (bottom) display of a multi-channel recording.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Waveform (top) and spectrogram (bottom) display of a multi-channel recording.</span><a class="headerlink" href="#xb-display-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>For multi-channel audio, the waveform view can be further adjusted:</p>
 <ul class="simple">
 <li><p>Hide the non-selected channels in the waveform view by toggling <em>Audio/Show all channels</em>.</p></li>
 <li><p>Change the selected channel for which the spectrogram is displayed using the dropdown list on the upper right (“Channel …”). Or switch to next/previous channel with the up/down arrow keys.</p></li>
 <li><p>Enable the automatic selection of the loudest channel in the current view with <code class="docutils literal notranslate"><span class="pre">Q</span></code> (or <em>Audio/Autoselect loudest channel</em>).</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>

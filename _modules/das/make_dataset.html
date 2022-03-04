@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.make_dataset - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -255,17 +258,25 @@
           <h1>Source code for das.make_dataset</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">zarr</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">sklearn.model_selection</span>
 
 
-<div class="viewcode-block" id="init_store"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.init_store">[docs]</a><span class="k">def</span> <span class="nf">init_store</span><span class="p">(</span><span class="n">nb_channels</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">,</span> <span class="n">samplerate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">make_single_class_datasets</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-               <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-               <span class="n">store_type</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">TempStore</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="s1">'store.zarr'</span><span class="p">,</span>
-               <span class="n">chunk_len</span><span class="o">=</span><span class="mi">1_000_000</span><span class="p">):</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_store"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.init_store">[docs]</a><span class="k">def</span> <span class="nf">init_store</span><span class="p">(</span><span class="n">nb_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+               <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+               <span class="n">samplerate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">make_single_class_datasets</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+               <span class="n">class_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">class_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">store_type</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">TempStore</span><span class="p">,</span>
+               <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'store.zarr'</span><span class="p">,</span>
+               <span class="n">chunk_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span><span class="p">):</span>
     <span class="sd">"""[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -287,21 +298,36 @@
 <span class="sd">        [type]: [description]</span>
 <span class="sd">    """</span>
 
-    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nb_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nb_classes</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of classes (</span><span class="si">{</span><span class="n">nb_classes</span><span class="si">}</span><span class="s1">) needs to match len(class_names) (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span><span class="si">}</span><span class="s1">).'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">class_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nb_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nb_classes</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Number of classes (</span><span class="si">{</span><span class="n">nb_classes</span><span class="si">}</span><span class="s1">) needs to match len(class_names) (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_types</span><span class="p">)</span><span class="si">}</span><span class="s1">).'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nb_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">class_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nb_classes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'Number of classes (</span><span class="si">{</span><span class="n">nb_classes</span><span class="si">}</span><span class="s1">) needs to match len(class_names) (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span><span class="si">}</span><span class="s1">).'</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">class_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">nb_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">class_names</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nb_classes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">'Number of classes (</span><span class="si">{</span><span class="n">nb_classes</span><span class="si">}</span><span class="s1">) needs to match len(class_names) (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_types</span><span class="p">)</span><span class="si">}</span><span class="s1">).'</span>
+        <span class="p">)</span>
 
     <span class="c1"># initialize the store</span>
     <span class="n">store</span> <span class="o">=</span> <span class="n">store_type</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># need to def the root</span>
     <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'train'</span><span class="p">,</span> <span class="s1">'val'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">]:</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/x'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/y'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/x'</span><span class="p">,</span>
+                   <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span>
+                   <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/y'</span><span class="p">,</span>
+                   <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span>
+                   <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
         <span class="c1"># root.empty(name=f'{target}/eventtimes', shape=(0, nb_classes), chunks=(1_000,), dtype=np.float)</span>
         <span class="k">if</span> <span class="n">make_single_class_datasets</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/y_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+                <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">/y_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                           <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                           <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">),</span>
+                           <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
 
     <span class="c1"># init metadata - since attrs cannot be appended to, we init a dict here, populate it with information below and finaly assign it to root.attrs</span>
     <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'samplerate_x_Hz'</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplerate</span>
@@ -312,8 +338,12 @@
 
     <span class="k">if</span> <span class="n">make_single_class_datasets</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">class_names</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">class_types</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">'class_names_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">class_name</span><span class="p">]</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">'class_types_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">class_types</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">class_type</span><span class="p">]</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">'class_names_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">class_names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">class_name</span>
+            <span class="p">]</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">'class_types_</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">class_types</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">class_type</span>
+            <span class="p">]</span>
 
     <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'train'</span><span class="p">,</span> <span class="s1">'val'</span><span class="p">,</span> <span class="s1">'test'</span><span class="p">]:</span>
         <span class="n">root</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="sa">f</span><span class="s1">'filename_startsample_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -322,7 +352,7 @@
     <span class="k">return</span> <span class="n">root</span></div>
 
 
-<div class="viewcode-block" id="events_to_probabilities"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.events_to_probabilities">[docs]</a><span class="k">def</span> <span class="nf">events_to_probabilities</span><span class="p">(</span><span class="n">eventsamples</span><span class="p">,</span> <span class="n">desired_len</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="mi">61</span><span class="p">):</span>
+<div class="viewcode-block" id="events_to_probabilities"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.events_to_probabilities">[docs]</a><span class="k">def</span> <span class="nf">events_to_probabilities</span><span class="p">(</span><span class="n">eventsamples</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">desired_len</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">extent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">61</span><span class="p">):</span>
     <span class="sd">"""Converts list of events to one-hot-encoded probability vectors.</span>
 
 <span class="sd">    Args:</span>
@@ -341,10 +371,14 @@
     <span class="k">if</span> <span class="n">desired_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">desired_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">eventsamples</span><span class="p">)</span> <span class="o">+</span> <span class="n">extent</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">eventsamples</span> <span class="o">=</span> <span class="n">eventsamples</span><span class="p">[</span><span class="n">eventsamples</span> <span class="o">&lt;</span> <span class="n">desired_len</span> <span class="o">-</span> <span class="n">extent</span><span class="p">]</span>  <span class="c1"># delete all eventsamples exceeding desired_len</span>
+        <span class="n">eventsamples</span> <span class="o">=</span> <span class="n">eventsamples</span><span class="p">[</span>
+            <span class="n">eventsamples</span> <span class="o">&lt;</span> <span class="n">desired_len</span> <span class="o">-</span>
+            <span class="n">extent</span><span class="p">]</span>  <span class="c1"># delete all eventsamples exceeding desired_len</span>
     <span class="n">probabilities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">desired_len</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
     <span class="n">probabilities</span><span class="p">[</span><span class="n">eventsamples</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">extent</span><span class="p">,)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span>
+    <span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">extent</span><span class="p">,</span> <span class="p">)),</span>
+                                      <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span>
     <span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">probabilities</span></div>
 
@@ -365,26 +399,35 @@
     <span class="c1"># infer class type - event if start and end are the same</span>
     <span class="n">class_types</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'segment'</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">first_index</span> <span class="ow">in</span> <span class="n">first_indices</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">first_index</span><span class="p">][</span><span class="s1">'start_seconds'</span><span class="p">]</span><span class="o">==</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">first_index</span><span class="p">][</span><span class="s1">'stop_seconds'</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">first_index</span><span class="p">][</span><span class="s1">'start_seconds'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">first_index</span><span class="p">][</span>
+                <span class="s1">'stop_seconds'</span><span class="p">]:</span>
             <span class="n">class_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'event'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">class_types</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'segment'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">class_types</span></div>
 
 
-<div class="viewcode-block" id="make_annotation_matrix"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.make_annotation_matrix">[docs]</a><span class="k">def</span> <span class="nf">make_annotation_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">nb_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-                           <span class="n">class_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span><span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sd">"""[summary]</span>
+<div class="viewcode-block" id="make_annotation_matrix"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.make_annotation_matrix">[docs]</a><span class="k">def</span> <span class="nf">make_annotation_matrix</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                           <span class="n">nb_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                           <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                           <span class="n">class_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">"""One-hot encode a list of song timings to a binary matrix.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        df ([type]): [description]</span>
-<span class="sd">        nb_samples ([type]): [description]</span>
-<span class="sd">        samplerate</span>
-<span class="sd">        class_names (List[str]): will take only events in class_names, order in class_names determines order in class_matrix</span>
-<span class="sd">                                 if not provided, will take the names in df</span>
+<span class="sd">        df (pd.DataFrame): DataFrame with the following columns:</span>
+<span class="sd">                            - name: class name of the syllable/song event</span>
+<span class="sd">                            - start_seconds: start of the song event in the audio recording in seconds.</span>
+<span class="sd">                            - stop_seconds: stop of the song event in the audio recording in seconds.</span>
+<span class="sd">        nb_samples ([type]): Length of the annotation matrix in samples.</span>
+<span class="sd">        samplerate (float): Sample rate for the annotation matrix in Hz.</span>
+<span class="sd">        class_names (List[str], optional): List of class names.</span>
+<span class="sd">                            If provided, the annotation matrix will be built only for the events in class_names.</span>
+<span class="sd">                            Otherwise, the matrix will be build for all class names in the df.</span>
+<span class="sd">                            Order in class_names determines order in class_matrix</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        [type]: [description]</span>
+<span class="sd">        nd.array: Binary matrix [nb_samples, nb_classes]</span>
+<span class="sd">                  with 1 indicating the presence of a class at a specific sample.</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">class_names</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">infer_class_info</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -400,51 +443,10 @@
         <span class="k">if</span> <span class="n">start_index</span> <span class="o">&lt;</span> <span class="n">stop_index</span><span class="p">:</span>
             <span class="n">class_matrix</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">stop_index</span><span class="p">,</span> <span class="n">class_index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">start_index</span><span class="si">}</span><span class="s1"> should be greater than </span><span class="si">{</span><span class="n">stop_index</span><span class="si">}</span><span class="s1"> for row </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">start_index</span><span class="si">}</span><span class="s1"> should be greater than </span><span class="si">{</span><span class="n">stop_index</span><span class="si">}</span><span class="s1"> for row </span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s1">'</span>
+            <span class="p">)</span>
     <span class="k">return</span> <span class="n">class_matrix</span></div>
-
-
-<div class="viewcode-block" id="generate_data_splits"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.generate_data_splits">[docs]</a><span class="k">def</span> <span class="nf">generate_data_splits</span><span class="p">(</span><span class="n">arrays</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">splits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">split_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""[summary]</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        arrays (Mapping): [description]</span>
-<span class="sd">        splits ([type]): [description]</span>
-<span class="sd">        split_names ([type]): [description]</span>
-<span class="sd">        shuffle (bool, optional): [description]. Defaults to True.</span>
-<span class="sd">        seed (float, optional): Defaults to None (do not seed random number generator)</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        [type]: [description]</span>
-<span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-    <span class="n">splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span>  <span class="c1"># split train twice - otherwise val is always at the crappy beginning or end of a recording</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">split_names</span><span class="p">)</span>
-
-    <span class="c1"># if not all([len(arrays[0]) == len(a) for a in arrays]):</span>
-    <span class="c1">#     ValueError('All arrays should have same length')</span>
-
-    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)))</span>
-        <span class="n">splits</span> <span class="o">=</span> <span class="n">splits</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-        <span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-
-    <span class="n">split_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span>
-
-    <span class="n">split_arrays</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">array</span> <span class="ow">in</span> <span class="n">arrays</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">nb_samples</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">nb_dims</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">split_arrays</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_dims</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">}</span>
-        <span class="n">train_val_test_split</span> <span class="o">=</span> <span class="p">(</span><span class="n">split_points</span><span class="o">*</span><span class="n">nb_samples</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="n">x_splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">train_val_test_split</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">x_split</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_splits</span><span class="p">,</span> <span class="n">names</span><span class="p">):</span>
-            <span class="n">split_arrays</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">split_arrays</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">name</span><span class="p">],</span> <span class="n">x_split</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">split_arrays</span></div>
 
 
 <div class="viewcode-block" id="normalize_probabilities"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.normalize_probabilities">[docs]</a><span class="k">def</span> <span class="nf">normalize_probabilities</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -458,66 +460,15 @@
 <span class="sd">    """</span>
     <span class="n">p_song</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">p</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">p_song</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">p</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span>
+      <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">p_song</span><span class="p">[</span><span class="n">p_song</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
     <span class="n">p</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">p</span></div>
 
 
-<div class="viewcode-block" id="generate_file_splits"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.generate_file_splits">[docs]</a><span class="k">def</span> <span class="nf">generate_file_splits</span><span class="p">(</span><span class="n">file_list</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">splits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">split_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-                         <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
-    <span class="sd">"""[summary]</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        file_list (List): [description]</span>
-<span class="sd">        splits (List[float]): [description]</span>
-<span class="sd">        split_names (List[str]): [description]</span>
-<span class="sd">        shuffle (bool, optional): [description]. Defaults to True.</span>
-<span class="sd">        seed (float, optional): Defaults to None (do not seed random number generator)</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        ValueError: [description]</span>
-<span class="sd">        ValueError: [description]</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        List: [description]</span>
-<span class="sd">    """</span>
-
-    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_names</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'there must be one name per split. but there are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">split_names</span><span class="p">)</span><span class="si">}</span><span class="s1"> names and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span><span class="si">}</span><span class="s1"> splits.'</span><span class="p">)</span>
-
-    <span class="n">file_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
-    <span class="n">nb_files</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">shuffle</span><span class="p">:</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nb_files</span><span class="p">))</span>
-        <span class="n">file_list</span> <span class="o">=</span> <span class="n">file_list</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
-
-    <span class="n">splits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">splits</span><span class="p">)))</span>  <span class="c1"># prepend 0 as split anchor</span>
-
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">'probs should sum to 1 - but sum(</span><span class="si">{</span><span class="n">splits</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span><span class="si">}</span><span class="s1">. Normalizing to </span><span class="si">{</span><span class="n">splits</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-        <span class="n">splits</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">splits</span><span class="p">)</span>
-
-    <span class="n">file_counts</span> <span class="o">=</span> <span class="n">splits</span> <span class="o">*</span> <span class="n">nb_files</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">file_counts</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">file_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'too few files for probs - with </span><span class="si">{</span><span class="n">nb_files</span><span class="si">}</span><span class="s1"> files, probs should not be smaller than 1/</span><span class="si">{</span><span class="n">nb_files</span><span class="si">}</span><span class="s1">=</span><span class="si">{</span><span class="mi">1</span><span class="o">/</span><span class="n">nb_files</span><span class="si">}</span><span class="s1"> but smallest prob is </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
-
-    <span class="n">indices</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">split_files</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">cum_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">file_counts</span><span class="p">)</span>
-    <span class="n">file_counts</span><span class="p">,</span> <span class="n">cum_counts</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cum_counts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cum_counts</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">split_names</span><span class="p">):</span>
-        <span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">start</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">end</span><span class="p">))))</span>
-        <span class="n">split_files</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">file_list</span><span class="p">[</span><span class="n">indices</span><span class="p">[</span><span class="n">name</span><span class="p">]])</span>
-
-    <span class="k">return</span> <span class="n">split_files</span></div>
-
-
-<div class="viewcode-block" id="make_gaps"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.make_gaps">[docs]</a><span class="k">def</span> <span class="nf">make_gaps</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">gap_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<div class="viewcode-block" id="make_gaps"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.make_gaps">[docs]</a><span class="k">def</span> <span class="nf">make_gaps</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+              <span class="n">gap_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+              <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
               <span class="n">start_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
               <span class="n">stop_seconds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">"""[summary]</span>
@@ -536,36 +487,36 @@
 <span class="sd">    """</span>
     <span class="n">y0</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="n">gap_halfwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">gap_seconds</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">gap_halfwidth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">gap_seconds</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
     <span class="c1"># widen gaps between adjacent syllables of different types</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-    <span class="n">label_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">label_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="c1"># remove on and offsets (0-&gt;label or label-&gt;0)</span>
-    <span class="n">onset</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">label_change</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span>
-    <span class="n">offset</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">label_change</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span>
+    <span class="n">onset</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">label_change</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">label_change</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
     <span class="n">neither_on_nor_off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="o">~</span><span class="n">onset</span><span class="p">,</span> <span class="o">~</span><span class="n">offset</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">neither_on_nor_off</span><span class="p">):</span>
         <span class="n">label_change</span> <span class="o">=</span> <span class="n">label_change</span><span class="p">[</span><span class="n">neither_on_nor_off</span><span class="p">]</span>
 
         <span class="c1"># introduce gap around label changes for adjacent syllables</span>
-        <span class="k">for</span> <span class="n">gap_offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">gap_halfwidth</span><span class="p">,</span><span class="n">gap_halfwidth</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">y</span><span class="p">[</span><span class="n">label_change</span><span class="o">+</span><span class="n">gap_offset</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">gap_offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="n">gap_halfwidth</span><span class="p">,</span> <span class="n">gap_halfwidth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">label_change</span> <span class="o">+</span> <span class="n">gap_offset</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># one-hot-encode gapped labels</span>
     <span class="n">y0</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">y0</span><span class="p">[</span><span class="n">y</span><span class="o">==</span><span class="n">label</span><span class="p">,</span> <span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">y0</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="n">label</span><span class="p">,</span> <span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># widen gaps between syllables of same type</span>
     <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y0</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">label_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y0</span><span class="p">[:,</span> <span class="n">label</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">label_change</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y0</span><span class="p">[:,</span> <span class="n">label</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">onset</span> <span class="o">=</span> <span class="n">y0</span><span class="p">[</span><span class="n">label_change</span><span class="p">,</span> <span class="n">label</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-        <span class="n">offset</span> <span class="o">=</span> <span class="n">y0</span><span class="p">[</span><span class="n">label_change</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">y0</span><span class="p">[</span><span class="n">label_change</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
 
         <span class="c1"># there is no gap before the first syll starts and after the last syll ends so ignore those</span>
         <span class="n">gap_onsets</span> <span class="o">=</span> <span class="n">label_change</span><span class="p">[</span><span class="n">onset</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
@@ -581,9 +532,10 @@
         <span class="n">gaps</span> <span class="o">=</span> <span class="n">gap_onsets</span> <span class="o">-</span> <span class="n">gap_offsets</span>
 
         <span class="k">for</span> <span class="n">gap</span><span class="p">,</span> <span class="n">gap_onset</span><span class="p">,</span> <span class="n">gap_offset</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gaps</span><span class="p">,</span> <span class="n">gap_onsets</span><span class="p">,</span> <span class="n">gap_offsets</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">gap</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">gap_halfwidth</span><span class="p">:</span>
-                <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gap_offset</span> <span class="o">+</span> <span class="n">gap</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-                <span class="n">y0</span><span class="p">[</span><span class="n">midpoint</span> <span class="o">-</span> <span class="n">gap_halfwidth</span><span class="p">:</span><span class="n">midpoint</span> <span class="o">+</span> <span class="n">gap_halfwidth</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">gap</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">gap_halfwidth</span><span class="p">:</span>
+                <span class="n">midpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">gap_offset</span> <span class="o">+</span> <span class="n">gap</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">y0</span><span class="p">[</span><span class="n">midpoint</span> <span class="o">-</span> <span class="n">gap_halfwidth</span><span class="p">:</span><span class="n">midpoint</span> <span class="o">+</span> <span class="n">gap_halfwidth</span> <span class="o">+</span>
+                   <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c1"># ensure gaps exist even when same-type segments touch</span>
     <span class="k">if</span> <span class="n">start_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">stop_seconds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -596,7 +548,8 @@
     <span class="k">return</span> <span class="n">y0</span></div>
 
 
-<div class="viewcode-block" id="blur_events"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.blur_events">[docs]</a><span class="k">def</span> <span class="nf">blur_events</span><span class="p">(</span><span class="n">event_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">event_std_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="blur_events"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.blur_events">[docs]</a><span class="k">def</span> <span class="nf">blur_events</span><span class="p">(</span><span class="n">event_trace</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">event_std_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">"""Blur event trace with a gaussian.</span>
 
 <span class="sd">    Args:</span>
@@ -608,8 +561,11 @@
 <span class="sd">        np.ndarray: blurred event trace</span>
 <span class="sd">    """</span>
     <span class="n">event_std_samples</span> <span class="o">=</span> <span class="n">event_std_seconds</span> <span class="o">*</span> <span class="n">samplerate</span>
-    <span class="n">win</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">event_std_samples</span> <span class="o">*</span> <span class="mi">8</span><span class="p">),</span> <span class="n">std</span><span class="o">=</span><span class="n">event_std_samples</span><span class="p">)</span>
-    <span class="n">event_trace</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">event_trace</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">win</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span>
+    <span class="n">win</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">event_std_samples</span> <span class="o">*</span> <span class="mi">8</span><span class="p">),</span>
+                                <span class="n">std</span><span class="o">=</span><span class="n">event_std_samples</span><span class="p">)</span>
+    <span class="n">event_trace</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">event_trace</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span>
+                                        <span class="n">win</span><span class="p">,</span>
+                                        <span class="n">mode</span><span class="o">=</span><span class="s1">'same'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">event_trace</span></div>
 </pre></div>
         </article>

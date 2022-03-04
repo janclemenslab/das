@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.tracking - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -255,23 +258,13 @@
           <h1>Source code for das.tracking</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Utilities for logging training runs.</span>
 
-<span class="sd">We currenlty have integrations for `tensorboard &lt;https://www.tensorflow.org/tensorboard&gt;`_, `wandb.ai &lt;https://wandb.ai&gt;`_, and `neptune.ai &lt;https://neptune.ai&gt;`_.</span>
-<span class="sd">While tensorboard is integrated with tensorflow. To use wandb and neptune you'll</span>
-<span class="sd">have to install the respective APIs.</span>
+<span class="sd">We currenlty have integrations for `tensorboard &lt;https://www.tensorflow.org/tensorboard&gt;`_, and `wandb.ai &lt;https://wandb.ai&gt;`_.</span>
+<span class="sd">While tensorboard is integrated with tensorflow. To use wandb you'll have to install the wandb API:</span>
+<span class="sd">"pip install wandb" or "conda install wandb -c conda-forge".</span>
 <span class="sd">"""</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
-
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">neptune.new</span> <span class="k">as</span> <span class="nn">neptune</span>
-    <span class="kn">from</span> <span class="nn">neptune.new.integrations.tensorflow_keras</span> <span class="kn">import</span> <span class="n">NeptuneCallback</span>
-    <span class="n">HAS_NEPTUNE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="c1"># logging.exception('Could not import neptune libraries.')</span>
-    <span class="n">HAS_NEPTUNE</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">HAS_NEPTUNE</span> <span class="o">=</span> <span class="kc">True</span>
 
 
 <span class="k">try</span><span class="p">:</span>
@@ -282,57 +275,6 @@
     <span class="c1"># logging.exception('Could not import neptune libraries.')</span>
     <span class="n">HAS_WANDB</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">HAS_WANDB</span> <span class="o">=</span> <span class="kc">True</span>
-
-
-<div class="viewcode-block" id="Neptune"><a class="viewcode-back" href="../../api/das.tracking.html#das.tracking.Neptune">[docs]</a><span class="k">class</span> <span class="nc">Neptune</span><span class="p">():</span>
-    <span class="sd">"""Utility class for logging to neptune.ai during training."""</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">api_token</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">infer_from_env</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-        <span class="sd">"""</span>
-<span class="sd">        Args:</span>
-<span class="sd">            project (Optional[str], optional): Project to log to. Defaults to None.</span>
-<span class="sd">            api_token (Optional[str], optional): Neptune api token. Defaults to None.</span>
-<span class="sd">            params (Optional[Dict], optional): Dict to log to `hyper-parameters`. Defaults to None.</span>
-<span class="sd">            infer_from_env (bool, optional): read project and api_token from environment variables</span>
-<span class="sd">                                             NEPTUNE_PROJECT and NEPTUNE_API_TOKEN.</span>
-<span class="sd">                                             Defaults to False.</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">HAS_NEPTUNE</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">'Could not import neptune in das.tracking.'</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">project</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">project</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'NEPTUNE_PROJECT'</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">api_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">api_token</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">'NEPTUNE_API_TOKEN'</span><span class="p">]</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">neptune</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">api_token</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">[</span><span class="s1">'hyper-parameters'</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
-
-        <span class="k">except</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">'Neptune stuff went wrong.'</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Neptune.callback"><a class="viewcode-back" href="../../api/das.tracking.html#das.tracking.Neptune.callback">[docs]</a>    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># -&gt; Optional[NeptuneCallback]:</span>
-        <span class="sd">"""Get callback for auto-logging from tensorfow/keras."""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">NeptuneCallback</span><span class="p">(</span><span class="n">run</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">base_namespace</span><span class="o">=</span><span class="s1">'metrics'</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="Neptune.log_test_results"><a class="viewcode-back" href="../../api/das.tracking.html#das.tracking.Neptune.log_test_results">[docs]</a>    <span class="k">def</span> <span class="nf">log_test_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">report</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
-        <span class="sd">"""Log final classification result from test data.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            report (Dict): dictionary containing the classification report.</span>
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">[</span><span class="s1">'classification_report'</span><span class="p">]</span> <span class="o">=</span> <span class="n">report</span></div></div>
 
 
 <div class="viewcode-block" id="Wandb"><a class="viewcode-back" href="../../api/das.tracking.html#das.tracking.Wandb">[docs]</a><span class="k">class</span> <span class="nc">Wandb</span><span class="p">():</span>
@@ -365,7 +307,8 @@
             <span class="n">wandb</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">api_token</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">entity</span> <span class="o">=</span> <span class="n">entity</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">entity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span> <span class="o">=</span> <span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="n">entity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entity</span><span class="p">,</span>
+                                  <span class="n">settings</span><span class="o">=</span><span class="n">wandb</span><span class="o">.</span><span class="n">Settings</span><span class="p">(</span><span class="n">start_method</span><span class="o">=</span><span class="s2">"fork"</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">wandb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>

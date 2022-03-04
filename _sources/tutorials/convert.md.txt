@@ -1,11 +1,11 @@
 # Convert your own annotations and audio data
-If you start from scratch---with non-annotated audio recording---use the GUI. See the [GUI tutorial](/tutorials_gui/tutorials_gui) for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training...
+If you start from scratch---with non-annotated audio recording---use the GUI for labelling the data. See the [GUI tutorial](/tutorials_gui/tutorials_gui) for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training.
 
-However, often annotations exist, from old manual annotations or produced by other tools. _DAS_ can be used with existing annotations, by converting the existing annotations into the das format.
+However, often annotations exist, from old manual annotations or other tools. You can use existing annotations to train _DAS_, by converting the existing annotations into the _DAS_ format. See [here](/technical/data_formats).
 
 If audio data is in a format supported by das (see [here](/tutorials_gui/load)), open in GUI and export to a folder. For processing large sets of recordings use the [notebook](make_ds_notebook).
 
-
+<!--
 ## Format of exported annotations and audio
 Produced by the GUI via `File/Save annotations` and `File/Export for DAS`.
 
@@ -17,7 +17,7 @@ Audio and annotations are exported into `csv` (comma-separated values) and `npz`
     + `name` - the name of the song or syllable type
     + `start_seconds` - the start time of the syllable.
     + `stop_seconds` - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
-    + Each row in the file contains to a single annotation with `name`, `start_seconds` and `stop_seconds`. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, `start_seconds` is `np.nan` and an arbitrary stop_seconds. For event-like types (song pulses), both `start_seconds` and `stop_seconds` are `np.nan`.
+    + Each row in the file contains to a single annotation with `name`, `start_seconds` and `stop_seconds`. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, `start_seconds` is `np.nan` and an arbitrary stop_seconds. For event-like types (song pulses), both `start_seconds` and `stop_seconds` are `np.nan`. -->
 
 
 <!--
@@ -31,7 +31,7 @@ There are two types of song elements:
 - `events` have not extent in time, `start_seconds=stop_seconds`, and are best used for brief, pulsatile signals like fly pulse song
 - `segments` extend in time, `start_seconds>stop_seconds`, and should be used for normal syllables or fly sine song -->
 
-The `csv` format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created `csv` files from your own annotation format in python using a [pandas DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html). Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a `csv` file for use with _DAS_.
+<!-- The `csv` format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created `csv` files from your own annotation format in python using a [pandas DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html). Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a `csv` file for use with _DAS_.
 
 
 ### Examples of transforming custom annotation formats
@@ -102,9 +102,9 @@ To assemble a dataset, audio data has to be provided in two formats:
     - From python `scipy.io.wavfile.write(...)`
     - from matlab `wavwrite(...)`
     - from the command line via ffmpeg: `ffmpeg ...`
-- `npz`: Python-specific but a bit more flexible/robust. Should contain two variables - `samplerate` and `data` - and can be created like so: `np.savez(filename, data=audio, samplerate=samplerate)`
+- `npz`: Python-specific but a bit more flexible/robust. Should contain two variables - `samplerate` and `data` - and can be created like so: `np.savez(filename, data=audio, samplerate=samplerate)` -->
 
-
+<!--
 ```{warning}
 Clipping can occur when saving certain data types as wav files. see docs of [scipy.io.wavfile.write](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html) for a list of the range of values available when saving audio of different types to wav.
-```
+``` -->

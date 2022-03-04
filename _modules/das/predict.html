@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.predict - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +199,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +208,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -262,9 +265,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">event_utils</span><span class="p">,</span> <span class="n">segment_utils</span><span class="p">,</span> <span class="n">annot</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
-
-<span class="kn">from</span> <span class="nn">tensorflow.python.framework.ops</span> <span class="kn">import</span> <span class="n">disable_eager_execution</span>
-<span class="n">disable_eager_execution</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 
 
 <div class="viewcode-block" id="predict_probabililties"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_probabililties">[docs]</a><span class="k">def</span> <span class="nf">predict_probabililties</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
@@ -291,7 +292,7 @@
     <span class="k">return</span> <span class="n">y_pred</span></div>
 
 
-<div class="viewcode-block" id="labels_from_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.labels_from_probabilities">[docs]</a><span class="k">def</span> <span class="nf">labels_from_probabilities</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="labels_from_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.labels_from_probabilities">[docs]</a><span class="k">def</span> <span class="nf">labels_from_probabilities</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">"""Convert class-wise probabilities into labels.</span>
 
 <span class="sd">    Args:</span>
@@ -341,13 +342,15 @@
 <span class="sd">        segment_dims (Optional[List[int]], optional): set of indices into class_probabilities corresponding</span>
 <span class="sd">                                                      to segment-like song types.</span>
 <span class="sd">                                                      Needs to include the noise dim.</span>
-<span class="sd">                                                      Defaults to None.</span>
-<span class="sd">        segment_names (Optional[List[str]], optional): [description]. Defaults to None.</span>
+<span class="sd">                                                      Required to ignore event-like song types.</span>
+<span class="sd">                                                      Defaults to None (all classes are considered segment-like).</span>
+<span class="sd">        segment_names (Optional[List[str]], optional): Names for segment-like classes.</span>
+<span class="sd">                                                       Defaults to None (use indices of segment-like classes).</span>
 <span class="sd">        segment_ref_onsets (Optional[List[float]], optional):</span>
-<span class="sd">                            Use onsets (in seconds) as ref for estimating labels.</span>
+<span class="sd">                            Syllable onsets (in seconds) to use for estimating labels.</span>
 <span class="sd">                            Defaults to None (will use onsets est from class_probabilitieslabels as ref).</span>
 <span class="sd">        segment_ref_offsets (Optional[List[float]], optional): [description].</span>
-<span class="sd">                            Use offsets (in seconds) as ref for estimating labels.</span>
+<span class="sd">                            Syllable offsets (in seconds) to use for estimating labels.</span>
 <span class="sd">                            Defaults to None (will use offsets est from class_probabilitieslabels as ref).</span>
 <span class="sd">        segment_thres (float, optional): [description]. Defaults to 0.5.</span>
 <span class="sd">        segment_minlen (Optional[float], optional): seconds. Defaults to None.</span>
@@ -359,7 +362,6 @@
 <span class="sd">    """</span>
 
     <span class="n">probs_are_labels</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
-
     <span class="k">if</span> <span class="n">segment_dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">probs_are_labels</span><span class="p">:</span>  <span class="c1"># class_probabilities is [T, nb_classes]</span>
             <span class="n">nb_classes</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -508,8 +510,8 @@
             <span class="n">model</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
             <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">pad</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     <span class="sd">"""[summary]</span>
 
@@ -548,8 +550,13 @@
 <span class="sd">                                Defaults to None (no upper limit).</span>
 
 <span class="sd">        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.</span>
+<span class="sd">        segment_use_optimized (bool): Use minlen and fillgap values from param file if they exist.</span>
+<span class="sd">                                      If segment_minlen and segment_fillgap are provided,</span>
+<span class="sd">                                      then they will override the values from the param file.</span>
+<span class="sd">                                      Defaults to True.</span>
 <span class="sd">        segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.</span>
 <span class="sd">        segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.</span>
+
 <span class="sd">        pad (bool): prepend values (repeat last sample value) to fill the last batch. Otherwise, the end of the data will not be annotated because</span>
 <span class="sd">                    the last, non-full batch will be skipped.</span>
 <span class="sd">        prepend_data_padding (bool, optional): Restores samples that are ignored</span>
@@ -570,6 +577,13 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+    <span class="c1"># use postprocessing values from params and/or args</span>
+    <span class="k">if</span> <span class="n">segment_use_optimized</span> <span class="ow">and</span> <span class="s1">'post_opt'</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'post_opt'</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">segment_minlen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">segment_minlen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'post_opt'</span><span class="p">][</span><span class="s1">'min_len'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">segment_fillgap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">segment_fillgap</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">'post_opt'</span><span class="p">][</span><span class="s1">'gap_dur'</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">params</span><span class="p">[</span><span class="s1">'batch_size'</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_size</span>
@@ -597,27 +611,33 @@
     <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span> <span class="nf">cli_predict</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                <span class="n">save_filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'h5'</span><span class="p">,</span>
+<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span> <span class="nf">cli_predict</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                <span class="n">save_filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">save_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'csv'</span><span class="p">,</span>
                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
                 <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">"""Predict song labels in a wav file.</span>
+                <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">"""Predict song labels for a wav file or a folder of wav files.</span>
 
-<span class="sd">    Saves hdf5 file with keys: events, segments, class_probabilities</span>
+<span class="sd">    Saves hdf5 files with keys: events, segments, class_probabilities</span>
+<span class="sd">    OR csv files with columns: label/start_seconds/stop_seconds</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        recording_filename (str): Path to the WAV file with the audio data.</span>
+<span class="sd">        path (str): Path to a single WAV file with the audio data or to a folder with WAV files.</span>
 <span class="sd">        model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.</span>
 <span class="sd">        save_filename (Optional[str]): Path to save annotations to.</span>
 <span class="sd">                                       If omitted, will construct save_filename by</span>
 <span class="sd">                                       stripping the extension from recording_filename and adding '_das.h5' or '_annotations.csv'.</span>
-<span class="sd">        save_format (str): 'csv' or 'h5'. Defaults to 'h5'.</span>
+<span class="sd">                                       Will be ignored if `path` is a folder.</span>
+<span class="sd">        save_format (str): 'csv' or 'h5'.</span>
+<span class="sd">                           csv: tabular text file with label, start and end seconds for each predicted song.</span>
+<span class="sd">                           h5: same information as in csv plus confidence values for each sample and song type.</span>
+<span class="sd">                           Defaults to 'csv'.</span>
 <span class="sd">        verbose (int): Display progress bar during prediction. Defaults to 1.</span>
 <span class="sd">        batch_size (Optional[int]): Number of chunks processed at once.</span>
 <span class="sd">                                    Defaults to None (the default used during training).</span>
+
 <span class="sd">        event_thres (float): Confidence threshold for detecting events. Range 0..1. Defaults to 0.5.</span>
 <span class="sd">        event_dist (float): Minimal distance between adjacent events during thresholding.</span>
 <span class="sd">                            Prevents detecting duplicate events when the confidence trace is a little noisy.</span>
@@ -626,7 +646,12 @@
 <span class="sd">                                Defaults to 0.</span>
 <span class="sd">        event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.</span>
 <span class="sd">                                          Defaults to None (no upper limit).</span>
+
 <span class="sd">        segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.</span>
+<span class="sd">        segment_use_optimized (Optional[bool]): Use minlen and fillgap values from param file if they exist.</span>
+<span class="sd">                                      If segment_minlen and segment_fillgap are provided,</span>
+<span class="sd">                                      then they will override the values from the param file.</span>
+<span class="sd">                                      Defaults to True.</span>
 <span class="sd">        segment_minlen (Optional[float]): Minimal duration of a segment used for filtering out spurious detections.</span>
 <span class="sd">                                          Defaults to None (keep all segments).</span>
 <span class="sd">        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.</span>
@@ -638,36 +663,57 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">save_format</span> <span class="o">==</span> <span class="s1">'csv'</span> <span class="ow">or</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">'h5'</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unknown save_format '</span><span class="si">{</span><span class="n">save_format</span><span class="si">}</span><span class="s2">'. Should be either 'csv' or 'h5'."</span><span class="p">)</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Loading data from </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> is a folder. Will ignore save_filename argument </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Annotating using model at </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model_save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span>
-                                                    <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                                                    <span class="n">event_thres</span><span class="p">,</span> <span class="n">event_dist</span><span class="p">,</span> <span class="n">event_dist_min</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">,</span>
-                                                    <span class="n">segment_thres</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="p">)</span>
+    <span class="c1"># if path is folder: glob contents - all files</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/*.wav'</span><span class="p">)</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">filename</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
-    <span class="k">if</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">'h5'</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
-            <span class="s1">'segments'</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
-            <span class="s1">'class_probabilities'</span><span class="p">:</span> <span class="n">class_probabilities</span><span class="p">,</span>
-            <span class="s1">'class_names'</span><span class="p">:</span> <span class="n">class_names</span><span class="p">}</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'_das.h5'</span>
+    <span class="k">for</span> <span class="n">recording_filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Loading data from </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># else if path is file - predict only on file but make it single-item list</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-        <span class="n">flammkuchen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done."</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Annotating using model at </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+            <span class="c1"># TODO: load model once, provide as direct arg</span>
+            <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span>
+                                                            <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
+                                                            <span class="n">event_thres</span><span class="p">,</span> <span class="n">event_dist</span><span class="p">,</span> <span class="n">event_dist_min</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">,</span>
+                                                            <span class="n">segment_thres</span><span class="p">,</span> <span class="n">segment_use_optimized</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">'csv'</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">annot</span><span class="o">.</span><span class="n">Events</span><span class="o">.</span><span class="n">from_predict</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'_annotations.csv'</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_filename</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done."</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">'h5'</span><span class="p">:</span>
+                <span class="c1"># turn events and segments into df!</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'events'</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
+                    <span class="s1">'segments'</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
+                    <span class="s1">'class_probabilities'</span><span class="p">:</span> <span class="n">class_probabilities</span><span class="p">,</span>
+                    <span class="s1">'class_names'</span><span class="p">:</span> <span class="n">class_names</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'_das.h5'</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+                <span class="n">flammkuchen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done."</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">'csv'</span><span class="p">:</span>
+                <span class="n">evt</span> <span class="o">=</span> <span class="n">annot</span><span class="o">.</span><span class="n">Events</span><span class="o">.</span><span class="n">from_predict</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'_annotations.csv'</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
+                <span class="n">evt</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_filename</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Done."</span><span class="p">)</span>
+
+            <span class="c1"># reset</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+                <span class="n">save_filename</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Error processing file </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span></div>
+
 </pre></div>
         </article>
       </div>

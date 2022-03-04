@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.filterbank" href="das.kapre.filterbank.html" /><link rel="prev" title="das.kapre.backend" href="das.kapre.backend.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.filterbank" href="das.kapre.filterbank.html" /><link rel="prev" title="das.kapre.backend" href="das.kapre.backend.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.kapre.backend_keras - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
@@ -252,11 +256,11 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-das.kapre.backend_keras">
+          <section id="module-das.kapre.backend_keras">
 <span id="das-kapre-backend-keras"></span><h1>das.kapre.backend_keras<a class="headerlink" href="#module-das.kapre.backend_keras" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.backend_keras.amplitude_to_decibel">
-<span class="sig-prename descclassname"><span class="pre">das.kapre.backend_keras.</span></span><span class="sig-name descname"><span class="pre">amplitude_to_decibel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_range</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">80.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend_keras.html#amplitude_to_decibel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend_keras.amplitude_to_decibel" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.kapre.backend_keras.</span></span><span class="sig-name descname"><span class="pre">amplitude_to_decibel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">amin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dynamic_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">80.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend_keras.html#amplitude_to_decibel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend_keras.amplitude_to_decibel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert (linear) amplitude to decibel (log10(x)).</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">[</span><span class="n">x</span><span class="o">&lt;</span><span class="n">amin</span><span class="p">]</span> <span class="o">=</span> <span class="n">amin</span>  <span class="c1"># clip everythin below amin</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># log transform</span>
@@ -279,7 +283,7 @@
 </dd>
 </dl>
 </dd></dl>
-</div>
+</section>
 
         </article>
       </div>

@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developer API" href="../api.html" /><link rel="prev" title="Command line interfaces" href="cli.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developer API" href="../api.html" /><link rel="prev" title="Command line interfaces" href="cli.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>Data formats - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -252,12 +256,11 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="data-formats">
+          <section class="tex2jax_ignore mathjax_ignore" id="data-formats">
 <h1>Data formats<a class="headerlink" href="#data-formats" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="format-of-exported-annotations-and-audio">
-<h2>Format of exported annotations and audio<a class="headerlink" href="#format-of-exported-annotations-and-audio" title="Permalink to this headline">¶</a></h2>
-<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
-<p>Annotations are exported to <code class="docutils literal notranslate"><span class="pre">csv</span></code> (comma-separated values) and audio data to <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files) or <code class="docutils literal notranslate"><span class="pre">wav</span></code> (wave audio file):</p>
+<section id="audio">
+<h2>Audio<a class="headerlink" href="#audio" title="Permalink to this headline">¶</a></h2>
+<p><em>DAS</em> can read many audio formats and even binary data. Audio is exported data to <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files) or <code class="docutils literal notranslate"><span class="pre">wav</span></code> (wave audio file):</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">.npz</span></code> consist of two variables:</p>
 <ul>
@@ -265,17 +268,33 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">samplerate</span></code>: <code class="docutils literal notranslate"><span class="pre">[1,]</span></code> array with the sample rate in Hz</p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> contains three columns:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> - the name of the song or syllable type</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> - the start time of the syllable.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.</p></li>
-<li><p>Each row in the file contains to a single annotation with <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> and an arbitrary stop_seconds. For event-like types (song pulses), both <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> are <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p></li>
 </ul>
-</li>
-</ul>
+<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Clipping can occur when saving certain data types as wav files. see docs of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy.io.wavfile.write</a> for a list of the range of values available when saving audio of different types to wav.</p>
 </div>
-<div class="section" id="data-structure-used-for-training">
+</section>
+<section id="annotations">
+<h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">¶</a></h2>
+<p>File should end in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> contains three columns:
++ <code class="docutils literal notranslate"><span class="pre">name</span></code> - the name of the song or syllable type
++ <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> - the start time of the syllable.
++ <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
++ Each row in the file contains to a single annotation with <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> and an arbitrary stop_seconds. For event-like types (song pulses), both <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> are <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p>
+<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
+</section>
+<section id="song-definitions">
+<h2>Song definitions<a class="headerlink" href="#song-definitions" title="Permalink to this headline">¶</a></h2>
+<p>File should end in <code class="docutils literal notranslate"><span class="pre">_definitions.csv</span></code> . Text file with song definitions, one per row. Name of the song type and category (segment, event), separated by a comma. For instance, the following file defines three song types:</p>
+<div class="highlight-csv notranslate"><div class="highlight"><pre><span></span>whip,segment
+whop,segment
+tick,event
+</pre></div>
+</div>
+<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code>.</p>
+</section>
+<section id="data-structure-used-for-training">
 <h2>Data structure used for training<a class="headerlink" href="#data-structure-used-for-training" title="Permalink to this headline">¶</a></h2>
 <p>For training, <em>DAS</em> expects a simple dictionary-like data structure, sth like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data
@@ -338,8 +357,8 @@
 <li><p>directories ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.save.html">numpy</a> files.</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">zarr</span></code> is great for assembling and storing datasets, in particular for datasets with unknown final size since it allows appending to arrays, and is used as an intermediate storage during dataset assembly. For training, <code class="docutils literal notranslate"><span class="pre">npy</span></code> is the fastest, in particular for random access of datasets that are too large to fit in memory, thanks to highly efficient memory mapping.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>
@@ -395,7 +414,9 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Data formats</a><ul>
-<li><a class="reference internal" href="#format-of-exported-annotations-and-audio">Format of exported annotations and audio</a></li>
+<li><a class="reference internal" href="#audio">Audio</a></li>
+<li><a class="reference internal" href="#annotations">Annotations</a></li>
+<li><a class="reference internal" href="#song-definitions">Song definitions</a></li>
 <li><a class="reference internal" href="#data-structure-used-for-training">Data structure used for training</a></li>
 </ul>
 </li>

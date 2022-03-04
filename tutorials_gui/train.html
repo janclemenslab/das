@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Annotate song" href="annotate.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Annotate song" href="annotate.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>Train - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -252,21 +256,23 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="train">
+          <section class="tex2jax_ignore mathjax_ignore" id="train">
 <h1>Train<a class="headerlink" href="#train" title="Permalink to this headline">¶</a></h1>
 <p>Training a network involves two steps:</p>
 <ol class="simple">
 <li><p>Make a dataset from exported annotations.</p></li>
 <li><p>Configure and train a network.</p></li>
 </ol>
-<div class="section" id="make-a-dataset-from-exported-annotations">
+<section id="make-a-dataset-from-exported-annotations">
 <h2>Make a dataset from exported annotations<a class="headerlink" href="#make-a-dataset-from-exported-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Training requires data in a specific format in which the audio is split into different parts for use during training to optimize the network and after training to evaluate network performance. The GUI automates the generation of these datasets from audio annotated using the GUI. Alternatively, you can also <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">use your existing annotations</span></a> or <a class="reference internal" href="../tutorials/make_ds_notebook.html"><span class="doc std std-doc">make a dataset yourself</span></a>. For details on the data format itself, see <a class="reference external" href="data_formats.html#dataset-for-training">here</a>.</p>
 <p>In the GUI, make a dataset via <em>DAS/Make dataset for training</em>. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:</p>
-<div class="figure align-default" id="xb-assemble-fig">
+<figure class="align-default" id="xb-assemble-fig">
 <a class="reference internal image-reference" href="../_images/xb_assemble.png"><img alt="assemble dataset" src="../_images/xb_assemble.png" style="width: 650px;"/></a>
-<p class="caption"><span class="caption-text">Dialog for customizing a dataset for training.</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Dialog for customizing a dataset for training.</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <ul class="simple">
 <li><p><em>Data folder</em> &amp; <em>Store folder</em>: The data folder contains your exported annotations (annotations as <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code>, audio as <code class="docutils literal notranslate"><span class="pre">*.npz</span></code> or <code class="docutils literal notranslate"><span class="pre">*.wav</span></code>). From these annotations, the dataset will be created and save in the store folder. By default, the store folder is the data folder with <code class="docutils literal notranslate"><span class="pre">.npy</span></code> appended. <em>Important: You can change the name of the store folder but the data folder must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> for DAS to recognize the dataset.</em></p></li>
 <li><p><em>Make individual training targets</em>: By default, the dataset will contain targets for a single network that recognizes all annotated song types. To be able to train a network for specific song types, enable this option. Training specific networks for individual song types, instead of a single network for all song types, can sometimes improve performance.</p></li>
@@ -291,14 +297,16 @@
 <p class="admonition-title">Note</p>
 <p>The dataset can be inspected using the <a class="reference internal" href="../tutorials/inspect_dataset.html"><span class="doc std std-doc">inspect_dataset notebook</span></a> if you are curious or if training fails.</p>
 </div>
-</div>
-<div class="section" id="train-das-using-the-gui">
+</section>
+<section id="train-das-using-the-gui">
 <h2>Train DAS using the GUI<a class="headerlink" href="#train-das-using-the-gui" title="Permalink to this headline">¶</a></h2>
 <p>Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> that you just created. Then, a dialog will allow you to customize the network to be trained.</p>
-<div class="figure align-default" id="xb-train-fig">
+<figure class="align-default" id="xb-train-fig">
 <a class="reference internal image-reference" href="../_images/xb_train.png"><img alt="train" src="../_images/xb_train.png" style="width: 600px;"/></a>
-<p class="caption"><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>Options are grouped into three sections:</p>
 <p><strong>Data set</strong>:</p>
 <ul class="simple">
@@ -331,7 +339,7 @@
 <li><p><em>Create tensorboard logs</em>: Create tensorboard logs for monitoring training.</p></li>
 </ul>
 <p>Training can be started locally in a separate process or a script can be generated for training on the command line, for instance on a cluster.</p>
-<div class="section" id="train-from-the-command-line">
+<section id="train-from-the-command-line">
 <h3>Train from the command line<a class="headerlink" href="#train-from-the-command-line" title="Permalink to this headline">¶</a></h3>
 <p>The datasets are portable—you can copy the folder with the dataset to another computer with a GPU and run training from the GUI there. If that machine cannot be used with a GUI—for instance if it’s a linux server, the training and network configuration can be exported via the dialog as a command line script and executed via a terminal.</p>
 <p>The script uses the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for training <em>DAS</em> (see also <a class="reference internal" href="../tutorials/train.html"><span class="doc std std-doc">train using command-line scripts</span></a>) and its contents will look like this:</p>
@@ -345,9 +353,9 @@
 <li><p>Add a line to activate a specific conda environment before running <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. For instance, <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">das</span></code>.</p></li>
 <li><p>Activate linux modules, for instance to enable CUDA; or specify parameters for your job scheduler.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="files-generated-during-training">
+</section>
+</section>
+<section id="files-generated-during-training">
 <h2>Files generated during training<a class="headerlink" href="#files-generated-during-training" title="Permalink to this headline">¶</a></h2>
 <p>The following files will be created in the <em>save folder</em>:</p>
 <ul class="simple">
@@ -356,8 +364,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">_results.h5</span></code>: results form the test data set.</p></li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> are required for using the network for predictions and need to be copied to your local machine if you train remotely.</p>
-</div>
-</div>
+</section>
+</section>
 
         </article>
       </div>

@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="#" /><link rel="search" title="Search" href="search.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/><title>Index - DAS documentation</title>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/><title>Index - DAS documentation</title>
 <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
@@ -198,6 +198,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.evaluate.html">das.evaluate</a></li>
@@ -206,7 +207,9 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
@@ -292,6 +295,10 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.utils_plot.html#das.utils_plot.bar_text">bar_text() (in module das.utils_plot)</a>
 </li>
+        <li><a href="api/das.block_stratify.html#das.block_stratify.blockstats_from_data">blockstats_from_data() (in module das.block_stratify)</a>
+</li>
+        <li><a href="api/das.block_stratify.html#das.block_stratify.blockstats_from_files">blockstats_from_files() (in module das.block_stratify)</a>
+</li>
         <li><a href="api/das.make_dataset.html#das.make_dataset.blur_events">blur_events() (in module das.make_dataset)</a>
 </li>
         <li><a href="api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.build">build() (das.kapre.filterbank.Filterbank method)</a>
@@ -334,12 +341,8 @@
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.TCN.call">(das.tcn.tcn_new.TCN method)</a>
 </li>
         </ul></li>
-        <li><a href="api/das.tracking.html#das.tracking.Neptune.callback">callback() (das.tracking.Neptune method)</a>
-
-        <ul>
-          <li><a href="api/das.tracking.html#das.tracking.Wandb.callback">(das.tracking.Wandb method)</a>
+        <li><a href="api/das.tracking.html#das.tracking.Wandb.callback">callback() (das.tracking.Wandb method)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.center_of_mass">center_of_mass() (in module das.pulse_utils)</a>
 </li>
         <li><a href="api/das.tcn.tcn.html#das.tcn.tcn.channel_normalization">channel_normalization() (in module das.tcn.tcn)</a>
@@ -354,9 +357,9 @@
 </li>
         <li><a href="api/das.predict.html#das.predict.cli_predict">cli_predict() (in module das.predict)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.cnn">cnn() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.cnn">cnn() (in module das.models_legacy)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.cnn2D">cnn2D() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.cnn2D">cnn2D() (in module das.models_legacy)</a>
 </li>
         <li><a href="api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.compute_output_shape">compute_output_shape() (das.kapre.filterbank.Filterbank method)</a>
 
@@ -394,6 +397,13 @@
 
         <ul>
           <li><a href="api/das.augmentation.html#module-das.augmentation">module</a>
+</li>
+        </ul></li>
+        <li>
+    das.block_stratify
+
+        <ul>
+          <li><a href="api/das.block_stratify.html#module-das.block_stratify">module</a>
 </li>
         </ul></li>
         <li>
@@ -504,10 +514,24 @@
 </li>
         </ul></li>
         <li>
+    das.models_legacy
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#module-das.models_legacy">module</a>
+</li>
+        </ul></li>
+        <li>
     das.npy_dir
 
         <ul>
           <li><a href="api/das.npy_dir.html#module-das.npy_dir">module</a>
+</li>
+        </ul></li>
+        <li>
+    das.postprocessing
+
+        <ul>
+          <li><a href="api/das.postprocessing.html#module-das.postprocessing">module</a>
 </li>
         </ul></li>
         <li>
@@ -624,9 +648,9 @@
   <h2>F</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/das.models.html#das.models.fcn">fcn() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.fcn">fcn() (in module das.models_legacy)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.fcn2D">fcn2D() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.fcn2D">fcn2D() (in module das.models_legacy)</a>
 </li>
         <li><a href="api/das.segment_utils.html#das.segment_utils.fill_gaps">fill_gaps() (in module das.segment_utils)</a>
 </li>
@@ -660,10 +684,6 @@
 </li>
         <li><a href="api/das.utils_plot.html#das.utils_plot.generate_colors">generate_colors() (in module das.utils_plot)</a>
 </li>
-        <li><a href="api/das.make_dataset.html#das.make_dataset.generate_data_splits">generate_data_splits() (in module das.make_dataset)</a>
-</li>
-        <li><a href="api/das.make_dataset.html#das.make_dataset.generate_file_splits">generate_file_splits() (in module das.make_dataset)</a>
-</li>
         <li><a href="api/das.kapre.augmentation.html#das.kapre.augmentation.AdditiveNoise.get_config">get_config() (das.kapre.augmentation.AdditiveNoise method)</a>
 
         <ul>
@@ -685,6 +705,8 @@
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.get_pulseshapes">get_pulseshapes() (in module das.pulse_utils)</a>
 </li>
         <li><a href="api/das.kapre.backend.html#das.kapre.backend.get_stft_kernels">get_stft_kernels() (in module das.kapre.backend)</a>
+</li>
+        <li><a href="api/das.block_stratify.html#das.block_stratify.groupstats">groupstats() (in module das.block_stratify)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -738,10 +760,10 @@
           <li><a href="api/das.npy_dir.html#das.npy_dir.load">(in module das.npy_dir)</a>
 </li>
         </ul></li>
-        <li><a href="api/das.utils.html#das.utils.load_from">load_from() (in module das.utils)</a>
-</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/das.utils.html#das.utils.load_from">load_from() (in module das.utils)</a>
+</li>
         <li><a href="api/das.utils.html#das.utils.load_model">load_model() (in module das.utils)</a>
 </li>
         <li><a href="api/das.utils.html#das.utils.load_model_and_params">load_model_and_params() (in module das.utils)</a>
@@ -750,12 +772,8 @@
 </li>
         <li><a href="api/das.utils.html#das.utils.load_params">load_params() (in module das.utils)</a>
 </li>
-        <li><a href="api/das.tracking.html#das.tracking.Neptune.log_test_results">log_test_results() (das.tracking.Neptune method)</a>
-
-        <ul>
-          <li><a href="api/das.tracking.html#das.tracking.Wandb.log_test_results">(das.tracking.Wandb method)</a>
+        <li><a href="api/das.tracking.html#das.tracking.Wandb.log_test_results">log_test_results() (das.tracking.Wandb method)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.utils.html#das.utils.LossHistory">LossHistory (class in das.utils)</a>
 </li>
     </ul></td>
@@ -782,6 +800,8 @@
 </li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.Melspectrogram">Melspectrogram (class in das.kapre.time_frequency)</a>
 </li>
+        <li><a href="api/das.train_tune.html#das.train_tune.ModelParamsCheckpoint">ModelParamsCheckpoint (class in das.train_tune)</a>
+</li>
         <li>
     module
 
@@ -789,6 +809,8 @@
           <li><a href="api/das.annot.html#module-das.annot">das.annot</a>
 </li>
           <li><a href="api/das.augmentation.html#module-das.augmentation">das.augmentation</a>
+</li>
+          <li><a href="api/das.block_stratify.html#module-das.block_stratify">das.block_stratify</a>
 </li>
           <li><a href="api/das.cli.html#module-das.cli">das.cli</a>
 </li>
@@ -820,7 +842,11 @@
 </li>
           <li><a href="api/das.models.html#module-das.models">das.models</a>
 </li>
+          <li><a href="api/das.models_legacy.html#module-das.models_legacy">das.models_legacy</a>
+</li>
           <li><a href="api/das.npy_dir.html#module-das.npy_dir">das.npy_dir</a>
+</li>
+          <li><a href="api/das.postprocessing.html#module-das.postprocessing">das.postprocessing</a>
 </li>
           <li><a href="api/das.predict.html#module-das.predict">das.predict</a>
 </li>
@@ -855,19 +881,19 @@
   <h2>N</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/das.tracking.html#das.tracking.Neptune">Neptune (class in das.tracking)</a>
-</li>
         <li><a href="api/das.cli.html#das.cli.no_xb_gui">no_xb_gui() (in module das.cli)</a>
 </li>
         <li><a href="api/das.augmentation.html#das.augmentation.Normal">Normal (class in das.augmentation)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D">Normalization2D (class in das.kapre.utils)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.make_dataset.html#das.make_dataset.normalize_probabilities">normalize_probabilities() (in module das.make_dataset)</a>
 </li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">normalize_pulse() (in module das.pulse_utils)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.NotchFilter">NotchFilter (class in das.augmentation)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -904,6 +930,8 @@
 </li>
         </ul></li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_end">on_train_end() (das.utils.QtProgressCallback method)</a>
+</li>
+        <li><a href="api/das.postprocessing.html#das.postprocessing.optimize">optimize() (in module das.postprocessing)</a>
 </li>
         <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback">OracleCallback (class in das.train_tune)</a>
 </li>
@@ -1004,19 +1032,31 @@
 </li>
         </ul></li>
         <li><a href="api/das.models.html#das.models.tcn">tcn() (in module das.models)</a>
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn">(in module das.models_legacy)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.tcn_multi">tcn_multi() (in module das.models)</a>
+        </ul></li>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_multi">tcn_multi() (in module das.models_legacy)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.tcn_seq">tcn_seq() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_seq">tcn_seq() (in module das.models_legacy)</a>
 </li>
-        <li><a href="api/das.models.html#das.models.tcn_small">tcn_small() (in module das.models)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_small">tcn_small() (in module das.models_legacy)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.models.html#das.models.tcn_stft">tcn_stft() (in module das.models)</a>
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_stft">(in module das.models_legacy)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.models.html#das.models.tcn_tcn">tcn_tcn() (in module das.models)</a>
+
+        <ul>
+          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_tcn">(in module das.models_legacy)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.annot.html#das.annot.Events.to_dataset">to_dataset() (das.annot.Events method)</a>
 </li>
         <li><a href="api/das.annot.html#das.annot.Events.to_df">to_df() (das.annot.Events method)</a>

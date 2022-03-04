@@ -1,17 +1,35 @@
 # Data formats
 
-## Format of exported annotations and audio
-Produced by the GUI via `File/Save annotations` and `File/Export for DAS`.
-
-Annotations are exported to `csv` (comma-separated values) and audio data to `npz` (zip compressed numpy files) or `wav` (wave audio file):
+## Audio
+_DAS_ can read many audio formats and even binary data. Audio is exported data to `npz` (zip compressed numpy files) or `wav` (wave audio file):
 - `.npz` consist of two variables:
     + `data`: `[samples, channels]` array with the audio data
     + `samplerate`: `[1,]` array with the sample rate in Hz
-- `_annotations.csv` contains three columns:
+
+Produced by the GUI via `File/Export for DAS`.
+
+```{warning}
+Clipping can occur when saving certain data types as wav files. see docs of [scipy.io.wavfile.write](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html) for a list of the range of values available when saving audio of different types to wav.
+```
+
+## Annotations
+File should end in `_annotations.csv` contains three columns:
     + `name` - the name of the song or syllable type
     + `start_seconds` - the start time of the syllable.
     + `stop_seconds` - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
     + Each row in the file contains to a single annotation with `name`, `start_seconds` and `stop_seconds`. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, `start_seconds` is `np.nan` and an arbitrary stop_seconds. For event-like types (song pulses), both `start_seconds` and `stop_seconds` are `np.nan`.
+
+Produced by the GUI via `File/Save annotations` and `File/Export for DAS`.
+
+## Song definitions
+File should end in `_definitions.csv` . Text file with song definitions, one per row. Name of the song type and category (segment, event), separated by a comma. For instance, the following file defines three song types:
+```csv
+whip,segment
+whop,segment
+tick,event
+```
+
+Produced by the GUI via `File/Save annotations`.
 
 ## Data structure used for training
 For training, _DAS_ expects a simple dictionary-like data structure, sth like:

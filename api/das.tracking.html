@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.train" href="das.train.html" /><link rel="prev" title="das.segment_utils" href="das.segment_utils.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.train" href="das.train.html" /><link rel="prev" title="das.segment_utils" href="das.segment_utils.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>das.tracking - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -199,6 +200,7 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
@@ -252,47 +256,15 @@
           </label>
         </div>
         <article role="main">
-          <div class="section" id="module-das.tracking">
+          <section id="module-das.tracking">
 <span id="das-tracking"></span><h1>das.tracking<a class="headerlink" href="#module-das.tracking" title="Permalink to this headline">¶</a></h1>
 <p>Utilities for logging training runs.</p>
-<p>We currenlty have integrations for <a class="reference external" href="https://www.tensorflow.org/tensorboard">tensorboard</a>, <a class="reference external" href="https://wandb.ai">wandb.ai</a>, and <a class="reference external" href="https://neptune.ai">neptune.ai</a>.
-While tensorboard is integrated with tensorflow. To use wandb and neptune you’ll
-have to install the respective APIs.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="das.tracking.Neptune">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.tracking.</span></span><span class="sig-name descname"><span class="pre">Neptune</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Neptune"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Neptune" title="Permalink to this definition">¶</a></dt>
-<dd><p>Utility class for logging to neptune.ai during training.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Project to log to. Defaults to None.</p></li>
-<li><p><strong>api_token</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Neptune api token. Defaults to None.</p></li>
-<li><p><strong>params</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em><em>, </em><em>optional</em>) – Dict to log to <code class="xref py py-obj docutils literal notranslate"><span class="pre">hyper-parameters</span></code>. Defaults to None.</p></li>
-<li><p><strong>infer_from_env</strong> (<em>bool</em><em>, </em><em>optional</em>) – read project and api_token from environment variables
-NEPTUNE_PROJECT and NEPTUNE_API_TOKEN.
-Defaults to False.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="das.tracking.Neptune.callback">
-<span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Neptune.callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Neptune.callback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get callback for auto-logging from tensorfow/keras.</p>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="das.tracking.Neptune.log_test_results">
-<span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Neptune.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Neptune.log_test_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Log final classification result from test data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>report</strong> (<em>Dict</em>) – dictionary containing the classification report.</p>
-</dd>
-</dl>
-</dd></dl>
-</dd></dl>
+<p>We currenlty have integrations for <a class="reference external" href="https://www.tensorflow.org/tensorboard">tensorboard</a>, and <a class="reference external" href="https://wandb.ai">wandb.ai</a>.
+While tensorboard is integrated with tensorflow. To use wandb you’ll have to install the wandb API:
+“pip install wandb” or “conda install wandb -c conda-forge”.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.tracking.Wandb">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">das.tracking.</span></span><span class="sig-name descname"><span class="pre">Wandb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.tracking.</span></span><span class="sig-name descname"><span class="pre">Wandb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility class for logging to wandb.ai during training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -314,7 +286,7 @@ Defaults to False.</p></li>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tracking.Wandb.log_test_results">
-<span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb.log_test_results" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb.log_test_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log final classification result from test data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -323,7 +295,7 @@ Defaults to False.</p></li>
 </dl>
 </dd></dl>
 </dd></dl>
-</div>
+</section>
 
         </article>
       </div>

@@ -2,9 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Programming documentation" href="tutorials.html" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Programming documentation" href="tutorials.html" />
 
-    <meta name="generator" content="sphinx-4.0.3, furo 2021.10.09"/>
+    <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
         <title>Convert your own annotations and audio data - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
@@ -140,7 +141,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -199,6 +200,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.augmentation.html">das.augmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.block_stratify.html">das.block_stratify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data.html">das.data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.data_hash.html">das.data_hash</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.evaluate.html">das.evaluate</a></li>
@@ -207,7 +209,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.models.html">das.models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
@@ -246,37 +250,30 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <div class="section" id="convert-your-own-annotations-and-audio-data">
+          <section class="tex2jax_ignore mathjax_ignore" id="convert-your-own-annotations-and-audio-data">
 <h1>Convert your own annotations and audio data<a class="headerlink" href="#convert-your-own-annotations-and-audio-data" title="Permalink to this headline">¶</a></h1>
-<p>If you start from scratch—with non-annotated audio recording—use the GUI. See the <a class="reference internal" href="../tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">GUI tutorial</span></a> for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training…</p>
-<p>However, often annotations exist, from old manual annotations or produced by other tools. <em>DAS</em> can be used with existing annotations, by converting the existing annotations into the das format.</p>
+<p>If you start from scratch—with non-annotated audio recording—use the GUI for labelling the data. See the <a class="reference internal" href="../tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">GUI tutorial</span></a> for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training.</p>
+<p>However, often annotations exist, from old manual annotations or other tools. You can use existing annotations to train <em>DAS</em>, by converting the existing annotations into the <em>DAS</em> format. See <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a>.</p>
 <p>If audio data is in a format supported by das (see <a class="reference internal" href="../tutorials_gui/load.html"><span class="doc std std-doc">here</span></a>), open in GUI and export to a folder. For processing large sets of recordings use the <a class="reference internal" href="make_ds_notebook.html"><span class="doc std std-doc">notebook</span></a>.</p>
-<div class="section" id="format-of-exported-annotations-and-audio">
-<h2>Format of exported annotations and audio<a class="headerlink" href="#format-of-exported-annotations-and-audio" title="Permalink to this headline">¶</a></h2>
-<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
-<p>Audio and annotations are exported into <code class="docutils literal notranslate"><span class="pre">csv</span></code> (comma-separated values) and <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">npz</span></code> consist of two variables:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code> array with the audio data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">samplerate</span></code>: <code class="docutils literal notranslate"><span class="pre">[1,]</span></code> array with the sample rate in Hz</p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">csv</span></code> contains three columns:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> - the name of the song or syllable type</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> - the start time of the syllable.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.</p></li>
-<li><p>Each row in the file contains to a single annotation with <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> and an arbitrary stop_seconds. For event-like types (song pulses), both <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> are <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p></li>
-</ul>
-</li>
-</ul>
+<!--
+## Format of exported annotations and audio
+Produced by the GUI via `File/Save annotations` and `File/Export for DAS`.
+
+Audio and annotations are exported into `csv` (comma-separated values) and `npz` (zip compressed numpy files):
+- `npz` consist of two variables:
+    + `data`: `[samples, channels]` array with the audio data
+    + `samplerate`: `[1,]` array with the sample rate in Hz
+- `csv` contains three columns:
+    + `name` - the name of the song or syllable type
+    + `start_seconds` - the start time of the syllable.
+    + `stop_seconds` - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
+    + Each row in the file contains to a single annotation with `name`, `start_seconds` and `stop_seconds`. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, `start_seconds` is `np.nan` and an arbitrary stop_seconds. For event-like types (song pulses), both `start_seconds` and `stop_seconds` are `np.nan`. -->
 <!--
 ## Annotation format
 csv file with three columns:
@@ -287,100 +284,82 @@ csv file with three columns:
 There are two types of song elements:
 - `events` have not extent in time, `start_seconds=stop_seconds`, and are best used for brief, pulsatile signals like fly pulse song
 - `segments` extend in time, `start_seconds>stop_seconds`, and should be used for normal syllables or fly sine song -->
-<p>The <code class="docutils literal notranslate"><span class="pre">csv</span></code> format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created <code class="docutils literal notranslate"><span class="pre">csv</span></code> files from your own annotation format in python using a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html">pandas DataFrames</a>. Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file for use with <em>DAS</em>.</p>
-<div class="section" id="examples-of-transforming-custom-annotation-formats">
-<h3>Examples of transforming custom annotation formats<a class="headerlink" href="#examples-of-transforming-custom-annotation-formats" title="Permalink to this headline">¶</a></h3>
-<p>Say we have read annotation data into python as three lists containing the names, start and stop of a song type:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'bip'</span><span class="p">,</span> <span class="s1">'bop'</span><span class="p">,</span> <span class="s1">'bip'</span><span class="p">]</span>
-<span class="n">start_seconds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.34</span><span class="p">,</span> <span class="mf">5.67</span><span class="p">,</span> <span class="mf">9.13</span><span class="p">]</span>
-<span class="n">stop_seconds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.34</span><span class="p">,</span> <span class="mf">5.85</span><span class="p">,</span> <span class="mf">9.13</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>This defines two song types, “bip” and “bop”. “bip” an event-like song type (like a pulse in fly song), since start and stop are identical. “bop” is a segment-like song type (like a syllable in birdsong), because start and stop differ.</p>
-<p>This information needs to be arranged into a table, i.e., a pandas DataFrame, of this format:</p>
-<div class="table-wrapper"><table class="colwidths-auto docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>names</p></th>
-<th class="text-align:left head"><p>start_seconds</p></th>
-<th class="text-align:left head"><p>stop_seconds</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>bip</p></td>
-<td class="text-align:left"><p>1.34</p></td>
-<td class="text-align:left"><p>1.34</p></td>
-</tr>
-<tr class="row-odd"><td><p>bop</p></td>
-<td class="text-align:left"><p>5.67</p></td>
-<td class="text-align:left"><p>5.85</p></td>
-</tr>
-<tr class="row-even"><td><p>bip</p></td>
-<td class="text-align:left"><p>9.13</p></td>
-<td class="text-align:left"><p>9.13</p></td>
-</tr>
-</tbody>
-</table></div>
-<p>A pandas DataFrame with the format can be created by two means:
-Use <code class="docutils literal notranslate"><span class="pre">xb.annot</span></code>, which takes the three lists and produces a correctly  DataFrame</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">xarray_behave.annot</span> <span class="kn">import</span> <span class="n">Events</span>  <span class="c1"># require install with gui</span>
+<!-- The `csv` format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created `csv` files from your own annotation format in python using a [pandas DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html). Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a `csv` file for use with _DAS_.
 
-<span class="n">evt</span> <span class="o">=</span> <span class="n">Events</span><span class="o">.</span><span class="n">from_lists</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">evt</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>Or you can assemble the DataFrame yourself:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="c1"># create empty DataFrame with the required columns</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'name'</span><span class="p">,</span> <span class="s1">'start_seconds'</span><span class="p">,</span> <span class="s1">'stop_seconds'</span><span class="p">])</span>
+### Examples of transforming custom annotation formats
+Say we have read annotation data into python as three lists containing the names, start and stop of a song type:
+```python
+names = ['bip', 'bop', 'bip']
+start_seconds = [1.34, 5.67, 9.13]
+stop_seconds = [1.34, 5.85, 9.13]
+```
+This defines two song types, "bip" and "bop". "bip" an event-like song type (like a pulse in fly song), since start and stop are identical. "bop" is a segment-like song type (like a syllable in birdsong), because start and stop differ.
 
-<span class="c1"># append a segment</span>
-<span class="n">onset</span> <span class="o">=</span> <span class="mf">1.33</span> <span class="c1"># seconds</span>
-<span class="n">offset</span> <span class="o">=</span> <span class="mf">1.42</span>  <span class="c1"># seconds</span>
-<span class="n">segment_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">onset</span><span class="p">,</span> <span class="n">offset</span><span class="p">]</span>
-<span class="n">segment_name</span> <span class="o">=</span> <span class="s1">'sine_song'</span>
+This information needs to be arranged into a table, i.e., a pandas DataFrame, of this format:
+| names   | start_seconds    | stop_seconds  |
+| ------- |:-------------|:-----|
+| bip      | 1.34 | 1.34 |
+| bop      | 5.67   | 5.85 |
+| bip      | 9.13   |  9.13 |
 
-<span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">segment_name</span><span class="p">,</span> <span class="o">*</span><span class="n">segment_bounds</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:],</span>
-                        <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+A pandas DataFrame with the format can be created by two means:
+Use `xb.annot`, which takes the three lists and produces a correctly  DataFrame
+```python
+from xarray_behave.annot import Events  # require install with gui
 
-<span class="c1"># append an event</span>
-<span class="n">event_time</span> <span class="o">=</span> <span class="mf">2.15</span> <span class="c1"># seconds</span>
-<span class="n">event_name</span> <span class="o">=</span> <span class="s1">'pulse'</span>
+evt = Events.from_lists(names, start_seconds, stop_seconds)
+df = evt.to_df()
+```
 
-<span class="n">new_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">event_name</span><span class="p">,</span> <span class="n">event_time</span><span class="p">,</span> <span class="n">event_time</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:],</span>
-                        <span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_row</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Then save as a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'filename.csv'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="convert-audio-data">
-<h3>Convert audio data<a class="headerlink" href="#convert-audio-data" title="Permalink to this headline">¶</a></h3>
-<p>The GUI can read many formats (see <a class="reference internal" href="../tutorials_gui/load.html"><span class="doc std std-doc">list of supported audio formats</span></a>) and data can always be exported in the correct format via the GUI.
-However, if you want to assemble many of your own recordings into dataset for training, a programmatic approach is more efficient.</p>
-<p>To assemble a dataset, audio data has to be provided in two formats:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">wav</span></code>: Universal format for audio data. can be created from many software packages:</p>
-<ul>
-<li><p>From python <code class="docutils literal notranslate"><span class="pre">scipy.io.wavfile.write(...)</span></code></p></li>
-<li><p>from matlab <code class="docutils literal notranslate"><span class="pre">wavwrite(...)</span></code></p></li>
-<li><p>from the command line via ffmpeg: <code class="docutils literal notranslate"><span class="pre">ffmpeg</span> <span class="pre">...</span></code></p></li>
-</ul>
-</li>
-<li><p><code class="docutils literal notranslate"><span class="pre">npz</span></code>: Python-specific but a bit more flexible/robust. Should contain two variables - <code class="docutils literal notranslate"><span class="pre">samplerate</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> - and can be created like so: <code class="docutils literal notranslate"><span class="pre">np.savez(filename,</span> <span class="pre">data=audio,</span> <span class="pre">samplerate=samplerate)</span></code></p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Clipping can occur when saving certain data types as wav files. see docs of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy.io.wavfile.write</a> for a list of the range of values available when saving audio of different types to wav.</p>
-</div>
-</div>
-</div>
-</div>
+Or you can assemble the DataFrame yourself:
+
+```python
+import numpy as np
+import pandas as pd
+
+# create empty DataFrame with the required columns
+df = pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
+
+# append a segment
+onset = 1.33 # seconds
+offset = 1.42  # seconds
+segment_bounds = [onset, offset]
+segment_name = 'sine_song'
+
+new_row = pd.DataFrame(np.array([segment_name, *segment_bounds])[np.newaxis,:],
+                        columns=df.columns)
+df = df.append(new_row, ignore_index=True)
+
+# append an event
+event_time = 2.15 # seconds
+event_name = 'pulse'
+
+new_row = pd.DataFrame(np.array([event_name, event_time, event_time])[np.newaxis,:],
+                        columns=df.columns)
+df = df.append(new_row, ignore_index=True)
+```
+
+Then save as a `csv` file:
+```python
+df.to_csv('filename.csv')
+```
+
+
+### Convert audio data
+The GUI can read many formats (see [list of supported audio formats](/tutorials_gui/load)) and data can always be exported in the correct format via the GUI.
+However, if you want to assemble many of your own recordings into dataset for training, a programmatic approach is more efficient.
+
+To assemble a dataset, audio data has to be provided in two formats:
+- `wav`: Universal format for audio data. can be created from many software packages:
+    - From python `scipy.io.wavfile.write(...)`
+    - from matlab `wavwrite(...)`
+    - from the command line via ffmpeg: `ffmpeg ...`
+- `npz`: Python-specific but a bit more flexible/robust. Should contain two variables - `samplerate` and `data` - and can be created like so: `np.savez(filename, data=audio, samplerate=samplerate)` -->
+<!--
+```{warning}
+Clipping can occur when saving certain data types as wav files. see docs of [scipy.io.wavfile.write](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html) for a list of the range of values available when saving audio of different types to wav.
+``` --></section>
 
         </article>
       </div>
@@ -423,31 +402,8 @@ However, if you want to assemble many of your own recordings into dataset for tr
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Convert your own annotations and audio data</a><ul>
-<li><a class="reference internal" href="#format-of-exported-annotations-and-audio">Format of exported annotations and audio</a><ul>
-<li><a class="reference internal" href="#examples-of-transforming-custom-annotation-formats">Examples of transforming custom annotation formats</a></li>
-<li><a class="reference internal" href="#convert-audio-data">Convert audio data</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
