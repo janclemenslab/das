@@ -102,62 +102,61 @@ def predict_segments(class_probabilities: np.array,
     Returns:
         dict['segmentnames']['denselabels-samples'/'onsets'/'offsets'/'probabilities']
     """
-
     probs_are_labels = class_probabilities.ndim == 1
     if segment_dims is None:
         if not probs_are_labels:  # class_probabilities is [T, nb_classes]
             nb_classes = class_probabilities.shape[1]
         else:  # class_probabilities is [T,] with integer entries as class labels
             nb_classes = int(np.max(class_probabilities))
-        segment_dims = range(nb_classes)
+        segment_dims = list(range(nb_classes))
 
     if segment_names is None:
         segment_names = segment_dims
 
     segments = dict()
     if len(segment_dims):
-            segments['samplerate_Hz'] = samplerate
-            segments['index'] = segment_dims
-            segments['names'] = segment_names
-            if not probs_are_labels:
-                prob = class_probabilities[:, segment_dims]
-                segments['probabilities'] = prob
-                labels = labels_from_probabilities(prob, segment_thres)
-            else:
-                segments['probabilities'] = None
-                labels = class_probabilities
+        segments['samplerate_Hz'] = samplerate
+        segments['index'] = segment_dims
+        segments['names'] = segment_names
+        if not probs_are_labels:
+            prob = class_probabilities[:, segment_dims]
+            segments['probabilities'] = prob
+            labels = labels_from_probabilities(prob, segment_thres)
+        else:
+            segments['probabilities'] = None
+            labels = class_probabilities
 
-            # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
-            song_pred = (labels > 0).astype(np.float)
-            if segment_fillgap is not None:
-                song_pred = segment_utils.fill_gaps(song_pred, segment_fillgap * samplerate)
-            if segment_minlen is not None:
-                song_pred = segment_utils.remove_short(song_pred, segment_minlen * samplerate)
+        # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
+        song_pred = (labels > 0).astype(np.float)
+        if segment_fillgap is not None:
+            song_pred = segment_utils.fill_gaps(song_pred, segment_fillgap * samplerate)
+        if segment_minlen is not None:
+            song_pred = segment_utils.remove_short(song_pred, segment_minlen * samplerate)
 
-            # detect syllable on- and offsets
-            # pre- and post-pend 0 so we detect on and offsets at boundaries
-            segments['onsets_seconds'] = np.where(np.diff(np.insert(song_pred, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
-            segments['offsets_seconds'] = np.where(np.diff(np.append(song_pred, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
-            segments['durations_seconds'] = segments['offsets_seconds'] - segments['onsets_seconds']
+        # detect syllable on- and offsets
+        # pre- and post-pend 0 so we detect on and offsets at boundaries
+        segments['onsets_seconds'] = np.where(np.diff(np.insert(song_pred, 0, values=[0], axis=0)) == 1)[0].astype(np.float) / samplerate
+        segments['offsets_seconds'] = np.where(np.diff(np.append(song_pred, values=[0], axis=0)) == -1)[0].astype(np.float) / samplerate
+        segments['durations_seconds'] = segments['offsets_seconds'] - segments['onsets_seconds']
 
-            if len(segment_dims) == 2:  # there is just a single segment type plus noise - in that case we use the gap-filled, short-deleted pred
-                labels = song_pred
-                segments['sequence'] = [str(segment_names[1])] * len(segments['offsets_seconds'])   # syllable-type for each syllable as int
-            elif len(segment_dims) > 2 and segment_labels_by_majority:  # if >1 segment type (plus noise) label sylls by majority vote on un-smoothed labels
-                # if no refs provided, use use on/offsets from smoothed labels
-                if segment_ref_onsets is None:
-                    segment_ref_onsets = segments['onsets_seconds']
-                if segment_ref_offsets is None:
-                    segment_ref_offsets = segments['offsets_seconds']
+        if len(segment_dims) == 2:  # there is just a single segment type plus noise - in that case we use the gap-filled, short-deleted pred
+            labels = song_pred
+            segments['sequence'] = [str(segment_names[1])] * len(segments['offsets_seconds'])   # syllable-type for each syllable as int
+        elif len(segment_dims) > 2 and segment_labels_by_majority:  # if >1 segment type (plus noise) label sylls by majority vote on un-smoothed labels
+            # if no refs provided, use use on/offsets from smoothed labels
+            if segment_ref_onsets is None:
+                segment_ref_onsets = segments['onsets_seconds']
+            if segment_ref_offsets is None:
+                segment_ref_offsets = segments['offsets_seconds']
 
-                sequence, labels = segment_utils.label_syllables_by_majority(labels,
-                                                                             segment_ref_onsets,
-                                                                             segment_ref_offsets,
-                                                                             samplerate)
-                segments['sequence'] = sequence  # syllable-type for each syllable as int
-            else:
-                segments['sequence'] = None
-            segments['samples'] = labels
+            sequence, labels = segment_utils.label_syllables_by_majority(labels,
+                                                                            segment_ref_onsets,
+                                                                            segment_ref_offsets,
+                                                                            samplerate)
+            segments['sequence'] = sequence  # syllable-type for each syllable as int
+        else:
+            segments['sequence'] = None
+        segments['samples'] = labels
     return segments
 
 
@@ -334,7 +333,7 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
         # figure out length in multiples of batches
         pad_len = params['batch_size'] * params['nb_hist']
         # pad with end val to fill
-        x = np.pad(x, ((0, pad_len), (0,0)), mode='edge')
+        x = np.pad(x, ((0, pad_len), (0, 0)), mode='edge')
 
     class_probabilities = predict_probabililties(x, model, params, verbose, prepend_data_padding)
 
@@ -436,9 +435,9 @@ def cli_predict(path: str, model_save_name: str, *,
             if save_format == 'h5':
                 # turn events and segments into df!
                 d = {'events': events,
-                    'segments': segments,
-                    'class_probabilities': class_probabilities,
-                    'class_names': class_names}
+                     'segments': segments,
+                     'class_probabilities': class_probabilities,
+                     'class_names': class_names}
                 if save_filename is None:
                     save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
                 logging.info(f"   Saving results to {save_filename}.")
