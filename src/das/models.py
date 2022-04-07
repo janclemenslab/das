@@ -103,68 +103,70 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
 
 
 @_register_as_model
-def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-            nb_conv: int = 1, loss: str = "categorical_crossentropy",
-            dilations: Optional[List[int]] = None, activation: str = 'norm_relu',
-            use_skip_connections: bool = True, return_sequences: bool = True,
-            dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
-            use_separable: bool = False, compile: bool = True,
-            **kwignored):
-    """Create TCN network with TCN layer as pre-processing and downsampling frontend.
+def stft_res_dense(nb_freq: int,
+                   nb_classes: int,
+                   nb_hist: int = 1,
+                   loss: str = "categorical_crossentropy",
+                   sample_weight_mode: str = None,
+                   nb_pre_conv: int = 4,
+                   pre_nb_dft: int = 64,
+                   learning_rate: float = 0.0005,
+                   resnet_train: bool = False,
+                   compile: bool = True,
+                   **kwignored):
+    """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
     Args:
         nb_freq (int): [description]
         nb_classes (int): [description]
         nb_hist (int, optional): [description]. Defaults to 1.
-        nb_filters (int, optional): [description]. Defaults to 16.
-        kernel_size (int, optional): [description]. Defaults to 3.
-        nb_conv (int, optional): [description]. Defaults to 1.
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
-        dilations (List[int], optional): [description]. Defaults to [1, 2, 4, 8, 16].
-        activation (str, optional): [description]. Defaults to 'norm_relu'.
-        use_skip_connections (bool, optional): [description]. Defaults to True.
-        return_sequences (bool, optional): [description]. Defaults to True.
-        dropout_rate (float, optional): [description]. Defaults to 0.00.
-        padding (str, optional): [description]. Defaults to 'same'.
-        nb_pre_conv (int, optional): If >0 adds a single TCN layer with a final maxpooling layer
-                                     with block size of `2**nb_pre_conv` before the TCN.
+        nb_pre_conv (int, optional): If >0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.
                                      Useful for speeding up training by reducing the sample rate early in the network.
                                      Defaults to 0 (no downsampling)
+        pre_nb_dft (int, optional): Duration of filters (in samples) for the STFT frontend.
+                                    Number of filters is pre_nb_dft // 2 + 1.
+                                    Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
-        upsample (bool, optional): whether or not to restore the model output to the input samplerate.
-                                   Should generally be True during training and evaluation but my speed up inference .
-                                   Defaults to True.
-        use_separable (bool, optional): use separable convs in residual block. Defaults to False.
-        compile (bool, optional):
+        resnet_train (bool, optional): Fine tune resnet weights. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
-        [keras.models.Model]: Compiled TCN network model.
+        [keras.models.Model]: Compiled network model.
     """
-    if dilations is None:
-        dilations = [1, 2, 4, 8, 16]
 
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
-    if nb_pre_conv > 0:
-        out = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_pre_conv, dilations=dilations,
-                            activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                            dropout_rate=dropout_rate, return_sequences=return_sequences,
-                            use_separable=use_separable, name='frontend')(out)
-        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
-                      activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                      use_separable=use_separable)(out)
-    x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
-    if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
-    output_layer = x
+    # out = Spectrogram(n_dft=pre_nb_dft,
+    #                   n_hop=2**nb_pre_conv,
+    #                   return_decibel_spectrogram=True,
+    #                   power_spectrogram=1.0,
+    #                   trainable_kernel=False,
+    #                   name='stft',
+    #                   image_data_format='channels_last')(out)
+    out = spec_utils.MelSpec(sampling_rate=32_000, frame_length=512, frame_step=int(2**nb_pre_conv), num_mel_channels=128)(out)
+
+    out = kl.Activation('relu')(out)
+    out = tf.stack([out, out, out], axis=-1)
+    out = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)(out)
+
+    out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
+    out = kl.Flatten()(out)
+    out = kl.BatchNormalization()(out)
+
+    out = kl.Dense(nb_classes, activation='tanh')(out)
+    out = kl.Dense(2 * nb_classes, activation='tanh')(out)
+    out = kl.Dense(nb_classes, activation='softmax')(out)
+
+    output_layer = out
+
     model = keras.models.Model(input_layer, output_layer, name='TCN')
+    if not resnet_train:
+        model.get_layer(name='resnet50v2').trainable = False
+
     if compile:
         model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                      loss=loss, sample_weight_mode=sample_weight_mode)
+                      loss=loss,
+                      sample_weight_mode=sample_weight_mode)
     return model
