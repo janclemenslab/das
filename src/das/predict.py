@@ -422,7 +422,9 @@ def cli_predict(path: str, model_save_name: str, *,
         try:
             # else if path is file - predict only on file but make it single-item list
             _, x = scipy.io.wavfile.read(recording_filename)
-            x = np.atleast_2d(x).T
+
+            if x.ndim==1:
+                x = x[:, np.newaxis]
 
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
