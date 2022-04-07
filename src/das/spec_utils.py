@@ -1,5 +1,5 @@
 import tensorflow.keras as keras
-import tensorflow_probability as tfp
+# import tensorflow_probability as tfp
 import tensorflow as tf
 
 
@@ -56,12 +56,11 @@ class MelSpec(keras.layers.Layer):
         # Multiplying the Mel-filterbank with the magnitude and scaling it using the db scale
         mel = tf.matmul(tf.square(magnitude), self.mel_filterbank)
 
-        # baseline subtract
-        baseline = tfp.stats.percentile(mel, 50, axis=1, keepdims=True)
-        mel = tf.math.log(mel/baseline)
-        # mel[mel < 0] = 0
-        mel = tf.clip_by_value(mel, clip_value_min=0, clip_value_max=100_000)
-        mel /= tf.reduce_max(mel) * 255
+        # # baseline subtract
+        # baseline = tfp.stats.percentile(mel, 50, axis=1, keepdims=True)
+        # mel = tf.math.log(mel/baseline)
+        # mel = tf.clip_by_value(mel, clip_value_min=0, clip_value_max=100_000)
+        # mel /= tf.reduce_max(mel) * 255
         return mel
 
     def get_config(self):
