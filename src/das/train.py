@@ -336,7 +336,12 @@ def train(*,
         logging.info(f"Balancing classes: {params['class_weights']}")
 
     logging.info('building network')
-    model = models.model_dict[model_name](**params)
+    try:
+        model = models.model_dict[model_name](**params)
+    except KeyError as e:
+        logging.exception(e)
+        raise ValueError(f'Model name was {model_name} but only {list(models.model_dict)} allowed.')
+
 
     logging.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
