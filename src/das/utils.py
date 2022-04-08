@@ -5,6 +5,7 @@ import time
 import numpy as np
 import yaml
 import h5py
+import scipy.signal
 from . import kapre
 from . import tcn
 from . import models
@@ -253,3 +254,23 @@ class QtProgressCallback(keras.callbacks.Callback):
 
     def on_predict_batch_end(self, batch, logs=None):
         self._check_if_stopped()
+
+
+def resample(x: np.array, fs_audio: float, fs_model: float):
+    """Resample audio to model rate.
+
+    Rounds rates to next even number for efficiency.
+
+    Args:
+        x (np.array): _description_
+        fs_audio (float): _description_
+        fs_model (float): _description_
+
+    Returns:
+        np.array: Audio resample to fs_model.
+    """
+    fs_audio_even = int(fs_audio // 2) * 2
+    fs_model_even = int(fs_model // 2) * 2
+    gcd = np.gcd(fs_audio_even, fs_model_even)
+    x = scipy.signal.resample_poly(x, fs_audio_even // gcd, fs_model_even // gcd, axis=0)
+    return x

@@ -358,7 +358,8 @@ def cli_predict(path: str, model_save_name: str, *,
                 event_thres: float = 0.5, event_dist: float = 0.01,
                 event_dist_min: float = 0, event_dist_max: Optional[float] = None,
                 segment_thres: float = 0.5, segment_use_optimized: Optional[bool] = None,
-                segment_minlen: Optional[float] = None, segment_fillgap: Optional[float] = None):
+                segment_minlen: Optional[float] = None, segment_fillgap: Optional[float] = None,
+                resample: bool = True):
     """Predict song labels for a wav file or a folder of wav files.
 
     Saves hdf5 files with keys: events, segments, class_probabilities
@@ -397,6 +398,7 @@ def cli_predict(path: str, model_save_name: str, *,
                                           Defaults to None (keep all segments).
         segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.
                                            Defaults to None (do not fill gaps).
+        resample (bool): Resample audio data to the rate expected by the model. Defaults to True.
 
     Raises:
         ValueError on unknown save_format
@@ -414,16 +416,22 @@ def cli_predict(path: str, model_save_name: str, *,
     elif os.path.isfile(path):
         filenames = [path]
 
+    logging.info(f"Loading model from {model_save_name}.")
     model, params = utils.load_model_and_params(model_save_name)
+    fs_model = params['samplerate_x_Hz']
 
     for recording_filename in filenames:
         logging.info(f"   Loading data from {recording_filename}.")
         try:
             # else if path is file - predict only on file but make it single-item list
-            _, x = scipy.io.wavfile.read(recording_filename)
+            fs_audio, x = scipy.io.wavfile.read(recording_filename)
 
             if x.ndim==1:
                 x = x[:, np.newaxis]
+
+            if resample and fs_audio != fs_model:
+                logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")
+                x = utils.resample(x, fs_audio, fs_model)
 
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
@@ -431,6 +439,11 @@ def cli_predict(path: str, model_save_name: str, *,
                                                             model, params,
                                                             event_thres, event_dist, event_dist_min, event_dist_max,
                                                             segment_thres, segment_use_optimized, segment_minlen, segment_fillgap)
+
+            if 'event' in params["class_types"]:
+                logging.info(f"   found {len(events['seconds'])} instances of events '{list(set(events['sequence']))}'.")
+            if 'segment' in params["class_types"]:
+                logging.info(f"   found {len(segments['onsets_seconds'])} instances of segments '{list(set(segments['sequence']))}'.")
 
             if save_format == 'h5':
                 # turn events and segments into df!
@@ -456,4 +469,3 @@ def cli_predict(path: str, model_save_name: str, *,
                 save_filename = None
         except Exception as e:
             logging.exception(f'Error processing file {recording_filename}.')
-
