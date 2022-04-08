@@ -181,17 +181,18 @@ def stft_res_dense(nb_freq: int,
     #                   trainable_kernel=False,
     #                   name='stft',
     #                   image_data_format='channels_last')(out)
+    # out = out[..., 0]
     out = spec_utils.MelSpec(sampling_rate=32_000, frame_length=512, frame_step=int(2**nb_pre_conv), num_mel_channels=128)(out)
-
     out = kl.Activation('relu')(out)
     out = tf.stack([out, out, out], axis=-1)
     out = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)(out)
 
-    out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
+    # out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
     out = kl.Flatten()(out)
     out = kl.BatchNormalization()(out)
 
-    out = kl.Dense(nb_classes, activation='tanh')(out)
+    out = kl.Dense(min(64, 8 * nb_classes), activation='tanh')(out)
+    out = kl.Dense(min(32, 4 * nb_classes), activation='tanh')(out)
     out = kl.Dense(2 * nb_classes, activation='tanh')(out)
     out = kl.Dense(nb_classes, activation='softmax')(out)
 
@@ -202,7 +203,8 @@ def stft_res_dense(nb_freq: int,
         model.get_layer(name='resnet50v2').trainable = False
 
     if compile:
-        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+        # model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate),#, amsgrad=True, clipnorm=1.),
                       loss=loss,
                       sample_weight_mode=sample_weight_mode)
     return model
