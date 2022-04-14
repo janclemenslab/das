@@ -419,8 +419,14 @@ def train(*,
         logging.info('   Re-loading last best model from {checkpoint_save_name}.')
         model.load_weights(checkpoint_save_name)
 
-        logging.info('   Predicting.')
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
+        logger.info('   Predicting.')
+        x_name = 'x'
+        if x_suffix:
+            x_name += f'_{x_suffix}'
+        y_name = 'y'
+        if y_suffix:
+            y_name += f'_{y_suffix}'
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test'][x_name], y=d['test'][y_name], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
