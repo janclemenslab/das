@@ -10,13 +10,16 @@ import yaml
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
 
+logger = logging.getLogger(__name__)
+
 try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
     physical_devices = tf.config.list_physical_devices('GPU')
     if physical_devices:
         tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 except Exception as e:
-    logging.exception(e)
+    logger.exception(e)
+
 
 
 def train(*,
@@ -95,7 +98,7 @@ def train(*,
         save_name (Optional[str]): Append to prefix.
                            Name of files created will be start with SAVE_DIR/SAVE_PREFIX + "_" + SAVE_NAME
                            or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
-                           Defaults to TIMESTAMP.
+                           Defaults to the timestamp YYYYMMDD_hhmmss.
         model_name (str): Network architecture to use.
                           Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).
                           See das.models for a description of all models.
@@ -173,7 +176,7 @@ def train(*,
                                            Defaults to None (no logging to wandb).
         wandb_project (Optional[str]): Project to log to for wandb.
                                          Defaults to None (no logging to wandb).
-        wandb_entity (Optional[str]): Entiti to log to for wandb.
+        wandb_entity (Optional[str]): Entity to log to for wandb.
                                         Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
@@ -202,7 +205,7 @@ def train(*,
     #        The queue is used to transmit progress updates to the GUI,
     #        the event is set in the GUI to stop training.
     if log_messages:
-        logging.basicConfig(level=logging.INFO)
+        logger.basicConfig(level=logger.INFO)
 
     if dilations is None:
         dilations = [1, 2, 4, 8, 16]
@@ -249,16 +252,16 @@ def train(*,
     if '_multi' in model_name:
         params['unpack_channels'] = True
 
-    logging.info(f'Loading data from {data_dir}.')
+    logger.info(f'Loading data from {data_dir}.')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
 
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
         params['data_hash'] = data_hash.hash_data(data_dir)
-        logging.info(f"Version of the data:")
-        logging.info(f"   MD5 hash of {data_dir} is")
-        logging.info(f"   {params['data_hash']}")
+        logger.info(f"Version of the data:")
+        logger.info(f"   MD5 hash of {data_dir} is")
+        logger.info(f"   {params['data_hash']}")
 
     sample_bounds_provided = first_sample_train is not None and last_sample_train is not None and first_sample_val is not None and last_sample_val is not None
 
@@ -295,10 +298,10 @@ def train(*,
         'first_sample_val': first_sample_val,
         'last_sample_val': last_sample_val,
     })
-    logging.info('Parameters:')
-    logging.info(params)
+    logger.info('Parameters:')
+    logger.info(params)
 
-    logging.info('Preparing data')
+    logger.info('Preparing data')
     if fraction_data is not None and batch_level_subsampling:  # train on a subset
         np.random.seed(seed)
         shuffle_subset = fraction_data
@@ -306,11 +309,11 @@ def train(*,
         shuffle_subset = None
 
     if augmentations:
-        logging.info(f'Initializing augmentations from {augmentations}.')
+        logger.info(f'Initializing augmentations from {augmentations}.')
         aug_params = yaml.safe_load(open(augmentations, 'r'))
         params['augmentations'] = aug_params
         augs = augmentation.Augmentations.from_dict(params['augmentations'])
-        logging.info(f'   Got {len(augs)} augmentations.')
+        logger.info(f'   Got {len(augs)} augmentations.')
     else:
         augs = None
 
@@ -339,32 +342,32 @@ def train(*,
     #                              shuffle=False, batch_size=batch_size,
     #                              start_index=first_sample_val, end_index=last_sample_val)
 
-    logging.info(f"Training data:")
-    logging.info(f"   {data_gen}")
-    logging.info(f"Validation data:")
-    logging.info(f"   {val_gen}")
+    logger.info(f"Training data:")
+    logger.info(f"   {data_gen}")
+    logger.info(f"Validation data:")
+    logger.info(f"   {val_gen}")
 
     params['class_weights'] = None
     if balance:
         from sklearn.utils import class_weight
         y_train = np.argmax(d['train']['y'], axis=1)
         params['class_weights'] = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
-        logging.info(f"Balancing classes: {params['class_weights']}")
+        logger.info(f"Balancing classes: {params['class_weights']}")
 
-    logging.info('building network')
+    logger.info('building network')
     try:
         model = models.model_dict[model_name](**params)
     except KeyError as e:
-        logging.exception(e)
+        logger.exception(e)
         raise ValueError(f'Model name was {model_name} but only {list(models.model_dict)} allowed.')
 
 
-    logging.info(model.summary())
+    logger.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
     if save_name is None:
         save_name = time.strftime('%Y%m%d_%H%M%S')
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
-    logging.info(f'Will save to {save_name}.')
+    logger.info(f'Will save to {save_name}.')
 
     # SET UP CALLBACKS
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
@@ -391,7 +394,7 @@ def train(*,
     utils.save_params(params, save_name)
 
     # TRAIN NETWORK
-    logging.info('start training')
+    logger.info('start training')
     fit_hist = model.fit(
         data_gen,
         epochs=nb_epoch,
@@ -404,15 +407,15 @@ def train(*,
 
     # OPTIMIZE POSTPROCESSING
     if post_opt:
-        logging.info('OPTIMIZING POSTPROCESSING:')
+        logger.info('OPTIMIZING POSTPROCESSING:')
         best_gap_dur, best_min_len, scores = postprocessing.optimize(
             dataset_path=data_dir, model_save_name=save_name)
-        logging.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
+        logger.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
         if scores['val_pre'] is not None:
-            logging.info(f"  Score on validation data changed from {scores['val_pre']:1.4} to {scores['val']:1.4}.")
-        logging.info('  Optimal parameters for postprocessing:')
-        logging.info(f'     gap_dur={best_gap_dur} seconds')
-        logging.info(f'     min_len={best_min_len} seconds')
+            logger.info(f"  Score on validation data changed from {scores['val_pre']:1.4} to {scores['val']:1.4}.")
+        logger.info('  Optimal parameters for postprocessing:')
+        logger.info(f'     gap_dur={best_gap_dur} seconds')
+        logger.info(f'     min_len={best_min_len} seconds')
 
         params['post_opt'] = {
             'gap_dur': float(best_gap_dur),
@@ -421,18 +424,18 @@ def train(*,
             'score_val': float(scores['val']),
         }
 
-        logging.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
+        logger.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
         utils.save_params(params, save_name)
-        logging.info('DONE')
+        logger.info('DONE')
 
     # TEST
     # TODO use postprocessing params
-    logging.info('TESTING:')
+    logger.info('TESTING:')
     if len(d['test']['x']) < nb_hist:
-        logging.info('   No test data - skipping final evaluation step.')
+        logger.info('   No test data - skipping final evaluation step.')
         return
     else:
-        logging.info('   Re-loading last best model from {checkpoint_save_name}.')
+        logger.info(f'   Re-loading last best model from {checkpoint_save_name}.')
         model.load_weights(checkpoint_save_name)
 
         logger.info('   Predicting.')
@@ -447,15 +450,16 @@ def train(*,
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logging.info('   Evaluating.')
+        logger.info('   Evaluating.')
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
-        logging.info(conf_mat)
-        logging.info(report)
+        logger.info(conf_mat)
+        logger.info(report)
 
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
+        logger.info(f'   Saving to {save_filename}.')
         ddd = {
             'fit_hist': fit_hist.history,
             'confusion_matrix': conf_mat,
@@ -469,5 +473,5 @@ def train(*,
         }
         fl.save(save_filename, ddd)
 
-    logging.info('DONE.')
+    logger.info('DONE.')
     return model, params
