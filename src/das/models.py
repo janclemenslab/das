@@ -144,10 +144,7 @@ def stft_res_dense(nb_freq: int,
                    nb_hist: int = 1,
                    loss: str = "categorical_crossentropy",
                    sample_weight_mode: str = None,
-                   nb_pre_conv: int = 4,
-                   pre_nb_dft: int = 64,
                    learning_rate: float = 0.0005,
-                   resnet_train: bool = False,
                    compile: bool = True,
                    **kwignored):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
@@ -174,37 +171,20 @@ def stft_res_dense(nb_freq: int,
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
 
-    # out = Spectrogram(n_dft=pre_nb_dft,
-    #                   n_hop=2**nb_pre_conv,
-    #                   return_decibel_spectrogram=True,
-    #                   power_spectrogram=1.0,
-    #                   trainable_kernel=False,
-    #                   name='stft',
-    #                   image_data_format='channels_last')(out)
-    # out = out[..., 0]
-    out = spec_utils.MelSpec(sampling_rate=32_000, frame_length=512, frame_step=int(2**nb_pre_conv), num_mel_channels=128)(out)
-    out = kl.Activation('relu')(out)
-    out = tf.stack([out, out, out], axis=-1)
-    out = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)(out)
-
-    # out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
-    out = kl.Flatten()(out)
     out = kl.BatchNormalization()(out)
 
-    out = kl.Dense(min(64, 8 * nb_classes), activation='tanh')(out)
     out = kl.Dense(min(32, 4 * nb_classes), activation='tanh')(out)
+    out = kl.Dropout(rate=0.1)(out)
     out = kl.Dense(2 * nb_classes, activation='tanh')(out)
     out = kl.Dense(nb_classes, activation='softmax')(out)
 
     output_layer = out
 
-    model = keras.models.Model(input_layer, output_layer, name='TCN')
-    if not resnet_train:
-        model.get_layer(name='resnet50v2').trainable = False
+    model = keras.models.Model(input_layer, output_layer, name='RES')
 
     if compile:
         # model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate),#, amsgrad=True, clipnorm=1.),
+        model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate),  #, amsgrad=True, clipnorm=1.),
                       loss=loss,
                       sample_weight_mode=sample_weight_mode)
     return model
