@@ -49,6 +49,10 @@ def train(*,
           reduce_lr: bool = False,
           reduce_lr_patience: int = 5,
           fraction_data: Optional[float] = None,
+          first_sample_train: Optional[int] = 0,
+          last_sample_train: Optional[int] = None,
+          first_sample_val: Optional[int] = 0,
+          last_sample_val: Optional[int] = None,
           seed: Optional[int] = None,
           batch_level_subsampling: bool = False,
           augmentations: Optional[str] = None,
@@ -150,6 +154,13 @@ def train(*,
                                   Defaults to 5 epochs.
         fraction_data (Optional[float]): Fraction of training and validation data to use.
                                          Defaults to 1.0.
+                                         Overriden by setting all four *_sample_* args.
+        first_sample_train (Optional[int]): Defaults to 0 (first sample in training dataset).
+                                            Note 1: all four *_sample_* args must be set - otherwise they will be ignored.
+                                            Note 2: Overrides fraction_data.
+        last_sample_train (Optional[int]): Defaults to None (use last sample in training dataset).
+        first_sample_val (Optional[int]): Defaults to 0 (first sample in validation dataset).
+        last_sample_val (Optional[int]): Defaults to None (use last sample in validation dataset).
         seed (Optional[int]): Random seed to reproducibly select fractions of the data.
                               Defaults to None (no seed).
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
@@ -249,25 +260,30 @@ def train(*,
         logging.info(f"   MD5 hash of {data_dir} is")
         logging.info(f"   {params['data_hash']}")
 
-    if fraction_data is not None:
+    sample_bounds_provided = first_sample_train is not None and last_sample_train is not None and first_sample_val is not None and last_sample_val is not None
+
+    if fraction_data is not None and not sample_bounds_provided:
         if fraction_data > 1.0:  # seconds
-            logging.info(
+            logger.info(
                 f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data."
             )
             fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         elif fraction_data < 1.0:
-            logging.info(f"Using {fraction_data:1.4f} of the training and validation data.")
+            logger.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
-    if fraction_data is not None and not batch_level_subsampling:  # train on a subset
+    if fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
         first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0],
                                                                fraction_data,
                                                                min_nb_samples,
                                                                seed=seed)
         first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
-    else:
-        first_sample_train, last_sample_train = 0, None
-        first_sample_val, last_sample_val = 0, None
+    elif sample_bounds_provided:
+        logger.info("Using provided start/end samples:")
+        logger.info(f"Train: {first_sample_train}:{last_sample_train}, Val: {first_sample_val}:{last_sample_val}.")
+    # else:
+    #     first_sample_train, last_sample_train = 0, None
+    #     first_sample_val, last_sample_val = 0, None
 
     # TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data
     params.update({
