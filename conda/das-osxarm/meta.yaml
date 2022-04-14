@@ -1,0 +1,97 @@
+{% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
+{% set name = "das" %}
+{% set version = data.get('version') %}
+
+package:
+  name: das
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+
+build:
+  number: 0
+  entry_points:
+    - das=das.cli:main
+
+requirements:
+  host:
+    - defopt
+    - flammkuchen
+    - h5py
+    - librosa
+    - matplotlib
+    - matplotlib-scalebar
+    - pandas
+    - peakutils
+    - pip
+    - python
+    - pyyaml
+    - scipy
+    - scikit-learn
+    - zarr
+    - xarray
+    - pyside2
+    - pyqtgraph
+    - colorcet
+    - python-sounddevice
+    - scikit-image
+    - pyyaml
+    - opencv-python-headless
+    # - cudatoolkit # [not osx]
+    # - cudnn # [not osx]
+    - tensorflow-deps
+    - xarray-behave>=0.30
+    - keras-tuner
+    - numpy>1.19
+  run:
+    - defopt
+    - flammkuchen
+    - h5py
+    - librosa
+    - matplotlib
+    - matplotlib-scalebar
+    - numpy
+    - pandas
+    - peakutils
+    - python
+    - pyyaml
+    - scipy
+    - scikit-learn
+    - zarr
+    - xarray
+    - pyside2
+    - pyqtgraph
+    - colorcet
+    - python-sounddevice
+    - scikit-image
+    - opencv-python-headless
+    - cudatoolkit # [not osx]
+    - cudnn # [not osx]
+    - tensorflow>2.4 # [osx]
+    - tensorflow-gpu>2.4 # [not osx]
+    - xarray-behave>=0.30
+    - keras-tuner
+    - numpy>1.19
+
+test:
+  imports:
+    - das
+    - das.kapre
+    - das.tcn
+  commands:
+    - das --help
+    - das gui --help
+
+about:
+  home: "http://github.com/janclemenslab/das"
+  license: MIT
+  license_family: MIT
+  license_file:
+  summary: "DAS"
+  doc_url: "https://janclemenslab.org/das"
+  dev_url: "http://github.com/janclemenslab/das"
+
+extra:
+  recipe-maintainers:
+    - postpop
