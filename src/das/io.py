@@ -14,7 +14,6 @@ def _select(data, x_suffix, y_suffix):
                 if 'eventtimes_' + y_suffix in data[lvl]:
                     data[lvl]['eventtimes'] = data[lvl]['eventtimes_' + y_suffix]
             if 'x_' + x_suffix in data[lvl]:
-                print('found ' + x_suffix)
                 data[lvl]['x'] = data[lvl]['x_' + x_suffix]
                 if 'eventtimes_' + x_suffix in data[lvl]:
                     data[lvl]['eventtimes'] = data[lvl]['eventtimes_' + x_suffix]
