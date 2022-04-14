@@ -440,8 +440,7 @@ def train(*,
             wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
-        logging.info(f'   Saving to {save_filename}.')
-        d = {
+        ddd = {
             'fit_hist': fit_hist.history,
             'confusion_matrix': conf_mat,
             'classification_report': report,
@@ -452,8 +451,7 @@ def train(*,
             'labels_pred': labels_pred,
             'params': params,
         }
-
-        fl.save(save_filename, d)
+        fl.save(save_filename, ddd)
 
     logging.info('DONE.')
     return model, params
