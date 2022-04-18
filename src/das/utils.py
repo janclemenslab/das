@@ -132,7 +132,7 @@ def load_params(file_trunk: str,
     filename = _download_if_url(file_trunk + params_ext)
     with open(filename, 'r') as f:
         try:
-            params = yaml.load(f, Loader=yaml.FullLoader)
+            params = yaml.unsafe_load(f)
         except AttributeError:
             params = yaml.load(f)
     return params
