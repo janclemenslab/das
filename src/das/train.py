@@ -373,7 +373,7 @@ def train(*,
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
     callbacks = [
         ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-        EarlyStopping(monitor='val_loss', patience=20),
+        EarlyStopping(monitor='val_loss', patience=20, verbose=1),
     ]
 
     if reduce_lr:
