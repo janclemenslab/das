@@ -180,8 +180,7 @@ def stft_res_dense(nb_freq: int,
     # TODO compute STFT
 
     if resnet_compute:
-        out = out[..., tf.newaxis]
-        out = tf.repeat(out, 3, axis=-1)
+        out = tf.stack((out, out, out), axis=-1)
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)
         out = vision_model(out)
 
