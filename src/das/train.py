@@ -75,6 +75,8 @@ def train(*,
           min_len_min: Optional[float] = None,
           min_len_max: Optional[float] = None,
           min_len_steps: Optional[float] = None,
+          resnet_compute: Optional[bool] = False,
+          resnet_train: Optional[bool] = False,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DAS network.
 
@@ -197,6 +199,8 @@ def train(*,
         min_len_max (Optional[float]): None
         min_len_steps (Optional[float]): None
 
+        resnet_compute (Optional[bool]): . Defaults to False.
+        resnet_train (Optional[bool]): Defaults to False.
         Returns
             model (keras.Model)
             params (Dict[str, Any])
@@ -205,7 +209,7 @@ def train(*,
     #        The queue is used to transmit progress updates to the GUI,
     #        the event is set in the GUI to stop training.
     if log_messages:
-        logger.basicConfig(level=logger.INFO)
+        logging.basicConfig(level=logger.INFO)
 
     if dilations is None:
         dilations = [1, 2, 4, 8, 16]

@@ -2,6 +2,7 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
+from tensorflow.keras import regularizers
 from tensorflow.keras.applications.resnet_v2 import ResNet50V2
 from typing import List, Optional
 from . import tcn as tcn_layer
@@ -146,6 +147,9 @@ def stft_res_dense(nb_freq: int,
                    sample_weight_mode: str = None,
                    learning_rate: float = 0.0005,
                    compile: bool = True,
+                   stft_compute: bool = False,
+                   resnet_compute: bool = False,
+                   resnet_train: bool = False,
                    **kwignored):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -161,6 +165,8 @@ def stft_res_dense(nb_freq: int,
                                     Number of filters is pre_nb_dft // 2 + 1.
                                     Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
+        stft_compute (bool, optional): Defaults to False.
+        resnet_compute (bool, optional): Defaults to False.
         resnet_train (bool, optional): Fine tune resnet weights. Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
@@ -171,16 +177,31 @@ def stft_res_dense(nb_freq: int,
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
 
-    out = kl.BatchNormalization()(out)
+    # TODO compute STFT
 
-    out = kl.Dense(min(32, 4 * nb_classes), activation='tanh')(out)
-    out = kl.Dropout(rate=0.1)(out)
-    out = kl.Dense(2 * nb_classes, activation='tanh')(out)
+    if resnet_compute:
+        out = out[..., tf.newaxis]
+        out = tf.repeat(out, 3, axis=-1)
+        vision_model = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)
+        out = vision_model(out)
+
+    if len(out.shape)>2:
+        out = kl.Flatten()(out)
+
+    out = kl.BatchNormalization()(out)
+    # out = kl.Dropout(0.1)(out)
+    out = kl.Dense(min(32, 4 * nb_classes), activation='tanh', kernel_regularizer=regularizers.L1(1e-4))(out)
+    # out = kl.Dropout(0.1)(out)
+    out = kl.Dense(2 * nb_classes, activation='tanh', kernel_regularizer=regularizers.L1(1e-4))(out)
+    # out = kl.Dropout(0.1)(out)
     out = kl.Dense(nb_classes, activation='softmax')(out)
 
     output_layer = out
 
     model = keras.models.Model(input_layer, output_layer, name='RES')
+
+    if resnet_compute and not resnet_train:
+        model.get_layer('resnet50v2').trainable = False
 
     if compile:
         # model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
