@@ -75,8 +75,8 @@ def train(*,
           min_len_min: Optional[float] = None,
           min_len_max: Optional[float] = None,
           min_len_steps: Optional[float] = None,
-          resnet_compute: Optional[bool] = False,
-          resnet_train: Optional[bool] = False,
+          resnet_compute: bool = False,
+          resnet_train: bool = False,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Train a DAS network.
 
@@ -199,8 +199,8 @@ def train(*,
         min_len_max (Optional[float]): None
         min_len_steps (Optional[float]): None
 
-        resnet_compute (Optional[bool]): . Defaults to False.
-        resnet_train (Optional[bool]): Defaults to False.
+        resnet_compute (bool): Defaults to False.
+        resnet_train (bool): Defaults to False.
         Returns
             model (keras.Model)
             params (Dict[str, Any])
