@@ -209,7 +209,7 @@ def train(*,
     #        The queue is used to transmit progress updates to the GUI,
     #        the event is set in the GUI to stop training.
     if log_messages:
-        logging.basicConfig(level=logger.INFO)
+        logging.basicConfig(level=logging.INFO)
 
     if dilations is None:
         dilations = [1, 2, 4, 8, 16]
