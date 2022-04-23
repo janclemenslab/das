@@ -19,7 +19,7 @@ requirements:
     - defopt
     - flammkuchen
     - h5py
-    - librosa
+    - librosa>0.8
     - matplotlib
     - matplotlib-scalebar
     - pandas
@@ -29,26 +29,17 @@ requirements:
     - pyyaml
     - scipy
     - scikit-learn
-    - zarr
-    - xarray
-    - pyside2
-    - pyqtgraph
-    - colorcet
-    - python-sounddevice
     - scikit-image
-    - pyyaml
-    - opencv-python-headless
-    # - cudatoolkit # [not osx]
-    # - cudnn # [not osx]
-    - tensorflow-deps
+    - tqdm
+    - apple::tensorflow-deps
     - xarray-behave>=0.30
-    - keras-tuner
     - numpy>1.19
+    - ipython
   run:
     - defopt
     - flammkuchen
     - h5py
-    - librosa
+    - librosa>0.8
     - matplotlib
     - matplotlib-scalebar
     - numpy
@@ -58,21 +49,12 @@ requirements:
     - pyyaml
     - scipy
     - scikit-learn
-    - zarr
-    - xarray
-    - pyside2
-    - pyqtgraph
-    - colorcet
-    - python-sounddevice
     - scikit-image
-    - opencv-python-headless
-    - cudatoolkit # [not osx]
-    - cudnn # [not osx]
-    - tensorflow>2.4 # [osx]
-    - tensorflow-gpu>2.4 # [not osx]
+    - tqdm
     - xarray-behave>=0.30
-    - keras-tuner
+    - apple::tensorflow-deps
     - numpy>1.19
+    - ipython
 
 test:
   imports:
