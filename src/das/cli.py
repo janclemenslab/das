@@ -18,7 +18,7 @@ def version():
         import xarray_behave.gui.app
         import xarray_behave as xb
         import pyqtgraph
-        import PySide2
+        import qtpy
         has_gui = True
     except (ImportError, ModuleNotFoundError):
         has_gui = False
@@ -31,7 +31,8 @@ def version():
     if has_gui:
         print(f"     xarray-behave v{xb.__version__}")
         print(f"     pyqtgraph v{pyqtgraph.__version__}")
-        print(f"     PySide2 v{PySide2.__version__}")
+        print(f"     {qtpy.API_NAME}")
+        # print(f"     {qtpy.API_NAME} v{qtpy.API_NAME.__version__}")
 
     print("")
     print(f"  tensorflow v{tf.__version__}")
