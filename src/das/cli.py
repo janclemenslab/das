@@ -1,6 +1,9 @@
 import defopt
 import logging
+import platform
 from . import train, predict, train_tune
+
+logger = logging.getLogger(__name__)
 
 def version():
     import das
@@ -25,34 +28,34 @@ def version():
 
     gpu = len(tf.config.list_physical_devices('GPU'))>0
 
-    print(f"The following versions are available to DAS:")
-    print(f"  DAS v{das.__version__}")
-    print("     GUI is", "available" if has_gui else "NOT AVAILABLE")
+    logger.info(f"  {platform.platform()}")
+    logger.info(f"  DAS v{das.__version__}")
+    logger.info(f"     GUI is {'' if has_gui else 'not'} available.")
     if has_gui:
-        print(f"     xarray-behave v{xb.__version__}")
-        print(f"     pyqtgraph v{pyqtgraph.__version__}")
-        print(f"     {qtpy.API_NAME}")
-        # print(f"     {qtpy.API_NAME} v{qtpy.API_NAME.__version__}")
+        logger.info(f"     xarray-behave v{xb.__version__}")
+        logger.info(f"     pyqtgraph v{pyqtgraph.__version__}")
+        logger.info(f"     {qtpy.API_NAME} v{qtpy.PYQT_VERSION or qtpy.PYSIDE_VERSION}")
+        logger.info(f"     Qt v{qtpy.QT_VERSION}")
 
-    print("")
-    print(f"  tensorflow v{tf.__version__}")
-    print(f"  keras v{tensorflow.keras.__version__}")
-    print("     GPU is", "available" if gpu else "NOT AVAILABLE")
-    print("")
-    print(f"  python v{sys.version}")
-    print(f"  pandas v{pd.__version__}")
-    print(f"  numpy v{np.__version__}")
-    print(f"  h5py v{h5py.__version__}")
-    print(f"  scipy v{scipy.__version__}")
-    print(f"  scikit-learn v{sk.__version__}")
-    print(f"  xarray v{xr.__version__}")
+    logger.info("")
+    logger.info(f"  tensorflow v{tf.__version__}")
+    logger.info(f"  keras v{tensorflow.keras.__version__}")
+    logger.info(f"     GPU is {'' if gpu else 'not'} available.")
+    logger.info("")
+    logger.info(f"  python v{sys.version}")
+    logger.info(f"  pandas v{pd.__version__}")
+    logger.info(f"  numpy v{np.__version__}")
+    logger.info(f"  h5py v{h5py.__version__}")
+    logger.info(f"  scipy v{scipy.__version__}")
+    logger.info(f"  scikit-learn v{sk.__version__}")
+    logger.info(f"  xarray v{xr.__version__}")
 
 
 def no_xb_gui():
     """Could not import the GUI. For instructions on how to install the GUI, check the docs janclemenslab.org/das/install.html."""
-    print("Could not import the GUI.")
-    print("For instructions on how to install the GUI,")
-    print("check the docs janclemenslab.org/das/install.html.")
+    logger.warning("Could not import the GUI.")
+    logger.warning("For instructions on how to install the GUI,")
+    logger.warning("check the docs janclemenslab.org/das/install.html.")
 
 
 def main():
@@ -67,7 +70,7 @@ def main():
         # fall back to function that displays helpful instructions
         subcommands['gui'] = no_xb_gui
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, force=True)
     defopt.run(subcommands, show_defaults=False)
 
 
