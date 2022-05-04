@@ -32,8 +32,8 @@ __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data u
 ### Install _DAS_
 Create an anaconda environment called `das` that contains all the required packages:
 ```shell
-conda install mamba -c conda-forge -n base
-mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das
+conda install mamba -c conda-forge -n base -y
+mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
 ## Usage
