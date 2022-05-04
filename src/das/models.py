@@ -143,13 +143,13 @@ def tcn_stft(nb_freq: int,
 def stft_res_dense(nb_freq: int,
                    nb_classes: int,
                    nb_hist: int = 1,
-                   loss: str = "categorical_crossentropy",
                    sample_weight_mode: str = None,
                    learning_rate: float = 0.0005,
                    compile: bool = True,
                    stft_compute: bool = False,
                    resnet_compute: bool = False,
                    resnet_train: bool = False,
+                   label_smoothing: float = 0,
                    **kwignored):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -184,7 +184,7 @@ def stft_res_dense(nb_freq: int,
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)
         out = vision_model(out)
 
-    if len(out.shape)>2:
+    if len(out.shape) > 1:
         out = kl.Flatten()(out)
 
     out = kl.BatchNormalization()(out)
@@ -205,6 +205,6 @@ def stft_res_dense(nb_freq: int,
     if compile:
         # model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
         model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate),  #, amsgrad=True, clipnorm=1.),
-                      loss=loss,
+                      loss=keras.losses.CategoricalCrossentropy(label_smoothing=label_smoothing),
                       sample_weight_mode=sample_weight_mode)
     return model
