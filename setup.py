@@ -13,33 +13,13 @@ def read(*parts):
 
 def find_version(*file_paths):
     version_file = read(*file_paths)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
     if version_match:
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
 
-# read the contents of the README file
-this_directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
-
-setup(name='das',
-      version=find_version("src/das/__init__.py"),
-      description='deep audio segmenter',
-      long_description=long_description,
-      long_description_content_type="text/markdown",
-      url='http://github.com/janclemenslab/das',
-      author='Jan Clemens',
-      author_email='clemensjan@googlemail.com',
-      license='MIT',
-      packages=find_packages('src'),
-      package_dir={'': 'src'},
-      install_requires=['numpy', 'h5py', 'scipy', 'scikit-learn', 'pyyaml', 'peakutils', 'zarr',
-                        'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
-                        'matplotlib_scalebar', 'colorcet', 'keras-tuner', 'kt-legacy'],
-      include_package_data=True,
-      zip_safe=False,
-      entry_points = {'console_scripts': ['das=das.cli:main']}
-     )
+setup(
+    name='das',
+    version=find_version("src/das/__init__.py"),
+)
