@@ -16,44 +16,28 @@ build:
 
 requirements:
   host:
-    - defopt
-    - flammkuchen
-    - h5py
-    - librosa>0.8
-    - matplotlib
-    - matplotlib-scalebar
-    - pandas
-    - peakutils
+    - python {{ python }}
     - pip
-    - python
-    - pyyaml
-    - scipy
-    - scikit-learn
-    - scikit-image
-    - tqdm
-    - apple::tensorflow-deps
-    - xarray-behave>=0.30
-    - numpy>1.19
-    - ipython
+    - h5py
+    - numpy>=1.20
   run:
+    - python {{ python }}
     - defopt
     - flammkuchen
     - h5py
     - librosa>0.8
     - matplotlib
     - matplotlib-scalebar
-    - numpy
     - pandas
     - peakutils
-    - python
     - pyyaml
     - scipy
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave>=0.30
+    - xarray-behave
     - apple::tensorflow-deps
-    - numpy>1.19
+    - numpy>=1.20
     - ipython
 
 test:
