@@ -214,6 +214,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
@@ -272,7 +273,6 @@
                 <span class="k">if</span> <span class="s1">'eventtimes_'</span> <span class="o">+</span> <span class="n">y_suffix</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">]:</span>
                     <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'eventtimes'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'eventtimes_'</span> <span class="o">+</span> <span class="n">y_suffix</span><span class="p">]</span>
             <span class="k">if</span> <span class="s1">'x_'</span> <span class="o">+</span> <span class="n">x_suffix</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">]:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">'found '</span> <span class="o">+</span> <span class="n">x_suffix</span><span class="p">)</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'x_'</span> <span class="o">+</span> <span class="n">x_suffix</span><span class="p">]</span>
                 <span class="k">if</span> <span class="s1">'eventtimes_'</span> <span class="o">+</span> <span class="n">x_suffix</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">]:</span>
                     <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'eventtimes'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">lvl</span><span class="p">][</span><span class="s1">'eventtimes_'</span> <span class="o">+</span> <span class="n">x_suffix</span><span class="p">]</span>

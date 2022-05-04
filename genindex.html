@@ -213,6 +213,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
@@ -335,6 +336,8 @@
           <li><a href="api/das.kapre.utils.html#das.kapre.utils.AmplitudeToDB.call">(das.kapre.utils.AmplitudeToDB method)</a>
 </li>
           <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D.call">(das.kapre.utils.Normalization2D method)</a>
+</li>
+          <li><a href="api/das.spec_utils.html#das.spec_utils.MelSpec.call">(das.spec_utils.MelSpec method)</a>
 </li>
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.ResidualBlock.call">(das.tcn.tcn_new.ResidualBlock method)</a>
 </li>
@@ -504,8 +507,6 @@
           <li><a href="api/das.menagerie.html#module-das.menagerie">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     das.models
 
@@ -513,6 +514,8 @@
           <li><a href="api/das.models.html#module-das.models">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     das.models_legacy
 
@@ -553,6 +556,13 @@
 
         <ul>
           <li><a href="api/das.segment_utils.html#module-das.segment_utils">module</a>
+</li>
+        </ul></li>
+        <li>
+    das.spec_utils
+
+        <ul>
+          <li><a href="api/das.spec_utils.html#module-das.spec_utils">module</a>
 </li>
         </ul></li>
         <li>
@@ -697,6 +707,8 @@
 </li>
           <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D.get_config">(das.kapre.utils.Normalization2D method)</a>
 </li>
+          <li><a href="api/das.spec_utils.html#das.spec_utils.MelSpec.get_config">(das.spec_utils.MelSpec method)</a>
+</li>
           <li><a href="api/das.tcn.tcn_new.html#das.tcn.tcn_new.TCN.get_config">(das.tcn.tcn_new.TCN method)</a>
 </li>
         </ul></li>
@@ -798,6 +810,8 @@
 </li>
         <li><a href="api/das.kapre.backend.html#das.kapre.backend.mel">mel() (in module das.kapre.backend)</a>
 </li>
+        <li><a href="api/das.spec_utils.html#das.spec_utils.MelSpec">MelSpec (class in das.spec_utils)</a>
+</li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.Melspectrogram">Melspectrogram (class in das.kapre.time_frequency)</a>
 </li>
         <li><a href="api/das.train_tune.html#das.train_tune.ModelParamsCheckpoint">ModelParamsCheckpoint (class in das.train_tune)</a>
@@ -853,6 +867,8 @@
           <li><a href="api/das.pulse_utils.html#module-das.pulse_utils">das.pulse_utils</a>
 </li>
           <li><a href="api/das.segment_utils.html#module-das.segment_utils">das.segment_utils</a>
+</li>
+          <li><a href="api/das.spec_utils.html#module-das.spec_utils">das.spec_utils</a>
 </li>
           <li><a href="api/das.tcn.tcn.html#module-das.tcn.tcn">das.tcn.tcn</a>
 </li>
@@ -981,6 +997,8 @@
 </li>
         <li><a href="api/das.segment_utils.html#das.segment_utils.remove_short">remove_short() (in module das.segment_utils)</a>
 </li>
+        <li><a href="api/das.utils.html#das.utils.resample">resample() (in module das.utils)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.tcn.tcn.html#das.tcn.tcn.residual_block">residual_block() (in module das.tcn.tcn)</a>
@@ -1010,6 +1028,8 @@
         <li><a href="api/das.annot.html#das.annot.Events.select_range">select_range() (das.annot.Events method)</a>
 </li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.Spectrogram">Spectrogram (class in das.kapre.time_frequency)</a>
+</li>
+        <li><a href="api/das.models.html#das.models.stft_res_dense">stft_res_dense() (in module das.models)</a>
 </li>
         <li><a href="api/das.data.html#das.data.sub_range">sub_range() (in module das.data)</a>
 </li>
@@ -1051,12 +1071,8 @@
           <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_stft">(in module das.models_legacy)</a>
 </li>
         </ul></li>
-        <li><a href="api/das.models.html#das.models.tcn_tcn">tcn_tcn() (in module das.models)</a>
-
-        <ul>
-          <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_tcn">(in module das.models_legacy)</a>
+        <li><a href="api/das.models_legacy.html#das.models_legacy.tcn_tcn">tcn_tcn() (in module das.models_legacy)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.annot.html#das.annot.Events.to_dataset">to_dataset() (das.annot.Events method)</a>
 </li>
         <li><a href="api/das.annot.html#das.annot.Events.to_df">to_df() (das.annot.Events method)</a>

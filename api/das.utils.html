@@ -215,6 +215,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
@@ -478,7 +479,7 @@ Second, try to init model from parameters and then add weights…</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_model_and_params">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_and_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_save_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict={'tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn_stft':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_stft&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn_tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_tcn&gt;}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_objects=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">keras.engine.training.Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_model_and_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_and_params" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_and_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_save_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict={'stft_res_dense':</span> <span class="pre">&lt;function</span> <span class="pre">stft_res_dense&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn_stft':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_stft&gt;}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_objects=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">keras.engine.training.Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_model_and_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_and_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -531,6 +532,27 @@ Second, try to init model from parameters and then add weights…</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils.resample">
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_audio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.resample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample audio to model rate.</p>
+<p>Rounds rates to next even number for efficiency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.array</em>) – _description_</p></li>
+<li><p><strong>fs_audio</strong> (<em>float</em>) – _description_</p></li>
+<li><p><strong>fs_model</strong> (<em>float</em>) – _description_</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Audio resample to fs_model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
 </dd>
 </dl>
 </dd></dl>

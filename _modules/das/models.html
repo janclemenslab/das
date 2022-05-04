@@ -214,6 +214,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
@@ -257,12 +258,15 @@
         <article role="main">
           <h1>Source code for das.models</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Defines the network architectures."""</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">as</span> <span class="nn">kl</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">regularizers</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet_v2</span> <span class="kn">import</span> <span class="n">ResNet50V2</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span> <span class="k">as</span> <span class="n">tcn_layer</span>
 <span class="kn">from</span> <span class="nn">.kapre.time_frequency</span> <span class="kn">import</span> <span class="n">Spectrogram</span>
-
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">spec_utils</span>
 
 <span class="n">model_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
@@ -280,15 +284,27 @@
 
 
 <div class="viewcode-block" id="tcn_stft"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn_stft">[docs]</a><span class="nd">@_register_as_model</span>
-<span class="k">def</span> <span class="nf">tcn_stft</span><span class="p">(</span><span class="n">nb_freq</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-             <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"categorical_crossentropy"</span><span class="p">,</span>
-             <span class="n">dilations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'norm_relu'</span><span class="p">,</span>
-             <span class="n">use_skip_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">return_sequences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-             <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'same'</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-             <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">tcn_stft</span><span class="p">(</span><span class="n">nb_freq</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+             <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+             <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+             <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+             <span class="n">loss</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"categorical_crossentropy"</span><span class="p">,</span>
+             <span class="n">dilations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'norm_relu'</span><span class="p">,</span>
+             <span class="n">use_skip_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">return_sequences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00</span><span class="p">,</span>
+             <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'same'</span><span class="p">,</span>
+             <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+             <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+             <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
              <span class="n">nb_lstm_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-             <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+             <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span>
+             <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
              <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+             <span class="n">use_resnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
              <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
              <span class="o">**</span><span class="n">kwignored</span><span class="p">):</span>
     <span class="sd">"""Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
@@ -319,6 +335,7 @@
 <span class="sd">                                   Should generally be True during training and evaluation but may speed up inference.</span>
 <span class="sd">                                   Defaults to True.</span>
 <span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
+<span class="sd">        use_resnet (bool, optional): Defaults to False.</span>
 <span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred</span>
 
 <span class="sd">    Returns:</span>
@@ -326,27 +343,43 @@
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">dilations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">dilations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
-    <span class="c1"># if nb_freq &gt; 1:</span>
-    <span class="c1">#     raise ValueError(f'This model only works with single channel data but last dim of inputs has len {nb_freq} (should be 1).')</span>
+
     <span class="n">input_layer</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nb_hist</span><span class="p">,</span> <span class="n">nb_freq</span><span class="p">))</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">input_layer</span>
 
     <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">Spectrogram</span><span class="p">(</span><span class="n">n_dft</span><span class="o">=</span><span class="n">pre_nb_dft</span><span class="p">,</span> <span class="n">n_hop</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">,</span>
-                          <span class="n">return_decibel_spectrogram</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">power_spectrogram</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                          <span class="n">trainable_kernel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'trainable_stft'</span><span class="p">,</span> <span class="n">image_data_format</span><span class="o">=</span><span class="s1">'channels_last'</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">Spectrogram</span><span class="p">(</span><span class="n">n_dft</span><span class="o">=</span><span class="n">pre_nb_dft</span><span class="p">,</span>
+                          <span class="n">n_hop</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">,</span>
+                          <span class="n">return_decibel_spectrogram</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">power_spectrogram</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                          <span class="n">trainable_kernel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                          <span class="n">name</span><span class="o">=</span><span class="s1">'trainable_stft'</span><span class="p">,</span>
+                          <span class="n">image_data_format</span><span class="o">=</span><span class="s1">'channels_last'</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_resnet</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))(</span><span class="n">out</span><span class="p">)</span>
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">tcn_layer</span><span class="o">.</span><span class="n">TCN</span><span class="p">(</span><span class="n">nb_filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="o">=</span><span class="n">nb_conv</span><span class="p">,</span> <span class="n">dilations</span><span class="o">=</span><span class="n">dilations</span><span class="p">,</span>
-                      <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">use_skip_connections</span><span class="o">=</span><span class="n">use_skip_connections</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
-                      <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="n">return_sequences</span><span class="p">,</span>
+    <span class="k">if</span> <span class="n">use_resnet</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">'relu'</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)([</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">])</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ResNet50V2</span><span class="p">(</span><span class="n">input_shape</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">weights</span><span class="o">=</span><span class="s1">'imagenet'</span><span class="p">,</span> <span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">()(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tcn_layer</span><span class="o">.</span><span class="n">TCN</span><span class="p">(</span><span class="n">nb_filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span>
+                      <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+                      <span class="n">nb_stacks</span><span class="o">=</span><span class="n">nb_conv</span><span class="p">,</span>
+                      <span class="n">dilations</span><span class="o">=</span><span class="n">dilations</span><span class="p">,</span>
+                      <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+                      <span class="n">use_skip_connections</span><span class="o">=</span><span class="n">use_skip_connections</span><span class="p">,</span>
+                      <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+                      <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span>
+                      <span class="n">return_sequences</span><span class="o">=</span><span class="n">return_sequences</span><span class="p">,</span>
                       <span class="n">use_separable</span><span class="o">=</span><span class="n">use_separable</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">nb_lstm_units</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">kl</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">nb_lstm_units</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">'softmax'</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'softmax'</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
@@ -354,77 +387,85 @@
     <span class="n">output_layer</span> <span class="o">=</span> <span class="n">x</span>
 
     <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">output_layer</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'TCN'</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_resnet</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'trainable_stft'</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'resnet50v2'</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="k">if</span> <span class="nb">compile</span><span class="p">:</span>
         <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.</span><span class="p">),</span>
-                      <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">)</span>
+                      <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span>
+                      <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="tcn_tcn"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn_tcn">[docs]</a><span class="nd">@_register_as_model</span>
-<span class="k">def</span> <span class="nf">tcn_tcn</span><span class="p">(</span><span class="n">nb_freq</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">loss</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"categorical_crossentropy"</span><span class="p">,</span>
-            <span class="n">dilations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'norm_relu'</span><span class="p">,</span>
-            <span class="n">use_skip_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">return_sequences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">'same'</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwignored</span><span class="p">):</span>
-    <span class="sd">"""Create TCN network with TCN layer as pre-processing and downsampling frontend.</span>
+<div class="viewcode-block" id="stft_res_dense"><a class="viewcode-back" href="../../api/das.models.html#das.models.stft_res_dense">[docs]</a><span class="nd">@_register_as_model</span>
+<span class="k">def</span> <span class="nf">stft_res_dense</span><span class="p">(</span><span class="n">nb_freq</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                   <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                   <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                   <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span>
+                   <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                   <span class="n">stft_compute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">resnet_compute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">resnet_train</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                   <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                   <span class="o">**</span><span class="n">kwignored</span><span class="p">):</span>
+    <span class="sd">"""Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
 <span class="sd">        nb_classes (int): [description]</span>
 <span class="sd">        nb_hist (int, optional): [description]. Defaults to 1.</span>
-<span class="sd">        nb_filters (int, optional): [description]. Defaults to 16.</span>
-<span class="sd">        kernel_size (int, optional): [description]. Defaults to 3.</span>
-<span class="sd">        nb_conv (int, optional): [description]. Defaults to 1.</span>
 <span class="sd">        loss (str, optional): [description]. Defaults to "categorical_crossentropy".</span>
-<span class="sd">        dilations (List[int], optional): [description]. Defaults to [1, 2, 4, 8, 16].</span>
-<span class="sd">        activation (str, optional): [description]. Defaults to 'norm_relu'.</span>
-<span class="sd">        use_skip_connections (bool, optional): [description]. Defaults to True.</span>
-<span class="sd">        return_sequences (bool, optional): [description]. Defaults to True.</span>
-<span class="sd">        dropout_rate (float, optional): [description]. Defaults to 0.00.</span>
-<span class="sd">        padding (str, optional): [description]. Defaults to 'same'.</span>
-<span class="sd">        nb_pre_conv (int, optional): If &gt;0 adds a single TCN layer with a final maxpooling layer</span>
-<span class="sd">                                     with block size of `2**nb_pre_conv` before the TCN.</span>
+<span class="sd">        nb_pre_conv (int, optional): If &gt;0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.</span>
 <span class="sd">                                     Useful for speeding up training by reducing the sample rate early in the network.</span>
 <span class="sd">                                     Defaults to 0 (no downsampling)</span>
+<span class="sd">        pre_nb_dft (int, optional): Duration of filters (in samples) for the STFT frontend.</span>
+<span class="sd">                                    Number of filters is pre_nb_dft // 2 + 1.</span>
+<span class="sd">                                    Defaults to 64.</span>
 <span class="sd">        learning_rate (float, optional) Defaults to 0.0005</span>
-<span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
-<span class="sd">                                   Should generally be True during training and evaluation but my speed up inference .</span>
-<span class="sd">                                   Defaults to True.</span>
-<span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
-<span class="sd">        compile (bool, optional):</span>
+<span class="sd">        stft_compute (bool, optional): Defaults to False.</span>
+<span class="sd">        resnet_compute (bool, optional): Defaults to False.</span>
+<span class="sd">        resnet_train (bool, optional): Fine tune resnet weights. Defaults to False.</span>
 <span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        [keras.models.Model]: Compiled TCN network model.</span>
+<span class="sd">        [keras.models.Model]: Compiled network model.</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">dilations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dilations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
 
     <span class="n">input_layer</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nb_hist</span><span class="p">,</span> <span class="n">nb_freq</span><span class="p">))</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">input_layer</span>
-    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">tcn_layer</span><span class="o">.</span><span class="n">TCN</span><span class="p">(</span><span class="n">nb_filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="o">=</span><span class="n">nb_pre_conv</span><span class="p">,</span> <span class="n">dilations</span><span class="o">=</span><span class="n">dilations</span><span class="p">,</span>
-                            <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">use_skip_connections</span><span class="o">=</span><span class="n">use_skip_connections</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
-                            <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="n">return_sequences</span><span class="p">,</span>
-                            <span class="n">use_separable</span><span class="o">=</span><span class="n">use_separable</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'frontend'</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">MaxPooling1D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>  <span class="c1"># or avg pooling?</span>
 
-    <span class="n">x</span> <span class="o">=</span> <span class="n">tcn_layer</span><span class="o">.</span><span class="n">TCN</span><span class="p">(</span><span class="n">nb_filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">nb_stacks</span><span class="o">=</span><span class="n">nb_conv</span><span class="p">,</span> <span class="n">dilations</span><span class="o">=</span><span class="n">dilations</span><span class="p">,</span>
-                      <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span> <span class="n">use_skip_connections</span><span class="o">=</span><span class="n">use_skip_connections</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
-                      <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="n">return_sequences</span><span class="p">,</span>
-                      <span class="n">use_separable</span><span class="o">=</span><span class="n">use_separable</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">'softmax'</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">output_layer</span> <span class="o">=</span> <span class="n">x</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">output_layer</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'TCN'</span><span class="p">)</span>
+    <span class="c1"># TODO compute STFT</span>
+
+    <span class="k">if</span> <span class="n">resnet_compute</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">vision_model</span> <span class="o">=</span> <span class="n">ResNet50V2</span><span class="p">(</span><span class="n">input_shape</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">weights</span><span class="o">=</span><span class="s1">'imagenet'</span><span class="p">,</span> <span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">vision_model</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">()(</span><span class="n">out</span><span class="p">)</span>
+    <span class="c1"># out = kl.Dropout(0.1)(out)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">nb_classes</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">regularizers</span><span class="o">.</span><span class="n">L1</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">))(</span><span class="n">out</span><span class="p">)</span>
+    <span class="c1"># out = kl.Dropout(0.1)(out)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'tanh'</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">regularizers</span><span class="o">.</span><span class="n">L1</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">))(</span><span class="n">out</span><span class="p">)</span>
+    <span class="c1"># out = kl.Dropout(0.1)(out)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">'softmax'</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="n">output_layer</span> <span class="o">=</span> <span class="n">out</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">output_layer</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">'RES'</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">resnet_compute</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">resnet_train</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">'resnet50v2'</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
     <span class="k">if</span> <span class="nb">compile</span><span class="p">:</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">amsgrad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.</span><span class="p">),</span>
-                      <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">)</span>
+        <span class="c1"># model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">),</span>  <span class="c1">#, amsgrad=True, clipnorm=1.),</span>
+                      <span class="n">loss</span><span class="o">=</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">CategoricalCrossentropy</span><span class="p">(</span><span class="n">label_smoothing</span><span class="o">=</span><span class="n">label_smoothing</span><span class="p">),</span>
+                      <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
 </pre></div>
         </article>

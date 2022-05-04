@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
-        <title>das.npy_dir - DAS documentation</title>
+        <title>das.spec_utils - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
@@ -256,97 +256,101 @@
           </label>
         </div>
         <article role="main">
-          <h1>Source code for das.npy_dir</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Dict of dicts &lt;-&gt; hierarchy of npy files.</span>
-
-<span class="sd">Tools for working with dictionaries of dictionaries.</span>
-<span class="sd">The keys of the first dictionary are mapped to directories.</span>
-<span class="sd">The values in the nested dictionary are saved as npy files with the key as the name.</span>
-
-<span class="sd">As an example, this code:</span>
-<span class="sd">```python</span>
-<span class="sd">data = {'first_level': {'song': some_data, 'response': some_other_data}}</span>
-<span class="sd">data.attrs = {'song_name': 'this is the dream...', 'response_name': 'yeah'}</span>
-<span class="sd">das.npy.save('song_responses.npy', data)</span>
-<span class="sd">```</span>
-<span class="sd">will result in a folder `song_responses.npy` containing</span>
-<span class="sd">one subfolder `first_level` with two npy files - `song.npy` containing `some_data` and</span>
-<span class="sd">`responses.npy` containing `some_other_data`. The `attrs` attribute can be used to store metadata and will be stored in `song_responses.npy/attrs.npy`)</span>
-
-<span class="sd">`data = das.npy.load('song_responses.npy')` will restore the data with the metadata.</span>
-<span class="sd">"""</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+          <h1>Source code for das.spec_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">tensorflow_probability</span> <span class="k">as</span> <span class="nn">tfp</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">tfp</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'No tensorflow-probability.'</span><span class="p">)</span>
+    <span class="k">pass</span>
 
 
-<div class="viewcode-block" id="DictClass"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.DictClass">[docs]</a><span class="k">class</span> <span class="nc">DictClass</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
-    <span class="sd">"""Wrap dict in class so we can attach attrs to it."""</span>
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Data:</span><span class="se">\n</span><span class="s1">'</span>
-        <span class="k">for</span> <span class="n">top_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'   </span><span class="si">{</span><span class="n">top_key</span><span class="si">}</span><span class="s1">:</span><span class="se">\n</span><span class="s1">'</span>
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">[</span><span class="n">top_key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'      </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Attributes:</span><span class="se">\n</span><span class="s1">'</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="se">\n</span><span class="s1">'</span>
-        <span class="k">return</span> <span class="n">out</span></div>
+<div class="viewcode-block" id="MelSpec"><a class="viewcode-back" href="../../api/das.spec_utils.html#das.spec_utils.MelSpec">[docs]</a><span class="k">class</span> <span class="nc">MelSpec</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="c1"># copied from https://keras.io/examples/audio/melgan_spectrogram_inversion</span>
 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sampling_rate</span><span class="p">,</span>
+        <span class="n">frame_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+        <span class="n">frame_step</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fft_length</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_mel_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+        <span class="n">freq_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">freq_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span> <span class="o">=</span> <span class="n">sampling_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span> <span class="o">=</span> <span class="n">frame_length</span>
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">memmap_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'train'</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="sd">"""Load hierarchy of npy files into dict of dicts.</span>
+        <span class="k">if</span> <span class="n">frame_step</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">frame_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span> <span class="o">//</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_step</span> <span class="o">=</span> <span class="n">frame_step</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        location ([type]): [description]</span>
-<span class="sd">        memmap_dirs (list, optional): [description]. Defaults to ['train'].</span>
+        <span class="k">if</span> <span class="n">fft_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fft_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span> <span class="o">=</span> <span class="n">fft_length</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        dict: [description]</span>
-<span class="sd">    """</span>
-    <span class="k">def</span> <span class="nf">path_to_key</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_mel_channels</span> <span class="o">=</span> <span class="n">num_mel_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_min</span> <span class="o">=</span> <span class="n">freq_min</span>
 
-    <span class="n">dir_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-                 <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">name</span><span class="p">))]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">DictClass</span><span class="p">()</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">attrs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s1">'attrs.npy'</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">attrs_path</span><span class="p">):</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">attrs_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)[()]</span>
+        <span class="k">if</span> <span class="n">freq_max</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">freq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">freq_max</span> <span class="o">=</span> <span class="n">freq_max</span>
 
-    <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">dir_names</span><span class="p">:</span>
-        <span class="n">dir_key</span> <span class="o">=</span> <span class="n">path_to_key</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">dir_key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">npy_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_name</span><span class="p">,</span> <span class="s1">'*.npy'</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">npy_file</span> <span class="ow">in</span> <span class="n">npy_files</span><span class="p">:</span>
-            <span class="n">npy_key</span> <span class="o">=</span> <span class="n">path_to_key</span><span class="p">(</span><span class="n">npy_file</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">dir_key</span> <span class="ow">in</span> <span class="n">memmap_dirs</span><span class="p">:</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">dir_key</span><span class="p">][</span><span class="n">npy_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span><span class="n">npy_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data</span><span class="p">[</span><span class="n">dir_key</span><span class="p">][</span><span class="n">npy_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">npy_file</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">data</span></div>
+        <span class="c1"># Defining mel filter. This filter will be multiplied with the STFT output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mel_filterbank</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">linear_to_mel_weight_matrix</span><span class="p">(</span>
+            <span class="n">num_mel_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_mel_channels</span><span class="p">,</span>
+            <span class="n">num_spectrogram_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">sample_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span><span class="p">,</span>
+            <span class="n">lower_edge_hertz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freq_min</span><span class="p">,</span>
+            <span class="n">upper_edge_hertz</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">freq_max</span><span class="p">,</span>
+        <span class="p">)</span>
 
+<div class="viewcode-block" id="MelSpec.call"><a class="viewcode-back" href="../../api/das.spec_utils.html#das.spec_utils.MelSpec.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">audio</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># We will only perform the transformation during training.</span>
+        <span class="c1"># if training:</span>
+        <span class="c1"># Taking the Short Time Fourier Transform. Ensure that the audio is padded.</span>
+        <span class="c1"># In the paper, the STFT output is padded using the 'REFLECT' strategy.</span>
+        <span class="n">stft</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame_step</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span><span class="p">,</span>
+            <span class="n">pad_end</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
 
-<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
-    <span class="sd">"""Save nested dict in data to location as a directory with npy files dir.</span>
+        <span class="c1"># Taking the magnitude of the STFT output</span>
+        <span class="n">magnitude</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stft</span><span class="p">)</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        location ([type]): [description]</span>
-<span class="sd">        data ([type]): [description]</span>
-<span class="sd">    """</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">'attrs'</span><span class="p">):</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s1">'attrs'</span><span class="p">),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">),</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Multiplying the Mel-filterbank with the magnitude and scaling it using the db scale</span>
+        <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">magnitude</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">mel_filterbank</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">key_top</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">key_top</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">key_top</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">key_top</span><span class="p">,</span> <span class="n">key</span> <span class="o">+</span> <span class="s1">'.npy'</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span></div>
+        <span class="c1"># # baseline subtract</span>
+        <span class="k">if</span> <span class="n">tfp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">baseline</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">mel</span><span class="o">/</span><span class="p">(</span><span class="n">baseline</span> <span class="o">+</span> <span class="mf">0.000001</span><span class="p">))</span>
+            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span> <span class="n">clip_value_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clip_value_max</span><span class="o">=</span><span class="mi">100_000</span><span class="p">)</span>
+            <span class="n">mel</span> <span class="o">/=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">mel</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span>
+        <span class="k">return</span> <span class="n">mel</span></div>
+
+<div class="viewcode-block" id="MelSpec.get_config"><a class="viewcode-back" href="../../api/das.spec_utils.html#das.spec_utils.MelSpec.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MelSpec</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"frame_length"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span><span class="p">,</span>
+                <span class="s2">"frame_step"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_step</span><span class="p">,</span>
+                <span class="s2">"fft_length"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span><span class="p">,</span>
+                <span class="s2">"sampling_rate"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span><span class="p">,</span>
+                <span class="s2">"num_mel_channels"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mel_channels</span><span class="p">,</span>
+                <span class="s2">"freq_min"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_min</span><span class="p">,</span>
+                <span class="s2">"freq_max"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_max</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
 </pre></div>
         </article>
       </div>

@@ -215,6 +215,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
@@ -268,8 +269,8 @@
 <section id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">¶</a></h2>
 <p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install mamba -c conda-forge -n base
-mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 das -c conda-forge -c ncb -n das
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install mamba -c conda-forge -n base -y
+mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 </pre></div>
 </div>
 </section>

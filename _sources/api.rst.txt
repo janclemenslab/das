@@ -31,6 +31,7 @@ Developer API
    das.predict
    das.pulse_utils
    das.segment_utils
+   das.spec_utils
    das.tracking
    das.train
    das.train_tune
