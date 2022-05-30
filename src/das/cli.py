@@ -18,10 +18,10 @@ def version():
     import xarray as xr
 
     try:
-        import xarray_behave.gui.app
         import xarray_behave as xb
         import pyqtgraph
         import qtpy
+        import xarray_behave.gui.app
         has_gui = True
     except (ImportError, ModuleNotFoundError):
         has_gui = False
@@ -30,7 +30,7 @@ def version():
 
     logger.info(f"  {platform.platform()}")
     logger.info(f"  DAS v{das.__version__}")
-    logger.info(f"     GUI is {'' if has_gui else 'not'} available.")
+    logger.info(f"     GUI is {'' if has_gui else 'not'}available.")
     if has_gui:
         logger.info(f"     xarray-behave v{xb.__version__}")
         logger.info(f"     pyqtgraph v{pyqtgraph.__version__}")
@@ -66,7 +66,7 @@ def main():
         import xarray_behave.gui.app
         subcommands['gui'] = xarray_behave.gui.app.main_das
     except (ImportError, ModuleNotFoundError):
-        logging.exception('Failed to import GUI. You can still use the non GUI part of DAS.')
+        logging.exception('No GUI avalaible.')
         # fall back to function that displays helpful instructions
         subcommands['gui'] = no_xb_gui
 
