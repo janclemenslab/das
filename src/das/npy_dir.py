@@ -20,11 +20,15 @@ import numpy as np
 import os
 import os.path
 from glob import glob
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Union, Optional
 
 
 class DictClass(dict):
     """Wrap dict in class so we can attach attrs to it."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.attrs: Dict = {}
+
     def __str__(self):
         out = f'Data:\n'
         for top_key in self.keys():
@@ -37,16 +41,20 @@ class DictClass(dict):
         return out
 
 
-def load(location: str, memmap_dirs: List[str] = ['train']) -> Dict[str, Any]:
+def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> Dict[str, Any]:
     """Load hierarchy of npy files into dict of dicts.
 
     Args:
         location ([type]): [description]
-        memmap_dirs (list, optional): [description]. Defaults to ['train'].
+        memmap_dirs (list, optional): List of dirs to memmap. String 'all' will memmmap all dirs. Defaults to ['train'].
 
     Returns:
         dict: [description]
     """
+
+    if memmap_dirs is None:
+        memmap_dirs = ['train']
+
     def path_to_key(path):
         key = os.path.splitext(os.path.basename(path))[0]
         return key
@@ -55,7 +63,7 @@ def load(location: str, memmap_dirs: List[str] = ['train']) -> Dict[str, Any]:
                  for name in os.listdir(location)
                  if os.path.isdir(os.path.join(location, name))]
     data = DictClass()
-    data.attrs = dict()
+
     attrs_path = os.path.join(location, 'attrs.npy')
     if os.path.exists(attrs_path):
         data.attrs = np.load(attrs_path, allow_pickle=True)[()]
@@ -66,7 +74,7 @@ def load(location: str, memmap_dirs: List[str] = ['train']) -> Dict[str, Any]:
         npy_files = glob(os.path.join(dir_name, '*.npy'))
         for npy_file in npy_files:
             npy_key = path_to_key(npy_file)
-            if dir_key in memmap_dirs:
+            if memmap_dirs == 'all' or dir_key in memmap_dirs:
                 data[dir_key][npy_key] = np.lib.format.open_memmap(npy_file, 'r')
             else:
                 data[dir_key][npy_key] = np.load(npy_file)
