@@ -159,9 +159,8 @@ class Events(UserDict):
     def _append_row(self, df, name, start_seconds, stop_seconds=None) -> pd.DataFrame:
         if stop_seconds is None:
             stop_seconds = start_seconds
-        new_row = pd.DataFrame(np.array([name, start_seconds, stop_seconds])[np.newaxis,:],
-                                columns=df.columns)
-        return df.append(new_row, ignore_index=True)
+        new_row = pd.DataFrame(np.array([name, start_seconds, stop_seconds])[np.newaxis, :], columns=df.columns)
+        return pd.concat((df, new_row), ignore_index=True)
 
     def to_df(self, preserve_empty: bool = True) -> pd.DataFrame:
         """Convert to pandas.DataFrame
