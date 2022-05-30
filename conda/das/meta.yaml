@@ -13,67 +13,40 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
+  script: build_osx-arm.sh  # [arm64]
+
 
 requirements:
   host:
-    - defopt
-    - flammkuchen
-    - h5py
-    - librosa
-    - matplotlib
-    - matplotlib-scalebar
-    - pandas
-    - peakutils
+    - python {{ python }}
     - pip
-    - python
-    - pyyaml
-    - scipy
-    - scikit-learn
-    - zarr
-    - xarray
-    - pyside2
-    - pyqtgraph
-    - colorcet
-    - python-sounddevice
-    - scikit-image
-    - pyyaml
-    - opencv-python-headless
-    - cudatoolkit # [not osx]
-    - cudnn # [not osx]
-    - tensorflow>2.4 # [osx]
-    - tensorflow-gpu>2.4 # [not osx]
-    - xarray-behave>=0.30
-    - keras-tuner
-    - numpy>1.19
+    - h5py
+    - numpy>=1.20
+
   run:
+    - python {{ python }}
     - defopt
     - flammkuchen
     - h5py
-    - librosa
     - matplotlib
     - matplotlib-scalebar
-    - numpy
     - pandas
     - peakutils
-    - python
     - pyyaml
     - scipy
     - scikit-learn
-    - zarr
-    - xarray
-    - pyside2
-    - pyqtgraph
-    - colorcet
-    - python-sounddevice
     - scikit-image
-    - opencv-python-headless
-    - cudatoolkit # [not osx]
-    - cudnn # [not osx]
+    - tqdm
+    - xarray  # why this?
+    - xarray-behave
+    - cudatoolkit # [win or linux]
+    - cudnn # [win or linux]
     - tensorflow>2.4 # [osx]
-    - tensorflow-gpu>2.4 # [not osx]
-    - xarray-behave>=0.30
-    - keras-tuner
-    - numpy>1.19
+    - tensorflow-gpu>2.4 # [win or linux]
+    - apple::tensorflow-deps  # [not osx and arm64]
+    - numpy>=1.20
+    - ipython
+    - keras-tuner  # [not arm64]
 
 test:
   imports:
