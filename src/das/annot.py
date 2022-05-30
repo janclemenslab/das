@@ -5,10 +5,13 @@ import pandas as pd
 from collections import UserDict
 from typing import Optional, List, Dict, Any, Union
 
+
 class Events(UserDict):
     """Utility class for dealing with annotations."""
 
-    def __init__(self, data: Optional[Dict[str, List[float]]] = None, categories: Optional[Dict[str, str]] = None,
+    def __init__(self,
+                 data: Optional[Dict[str, List[float]]] = None,
+                 categories: Optional[Dict[str, str]] = None,
                  add_names_from_categories: bool = True):
         # """Initializes Events class. Do not use. Use `from_df` for `from_lists` instead.
 
@@ -24,9 +27,9 @@ class Events(UserDict):
 
         for key, val in self.items():
             val = np.array(val)
-            if val.ndim==1:
+            if val.ndim == 1:
                 val = val[:, np.newaxis]
-            if val.shape[1]==1:
+            if val.shape[1] == 1:
                 val = np.concatenate((val, val), axis=1)
 
             self.data[key] = val
@@ -63,9 +66,7 @@ class Events(UserDict):
         if possible_event_names is None:
             possible_event_names = []
 
-        return cls.from_lists(df.name.values,
-                              df.start_seconds.values.astype(float),
-                              df.stop_seconds.values.astype(float),
+        return cls.from_lists(df.name.values, df.start_seconds.values.astype(float), df.stop_seconds.values.astype(float),
                               possible_event_names)
 
     @classmethod
@@ -152,7 +153,6 @@ class Events(UserDict):
         out = cls.from_lists(names, start_seconds, stop_seconds, possible_event_names)
         return out
 
-
     def _init_df(self) -> pd.DataFrame:
         return pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
 
@@ -203,15 +203,26 @@ class Events(UserDict):
         start_seconds = df.start_seconds.values.astype(float)
         stop_seconds = df.stop_seconds.values.astype(float)
 
-        da_names = xr.DataArray(name='event_names', data=np.array(names, dtype='U128'), dims=['index',])
-        da_times = xr.DataArray(name='event_times', data=np.array([start_seconds, stop_seconds]).T, dims=['index','event_time'], coords={'event_time': ['start_seconds', 'stop_seconds']})
+        da_names = xr.DataArray(name='event_names', data=np.array(names, dtype='U128'), dims=[
+            'index',
+        ])
+        da_times = xr.DataArray(name='event_times',
+                                data=np.array([start_seconds, stop_seconds]).T,
+                                dims=['index', 'event_time'],
+                                coords={'event_time': ['start_seconds', 'stop_seconds']})
 
         ds = xr.Dataset({da.name: da for da in [da_names, da_times]})
         ds.attrs['time_units'] = 'seconds'
         ds.attrs['possible_event_names'] = self.names  # ensure that we preserve even names w/o events that get lost in to_df
         return ds
 
-    def add_name(self, name, category='segment', times=None, overwrite: bool = False, append: bool = False, sort_after_append: bool = False):
+    def add_name(self,
+                 name,
+                 category='segment',
+                 times=None,
+                 overwrite: bool = False,
+                 append: bool = False,
+                 sort_after_append: bool = False):
         """[summary]
 
         Args:
@@ -223,7 +234,7 @@ class Events(UserDict):
             sort_after_append (bool, optional): [description]. Defaults to False.
         """
         if times is None:
-            times = np.zeros((0,2))
+            times = np.zeros((0, 2))
 
         if name not in self or (name in self and overwrite):
             self.update({name: times})
@@ -255,10 +266,7 @@ class Events(UserDict):
         if stop_seconds is None:
             stop_seconds = start_seconds
 
-        self[name] = np.insert(self[name],
-                               len(self[name]),
-                               sorted([start_seconds, stop_seconds]),
-                               axis=0)
+        self[name] = np.insert(self[name], len(self[name]), sorted([start_seconds, stop_seconds]), axis=0)
 
     def move_time(self, name, old_time, new_time):
         """[summary]
@@ -268,7 +276,7 @@ class Events(UserDict):
             old_time ([type]): [description]
             new_time ([type]): [description]
         """
-        self[name][self[name]==old_time] = new_time
+        self[name][self[name] == old_time] = new_time
 
     def delete_time(self, name, time, tol=0):
         nearest_start = self._find_nearest(self.start_seconds(name), time)
@@ -311,10 +319,10 @@ class Events(UserDict):
             t1 = np.inf
 
         if strict:
-            within_range = np.logical_and(self.start_seconds(name)>t0, self.stop_seconds(name)<t1)
+            within_range = np.logical_and(self.start_seconds(name) > t0, self.stop_seconds(name) < t1)
         else:
-            starts_in_range = np.logical_and(self.start_seconds(name)>t0, self.start_seconds(name)<t1)
-            stops_in_range = np.logical_and(self.stop_seconds(name)>t0, self.stop_seconds(name)<t1)
+            starts_in_range = np.logical_and(self.start_seconds(name) > t0, self.start_seconds(name) < t1)
+            stops_in_range = np.logical_and(self.stop_seconds(name) > t0, self.stop_seconds(name) < t1)
             within_range = np.logical_or(starts_in_range, stops_in_range)
         within_range_indices = np.where(within_range)[0]
         return within_range_indices
@@ -362,7 +370,7 @@ class Events(UserDict):
     def _infer_categories(self):
         categories = dict()
         for name in self.names:
-            if len(self[name])==0:
+            if len(self[name]) == 0:
                 if not hasattr(self, 'categories') or name not in self.categories:
                     categories[name] = None
                 elif hasattr(self, 'categories') and name in self.categories:
@@ -383,8 +391,7 @@ class Events(UserDict):
     def _drop_nan(self):
         # remove entries with nan stop or start (but keep their name)
         for name in self.names:
-            nan_events = np.logical_or(np.isnan(self.start_seconds(name)),
-                                       np.isnan(self.stop_seconds(name)))
+            nan_events = np.logical_or(np.isnan(self.start_seconds(name)), np.isnan(self.stop_seconds(name)))
             self[name] = self[name][~nan_events]
 
     @property
