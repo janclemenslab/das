@@ -41,7 +41,7 @@ class DictClass(dict):
         return out
 
 
-def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> Dict[str, Any]:
+def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> DictClass[str, Any]:
     """Load hierarchy of npy files into dict of dicts.
 
     Args:
@@ -81,7 +81,7 @@ def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> 
     return data
 
 
-def save(location: str, data: Dict[str, Any]):
+def save(location: str, data: DictClass) -> None:
     """Save nested dict in data to location as a directory with npy files dir.
 
     Args:
