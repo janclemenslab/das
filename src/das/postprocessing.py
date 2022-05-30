@@ -57,7 +57,7 @@ def optimize(dataset_path: str,
         Tuple[float, float, float, Dict[str, Union[float, List[float]]]]: [description]
     """
 
-    data = das.io.npy_dir.load(dataset_path)
+    data = das.io.npy_dir.load(dataset_path, memmap_dirs='all')
     fs = data.attrs['samplerate_x_Hz']
 
     # sensible(?) defaults 0.5--1000ms
@@ -76,6 +76,10 @@ def optimize(dataset_path: str,
 
     # get raw predictions to run post-processing on
     # TODO better to load_model_and_params once and pass to predict here and below
+    # FIXME does not work for large dataset - this all needs to be done out-of-memory
+    # TODO chunk and write to zarr files
+
+    chunk_size = 10_000_000
     _, segments, probs_train_pred, _ = das.predict.predict(data['train']['x'], model_save_name=model_save_name)
     labels_train_true = postprocess(data['train']['y'], segment_dims=segments['index'], segment_names=segments['names'])
 
