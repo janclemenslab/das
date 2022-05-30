@@ -182,7 +182,8 @@ def stft_res_dense(nb_freq: int,
     if resnet_compute:
         out = tf.stack((out, out, out), axis=-1)
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)
-        out = vision_model(out)
+        out = vision_model(out, training=False)
+        out = kl.TimeDistributed(kl.Dense(min(32, 4 * nb_classes), activation='tanh', kernel_regularizer=regularizers.L1(1e-4)))(out)
 
     if len(out.shape) > 1:
         out = kl.Flatten()(out)
@@ -203,8 +204,7 @@ def stft_res_dense(nb_freq: int,
         model.get_layer('resnet50v2').trainable = False
 
     if compile:
-        # model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-        model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate),  #, amsgrad=True, clipnorm=1.),
+        model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.),
                       loss=keras.losses.CategoricalCrossentropy(label_smoothing=label_smoothing),
                       sample_weight_mode=sample_weight_mode)
     return model
