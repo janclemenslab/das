@@ -417,8 +417,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         from sklearn.utils import class_weight
         y_train = np.argmax(d['train']['y'], axis=1)
         params['class_weights'] = class_weight.compute_class_weight('balanced',
-                                                        np.unique(y_train),
-                                                        y_train)
+                                                                    classes=np.unique(y_train),
+                                                                    y=y_train)
         logging.info(f"Balancing classes: {params['class_weights']}")
 
     logging.info('building network')

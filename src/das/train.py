@@ -355,7 +355,7 @@ def train(*,
     if balance:
         from sklearn.utils import class_weight
         y_train = np.argmax(d['train']['y'], axis=1)
-        params['class_weights'] = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
+        params['class_weights'] = class_weight.compute_class_weight('balanced', classes=np.unique(y_train), y=y_train)
         logger.info(f"Balancing classes: {params['class_weights']}")
 
     logger.info('building network')
