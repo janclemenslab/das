@@ -8,7 +8,7 @@ module = "das"
 author = "Jan Clemens"
 author-email = "clemensjan@googlemail.com"
 home-page = "https://github.com/janclemenslab/das"
-classifiers = ["License :: OSI Approved :: MIT License"]
+# classifiers = ["License :: OSI Approved :: MIT License"]
 requires-python = ">=3.6"
 requires = ['numpy', 'h5py', 'scipy', 'scikit-learn', 'pyyaml', 'peakutils', 'zarr',
             'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
