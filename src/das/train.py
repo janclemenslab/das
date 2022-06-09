@@ -278,7 +278,7 @@ def train(*,
         elif fraction_data < 1.0:
             logger.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
-    if fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided:  # train on a subset
+    if fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0:  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
         first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0],
                                                                fraction_data,
