@@ -135,6 +135,7 @@ class AudioSequence(keras.utils.Sequence):
             self.weights = np.ones((self.batch_size,))
 
         self.batch_processor = batch_processor
+        self._idx_offset = 0
 
     def unroll(self, return_x=True, merge_batches=True):
         """[summary]
@@ -200,6 +201,7 @@ class AudioSequence(keras.utils.Sequence):
             batch_y [np.ndarray]: [nb_batches, nb_hist, nb_classes].
             weights_y [np.ndarray]: [nb_batches, nb_hist, nb_classes].
         """
+        idx += self._idx_offset
         batch_x = np.zeros((self.batch_size, self.x_hist, *self.x.shape[1:]), dtype=self.x.dtype)
 
         if self.with_y:
