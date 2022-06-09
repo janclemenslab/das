@@ -75,7 +75,7 @@ def init_store(nb_channels: int,
     root.attrs['samplerate_x_Hz'] = samplerate
     root.attrs['samplerate_y_Hz'] = samplerate
 
-    root.attrs['class_names'] = class_names
+    root.attrs['class_names'] = [str(cn) for cn in class_names]
     root.attrs['class_types'] = class_types
 
     if make_single_class_datasets:
