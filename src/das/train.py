@@ -437,7 +437,6 @@ def train(*,
     logger.info('TESTING:')
     if len(d['test']['x']) < nb_hist:
         logger.info('   No test data - skipping final evaluation step.')
-        return
     else:
         logger.info(f'   Re-loading last best model from {checkpoint_save_name}.')
         model.load_weights(checkpoint_save_name)

@@ -482,7 +482,6 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     # TEST
     if len(d['test']['x']) < nb_hist:
         logging.info('No test data - skipping final evaluation step.')
-        return
     else:
         logging.info('re-loading last best model')
         model, params = utils.load_model_and_params(params['save_name'])
