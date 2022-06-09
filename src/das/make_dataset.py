@@ -271,13 +271,17 @@ def make_gaps(y: np.ndarray,
         if len(gap_offsets) > 0 and len(gap_onsets) > 0:
             gap_onsets = gap_onsets[gap_onsets < np.max(gap_offsets)]
 
-        gaps = gap_onsets - gap_offsets
+        if len(gap_offsets) > 0 and len(gap_onsets) > 0:
+            gaps = gap_onsets - gap_offsets
+        else:
+            gaps = []
+            gap_onsets = []
+            gap_offsets = []
 
         for gap, gap_onset, gap_offset in zip(gaps, gap_onsets, gap_offsets):
             if gap < 2 * gap_halfwidth:
                 midpoint = int(gap_offset + gap / 2)
-                y0[midpoint - gap_halfwidth:midpoint + gap_halfwidth +
-                   1, :] = 0
+                y0[midpoint - gap_halfwidth:midpoint + gap_halfwidth + 1, :] = 0
 
     # ensure gaps exist even when same-type segments touch
     if start_seconds is not None and stop_seconds is not None:
