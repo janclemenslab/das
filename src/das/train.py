@@ -17,10 +17,11 @@ try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
     physical_devices = tf.config.list_physical_devices('GPU')
     if physical_devices:
-        tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+        for device in physical_devices:
+            tf.config.experimental.set_memory_growth(device, enable=True)
+    tf.config.optimizer.set_jit(enabled=True)
 except Exception as e:
     logger.exception(e)
-
 
 
 def train(*,
