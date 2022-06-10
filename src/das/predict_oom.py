@@ -291,7 +291,6 @@ def predict_segments(class_probabilities: np.ndarray,
     return segments
 
 
-
 def _detect_events_oom(event_probability: np.ndarray,
                        thres: float = 0.70, min_dist: int = 100,
                        index: int = 0, block_info=None, pad=0) -> np.ndarray:
