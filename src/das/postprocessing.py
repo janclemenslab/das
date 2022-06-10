@@ -123,13 +123,13 @@ def optimize(dataset_path: str,
         score_val = None
 
     # from samples to seconds
-    best_gap_dur, best_min_len = best_gap_dur / fs, best_min_len / fs
+    best_gap_dur, best_min_len = float(best_gap_dur / fs), float(best_min_len / fs)
 
     scores = {
-        'train_pre': score_train_pre,
-        'train': score_train,
-        'val_pre': score_val_pre,
-        'val': score_val,
+        'train_pre': float(score_train_pre),
+        'train': float(score_train),
+        'val_pre': float(score_val_pre),
+        'val': float(score_val),
         'all_train': f1_scores
     }
 

@@ -422,10 +422,10 @@ def train(*,
         logger.info(f'     min_len={best_min_len} seconds')
 
         params['post_opt'] = {
-            'gap_dur': float(best_gap_dur),
-            'min_len': float(best_min_len),
-            'score_train': float(scores['train']),
-            'score_val': float(scores['val']),
+            'gap_dur': best_gap_dur,
+            'min_len': best_min_len,
+            'score_train': scores['train'],
+            'score_val': scores['val'],
         }
 
         logger.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
