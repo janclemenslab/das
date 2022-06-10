@@ -445,10 +445,10 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         callbacks.append(TensorBoard(log_dir=save_name))
 
     if wandb_api_token and wandb_project:  # could also get those from env vars!
-            del params['wandb_api_token']
-            wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
-            if wandb:
-                callbacks.append(wandb.callback())
+        del params['wandb_api_token']
+        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+        if wandb:
+            callbacks.append(wandb.callback())
     else:
         wandb = None
 

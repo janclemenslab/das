@@ -44,7 +44,7 @@ def optimize_grid(labels_train_true, probs_train_pred, gap_durs, min_lens, segme
 def optimize(dataset_path: str,
              model_save_name: str,
              gap_durs: Optional[List[float]] = None,
-             min_lens: Optional[List[float]] = None) -> Tuple[float, float, float, Dict[str, Union[float, List[float]]]]:
+             min_lens: Optional[List[float]] = None) -> Tuple[float, float, Dict[str, Union[float, List[float]]]]:
     """[summary]
 
     Args:
@@ -54,7 +54,7 @@ def optimize(dataset_path: str,
         min_lens (Optional[List[float]], optional): in seconds. Defaults to None.
 
     Returns:
-        Tuple[float, float, float, Dict[str, Union[float, List[float]]]]: [description]
+        Tuple[float, float, Dict[str, Union[float, List[float]]]]: [description]
     """
 
     data = das.io.npy_dir.load(dataset_path, memmap_dirs='all')
@@ -75,11 +75,6 @@ def optimize(dataset_path: str,
         min_lens = (values * fs).astype(np.int)
 
     # get raw predictions to run post-processing on
-    # TODO better to load_model_and_params once and pass to predict here and below
-    # FIXME does not work for large dataset - this all needs to be done out-of-memory
-    # TODO chunk and write to zarr files
-
-    chunk_size = 10_000_000
     _, segments, probs_train_pred, _ = das.predict.predict(data['train']['x'], model_save_name=model_save_name)
     labels_train_true = postprocess(data['train']['y'], segment_dims=segments['index'], segment_names=segments['names'])
 

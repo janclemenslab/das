@@ -288,9 +288,6 @@ def train(*,
     elif sample_bounds_provided:
         logger.info("Using provided start/end samples:")
         logger.info(f"Train: {first_sample_train}:{last_sample_train}, Val: {first_sample_val}:{last_sample_val}.")
-    # else:
-    #     first_sample_train, last_sample_train = 0, None
-    #     first_sample_val, last_sample_val = 0, None
 
     # TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data
     params.update({
@@ -364,7 +361,6 @@ def train(*,
     except KeyError as e:
         logger.exception(e)
         raise ValueError(f'Model name was {model_name} but only {list(models.model_dict)} allowed.')
-
 
     logger.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
