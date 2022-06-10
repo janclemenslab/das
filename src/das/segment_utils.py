@@ -71,13 +71,18 @@ def label_syllables_by_majority(labels: np.array,
         Tuple[np.array, np.array]: Sequence of syllables, clean sequence of per-sample labels.
     """
     syllables = []
-    labels_clean = np.zeros_like(labels, dtype=np.int)
+    labels_clean = np.zeros_like(labels, dtype=int)
 
-    for onset_seconds, offset_seconds in zip(onsets_seconds, offsets_seconds):
-        onset_sample = int(onset_seconds * samplerate)
-        offset_sample = int(offset_seconds * samplerate)
-        majority_label = scipy.stats.mode(labels[onset_sample:offset_sample])[0]
-        if len(majority_label):
+    onsets_sample = (onsets_seconds * samplerate).astype('int')
+    offsets_sample = (offsets_seconds * samplerate).astype('int')
+
+    for onset_sample, offset_sample in zip(onsets_sample, offsets_sample):
+        # majority_label = scipy.stats.mode(labels[onset_sample:offset_sample])[0]
+        # faster mode
+        values, counts = np.unique(labels[onset_sample:offset_sample], return_counts=True)
+        if len(values):
+            majority_label = values[counts.argmax()]
+            # if (majority_label):
             syllables.append(int(majority_label))
             labels_clean[onset_sample:offset_sample] = syllables[-1]
 

@@ -1,7 +1,7 @@
 """Utilities for handling events."""
 import numpy as np
 import peakutils
-from typing import Iterable
+from typing import Iterable, Optional, List, Tuple, Union
 
 
 def find_nearest(array, values):
@@ -30,22 +30,25 @@ def find_nearest(array, values):
     return val, idx, dist
 
 
-def detect_events(event_probability, thres=0.70, min_dist=100):
-    """[summary]
+def detect_events(event_probability: np.ndarray,
+                  thres: float = 0.70, min_dist: int = 100,
+                  index: int = 0) -> Tuple[np.ndarray, np.ndarray]:
+    """Detect events as peaks in probabilitiy.
 
     Args:
-        event_probability ([type]): [description]
+        event_probability ([np.ndarray]): [T, nb_classes]
         thres (float, optional): [description]. Defaults to 0.70.
         min_dist (int, optional): [description]. Defaults to 100 samples.
-
+        index: (int, Optional): List of indices into axis 1 for which to compute the labels.
+                                     Defaults to None (use all indices).
     Returns:
         event_indices: index of each detected event
         event_confidence: event_probability at the event_index
     """
-    event_indices = peakutils.indexes(event_probability, thres=thres, min_dist=min_dist)
+    event_indices = peakutils.indexes(event_probability[:, index], thres=thres, min_dist=min_dist, thres_abs=True)
 
     if len(event_indices):  # guard against empty event_indices
-        event_confidence = event_probability[event_indices]
+        event_confidence = event_probability[event_indices, index]
     else:
         event_confidence = []
 
