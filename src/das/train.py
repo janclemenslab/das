@@ -324,9 +324,7 @@ def train(*,
     if balance:
         logger.info("Balancing classes:")
         logger.info("   Computing class weights.")
-        y_train = np.argmax(d['train']['y'][first_sample_train:last_sample_train], axis=1)
-        classes = np.unique(y_train)
-        params['class_weights'] = list(sklearn.utils.class_weight.compute_class_weight('balanced', classes=classes, y=y_train))
+        params['class_weights'] = data.compute_class_weights(d['train']['y'][first_sample_train:last_sample_train])
         logger.info(f"   {params['class_weights']}")
 
     data_gen = data.AudioSequence(d['train']['x'],

@@ -1,7 +1,9 @@
 """Utils for loading and manipulating data for training and prediction."""
 import numpy as np
 import tensorflow.keras as keras
+import dask.array
 from typing import Optional, Callable, Sequence
+from tqdm.autonotebook import tqdm
 
 
 def unpack_batches(x: np.ndarray, padding: int = 0):
@@ -47,6 +49,32 @@ def sub_range(data_len, fraction: float, min_nb_samples: int = 0, seed=None):
     first_sample = np.random.randint(low=0, high=data_len - sub_len - 1)
     last_sample = first_sample + sub_len + 1
     return first_sample, last_sample
+
+
+def compute_class_weights(y: np.ndarray) -> np.ndarray:
+    """_summary_
+
+    Args:
+        y (np.ndarray): [T, nb_classes]
+
+    Returns:
+        np.ndarray: nb_classes
+    """
+    nb_classes = y.shape[1]
+
+    # chunk y
+    yy = dask.array.from_array(y)
+    nb_chunks = len(yy.chunks[0])
+
+    # count classes over blocks (dask.array.map_blocks does nto work fsr)
+    counts = np.zeros((nb_chunks, nb_classes))
+    for cnt, block in enumerate(tqdm(yy.blocks, total=nb_chunks, desc='Counting class occurrences')):
+        counts[cnt, :] = np.sum(block.compute().astype(float), axis=0)
+
+    # aggregate and normalize
+    class_weights = np.sum(counts, axis=0)
+    class_weights /= np.sum(class_weights)
+    return class_weights
 
 
 class AudioSequence(keras.utils.Sequence):
