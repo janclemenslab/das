@@ -11,6 +11,7 @@ from tensorflow.python.keras.utils import tf_utils
 from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import keras_tuner as kt
+import sklearn.utils
 import yaml
 import os
 import sys
@@ -175,7 +176,7 @@ class DasTuner(kt.Tuner):
             model = self.hypermodel.build(trial.hyperparameters)
             model.params = self.params  # attach params to model so we can save them in ModelParamsCheckpoint
             model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
-                      callbacks=callbacks, verbose=verbose, class_weight=class_weight)
+                      callbacks=callbacks, verbose=verbose)
             if self.tracker is not None:
                 self.tracker.finish()
             self.current_trial.status = 'RUNNING'
@@ -414,12 +415,12 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     params['class_weights'] = None
     if balance:
-        from sklearn.utils import class_weight
+        logging.info("Balancing classes:")
+        logging.info("   Computing class weights.")
         y_train = np.argmax(d['train']['y'], axis=1)
-        params['class_weights'] = class_weight.compute_class_weight('balanced',
-                                                                    classes=np.unique(y_train),
-                                                                    y=y_train)
-        logging.info(f"Balancing classes: {params['class_weights']}")
+        classes = np.unique(y_train)
+        params['class_weights'] = list(sklearn.utils.class_weight.compute_class_weight('balanced', classes=classes, y=y_train))
+        logging.info(f"   {params['class_weights']}")
 
     logging.info('building network')
 
