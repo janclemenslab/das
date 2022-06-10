@@ -219,7 +219,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
     return events
 
 
-def predict_song(class_probabilities: np.ndarray, params: dict[str, Any],
+def predict_song(class_probabilities: np.ndarray, params: Dict[str, Any],
                  event_thres: float = 0.5, event_dist: float = 0.01,
                  event_dist_min: float = 0, event_dist_max: float = None,
                  segment_ref_onsets: Optional[List[float]] = None,
