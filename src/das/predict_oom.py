@@ -317,9 +317,6 @@ def _detect_events_oom(event_probability: np.ndarray,
     return np.stack((event_indices, event_confidence), axis=1)
 
 
-    return np.stack((event_indices, event_confidence), axis=1)
-
-
 def predict_events(class_probabilities: np.ndarray,
                    samplerate: float = 1.0,
                    event_dims: Sequence[int] = None,
@@ -519,7 +516,7 @@ def predict(x: np.ndarray,
 
     if batch_size is not None:
         params['batch_size'] = batch_size
-    # breakpoint()
+
     if pad:
         # figure out length in multiples of batches
 

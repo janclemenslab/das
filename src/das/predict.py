@@ -328,7 +328,7 @@ def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
 
     if batch_size is not None:
         params['batch_size'] = batch_size
-    # breakpoint()
+
     if pad:
         # figure out length in multiples of batches
 
