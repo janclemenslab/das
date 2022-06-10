@@ -1,7 +1,7 @@
 """Utils for loading and manipulating data for training and prediction."""
 import numpy as np
 import tensorflow.keras as keras
-from typing import Optional, Callable
+from typing import Optional, Callable, Sequence
 
 
 def unpack_batches(x: np.ndarray, padding: int = 0):
@@ -61,6 +61,7 @@ class AudioSequence(keras.utils.Sequence):
                  first_sample: int = 0, last_sample: Optional[int] = None, output_stride: int = 1, nb_repeats: int = 1,
                  shuffle_subset: Optional[float] = None, unpack_channels: bool = False, mask_input: Optional[int] = None,
                  batch_processor: Optional[Callable[[np.ndarray], np.ndarray]] = None,
+                 class_weights: Optional[Sequence[float]] = None,
                  **kwargs):
         """[summary]
 
@@ -87,6 +88,7 @@ class AudioSequence(keras.utils.Sequence):
                                     unpack [nb_hist, nb_channels] -> [nb_channels * [nb_hist, 1]]
             mask_input (int): half width of the number of central samples to mask. Defaults to None (no masking).
             batch_processor (Callable[[np.ndarray], np.ndarray], optional): For augmentations. Defaults to None.
+            class_weights (Sequence[float], optional): Weights for each class used for balancing. Defaults to None (no balancing).
         """
         # TODO clarify "channels" semantics
         self.x, self.y = x, y
@@ -110,6 +112,7 @@ class AudioSequence(keras.utils.Sequence):
         self.with_y_hist = with_y_hist
         self.data_padding = data_padding
         self.unpack_channels = unpack_channels
+        self.class_weights = class_weights
         self.mask_input = mask_input
         s0 = self.first_sample / self.stride
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
@@ -239,8 +242,19 @@ class AudioSequence(keras.utils.Sequence):
 
         if self.with_y:
             out = (batch_x, batch_y)
+
+            if self.class_weights is not None:
+                # weights contain weight for the class at each time point
+                weights = np.zeros_like(self.weights)
+                labels = np.argmax(batch_y, axis=-1)
+                for label, weight in enumerate(self.class_weights):
+                    weights[labels == label] = weight
+                weights *= self.weights  # use weights as mask to zero boundaries
+            else:
+                weights = self.weights()
+
             if self.data_padding > 0:
-                out = (batch_x, batch_y, self.weights)
+                out = (batch_x, batch_y, weights)
         else:
             out = (batch_x, )
         return out

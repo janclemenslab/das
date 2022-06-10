@@ -5,6 +5,7 @@ import flammkuchen as fl
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
+import sklearn.utils
 import os
 import yaml
 from typing import List, Optional, Tuple, Dict, Any
@@ -318,6 +319,15 @@ def train(*,
     else:
         augs = None
 
+    params['class_weights'] = None
+    if balance:
+        logger.info("Balancing classes:")
+        logger.info("   Computing class weights.")
+        y_train = np.argmax(d['train']['y'][first_sample_train:last_sample_train], axis=1)
+        classes = np.unique(y_train)
+        params['class_weights'] = list(sklearn.utils.class_weight.compute_class_weight('balanced', classes=classes, y=y_train))
+        logger.info(f"   {params['class_weights']}")
+
     data_gen = data.AudioSequence(d['train']['x'],
                                   d['train']['y'],
                                   shuffle=True,
@@ -347,13 +357,6 @@ def train(*,
     logger.info(f"   {data_gen}")
     logger.info(f"Validation data:")
     logger.info(f"   {val_gen}")
-
-    params['class_weights'] = None
-    if balance:
-        from sklearn.utils import class_weight
-        y_train = np.argmax(d['train']['y'], axis=1)
-        params['class_weights'] = class_weight.compute_class_weight('balanced', classes=np.unique(y_train), y=y_train)
-        logger.info(f"Balancing classes: {params['class_weights']}")
 
     logger.info('building network')
     try:
@@ -402,7 +405,6 @@ def train(*,
         verbose=verbose,
         validation_data=val_gen,
         callbacks=callbacks,
-        class_weight=params['class_weights'],
     )
 
     # OPTIMIZE POSTPROCESSING
