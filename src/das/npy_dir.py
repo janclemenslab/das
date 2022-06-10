@@ -41,7 +41,7 @@ class DictClass(dict):
         return out
 
 
-def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> DictClass[str, Any]:
+def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> DictClass:
     """Load hierarchy of npy files into dict of dicts.
 
     Args:
