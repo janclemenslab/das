@@ -279,7 +279,7 @@ class AudioSequence(keras.utils.Sequence):
                     weights[labels == label] = weight
                 weights *= self.weights  # use weights as mask to zero boundaries
             else:
-                weights = self.weights()
+                weights = self.weights
 
             if self.data_padding > 0:
                 out = (batch_x, batch_y, weights)
