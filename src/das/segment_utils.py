@@ -4,7 +4,7 @@ import scipy.stats
 from typing import List, Tuple, Any
 
 
-def fill_gaps(labels: np.array, gap_dur: int = 100) -> np.array:
+def fill_gaps(labels: np.array, gap_dur: int = 100) -> np.ndarray:
     """Fill short gaps in a sequence of labelled samples.
 
     `---111111-1111---` -> `---11111111111---`
