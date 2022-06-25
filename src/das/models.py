@@ -133,7 +133,8 @@ def tcn_stft(nb_freq: int,
         model.get_layer(name='resnet50v2').trainable = False
 
     if compile:
-        model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.)
+        model.compile(optimizer=optimizer,
                       loss=loss,
                       sample_weight_mode=sample_weight_mode)
     return model
@@ -204,7 +205,8 @@ def stft_res_dense(nb_freq: int,
         model.get_layer('resnet50v2').trainable = False
 
     if compile:
-        model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.),
+        optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.)
+        model.compile(optimizer=optimizer,
                       loss=keras.losses.CategoricalCrossentropy(label_smoothing=label_smoothing),
                       sample_weight_mode=sample_weight_mode)
     return model
