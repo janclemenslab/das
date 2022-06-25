@@ -150,12 +150,12 @@ def predict_segments(class_probabilities: np.array,
                 segment_ref_offsets = segments['offsets_seconds']
 
             sequence, labels = segment_utils.label_syllables_by_majority(labels,
-                                                                            segment_ref_onsets,
-                                                                            segment_ref_offsets,
-                                                                            samplerate)
+                                                                         segment_ref_onsets,
+                                                                         segment_ref_offsets,
+                                                                         samplerate)
             segments['sequence'] = sequence  # syllable-type for each syllable as int
         else:
-            segments['sequence'] = None
+            segments['sequence'] = []
         segments['samples'] = labels
     return segments
 
