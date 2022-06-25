@@ -19,7 +19,6 @@ try:  # fixes cuDNN error when using LSTM layer
     if physical_devices:
         for device in physical_devices:
             tf.config.experimental.set_memory_growth(device, enable=True)
-    tf.config.optimizer.set_jit(enabled=True)
 except Exception as e:
     logger.exception(e)
 
