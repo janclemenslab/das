@@ -2,7 +2,7 @@
 import numpy as np
 import tensorflow.keras as keras
 import dask.array
-from typing import Optional, Callable, Sequence
+from typing import Optional, Callable, Sequence, List
 from tqdm.autonotebook import tqdm
 
 
@@ -51,7 +51,7 @@ def sub_range(data_len, fraction: float, min_nb_samples: int = 0, seed=None):
     return first_sample, last_sample
 
 
-def compute_class_weights(y: np.ndarray) -> np.ndarray:
+def compute_class_weights(y: np.ndarray) -> List[float]:
     """_summary_
 
     Args:
@@ -74,6 +74,7 @@ def compute_class_weights(y: np.ndarray) -> np.ndarray:
     # aggregate and normalize
     class_weights = np.sum(counts, axis=0)
     class_weights /= np.sum(class_weights)
+    class_weights = [1 / class_weight for class_weight in class_weights]
     return class_weights
 
 
