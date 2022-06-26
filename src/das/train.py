@@ -263,8 +263,8 @@ def train(*,
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
+        logger.info(f"Versioning the data:")
         params['data_hash'] = data_hash.hash_data(data_dir)
-        logger.info(f"Version of the data:")
         logger.info(f"   MD5 hash of {data_dir} is")
         logger.info(f"   {params['data_hash']}")
 
