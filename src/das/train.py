@@ -405,6 +405,8 @@ def train(*,
         callbacks=callbacks,
     )
 
+    tf.keras.backend.clear_session()
+
     # OPTIMIZE POSTPROCESSING
     if post_opt:
         logger.info('OPTIMIZING POSTPROCESSING:')
