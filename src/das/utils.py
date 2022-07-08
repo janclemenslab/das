@@ -12,33 +12,6 @@ from . import models
 from typing import Dict, Callable, Any, List, Tuple, Optional
 
 
-class LossHistory(keras.callbacks.Callback):
-    """[summary]
-
-    Args:
-        keras ([type]): [description]
-    """
-
-    def __init__(self):
-        self.min_loss = np.inf
-
-    def on_train_begin(self, logs):
-        logging.info('training started')
-
-    def on_epoch_begin(self, epoch, logs):
-        self.t0 = time.time()
-
-    def on_epoch_end(self, epoch, logs):
-        duration = time.time() - self.t0
-        current_loss = logs.get('val_loss')
-        current_train_loss = logs.get('loss')
-        self.min_loss = np.min((current_loss, self.min_loss))
-        logging.info('ep{0:>5d} ({1:1.4f} seconds): train_loss={4:1.5f} val_loss= {2:1.5f}/{3:1.5f} (current/min)'.format(epoch, duration, current_loss, self.min_loss, current_train_loss))
-
-    def on_training_end(self, logs):
-        logging.info('trained ended')
-
-
 def load_model(file_trunk: str, model_dict: Dict[str, Callable],
                model_ext: str = '_model.h5',
                params_ext: str = '_params.yaml',
