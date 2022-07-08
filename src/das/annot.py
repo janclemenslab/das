@@ -150,7 +150,7 @@ class Events(UserDict):
         # only keep unique
         possible_event_names = list(set(possible_event_names))
 
-        out = cls.from_lists(names, start_seconds, stop_seconds, possible_event_names)
+        out = cls.from_lists(event_names, start_seconds, stop_seconds, possible_event_names)
         return out
 
     def _init_df(self) -> pd.DataFrame:
