@@ -122,35 +122,35 @@ class Events(UserDict):
     @classmethod
     def from_predict(cls, events=None, segments=None):
         # to lists or df
-        event_names = []
+        names = []
         start_seconds = []
         stop_seconds = []
-        possible_event_names = []
+        possible_names = []
 
         if segments is not None and len(segments) and 'sequence' in segments and len(segments['sequence']) and 'names' in segments:
             if type(segments['sequence'][0]) is not str and type(segments['sequence'][0]) is not np.str_:
-                names = [segments['names'][ii] for ii in segments['sequence']]  # from ints to names
+                segment_names = [segments['names'][ii] for ii in segments['sequence']]  # from ints to names
             else:
-                names = segments['sequence']
-            event_names.extend(names)
+                segment_names = segments['sequence']
+            names.extend(segment_names)
             start_seconds.extend(segments['onsets_seconds'])
             stop_seconds.extend(segments['offsets_seconds'])
-            possible_event_names.extend(segments['names'])
+            possible_names.extend(segments['names'])
 
         if events is not None and len(events) and 'sequence' in events and len(events['sequence']) and 'names' in events:
             if type(events['sequence'][0]) is not str and type(events['sequence'][0]) is not np.str_:
-                names = [events['names'][ii] for ii in events['sequence']]  # from ints to names
+                event_names = [events['names'][ii] for ii in events['sequence']]  # from ints to names
             else:
-                names = events['sequence']
-            event_names.extend(names)
+                event_names = events['sequence']
+            names.extend(event_names)
             start_seconds.extend(events['seconds'])
             stop_seconds.extend(events['seconds'])
-            possible_event_names.extend(events['names'])
+            possible_names.extend(events['names'])
 
         # only keep unique
-        possible_event_names = list(set(possible_event_names))
+        possible_names = list(set(possible_names))
 
-        out = cls.from_lists(event_names, start_seconds, stop_seconds, possible_event_names)
+        out = cls.from_lists(names, start_seconds, stop_seconds, possible_names)
         return out
 
     def _init_df(self) -> pd.DataFrame:
