@@ -1,7 +1,6 @@
 """Code for training and evaluating networks."""
 import logging
 import os
-import defopt
 import scipy
 import flammkuchen
 import numpy as np
@@ -29,7 +28,7 @@ def predict_probabililties(x, model, params, verbose=None, prepend_data_padding:
     y_pred = data.unpack_batches(y_pred, pred_gen.data_padding)  # reshape from [batches, nb_hist, ...] to [time, ...]
     if prepend_data_padding:   # to account for loss of samples at the first and last chunks
         y_pred = np.pad(y_pred,
-                        pad_width=((params['data_padding'], params['data_padding']), (0,0)),
+                        pad_width=((params['data_padding'], params['data_padding']), (0, 0)),
                         mode='constant', constant_values=0)
     return y_pred
 
@@ -63,7 +62,7 @@ def labels_from_probabilities(probabilities, threshold: Optional[float] = None):
     return labels
 
 
-def predict_segments(class_probabilities: np.array,
+def predict_segments(class_probabilities: np.ndarray,
                      samplerate: float = 1.0,
                      segment_dims: Optional[List[int]] = None,
                      segment_names: Optional[List[str]] = None,
@@ -193,7 +192,7 @@ def predict_events(class_probabilities, samplerate: float = 1.0,
     if event_dist_max is None:
         event_dist_max = np.inf
 
-    events = dict()
+    events: Dict[str, Any] = dict()
     if len(event_dims):
         events['samplerate_Hz'] = samplerate
         events['index'] = event_dims
@@ -246,7 +245,7 @@ def predict_song(class_probabilities: np.ndarray, params: Dict[str, Any],
     return events, segments
 
 
-def predict(x: np.array, model_save_name: str = None, verbose: int = 1,
+def predict(x: np.ndarray, model_save_name: str = None, verbose: int = 1,
             batch_size: int = None,
             model: models.keras.models.Model = None, params: dict = None,
             event_thres: float = 0.5, event_dist: float = 0.01,
@@ -444,9 +443,9 @@ def cli_predict(path: str, model_save_name: str, *,
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
             events, segments, class_probabilities, class_names = predict(x, None, verbose, batch_size,
-                                                            model, params,
-                                                            event_thres, event_dist, event_dist_min, event_dist_max,
-                                                            segment_thres, segment_use_optimized, segment_minlen, segment_fillgap)
+                                                                         model, params,
+                                                                         event_thres, event_dist, event_dist_min, event_dist_max,
+                                                                         segment_thres, segment_use_optimized, segment_minlen, segment_fillgap)
 
             if 'event' in params["class_types"]:
                 logging.info(f"   found {len(events['seconds'])} instances of events '{list(set(events['sequence']))}'.")
@@ -475,5 +474,5 @@ def cli_predict(path: str, model_save_name: str, *,
             # reset
             if os.path.isdir(path):
                 save_filename = None
-        except Exception as e:
+        except Exception:
             logging.exception(f'Error processing file {recording_filename}.')
