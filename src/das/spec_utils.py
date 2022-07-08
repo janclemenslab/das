@@ -5,7 +5,7 @@ try:
     import tensorflow_probability as tfp
 except ImportError:
     tfp = None
-    logging.warning('No tensorflow-probability.')
+    # logging.warning('No tensorflow-probability.')
     pass
 
 
