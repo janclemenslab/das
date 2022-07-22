@@ -25,7 +25,8 @@ requirements:
 
   run:
     - python {{ python }}
-    - defopt
+    - defopt=6.3
+    - rich
     - flammkuchen
     - h5py
     - matplotlib
