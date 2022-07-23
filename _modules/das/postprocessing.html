@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -257,7 +258,7 @@
         </div>
         <article role="main">
           <h1>Source code for das.postprocessing</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">das.io</span><span class="o">,</span> <span class="nn">das.predict</span><span class="o">,</span> <span class="nn">das.segment_utils</span>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">io</span><span class="p">,</span> <span class="n">predict_oom</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn.metrics</span>
 <span class="kn">from</span> <span class="nn">tqdm.autonotebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
@@ -265,13 +266,23 @@
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
+<span class="c1"># import zarr</span>
 
 <span class="c1"># suppress UndefinedMetricWarnings in case of no preds</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">gap_dur</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segment_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segment_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="n">probs_post</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict_segments</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">,</span> <span class="n">gap_dur</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segment_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segment_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">segment_thres</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># labels = da.map_blocks(predict_oom.labels_from_probabilities,</span>
+    <span class="c1">#                        class_probabilities,</span>
+    <span class="c1">#                        segment_thres,</span>
+    <span class="c1">#                        segment_dims,</span>
+    <span class="c1">#                        dtype=np.intp,</span>
+    <span class="c1">#                        drop_axis=-1,)</span>
+    <span class="c1"># labels = labels.compute()</span>
+    <span class="c1"># labels = da.to_zarr(labels, zarr.storage.TempStore(), return_stored=True, compute=True)</span>
+    <span class="n">probs_post</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">predict_segments</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">,</span>
                                               <span class="n">segment_fillgap</span><span class="o">=</span><span class="n">gap_dur</span><span class="p">,</span>
                                               <span class="n">segment_minlen</span><span class="o">=</span><span class="n">min_len</span><span class="p">,</span>
                                               <span class="n">segment_dims</span><span class="o">=</span><span class="n">segment_dims</span><span class="p">,</span>
@@ -295,6 +306,10 @@
     <span class="n">f1_scores</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)(</span>
         <span class="n">delayed</span><span class="p">(</span><span class="n">obj_fun</span><span class="p">)(</span><span class="n">labels_train_true</span><span class="p">,</span> <span class="n">probs_train_pred</span><span class="p">,</span> <span class="n">gap_dur</span><span class="p">,</span> <span class="n">min_len</span><span class="p">,</span> <span class="n">segment_dims</span><span class="p">,</span> <span class="n">segment_names</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">gap_dur</span><span class="p">,</span> <span class="n">min_len</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)))</span>
+    <span class="c1"># f1_scores = []</span>
+    <span class="c1"># for gap_dur, min_len in tqdm(params, total=len(params)):</span>
+    <span class="c1">#     val = obj_fun(labels_train_true, probs_train_pred, gap_dur, min_len, segment_dims, segment_names)</span>
+    <span class="c1">#     f1_scores.append(val)</span>
     <span class="n">best_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">f1_scores</span><span class="p">)</span>
     <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span><span class="p">,</span> <span class="n">best_score</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">best_idx</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="n">best_idx</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">f1_scores</span><span class="p">[</span><span class="n">best_idx</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span><span class="p">,</span> <span class="n">best_score</span><span class="p">,</span> <span class="n">f1_scores</span>
@@ -303,7 +318,7 @@
 <div class="viewcode-block" id="optimize"><a class="viewcode-back" href="../../api/das.postprocessing.html#das.postprocessing.optimize">[docs]</a><span class="k">def</span> <span class="nf">optimize</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
              <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
              <span class="n">gap_durs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-             <span class="n">min_lens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]:</span>
+             <span class="n">min_lens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]:</span>
     <span class="sd">"""[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -313,10 +328,10 @@
 <span class="sd">        min_lens (Optional[List[float]], optional): in seconds. Defaults to None.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[float, float, float, Dict[str, Union[float, List[float]]]]: [description]</span>
+<span class="sd">        Tuple[float, float, Dict[str, Union[float, List[float]]]]: [description]</span>
 <span class="sd">    """</span>
 
-    <span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">npy_dir</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">npy_dir</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">memmap_dirs</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
     <span class="n">fs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'samplerate_x_Hz'</span><span class="p">]</span>
 
     <span class="c1"># sensible(?) defaults 0.5--1000ms</span>
@@ -324,30 +339,32 @@
 
     <span class="c1"># from seconds to samples</span>
     <span class="k">if</span> <span class="n">gap_durs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">gap_durs</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gap_durs</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">gap_durs</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gap_durs</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">gap_durs</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">gap_durs</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">min_lens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">min_lens</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">min_lens</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">min_lens</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">min_lens</span><span class="p">)</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">min_lens</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">min_lens</span> <span class="o">=</span> <span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># get raw predictions to run post-processing on</span>
-    <span class="c1"># TODO better to load_model_and_params once and pass to predict here and below</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">probs_train_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">model_save_name</span><span class="p">)</span>
-    <span class="n">labels_train_true</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">probs_train_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">model_save_name</span><span class="p">)</span>
+    <span class="c1"># labels_train_true = postprocess(data['train']['y'], segment_dims=segments['index'], segment_names=segments['names'])</span>
+    <span class="n">labels_train_true</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]),</span>
+                                    <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span>
+                                    <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
 
-    <span class="n">l</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_train_true</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs_train_pred</span><span class="p">))</span>
+    <span class="n">ml</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_train_true</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs_train_pred</span><span class="p">))</span>
 
     <span class="c1"># get the F1 score before post-processing</span>
     <span class="n">labels_train_pred</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">probs_train_pred</span><span class="p">,</span> <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
-    <span class="n">score_train_pre</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">labels_train_true</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span> <span class="n">labels_train_pred</span><span class="p">[:</span><span class="n">l</span><span class="p">])</span>
+    <span class="n">score_train_pre</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">labels_train_true</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span> <span class="n">labels_train_pred</span><span class="p">[:</span><span class="n">ml</span><span class="p">])</span>
 
     <span class="c1"># test all (gap_dur, min_len) combinations and choose the one maximizes the F1 score</span>
     <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span><span class="p">,</span> <span class="n">score_train</span><span class="p">,</span> <span class="n">f1_scores</span> <span class="o">=</span> <span class="n">optimize_grid</span><span class="p">(</span>
-        <span class="n">labels_train_true</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span>
-        <span class="n">probs_train_pred</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span>
+        <span class="n">labels_train_true</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span>
+        <span class="n">probs_train_pred</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span>
         <span class="n">gap_durs</span><span class="o">=</span><span class="n">gap_durs</span><span class="p">,</span>
         <span class="n">min_lens</span><span class="o">=</span><span class="n">min_lens</span><span class="p">,</span>
         <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span>
@@ -357,18 +374,20 @@
     <span class="c1"># validate found parameters on validation set</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]):</span>
         <span class="c1"># get raw predictions to run post-processing on</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">probs_val_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">model_save_name</span><span class="p">)</span>
-        <span class="n">labels_val_true</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">probs_val_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">model_save_name</span><span class="p">)</span>
+        <span class="n">labels_val_true</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">]),</span>
+                                      <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span>
+                                      <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
 
-        <span class="n">l</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs_val_pred</span><span class="p">))</span>
+        <span class="n">ml</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs_val_pred</span><span class="p">))</span>
 
         <span class="c1"># get the F1 score before post-processing</span>
         <span class="n">labels_val_pred</span> <span class="o">=</span> <span class="n">postprocess</span><span class="p">(</span><span class="n">probs_val_pred</span><span class="p">,</span> <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span> <span class="n">segment_names</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'names'</span><span class="p">])</span>
-        <span class="n">score_val_pre</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span> <span class="n">labels_val_pred</span><span class="p">[:</span><span class="n">l</span><span class="p">])</span>
+        <span class="n">score_val_pre</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span> <span class="n">labels_val_pred</span><span class="p">[:</span><span class="n">ml</span><span class="p">])</span>
 
         <span class="c1"># get score with best parameters</span>
-        <span class="n">score_val</span> <span class="o">=</span> <span class="n">obj_fun</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span>
-                            <span class="n">probs_val_pred</span><span class="p">[:</span><span class="n">l</span><span class="p">],</span>
+        <span class="n">score_val</span> <span class="o">=</span> <span class="n">obj_fun</span><span class="p">(</span><span class="n">labels_val_true</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span>
+                            <span class="n">probs_val_pred</span><span class="p">[:</span><span class="n">ml</span><span class="p">],</span>
                             <span class="n">gap_dur</span><span class="o">=</span><span class="n">best_gap_dur</span><span class="p">,</span>
                             <span class="n">min_len</span><span class="o">=</span><span class="n">best_min_len</span><span class="p">,</span>
                             <span class="n">segment_dims</span><span class="o">=</span><span class="n">segments</span><span class="p">[</span><span class="s1">'index'</span><span class="p">],</span>
@@ -378,13 +397,13 @@
         <span class="n">score_val</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># from samples to seconds</span>
-    <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span> <span class="o">=</span> <span class="n">best_gap_dur</span> <span class="o">/</span> <span class="n">fs</span><span class="p">,</span> <span class="n">best_min_len</span> <span class="o">/</span> <span class="n">fs</span>
+    <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_gap_dur</span> <span class="o">/</span> <span class="n">fs</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_min_len</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)</span>
 
     <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">'train_pre'</span><span class="p">:</span> <span class="n">score_train_pre</span><span class="p">,</span>
-        <span class="s1">'train'</span><span class="p">:</span> <span class="n">score_train</span><span class="p">,</span>
-        <span class="s1">'val_pre'</span><span class="p">:</span> <span class="n">score_val_pre</span><span class="p">,</span>
-        <span class="s1">'val'</span><span class="p">:</span> <span class="n">score_val</span><span class="p">,</span>
+        <span class="s1">'train_pre'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">score_train_pre</span><span class="p">),</span>
+        <span class="s1">'train'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">score_train</span><span class="p">),</span>
+        <span class="s1">'val_pre'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">score_val_pre</span><span class="p">),</span>
+        <span class="s1">'val'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">score_val</span><span class="p">),</span>
         <span class="s1">'all_train'</span><span class="p">:</span> <span class="n">f1_scores</span>
     <span class="p">}</span>
 

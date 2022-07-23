@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -260,7 +261,7 @@
 <span></span><span class="sd">"""Utilities for handling events."""</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">peakutils</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
 
 <div class="viewcode-block" id="find_nearest"><a class="viewcode-back" href="../../api/das.event_utils.html#das.event_utils.find_nearest">[docs]</a><span class="k">def</span> <span class="nf">find_nearest</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -289,22 +290,25 @@
     <span class="k">return</span> <span class="n">val</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="detect_events"><a class="viewcode-back" href="../../api/das.event_utils.html#das.event_utils.detect_events">[docs]</a><span class="k">def</span> <span class="nf">detect_events</span><span class="p">(</span><span class="n">event_probability</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="mf">0.70</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sd">"""[summary]</span>
+<div class="viewcode-block" id="detect_events"><a class="viewcode-back" href="../../api/das.event_utils.html#das.event_utils.detect_events">[docs]</a><span class="k">def</span> <span class="nf">detect_events</span><span class="p">(</span><span class="n">event_probability</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                  <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.70</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                  <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">"""Detect events as peaks in probabilitiy.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        event_probability ([type]): [description]</span>
+<span class="sd">        event_probability ([np.ndarray]): [T, nb_classes]</span>
 <span class="sd">        thres (float, optional): [description]. Defaults to 0.70.</span>
 <span class="sd">        min_dist (int, optional): [description]. Defaults to 100 samples.</span>
-
+<span class="sd">        index: (int, Optional): List of indices into axis 1 for which to compute the labels.</span>
+<span class="sd">                                     Defaults to None (use all indices).</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        event_indices: index of each detected event</span>
 <span class="sd">        event_confidence: event_probability at the event_index</span>
 <span class="sd">    """</span>
-    <span class="n">event_indices</span> <span class="o">=</span> <span class="n">peakutils</span><span class="o">.</span><span class="n">indexes</span><span class="p">(</span><span class="n">event_probability</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">)</span>
+    <span class="n">event_indices</span> <span class="o">=</span> <span class="n">peakutils</span><span class="o">.</span><span class="n">indexes</span><span class="p">(</span><span class="n">event_probability</span><span class="p">[:,</span> <span class="n">index</span><span class="p">],</span> <span class="n">thres</span><span class="o">=</span><span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">,</span> <span class="n">thres_abs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_indices</span><span class="p">):</span>  <span class="c1"># guard against empty event_indices</span>
-        <span class="n">event_confidence</span> <span class="o">=</span> <span class="n">event_probability</span><span class="p">[</span><span class="n">event_indices</span><span class="p">]</span>
+        <span class="n">event_confidence</span> <span class="o">=</span> <span class="n">event_probability</span><span class="p">[</span><span class="n">event_indices</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">event_confidence</span> <span class="o">=</span> <span class="p">[]</span>
 

@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -260,7 +261,9 @@
 <span></span><span class="sd">"""Utils for loading and manipulating data for training and prediction."""</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">dask.array</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">tqdm.autonotebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 
 <div class="viewcode-block" id="unpack_batches"><a class="viewcode-back" href="../../api/das.data.html#das.data.unpack_batches">[docs]</a><span class="k">def</span> <span class="nf">unpack_batches</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">padding</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -308,6 +311,33 @@
     <span class="k">return</span> <span class="n">first_sample</span><span class="p">,</span> <span class="n">last_sample</span></div>
 
 
+<div class="viewcode-block" id="compute_class_weights"><a class="viewcode-back" href="../../api/das.data.html#das.data.compute_class_weights">[docs]</a><span class="k">def</span> <span class="nf">compute_class_weights</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">"""_summary_</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        y (np.ndarray): [T, nb_classes]</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray: nb_classes</span>
+<span class="sd">    """</span>
+    <span class="n">nb_classes</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># chunk y</span>
+    <span class="n">yy</span> <span class="o">=</span> <span class="n">dask</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">nb_chunks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yy</span><span class="o">.</span><span class="n">chunks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># count classes over blocks (dask.array.map_blocks does nto work fsr)</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nb_chunks</span><span class="p">,</span> <span class="n">nb_classes</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">yy</span><span class="o">.</span><span class="n">blocks</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">nb_chunks</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s1">'Counting class occurrences'</span><span class="p">)):</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">cnt</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># aggregate and normalize</span>
+    <span class="n">class_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">class_weights</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">class_weights</span><span class="p">)</span>
+    <span class="n">class_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="n">class_weight</span> <span class="k">for</span> <span class="n">class_weight</span> <span class="ow">in</span> <span class="n">class_weights</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">class_weights</span></div>
+
+
 <div class="viewcode-block" id="AudioSequence"><a class="viewcode-back" href="../../api/das.data.html#das.data.AudioSequence">[docs]</a><span class="k">class</span> <span class="nc">AudioSequence</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">Sequence</span><span class="p">):</span>
     <span class="sd">"""[summary]</span>
 
@@ -320,6 +350,7 @@
                  <span class="n">first_sample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">last_sample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output_stride</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nb_repeats</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">shuffle_subset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unpack_channels</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">mask_input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">batch_processor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">class_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">"""[summary]</span>
 
@@ -346,6 +377,7 @@
 <span class="sd">                                    unpack [nb_hist, nb_channels] -&gt; [nb_channels * [nb_hist, 1]]</span>
 <span class="sd">            mask_input (int): half width of the number of central samples to mask. Defaults to None (no masking).</span>
 <span class="sd">            batch_processor (Callable[[np.ndarray], np.ndarray], optional): For augmentations. Defaults to None.</span>
+<span class="sd">            class_weights (Sequence[float], optional): Weights for each class used for balancing. Defaults to None (no balancing).</span>
 <span class="sd">        """</span>
         <span class="c1"># TODO clarify "channels" semantics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
@@ -369,6 +401,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">with_y_hist</span> <span class="o">=</span> <span class="n">with_y_hist</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_padding</span> <span class="o">=</span> <span class="n">data_padding</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unpack_channels</span> <span class="o">=</span> <span class="n">unpack_channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_weights</span> <span class="o">=</span> <span class="n">class_weights</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mask_input</span> <span class="o">=</span> <span class="n">mask_input</span>
         <span class="n">s0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_sample</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
         <span class="n">s1</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_sample</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hist</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span>
@@ -394,6 +427,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">batch_processor</span> <span class="o">=</span> <span class="n">batch_processor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_idx_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="AudioSequence.unroll"><a class="viewcode-back" href="../../api/das.data.html#das.data.AudioSequence.unroll">[docs]</a>    <span class="k">def</span> <span class="nf">unroll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_x</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">merge_batches</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">"""[summary]</span>
@@ -459,6 +493,7 @@
 <span class="sd">            batch_y [np.ndarray]: [nb_batches, nb_hist, nb_classes].</span>
 <span class="sd">            weights_y [np.ndarray]: [nb_batches, nb_hist, nb_classes].</span>
 <span class="sd">        """</span>
+        <span class="n">idx</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_idx_offset</span>
         <span class="n">batch_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_hist</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_y</span><span class="p">:</span>
@@ -496,8 +531,19 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">with_y</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># weights contain weight for the class at each time point</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">batch_y</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_weights</span><span class="p">):</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight</span>
+                <span class="n">weights</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>  <span class="c1"># use weights as mask to zero boundaries</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_padding</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_x</span><span class="p">,</span> <span class="p">)</span>
         <span class="k">return</span> <span class="n">out</span></div>

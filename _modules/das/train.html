@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -264,10 +265,15 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">EarlyStopping</span><span class="p">,</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="n">ReduceLROnPlateau</span><span class="p">,</span> <span class="n">TensorBoard</span>
 <span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
+<span class="kn">import</span> <span class="nn">sklearn.utils</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">rich.logging</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">evaluate</span><span class="p">,</span> <span class="n">tracking</span><span class="p">,</span> <span class="n">data_hash</span><span class="p">,</span> <span class="n">augmentation</span><span class="p">,</span> <span class="n">postprocessing</span>  <span class="c1">#, timeseries</span>
+
+<span class="n">FORMAT</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(message)s</span><span class="s2">"</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">FORMAT</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s2">"[</span><span class="si">%X</span><span class="s2">]"</span><span class="p">,</span> <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">rich</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">RichHandler</span><span class="p">()])</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -275,10 +281,10 @@
     <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
     <span class="n">physical_devices</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">list_physical_devices</span><span class="p">(</span><span class="s1">'GPU'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">physical_devices</span><span class="p">:</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">set_memory_growth</span><span class="p">(</span><span class="n">physical_devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">physical_devices</span><span class="p">:</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">experimental</span><span class="o">.</span><span class="n">set_memory_growth</span><span class="p">(</span><span class="n">device</span><span class="p">,</span> <span class="n">enable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
 
 
 <div class="viewcode-block" id="train"><a class="viewcode-back" href="../../api/das.train.html#das.train.train">[docs]</a><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="o">*</span><span class="p">,</span>
@@ -292,7 +298,7 @@
           <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
           <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
           <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-          <span class="n">use_separable</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+          <span class="n">use_separable</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>
           <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">,</span>
           <span class="n">ignore_boundaries</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
           <span class="n">batch_norm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -521,8 +527,8 @@
     <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>  <span class="c1"># add metadata from data.attrs to params for saving</span>
 
     <span class="k">if</span> <span class="n">version_data</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Versioning the data:"</span><span class="p">)</span>
         <span class="n">params</span><span class="p">[</span><span class="s1">'data_hash'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_hash</span><span class="o">.</span><span class="n">hash_data</span><span class="p">(</span><span class="n">data_dir</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Version of the data:"</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   MD5 hash of </span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2"> is"</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_hash'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
@@ -537,7 +543,7 @@
         <span class="k">elif</span> <span class="n">fraction_data</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using </span><span class="si">{</span><span class="n">fraction_data</span><span class="si">:</span><span class="s2">1.4f</span><span class="si">}</span><span class="s2"> of the training and validation data."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">fraction_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">batch_level_subsampling</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sample_bounds_provided</span><span class="p">:</span>  <span class="c1"># train on a subset</span>
+    <span class="k">if</span> <span class="n">fraction_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">batch_level_subsampling</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">sample_bounds_provided</span> <span class="ow">and</span> <span class="n">fraction_data</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>  <span class="c1"># train on a subset</span>
         <span class="n">min_nb_samples</span> <span class="o">=</span> <span class="n">nb_hist</span> <span class="o">*</span> <span class="p">(</span><span class="n">batch_size</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># ensure the generator contains at least one full batch</span>
         <span class="n">first_sample_train</span><span class="p">,</span> <span class="n">last_sample_train</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sub_range</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                                                <span class="n">fraction_data</span><span class="p">,</span>
@@ -547,9 +553,6 @@
     <span class="k">elif</span> <span class="n">sample_bounds_provided</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Using provided start/end samples:"</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Train: </span><span class="si">{</span><span class="n">first_sample_train</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">last_sample_train</span><span class="si">}</span><span class="s2">, Val: </span><span class="si">{</span><span class="n">first_sample_val</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">last_sample_val</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="c1"># else:</span>
-    <span class="c1">#     first_sample_train, last_sample_train = 0, None</span>
-    <span class="c1">#     first_sample_val, last_sample_val = 0, None</span>
 
     <span class="c1"># TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data</span>
     <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -579,6 +582,13 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   Got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">augs</span><span class="p">)</span><span class="si">}</span><span class="s1"> augmentations.'</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">augs</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">balance</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Balancing classes:"</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"   Computing class weights."</span><span class="p">)</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">compute_class_weights</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">][</span><span class="n">first_sample_train</span><span class="p">:</span><span class="n">last_sample_train</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">data_gen</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">AudioSequence</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span>
                                   <span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span>
@@ -610,20 +620,12 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Validation data:"</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">val_gen</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">balance</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">class_weight</span>
-        <span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_weight</span><span class="o">.</span><span class="n">compute_class_weight</span><span class="p">(</span><span class="s1">'balanced'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">),</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Balancing classes: </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'building network'</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">[</span><span class="n">model_name</span><span class="p">](</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Model name was </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1"> but only </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">)</span><span class="si">}</span><span class="s1"> allowed.'</span><span class="p">)</span>
-
 
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">save_dir</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -665,14 +667,27 @@
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
         <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span>
         <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-        <span class="n">class_weight</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">],</span>
     <span class="p">)</span>
+
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">clear_session</span><span class="p">()</span>
 
     <span class="c1"># OPTIMIZE POSTPROCESSING</span>
     <span class="k">if</span> <span class="n">post_opt</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'OPTIMIZING POSTPROCESSING:'</span><span class="p">)</span>
-        <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">postprocessing</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span>
-            <span class="n">dataset_path</span><span class="o">=</span><span class="n">data_dir</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">)</span>
+
+        <span class="n">gap_durs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">fill_gaps_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fill_gaps_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fill_gaps_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gap_durs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="n">fill_gaps_min</span><span class="p">,</span> <span class="n">fill_gaps_max</span><span class="p">,</span> <span class="n">fill_gaps_steps</span><span class="p">)</span>
+
+        <span class="n">min_lens</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">min_len_min</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_len_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">min_len_steps</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">min_lens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="n">min_len_min</span><span class="p">,</span> <span class="n">min_len_max</span><span class="p">,</span> <span class="n">min_len_steps</span><span class="p">)</span>
+
+        <span class="n">best_gap_dur</span><span class="p">,</span> <span class="n">best_min_len</span><span class="p">,</span> <span class="n">scores</span> <span class="o">=</span> <span class="n">postprocessing</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">dataset_path</span><span class="o">=</span><span class="n">data_dir</span><span class="p">,</span>
+                                                                     <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span>
+                                                                     <span class="n">gap_durs</span><span class="o">=</span><span class="n">gap_durs</span><span class="p">,</span>
+                                                                     <span class="n">min_lens</span><span class="o">=</span><span class="n">min_lens</span><span class="p">)</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Score on training data changed from </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">'train_pre'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.4</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">'train'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.4</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">scores</span><span class="p">[</span><span class="s1">'val_pre'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Score on validation data changed from </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">'val_pre'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.4</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="s1">'val'</span><span class="p">]</span><span class="si">:</span><span class="s2">1.4</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
@@ -681,10 +696,10 @@
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'     min_len=</span><span class="si">{</span><span class="n">best_min_len</span><span class="si">}</span><span class="s1"> seconds'</span><span class="p">)</span>
 
         <span class="n">params</span><span class="p">[</span><span class="s1">'post_opt'</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">'gap_dur'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_gap_dur</span><span class="p">),</span>
-            <span class="s1">'min_len'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">best_min_len</span><span class="p">),</span>
-            <span class="s1">'score_train'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">'train'</span><span class="p">]),</span>
-            <span class="s1">'score_val'</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s1">'val'</span><span class="p">]),</span>
+            <span class="s1">'gap_dur'</span><span class="p">:</span> <span class="n">best_gap_dur</span><span class="p">,</span>
+            <span class="s1">'min_len'</span><span class="p">:</span> <span class="n">best_min_len</span><span class="p">,</span>
+            <span class="s1">'score_train'</span><span class="p">:</span> <span class="n">scores</span><span class="p">[</span><span class="s1">'train'</span><span class="p">],</span>
+            <span class="s1">'score_val'</span><span class="p">:</span> <span class="n">scores</span><span class="p">[</span><span class="s1">'val'</span><span class="p">],</span>
         <span class="p">}</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   Updating params file "</span><span class="si">{</span><span class="n">save_name</span><span class="si">}</span><span class="s1">_params.yaml" with the results.'</span><span class="p">)</span>
@@ -696,7 +711,6 @@
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'TESTING:'</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">nb_hist</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'   No test data - skipping final evaluation step.'</span><span class="p">)</span>
-        <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   Re-loading last best model from </span><span class="si">{</span><span class="n">checkpoint_save_name</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
         <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">checkpoint_save_name</span><span class="p">)</span>
@@ -708,7 +722,10 @@
         <span class="n">y_name</span> <span class="o">=</span> <span class="s1">'y'</span>
         <span class="k">if</span> <span class="n">y_suffix</span><span class="p">:</span>
             <span class="n">y_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">'_</span><span class="si">{</span><span class="n">y_suffix</span><span class="si">}</span><span class="s1">'</span>
-        <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_probabilities</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">x_name</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">y_name</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_probabilities</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">x_name</span><span class="p">],</span>
+                                                                 <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="n">y_name</span><span class="p">],</span>
+                                                                 <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                                                                 <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 
         <span class="n">labels_test</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
         <span class="n">labels_pred</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
@@ -731,7 +748,7 @@
             <span class="s1">'y_test'</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
             <span class="s1">'y_pred'</span><span class="p">:</span> <span class="n">y_pred</span><span class="p">,</span>
             <span class="s1">'labels_test'</span><span class="p">:</span> <span class="n">labels_test</span><span class="p">,</span>
-            <span class="s1">'labels_pred'</span><span class="p">:</span> <span class="n">labels_pred</span><span class="p">,</span>
+            <span class="s1">'labels_pred'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">labels_pred</span><span class="p">),</span>
             <span class="s1">'params'</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">fl</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">ddd</span><span class="p">)</span>

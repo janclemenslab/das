@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -279,11 +280,15 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
 
 
 <div class="viewcode-block" id="DictClass"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.DictClass">[docs]</a><span class="k">class</span> <span class="nc">DictClass</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
     <span class="sd">"""Wrap dict in class so we can attach attrs to it."""</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attrs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Data:</span><span class="se">\n</span><span class="s1">'</span>
         <span class="k">for</span> <span class="n">top_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -296,16 +301,20 @@
         <span class="k">return</span> <span class="n">out</span></div>
 
 
-<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">memmap_dirs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'train'</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">memmap_dirs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DictClass</span><span class="p">:</span>
     <span class="sd">"""Load hierarchy of npy files into dict of dicts.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        location ([type]): [description]</span>
-<span class="sd">        memmap_dirs (list, optional): [description]. Defaults to ['train'].</span>
+<span class="sd">        memmap_dirs (list, optional): List of dirs to memmap. String 'all' will memmmap all dirs. Defaults to ['train'].</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: [description]</span>
 <span class="sd">    """</span>
+
+    <span class="k">if</span> <span class="n">memmap_dirs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">memmap_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'train'</span><span class="p">]</span>
+
     <span class="k">def</span> <span class="nf">path_to_key</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">key</span>
@@ -314,7 +323,7 @@
                  <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
                  <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">name</span><span class="p">))]</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">DictClass</span><span class="p">()</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
     <span class="n">attrs_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s1">'attrs.npy'</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">attrs_path</span><span class="p">):</span>
         <span class="n">data</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">attrs_path</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)[()]</span>
@@ -325,14 +334,14 @@
         <span class="n">npy_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_name</span><span class="p">,</span> <span class="s1">'*.npy'</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">npy_file</span> <span class="ow">in</span> <span class="n">npy_files</span><span class="p">:</span>
             <span class="n">npy_key</span> <span class="o">=</span> <span class="n">path_to_key</span><span class="p">(</span><span class="n">npy_file</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">dir_key</span> <span class="ow">in</span> <span class="n">memmap_dirs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">memmap_dirs</span> <span class="o">==</span> <span class="s1">'all'</span> <span class="ow">or</span> <span class="n">dir_key</span> <span class="ow">in</span> <span class="n">memmap_dirs</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">dir_key</span><span class="p">][</span><span class="n">npy_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">open_memmap</span><span class="p">(</span><span class="n">npy_file</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="n">dir_key</span><span class="p">][</span><span class="n">npy_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">npy_file</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<div class="viewcode-block" id="save"><a class="viewcode-back" href="../../api/das.npy_dir.html#das.npy_dir.save">[docs]</a><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">DictClass</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">"""Save nested dict in data to location as a directory with npy files dir.</span>
 
 <span class="sd">    Args:</span>

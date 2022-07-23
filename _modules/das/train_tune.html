@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -270,6 +271,7 @@
 <span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">Callback</span><span class="p">,</span> <span class="n">EarlyStopping</span><span class="p">,</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="n">ReduceLROnPlateau</span><span class="p">,</span> <span class="n">TensorBoard</span>
 <span class="kn">from</span> <span class="nn">tensorflow</span> <span class="kn">import</span> <span class="n">keras</span>
 <span class="kn">import</span> <span class="nn">keras_tuner</span> <span class="k">as</span> <span class="nn">kt</span>
+<span class="kn">import</span> <span class="nn">sklearn.utils</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -434,7 +436,7 @@
             <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hypermodel</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">trial</span><span class="o">.</span><span class="n">hyperparameters</span><span class="p">)</span>
             <span class="n">model</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span>  <span class="c1"># attach params to model so we can save them in ModelParamsCheckpoint</span>
             <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_gen</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="n">steps_per_epoch</span><span class="p">,</span>
-                      <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="n">class_weight</span><span class="p">)</span>
+                      <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_trial</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s1">'RUNNING'</span>
@@ -648,7 +650,7 @@
         <span class="k">elif</span> <span class="n">fraction_data</span> <span class="o">&lt;</span> <span class="mf">1.0</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Using </span><span class="si">{</span><span class="n">fraction_data</span><span class="si">:</span><span class="s2">1.4f</span><span class="si">}</span><span class="s2"> of the training and validation data."</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">fraction_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">batch_level_subsampling</span><span class="p">:</span>  <span class="c1"># train on a subset</span>
+    <span class="k">if</span> <span class="n">fraction_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">batch_level_subsampling</span> <span class="ow">and</span> <span class="n">fraction_data</span> <span class="o">!=</span> <span class="mf">1.0</span><span class="p">:</span>  <span class="c1"># train on a subset</span>
         <span class="n">min_nb_samples</span> <span class="o">=</span> <span class="n">nb_hist</span> <span class="o">*</span> <span class="p">(</span><span class="n">batch_size</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># ensure the generator contains at least one full batch</span>
         <span class="n">first_sample_train</span><span class="p">,</span> <span class="n">last_sample_train</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sub_range</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fraction_data</span><span class="p">,</span> <span class="n">min_nb_samples</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="n">first_sample_val</span><span class="p">,</span> <span class="n">last_sample_val</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sub_range</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fraction_data</span><span class="p">,</span> <span class="n">min_nb_samples</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
@@ -673,12 +675,12 @@
 
     <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">balance</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">class_weight</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Balancing classes:"</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"   Computing class weights."</span><span class="p">)</span>
         <span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_weight</span><span class="o">.</span><span class="n">compute_class_weight</span><span class="p">(</span><span class="s1">'balanced'</span><span class="p">,</span>
-                                                        <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">),</span>
-                                                        <span class="n">y_train</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Balancing classes: </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sklearn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">class_weight</span><span class="o">.</span><span class="n">compute_class_weight</span><span class="p">(</span><span class="s1">'balanced'</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"   </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'building network'</span><span class="p">)</span>
 
@@ -704,10 +706,10 @@
         <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TensorBoard</span><span class="p">(</span><span class="n">log_dir</span><span class="o">=</span><span class="n">save_name</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">wandb_api_token</span> <span class="ow">and</span> <span class="n">wandb_project</span><span class="p">:</span>  <span class="c1"># could also get those from env vars!</span>
-            <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">'wandb_api_token'</span><span class="p">]</span>
-            <span class="n">wandb</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">Wandb</span><span class="p">(</span><span class="n">wandb_project</span><span class="p">,</span> <span class="n">wandb_api_token</span><span class="p">,</span> <span class="n">wandb_entity</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">wandb</span><span class="p">:</span>
-                <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wandb</span><span class="o">.</span><span class="n">callback</span><span class="p">())</span>
+        <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">'wandb_api_token'</span><span class="p">]</span>
+        <span class="n">wandb</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">Wandb</span><span class="p">(</span><span class="n">wandb_project</span><span class="p">,</span> <span class="n">wandb_api_token</span><span class="p">,</span> <span class="n">wandb_entity</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">wandb</span><span class="p">:</span>
+            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wandb</span><span class="o">.</span><span class="n">callback</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">wandb</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -741,7 +743,6 @@
     <span class="c1"># TEST</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">nb_hist</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'No test data - skipping final evaluation step.'</span><span class="p">)</span>
-        <span class="k">return</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'re-loading last best model'</span><span class="p">)</span>
         <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'save_name'</span><span class="p">])</span>

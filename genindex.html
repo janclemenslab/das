@@ -211,6 +211,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
@@ -359,10 +360,16 @@
         <li><a href="api/das.augmentation.html#das.augmentation.CircShift">CircShift (class in das.augmentation)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.cli_predict">cli_predict() (in module das.predict)</a>
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#das.predict_oom.cli_predict">(in module das.predict_oom)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.models_legacy.html#das.models_legacy.cnn">cnn() (in module das.models_legacy)</a>
 </li>
         <li><a href="api/das.models_legacy.html#das.models_legacy.cnn2D">cnn2D() (in module das.models_legacy)</a>
+</li>
+        <li><a href="api/das.data.html#das.data.compute_class_weights">compute_class_weights() (in module das.data)</a>
 </li>
         <li><a href="api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.compute_output_shape">compute_output_shape() (das.kapre.filterbank.Filterbank method)</a>
 
@@ -542,6 +549,13 @@
 
         <ul>
           <li><a href="api/das.predict.html#module-das.predict">module</a>
+</li>
+        </ul></li>
+        <li>
+    das.predict_oom
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#module-das.predict_oom">module</a>
 </li>
         </ul></li>
         <li>
@@ -763,7 +777,11 @@
         <li><a href="api/das.segment_utils.html#das.segment_utils.label_syllables_by_majority">label_syllables_by_majority() (in module das.segment_utils)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.labels_from_probabilities">labels_from_probabilities() (in module das.predict)</a>
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#das.predict_oom.labels_from_probabilities">(in module das.predict_oom)</a>
 </li>
+        </ul></li>
         <li><a href="api/das.segment_utils.html#das.segment_utils.levenshtein">levenshtein() (in module das.segment_utils)</a>
 </li>
         <li><a href="api/das.io.html#das.io.load">load() (in module das.io)</a>
@@ -785,8 +803,6 @@
         <li><a href="api/das.utils.html#das.utils.load_params">load_params() (in module das.utils)</a>
 </li>
         <li><a href="api/das.tracking.html#das.tracking.Wandb.log_test_results">log_test_results() (das.tracking.Wandb method)</a>
-</li>
-        <li><a href="api/das.utils.html#das.utils.LossHistory">LossHistory (class in das.utils)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -864,6 +880,8 @@
 </li>
           <li><a href="api/das.predict.html#module-das.predict">das.predict</a>
 </li>
+          <li><a href="api/das.predict_oom.html#module-das.predict_oom">das.predict_oom</a>
+</li>
           <li><a href="api/das.pulse_utils.html#module-das.pulse_utils">das.pulse_utils</a>
 </li>
           <li><a href="api/das.segment_utils.html#module-das.segment_utils">das.segment_utils</a>
@@ -921,30 +939,22 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.augmentation.html#das.augmentation.Offset">Offset (class in das.augmentation)</a>
 </li>
-        <li><a href="api/das.utils.html#das.utils.LossHistory.on_epoch_begin">on_epoch_begin() (das.utils.LossHistory method)</a>
-</li>
         <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback.on_epoch_end">on_epoch_end() (das.train_tune.OracleCallback method)</a>
 
         <ul>
-          <li><a href="api/das.utils.html#das.utils.LossHistory.on_epoch_end">(das.utils.LossHistory method)</a>
-</li>
           <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">(das.utils.QtProgressCallback method)</a>
 </li>
         </ul></li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_predict_batch_end">on_predict_batch_end() (das.utils.QtProgressCallback method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_test_batch_end">on_test_batch_end() (das.utils.QtProgressCallback method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_batch_end">on_train_batch_end() (das.utils.QtProgressCallback method)</a>
 </li>
-        <li><a href="api/das.utils.html#das.utils.LossHistory.on_train_begin">on_train_begin() (das.utils.LossHistory method)</a>
-
-        <ul>
-          <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_begin">(das.utils.QtProgressCallback method)</a>
+        <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_begin">on_train_begin() (das.utils.QtProgressCallback method)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_train_end">on_train_end() (das.utils.QtProgressCallback method)</a>
 </li>
         <li><a href="api/das.postprocessing.html#das.postprocessing.optimize">optimize() (in module das.postprocessing)</a>
@@ -964,15 +974,29 @@
         <li><a href="api/das.utils_plot.html#das.utils_plot.Pdf">Pdf (class in das.utils_plot)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.predict">predict() (in module das.predict)</a>
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#das.predict_oom.predict">(in module das.predict_oom)</a>
 </li>
+        </ul></li>
+        <li><a href="api/das.predict.html#das.predict.predict_events">predict_events() (in module das.predict)</a>
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#das.predict_oom.predict_events">(in module das.predict_oom)</a>
+</li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/das.predict.html#das.predict.predict_events">predict_events() (in module das.predict)</a>
-</li>
         <li><a href="api/das.predict.html#das.predict.predict_probabililties">predict_probabililties() (in module das.predict)</a>
 </li>
-        <li><a href="api/das.predict.html#das.predict.predict_segments">predict_segments() (in module das.predict)</a>
+        <li><a href="api/das.predict_oom.html#das.predict_oom.predict_probabilities">predict_probabilities() (in module das.predict_oom)</a>
 </li>
+        <li><a href="api/das.predict.html#das.predict.predict_segments">predict_segments() (in module das.predict)</a>
+
+        <ul>
+          <li><a href="api/das.predict_oom.html#das.predict_oom.predict_segments">(in module das.predict_oom)</a>
+</li>
+        </ul></li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.pulse_freq">pulse_freq() (in module das.pulse_utils)</a>
 </li>
     </ul></td>

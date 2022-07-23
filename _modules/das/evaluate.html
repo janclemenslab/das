@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -260,10 +261,10 @@
 <span></span><span class="kn">import</span> <span class="nn">sklearn.metrics</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">predict</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">io</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">predict</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">predict_oom</span>
 <span class="kn">from</span> <span class="nn">.event_utils</span> <span class="kn">import</span> <span class="n">evaluate_eventtimes</span>
 
 
@@ -310,8 +311,7 @@
     <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span></div>
 
 
-<div class="viewcode-block" id="evaluate_segment_timing"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segment_timing">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segment_timing</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">,</span> <span class="n">segment_labels_pred</span><span class="p">,</span>
-                            <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<div class="viewcode-block" id="evaluate_segment_timing"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segment_timing">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segment_timing</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">,</span> <span class="n">segment_labels_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
     <span class="sd">"""[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -328,20 +328,18 @@
 
     <span class="c1"># ensure evaluate_eventtimes returns nearest_predicted_onsets (nearest true event for each predicted event),</span>
     <span class="c1"># if not, rename var</span>
-    <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span>
-        <span class="n">segment_onsets_true</span><span class="p">,</span> <span class="n">segment_onsets_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
-    <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span>
-        <span class="n">segment_offsets_true</span><span class="p">,</span> <span class="n">segment_offsets_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
+    <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">segment_onsets_true</span><span class="p">,</span> <span class="n">segment_onsets_pred</span><span class="p">,</span>
+                                                                                <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
+    <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">segment_offsets_true</span><span class="p">,</span> <span class="n">segment_offsets_pred</span><span class="p">,</span>
+                                                                                  <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span></div>
 
 
 <span class="c1"># TODO: move to das.segment_utils</span>
 <div class="viewcode-block" id="segment_timing"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.segment_timing">[docs]</a><span class="k">def</span> <span class="nf">segment_timing</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
     <span class="sd">"""Get onset and offset time (in seconds) for each segment."""</span>
-    <span class="n">segment_onset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>  <span class="c1"># explicit cast required?</span>
-    <span class="n">segment_offset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
+    <span class="n">segment_onset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>  <span class="c1"># explicit cast required?</span>
+    <span class="n">segment_offset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
     <span class="k">return</span> <span class="n">segment_onset_times</span><span class="p">,</span> <span class="n">segment_offset_times</span></div>
 
 
@@ -377,11 +375,7 @@
             <span class="p">)</span>
 
     <span class="c1"># do not prepend padding since we create y from the generator</span>
-    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">predict_probabililties</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>
-                                            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-                                            <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
-                                            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                                            <span class="n">prepend_data_padding</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">predict_probabilities</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">prepend_data_padding</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">eval_gen</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">AudioSequence</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_data_from_gen</span><span class="p">(</span><span class="n">eval_gen</span><span class="p">)</span>
@@ -389,21 +383,15 @@
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span></div>
 
 
-<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">savename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-             <span class="n">custom_objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-             <span class="n">full_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-             <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">savename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">custom_objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">full_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Loading last best model.'</span><span class="p">)</span>
-    <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">savename</span><span class="p">,</span>
-                                                <span class="n">custom_objects</span><span class="o">=</span><span class="n">custom_objects</span><span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">savename</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="n">custom_objects</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Loading data from </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">]</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">],</span>
-                <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'x_suffix'</span><span class="p">],</span>
-                <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'y_suffix'</span><span class="p">])</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">],</span> <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'x_suffix'</span><span class="p">],</span> <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'y_suffix'</span><span class="p">])</span>
 
-    <span class="n">output</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">params</span><span class="p">[</span><span class="s1">'nb_hist'</span><span class="p">]:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'No test data - skipping final evaluation step.'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">full_output</span><span class="p">:</span>
@@ -418,14 +406,11 @@
                                                         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                                                         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
-        <span class="n">labels_test</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
-        <span class="n">labels_pred</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+        <span class="n">labels_test</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
+        <span class="n">labels_pred</span> <span class="o">=</span> <span class="n">predict_oom</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'evaluating'</span><span class="p">)</span>
-        <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span>
-                                             <span class="n">labels_pred</span><span class="p">,</span>
-                                             <span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">],</span>
-                                             <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
         <span class="n">output</span><span class="p">[</span><span class="s1">'x_test'</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_test</span>

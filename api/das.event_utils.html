@@ -213,6 +213,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
@@ -262,14 +263,16 @@
 <p>Utilities for handling events.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.detect_events">
-<span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">detect_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_probability</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thres</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/event_utils.html#detect_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.detect_events" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
+<span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">detect_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/event_utils.html#detect_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.detect_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect events as peaks in probabilitiy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>event_probability</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>event_probability</strong> (<em>[</em><em>np.ndarray</em><em>]</em>) – [T, nb_classes]</p></li>
 <li><p><strong>thres</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]. Defaults to 0.70.</p></li>
 <li><p><strong>min_dist</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 100 samples.</p></li>
+<li><p><strong>index</strong> – (int, Optional): List of indices into axis 1 for which to compute the labels.
+Defaults to None (use all indices).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>

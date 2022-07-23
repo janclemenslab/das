@@ -212,6 +212,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -269,33 +270,6 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
-
-
-<div class="viewcode-block" id="LossHistory"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.LossHistory">[docs]</a><span class="k">class</span> <span class="nc">LossHistory</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">Callback</span><span class="p">):</span>
-    <span class="sd">"""[summary]</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        keras ([type]): [description]</span>
-<span class="sd">    """</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-
-<div class="viewcode-block" id="LossHistory.on_train_begin"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.LossHistory.on_train_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'training started'</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="LossHistory.on_epoch_begin"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.LossHistory.on_epoch_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_epoch_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="LossHistory.on_epoch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.LossHistory.on_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
-        <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t0</span>
-        <span class="n">current_loss</span> <span class="o">=</span> <span class="n">logs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'val_loss'</span><span class="p">)</span>
-        <span class="n">current_train_loss</span> <span class="o">=</span> <span class="n">logs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'loss'</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">((</span><span class="n">current_loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_loss</span><span class="p">))</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'ep</span><span class="si">{0:&gt;5d}</span><span class="s1"> (</span><span class="si">{1:1.4f}</span><span class="s1"> seconds): train_loss=</span><span class="si">{4:1.5f}</span><span class="s1"> val_loss= </span><span class="si">{2:1.5f}</span><span class="s1">/</span><span class="si">{3:1.5f}</span><span class="s1"> (current/min)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">current_loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_loss</span><span class="p">,</span> <span class="n">current_train_loss</span><span class="p">))</span></div>
-
-    <span class="k">def</span> <span class="nf">on_training_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="p">):</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'trained ended'</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>

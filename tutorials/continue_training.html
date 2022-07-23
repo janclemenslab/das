@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Programming documentation" href="tutorials.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <meta name="generator" content="sphinx-4.3.2, furo 2021.10.09"/>
-        <title>Convert your own annotations and audio data - DAS documentation</title>
+        <title>Load the model - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=0254c309f5cadf746f1a613e7677379ac9c8cdcd" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
@@ -141,7 +141,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -163,7 +163,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
+  <ul>
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
@@ -174,8 +174,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/predict.html">Predict</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials.html">Programming documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Convert your own annotations and audio data</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
@@ -252,142 +252,140 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
-          <section class="tex2jax_ignore mathjax_ignore" id="convert-your-own-annotations-and-audio-data">
-<h1>Convert your own annotations and audio data<a class="headerlink" href="#convert-your-own-annotations-and-audio-data" title="Permalink to this headline">¶</a></h1>
-<p>If you start from scratch—with non-annotated audio recording—use the GUI for labelling the data. See the <a class="reference internal" href="../tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">GUI tutorial</span></a> for a description of all steps - from loading data, annotating song, making a dataset, training a network and generating annotations after training.</p>
-<p>However, often annotations exist, from old manual annotations or other tools. You can use existing annotations to train <em>DAS</em>, by converting the existing annotations into the <em>DAS</em> format. See <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a>.</p>
-<p>If audio data is in a format supported by das (see <a class="reference internal" href="../tutorials_gui/load.html"><span class="doc std std-doc">here</span></a>), open in GUI and export to a folder. For processing large sets of recordings use the <a class="reference internal" href="make_ds_notebook.html"><span class="doc std std-doc">notebook</span></a>.</p>
-<!--
-## Format of exported annotations and audio
-Produced by the GUI via `File/Save annotations` and `File/Export for DAS`.
+          <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.utils</span><span class="o">,</span> <span class="nn">das.data</span><span class="o">,</span> <span class="nn">das.train</span><span class="o">,</span> <span class="nn">das.io</span><span class="o">,</span> <span class="nn">das.evaluate</span><span class="o">,</span> <span class="nn">das.predict</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">EarlyStopping</span><span class="p">,</span> <span class="n">ModelCheckpoint</span>
+<span class="kn">import</span> <span class="nn">flammkuchen</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="load-the-model">
+<h1>Load the model<a class="headerlink" href="#load-the-model" title="Permalink to this headline">¶</a></h1>
+<p>Change <code class="docutils literal notranslate"><span class="pre">model_savename</span></code> - if the model is saved at <code class="docutils literal notranslate"><span class="pre">res/20220601_103543_model.h5</span></code>, then <code class="docutils literal notranslate"><span class="pre">model_savename="res/20220601_103543"</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_savename</span> <span class="o">=</span> <span class="s1">'res/20220601_103543'</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_savename</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-the-data">
+<h1>Load the data<a class="headerlink" href="#load-the-data" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">'data_dir'</span><span class="p">],</span> <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'x_suffix'</span><span class="p">],</span> <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'y_suffix'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="prep-the-data-for-tensorflow">
+<h1>Prep the data for tensorflow<a class="headerlink" href="#prep-the-data-for-tensorflow" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_gen</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AudioSequence</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span>
+                                  <span class="n">data</span><span class="p">[</span><span class="s1">'train'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span>
+                                  <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                  <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">val_gen</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AudioSequence</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span>
+                             <span class="n">data</span><span class="p">[</span><span class="s1">'val'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span>
+                             <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                             <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="prep-callbacks">
+<h1>Prep callbacks<a class="headerlink" href="#prep-callbacks" title="Permalink to this headline">¶</a></h1>
+<p>The new model will be saved to <code class="docutils literal notranslate"><span class="pre">model_savename</span> <span class="pre">+</span> <span class="pre">"_continued_model.h5"</span></code>, in our example “res/20220601_103543_continued_model.h5”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model_savename</span> <span class="o">+</span> <span class="s2">"_continued"</span><span class="p">)</span>
 
-Audio and annotations are exported into `csv` (comma-separated values) and `npz` (zip compressed numpy files):
-- `npz` consist of two variables:
-    + `data`: `[samples, channels]` array with the audio data
-    + `samplerate`: `[1,]` array with the sample rate in Hz
-- `csv` contains three columns:
-    + `name` - the name of the song or syllable type
-    + `start_seconds` - the start time of the syllable.
-    + `stop_seconds` - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
-    + Each row in the file contains to a single annotation with `name`, `start_seconds` and `stop_seconds`. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, `start_seconds` is `np.nan` and an arbitrary stop_seconds. For event-like types (song pulses), both `start_seconds` and `stop_seconds` are `np.nan`. -->
-<!--
-## Annotation format
-csv file with three columns:
-- `name`: name of the song element for instance 'pulse' or 'sine' or 'syllable A'
-- `start_seconds`: *start* of the song element in seconds rel. to the start of the recording
-- `stop_seconds`: *end* of the song element in seconds rel. to the start of the recording
+<span class="n">checkpoint_save_name</span> <span class="o">=</span> <span class="n">model_savename</span> <span class="o">+</span> <span class="s2">"_continued_model.h5"</span>  <span class="c1"># this will overwrite intermediates from previous epochs</span>
+<span class="n">callbacks</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">checkpoint_save_name</span><span class="p">,</span> <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save_weights_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">'val_loss'</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-the-model">
+<h1>Fit the model<a class="headerlink" href="#fit-the-model" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit_hist</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">data_gen</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'nb_epoch'</span><span class="p">],</span>
+    <span class="n">steps_per_epoch</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_gen</span><span class="p">),</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'verbose'</span><span class="p">],</span>
+    <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+    <span class="n">class_weight</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">'class_weights'</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="test-the-model">
+<h1>Test the model<a class="headerlink" href="#test-the-model" title="Permalink to this headline">¶</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   Re-loading last best model from </span><span class="si">{</span><span class="n">checkpoint_save_name</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">checkpoint_save_name</span><span class="p">)</span>
 
-There are two types of song elements:
-- `events` have not extent in time, `start_seconds=stop_seconds`, and are best used for brief, pulsatile signals like fly pulse song
-- `segments` extend in time, `start_seconds>stop_seconds`, and should be used for normal syllables or fly sine song -->
-<!-- The `csv` format is universal and can be created and edit using Excel or even a plain text editor. It is also very easy to programmatically created `csv` files from your own annotation format in python using a [pandas DataFrames](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_csv.html). Below, we show an example of creating a DataFrame in the correct format from annotation data and saving it as a `csv` file for use with _DAS_.
+<span class="nb">print</span><span class="p">(</span><span class="s1">'   Predicting.'</span><span class="p">)</span>
+<span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_probabilities</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">'test'</span><span class="p">][</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
 
+<span class="n">labels_test</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
+<span class="n">labels_pred</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
 
-### Examples of transforming custom annotation formats
-Say we have read annotation data into python as three lists containing the names, start and stop of a song type:
-```python
-names = ['bip', 'bop', 'bip']
-start_seconds = [1.34, 5.67, 9.13]
-stop_seconds = [1.34, 5.85, 9.13]
-```
-This defines two song types, "bip" and "bop". "bip" an event-like song type (like a pulse in fly song), since start and stop are identical. "bop" is a segment-like song type (like a syllable in birdsong), because start and stop differ.
+<span class="nb">print</span><span class="p">(</span><span class="s1">'   Evaluating.'</span><span class="p">)</span>
+<span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">evaluate</span><span class="o">.</span><span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">'class_names'</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
 
-This information needs to be arranged into a table, i.e., a pandas DataFrame, of this format:
-| names   | start_seconds    | stop_seconds  |
-| ------- |:-------------|:-----|
-| bip      | 1.34 | 1.34 |
-| bop      | 5.67   | 5.85 |
-| bip      | 9.13   |  9.13 |
-
-A pandas DataFrame with the format can be created by two means:
-Use `xb.annot`, which takes the three lists and produces a correctly  DataFrame
-```python
-from xarray_behave.annot import Events  # require install with gui
-
-evt = Events.from_lists(names, start_seconds, stop_seconds)
-df = evt.to_df()
-```
-
-Or you can assemble the DataFrame yourself:
-
-```python
-import numpy as np
-import pandas as pd
-
-# create empty DataFrame with the required columns
-df = pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
-
-# append a segment
-onset = 1.33 # seconds
-offset = 1.42  # seconds
-segment_bounds = [onset, offset]
-segment_name = 'sine_song'
-
-new_row = pd.DataFrame(np.array([segment_name, *segment_bounds])[np.newaxis,:],
-                        columns=df.columns)
-df = df.append(new_row, ignore_index=True)
-
-# append an event
-event_time = 2.15 # seconds
-event_name = 'pulse'
-
-new_row = pd.DataFrame(np.array([event_name, event_time, event_time])[np.newaxis,:],
-                        columns=df.columns)
-df = df.append(new_row, ignore_index=True)
-```
-
-Then save as a `csv` file:
-```python
-df.to_csv('filename.csv')
-```
-
-
-### Convert audio data
-The GUI can read many formats (see [list of supported audio formats](/tutorials_gui/load)) and data can always be exported in the correct format via the GUI.
-However, if you want to assemble many of your own recordings into dataset for training, a programmatic approach is more efficient.
-
-To assemble a dataset, audio data has to be provided in two formats:
-- `wav`: Universal format for audio data. can be created from many software packages:
-    - From python `scipy.io.wavfile.write(...)`
-    - from matlab `wavwrite(...)`
-    - from the command line via ffmpeg: `ffmpeg ...`
-- `npz`: Python-specific but a bit more flexible/robust. Should contain two variables - `samplerate` and `data` - and can be created like so: `np.savez(filename, data=audio, samplerate=samplerate)` -->
-<!--
-```{warning}
-Clipping can occur when saving certain data types as wav files. see docs of [scipy.io.wavfile.write](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html) for a list of the range of values available when saving audio of different types to wav.
-``` --></section>
+<span class="n">save_filename</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{0}</span><span class="s2">_results.h5"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model_savename</span> <span class="o">+</span> <span class="s2">"_continued"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'   Saving to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s1">.'</span><span class="p">)</span>
+<span class="n">ddd</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># 'fit_hist': fit_hist.history,</span>
+    <span class="s1">'confusion_matrix'</span><span class="p">:</span> <span class="n">conf_mat</span><span class="p">,</span>
+    <span class="s1">'classification_report'</span><span class="p">:</span> <span class="n">report</span><span class="p">,</span>
+    <span class="s1">'x_test'</span><span class="p">:</span> <span class="n">x_test</span><span class="p">,</span>
+    <span class="s1">'y_test'</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
+    <span class="s1">'y_pred'</span><span class="p">:</span> <span class="n">y_pred</span><span class="p">,</span>
+    <span class="s1">'labels_test'</span><span class="p">:</span> <span class="n">labels_test</span><span class="p">,</span>
+    <span class="s1">'labels_pred'</span><span class="p">:</span> <span class="n">labels_pred</span><span class="p">,</span>
+    <span class="s1">'params'</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">flammkuchen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">ddd</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="structparams.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Choice of structural network parameters</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="tutorials.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Programming documentation</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
 
         <div class="related-information">
@@ -396,7 +394,7 @@ Clipping can occur when saving certain data types as wav files. see docs of [sci
               and
               <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
               <a href="https://github.com/pradyunsg/furo">Furo theme</a>. |
-            <a class="muted-link" href="../_sources/tutorials/convert.md.txt"
+            <a class="muted-link" href="../_sources/tutorials/continue_training.ipynb.txt"
                rel="nofollow">
               Show Source
             </a>
@@ -404,8 +402,29 @@ Clipping can occur when saving certain data types as wav files. see docs of [sci
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Load the model</a></li>
+<li><a class="reference internal" href="#load-the-data">Load the data</a></li>
+<li><a class="reference internal" href="#prep-the-data-for-tensorflow">Prep the data for tensorflow</a></li>
+<li><a class="reference internal" href="#prep-callbacks">Prep callbacks</a></li>
+<li><a class="reference internal" href="#fit-the-model">Fit the model</a></li>
+<li><a class="reference internal" href="#test-the-model">Test the model</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

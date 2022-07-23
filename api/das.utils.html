@@ -213,6 +213,7 @@
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
@@ -261,66 +262,6 @@
 <span id="das-utils"></span><h1>das.utils<a class="headerlink" href="#module-das.utils" title="Permalink to this headline">¶</a></h1>
 <p>General utilities</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="das.utils.LossHistory">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">LossHistory</span></span><a class="reference internal" href="../_modules/das/utils.html#LossHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.LossHistory" title="Permalink to this definition">¶</a></dt>
-<dd><p>[summary]</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>keras</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="das.utils.LossHistory.on_epoch_begin">
-<span class="sig-name descname"><span class="pre">on_epoch_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#LossHistory.on_epoch_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.LossHistory.on_epoch_begin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called at the start of an epoch.</p>
-<p>Subclasses should override for any actions to run. This function should only
-be called during TRAIN mode.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>epoch</strong> – Integer, index of epoch.</p></li>
-<li><p><strong>logs</strong> – Dict. Currently no data is passed to this argument for this method
-but that may change in the future.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="das.utils.LossHistory.on_epoch_end">
-<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#LossHistory.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.LossHistory.on_epoch_end" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called at the end of an epoch.</p>
-<p>Subclasses should override for any actions to run. This function should only
-be called during TRAIN mode.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>epoch</strong> – Integer, index of epoch.</p></li>
-<li><p><strong>logs</strong> – <dl>
-<dt>Dict, metric results for this training epoch, and for the</dt><dd><p>validation epoch if validation is performed. Validation result keys
-are prefixed with <code class="xref py py-obj docutils literal notranslate"><span class="pre">val_</span></code>. For training epoch, the values of the</p>
-</dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>’s metrics are returned. Example<span class="classifier"><a href="#id1"><span class="problematic" id="id2">`</span></a>{‘loss’: 0.2, ‘accuracy’:</span></dt><dd><p>0.7}`.</p>
-</dd>
-</dl>
-</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="das.utils.LossHistory.on_train_begin">
-<span class="sig-name descname"><span class="pre">on_train_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#LossHistory.on_train_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.LossHistory.on_train_begin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called at the beginning of training.</p>
-<p>Subclasses should override for any actions to run.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>logs</strong> – Dict. Currently no data is passed to this argument for this method
-but that may change in the future.</p>
-</dd>
-</dl>
-</dd></dl>
-</dd></dl>
-<dl class="py class">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">QtProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Init the callback.</p>
@@ -348,7 +289,7 @@ be called during TRAIN mode.</p>
 <dt>Dict, metric results for this training epoch, and for the</dt><dd><p>validation epoch if validation is performed. Validation result keys
 are prefixed with <code class="xref py py-obj docutils literal notranslate"><span class="pre">val_</span></code>. For training epoch, the values of the</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>’s metrics are returned. Example<span class="classifier"><a href="#id3"><span class="problematic" id="id4">`</span></a>{‘loss’: 0.2, ‘accuracy’:</span></dt><dd><p>0.7}`.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>’s metrics are returned. Example<span class="classifier"><a href="#id1"><span class="problematic" id="id2">`</span></a>{‘loss’: 0.2, ‘accuracy’:</span></dt><dd><p>0.7}`.</p>
 </dd>
 </dl>
 </p></li>
