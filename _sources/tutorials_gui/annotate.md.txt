@@ -49,6 +49,9 @@ Delete annotations of the active song type by right-clicking on the annotation. 
 Dragging moves, right click deletes annotations.
 :::
 
+Change the label of an annotation via CMD/CTRL+Left click on an existing annotation. The type of the annotation will change to the currently active one.
+
+
 ## Export and save annotations
 Export audio data and annotations for integration into a training dataset via `File/Export for DAS`. This will first ask you to select a folder. When making a training dataset, all exported data in the folder will be used, so make sure you do not save data from different projects to the same folder:
 

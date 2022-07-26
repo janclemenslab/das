@@ -96,6 +96,9 @@ Delete annotations of the active song type by right-clicking on the annotation. 
 Dragging moves, right click deletes annotations.
 :::
 
+Change the label of an annotation via CMD/CTRL+Left click on an existing annotation. The type of the annotation will change to the currently active one.
+
+
 ## Export annotations and make a dataset
 _DAS_ achieves good performance from few annotated examples. Once you have completely annotated the song in the first 18 seconds of the tutorial recording---*all* pulses and sine song segments in that section of the song---you can train a network to help with annotating the rest of the data.
 
