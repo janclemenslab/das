@@ -45,7 +45,7 @@ das gui
 
 The documentation at [https://janclemenslab.org/das/](https://janclemenslab.org/das/) provides information on the usage of _DAS_:
 
-- A [quick start tutorial](https://janclemenslab.org/das/quick_start.html) walks through all steps from manually annotating song, over training a network, to generating new annotations.
+- A [quick start tutorial](https://janclemenslab.org/das/quickstart.html) walks through all steps from manually annotating song, over training a network, to generating new annotations.
 - How to use the [graphical user interface](https://janclemenslab.org/das/tutorials_gui/tutorials_gui.html).
 - How to use _DAS_ [from the terminal or from python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
 
