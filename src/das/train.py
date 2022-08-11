@@ -8,7 +8,7 @@ from tensorflow import keras
 import sklearn.utils
 import os
 import yaml
-from typing import List, Optional, Tuple, Dict, Any
+from typing import List, Optional, Tuple, Dict, Any, Union
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ def train(*,
           nb_filters: int = 16,
           kernel_size: int = 16,
           nb_conv: int = 3,
-          use_separable: List[bool] = [False],
+          use_separable: List[bool] = False,
           nb_hist: int = 1024,
           ignore_boundaries: bool = True,
           batch_norm: bool = True,
@@ -102,7 +102,6 @@ def train(*,
                            or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
                            Defaults to the timestamp YYYYMMDD_hhmmss.
         model_name (str): Network architecture to use.
-                          Use `tcn` (TCN) or `tcn_stft` (TCN with STFT frontend).
                           See das.models for a description of all models.
                           Defaults to `tcn`.
         nb_filters (int): Number of filters per layer.
