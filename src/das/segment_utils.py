@@ -16,16 +16,16 @@ def fill_gaps(labels: np.array, gap_dur: int = 100) -> np.ndarray:
     Returns:
         np.array: Labelled samples with short gaps filled.
     """
-    onsets = np.where(np.diff(labels.astype(np.int))==1)[0]
-    offsets = np.where(np.diff(labels.astype(np.int))==-1)[0]
+    onsets = np.where(np.diff(labels.astype(np.int)) == 1)[0]
+    offsets = np.where(np.diff(labels.astype(np.int)) == -1)[0]
     if len(onsets) and len(offsets):
-        onsets = onsets[onsets<offsets[-1]]
+        onsets = onsets[onsets < offsets[-1]]
     if len(onsets) and len(offsets):
-        offsets = offsets[offsets>onsets[0]]
+        offsets = offsets[offsets > onsets[0]]
     if len(onsets) and len(offsets) and len(onsets) == len(offsets):
         durations = offsets - onsets
         for idx, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
-            if idx>0 and offsets[idx-1]>onsets[idx]-gap_dur:
+            if idx > 0 and offsets[idx-1] > onsets[idx]-gap_dur:
                 labels[offsets[idx-1]:onsets[idx]+1] = 1
     return labels
 
