@@ -1,9 +1,8 @@
 import sklearn.metrics
 import numpy as np
 import pandas as pd
-from typing import Optional, Dict, Callable
+from typing import Optional, Dict, Callable, Any
 import logging
-
 from . import predict, data, utils, models, io
 from .event_utils import evaluate_eventtimes
 
@@ -51,8 +50,7 @@ def evaluate_segments(labels_test,
     return conf_mat, report
 
 
-def evaluate_segment_timing(segment_labels_true, segment_labels_pred,
-                            samplerate: float, event_tol: float):
+def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate: float, event_tol: float):
     """[summary]
 
     Args:
@@ -69,20 +67,18 @@ def evaluate_segment_timing(segment_labels_true, segment_labels_pred,
 
     # ensure evaluate_eventtimes returns nearest_predicted_onsets (nearest true event for each predicted event),
     # if not, rename var
-    segment_onsets_report, _, _, nearest_predicted_onsets = evaluate_eventtimes(
-        segment_onsets_true, segment_onsets_pred, samplerate, event_tol)
-    segment_offsets_report, _, _, nearest_predicted_offsets = evaluate_eventtimes(
-        segment_offsets_true, segment_offsets_pred, samplerate, event_tol)
+    segment_onsets_report, _, _, nearest_predicted_onsets = evaluate_eventtimes(segment_onsets_true, segment_onsets_pred,
+                                                                                samplerate, event_tol)
+    segment_offsets_report, _, _, nearest_predicted_offsets = evaluate_eventtimes(segment_offsets_true, segment_offsets_pred,
+                                                                                  samplerate, event_tol)
     return segment_onsets_report, segment_offsets_report, nearest_predicted_onsets, nearest_predicted_offsets
 
 
 # TODO: move to das.segment_utils
 def segment_timing(labels, samplerate: float):
     """Get onset and offset time (in seconds) for each segment."""
-    segment_onset_times = np.where(np.diff(labels) == 1)[0].astype(
-        np.float) / samplerate  # explicit cast required?
-    segment_offset_times = np.where(np.diff(labels) == -1)[0].astype(
-        np.float) / samplerate
+    segment_onset_times = np.where(np.diff(labels) == 1)[0].astype(np.float) / samplerate  # explicit cast required?
+    segment_offset_times = np.where(np.diff(labels) == -1)[0].astype(np.float) / samplerate
     return segment_onset_times, segment_offset_times
 
 
@@ -118,11 +114,7 @@ def evaluate_probabilities(x,
             )
 
     # do not prepend padding since we create y from the generator
-    y_pred = predict.predict_probabililties(x,
-                                            model=model,
-                                            params=params,
-                                            verbose=verbose,
-                                            prepend_data_padding=False)
+    y_pred = predict.predict_probabilities(x, model=model, params=params, verbose=verbose, prepend_data_padding=False)
 
     eval_gen = data.AudioSequence(x, y, shuffle=False, **params)
     x, y = data.get_data_from_gen(eval_gen)
@@ -130,21 +122,15 @@ def evaluate_probabilities(x,
     return x, y, y_pred
 
 
-def evaluate(savename: str,
-             custom_objects: Optional[Dict[str, Callable]] = None,
-             full_output: bool = True,
-             verbose: int = 1):
+def evaluate(savename: str, custom_objects: Optional[Dict[str, Callable]] = None, full_output: bool = True, verbose: int = 1):
     logging.info('Loading last best model.')
-    model, params = utils.load_model_and_params(savename,
-                                                custom_objects=custom_objects)
+    model, params = utils.load_model_and_params(savename, custom_objects=custom_objects)
     logging.info(model.summary())
 
     logging.info(f"Loading data from {params['data_dir']}.")
-    d = io.load(params['data_dir'],
-                x_suffix=params['x_suffix'],
-                y_suffix=params['y_suffix'])
+    d = io.load(params['data_dir'], x_suffix=params['x_suffix'], y_suffix=params['y_suffix'])
 
-    output = dict()
+    output: Dict[str, Any] = dict()
     if len(d['test']['x']) < params['nb_hist']:
         logging.info('No test data - skipping final evaluation step.')
         if full_output:
@@ -163,10 +149,7 @@ def evaluate(savename: str,
         labels_pred = predict.labels_from_probabilities(y_pred)
 
         logging.info('evaluating')
-        conf_mat, report = evaluate_segments(labels_test,
-                                             labels_pred,
-                                             params['class_names'],
-                                             report_as_dict=True)
+        conf_mat, report = evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
         output['x_test'] = x_test
