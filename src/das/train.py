@@ -10,7 +10,6 @@ import os
 import yaml
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
-
 logger = logging.getLogger(__name__)
 
 try:  # fixes cuDNN error when using LSTM layer
@@ -34,7 +33,7 @@ def train(*,
           nb_filters: int = 16,
           kernel_size: int = 16,
           nb_conv: int = 3,
-          use_separable: List[bool] = False,
+          use_separable: List[bool] = [False],
           nb_hist: int = 1024,
           ignore_boundaries: bool = True,
           batch_norm: bool = True,
@@ -263,7 +262,7 @@ def train(*,
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
-        logger.info(f"Versioning the data:")
+        logger.info("Versioning the data:")
         params['data_hash'] = data_hash.hash_data(data_dir)
         logger.info(f"   MD5 hash of {data_dir} is")
         logger.info(f"   {params['data_hash']}")
@@ -410,8 +409,20 @@ def train(*,
     # OPTIMIZE POSTPROCESSING
     if post_opt:
         logger.info('OPTIMIZING POSTPROCESSING:')
-        best_gap_dur, best_min_len, scores = postprocessing.optimize(
-            dataset_path=data_dir, model_save_name=save_name)
+
+        gap_durs = None
+        if fill_gaps_min is not None and fill_gaps_max is not None and fill_gaps_steps is not None:
+            gap_durs = np.geomspace(fill_gaps_min, fill_gaps_max, fill_gaps_steps)
+
+        min_lens = None
+        if min_len_min is not None and min_len_max is not None and min_len_steps is not None:
+            min_lens = np.geomspace(min_len_min, min_len_max, min_len_steps)
+
+        best_gap_dur, best_min_len, scores = postprocessing.optimize(dataset_path=data_dir,
+                                                                     model_save_name=save_name,
+                                                                     gap_durs=gap_durs,
+                                                                     min_lens=min_lens)
+
         logger.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
         if scores['val_pre'] is not None:
             logger.info(f"  Score on validation data changed from {scores['val_pre']:1.4} to {scores['val']:1.4}.")
@@ -446,7 +457,10 @@ def train(*,
         y_name = 'y'
         if y_suffix:
             y_name += f'_{y_suffix}'
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test'][x_name], y=d['test'][y_name], model=model, params=params)
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test'][x_name],
+                                                                 y=d['test'][y_name],
+                                                                 model=model,
+                                                                 params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
@@ -469,7 +483,7 @@ def train(*,
             'y_test': y_test,
             'y_pred': y_pred,
             'labels_test': labels_test,
-            'labels_pred': labels_pred,
+            'labels_pred': np.array(labels_pred),
             'params': params,
         }
         fl.save(save_filename, ddd)
