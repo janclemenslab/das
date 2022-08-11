@@ -1,5 +1,4 @@
 """Code for training and evaluating networks."""
-from cmath import log
 import logging
 import os
 import scipy
@@ -12,78 +11,14 @@ import tensorflow
 import zarr
 from tqdm.autonotebook import tqdm
 import dask
-import rich
-from numcodecs import Zstd
 from dask.diagnostics import ProgressBar
-import tensorflow as tf
-from tensorflow import keras
-from typing import Optional
 
 
-def tf_nan(dtype):
-    """Create NaN variable of proper dtype and variable shape for assign()."""
-    return tf.Variable(float("nan"), dtype=dtype, shape=tf.TensorShape(None))
-
-
-class DataCallback(keras.callbacks.Callback):  # diff
-    """Callback to operate on batch data from metric."""
-
-    def __init__(self, zarr_array, nb_batches: int, data_padding: Optional[int] = None):
-        """Offer a metric to access batch data."""
-        super().__init__()
-
-        self.y_pred = None
-        self.zarr_array = zarr_array
-        self.nb_batches = nb_batches
-        self.data_padding = data_padding
-
-    def set_model(self, model):
-        """Initialize variables when model is set."""
-        self.y_pred = tf_nan(model.output.dtype)
-
-    def metric(self, y_true, y_pred):
-        """Fake metric."""
-        self.y_pred.assign(y_pred)
-        return 0
-
-    def on_train_batch_end(self, batch_number, _logs=None):
-        """See keras.callbacks.Callback.on_train_batch_end."""
-        class_probabilities_unpacked_batch = data.unpack_batches(self.y_pred.numpy(), )  # reshape from [batches, nb_hist, ...] to [time, ...]
-        if self.data_padding is not None:
-            pad_width = None
-            if batch_number == 0:  # to account for loss of samples at the first and last chunks
-                pad_width = ((self.data_padding, 0), (0, 0))
-            elif batch_number == self.nb_batches - 1:
-                pad_width = ((0, self.data_padding), (0, 0))
-            if pad_width is not None:
-                class_probabilities_unpacked_batch = np.pad(
-                    class_probabilities_unpacked_batch,
-                    pad_width=pad_width,
-                    mode='constant',
-                    constant_values=0)
-
-        self.zarr_array.append(class_probabilities_unpacked_batch, axis=0)
-
-    def on_predict_end(self, _logs=None):
-        """Clean up."""
-        del self.y_pred
-
-
-class ConstantArray():
-    def __init__(self, value, shape):
-        self.val = value
-        self.dtype = type(value)
-        self.shape = shape
-
-    def __getitem__(self, _):
-        return self.val
-
-
-def predict_probabililties(x: np.ndarray,
-                           model: tensorflow.keras.Model,
-                           params: Dict[str, Any],
-                           verbose: Optional[int] = 1,
-                           prepend_data_padding: bool = True):
+def predict_probabilities(x: np.ndarray,
+                          model: tensorflow.keras.Model,
+                          params: Dict[str, Any],
+                          verbose: Optional[int] = 1,
+                          prepend_data_padding: bool = True):
     """[summary]
 
     Args:
@@ -98,36 +33,51 @@ def predict_probabililties(x: np.ndarray,
         y_pred - output of network for each sample [samples, nb_classes]
     """
 
-    # TODO: make fake, no-mem y with all zeros
-    virtual_zeros = ConstantArray(value=0, shape=(len(x), params['nb_classes']))
-    pred_gen = data.AudioSequence(x=x, y=virtual_zeros, shuffle=False, **params)  # prep data
-
+    pred_gen = data.AudioSequence(x=x, y=None, shuffle=False,
+                                  **params)  # prep data
     nb_batches = len(pred_gen)
-    if prepend_data_padding:
-        padding = pred_gen.data_padding
-    else:
-        padding = None
+    verbose = 1
+    prepend_data_padding = True
 
     temp_store = zarr.storage.TempStore()
     class_probabilities = zarr.zeros(shape=(0, params['nb_classes']),
-                                     chunks=(params['nb_hist'], params['nb_classes']),
+                                     chunks=(100_000, params['nb_classes']),
                                      dtype='float',
                                      store=temp_store,
-                                     compressor=Zstd(level=1),
                                      overwrite=True)
+    # predict and unpack batch by batch to memmaped np or zarr array
+    for batch_number, batch_data in tqdm(enumerate(pred_gen),
+                                         total=nb_batches,
+                                         disable=verbose < 1):
+        y_pred_batch = model.predict_on_batch(batch_data)  # run the network
 
-    model.evaluate(pred_gen,
-                   verbose=verbose,
-                   callbacks=[DataCallback(class_probabilities, nb_batches=nb_batches, data_padding=padding)])
+        # reshape from [batches, nb_hist, ...] to [time, ...]
+        y_pred_unpacked_batch = data.unpack_batches(y_pred_batch, pred_gen.data_padding)
+
+        if prepend_data_padding:
+            pad_width = None
+            if batch_number == 0:  # to account for loss of samples at the first and last chunks
+                pad_width = ((params['data_padding'], 0), (0, 0))
+            elif batch_number == nb_batches - 1:
+                pad_width = ((0, params['data_padding']), (0, 0))
+
+            if pad_width is not None:
+                y_pred_unpacked_batch = np.pad(y_pred_unpacked_batch,
+                                               pad_width=pad_width,
+                                               mode='constant',
+                                               constant_values=0)
+
+        class_probabilities.append(y_pred_unpacked_batch, axis=0)
 
     class_probabilities = dask.array.from_zarr(class_probabilities, inline_array=True)
     class_probabilities = class_probabilities.rechunk((1_000_000, params['nb_classes']))
     return class_probabilities
 
 
-def labels_from_probabilities(probabilities,
-                              threshold: Optional[float] = None,
-                              indices: Optional[List[int]] = None) -> np.ndarray:
+def labels_from_probabilities(
+        probabilities,
+        threshold: Optional[float] = None,
+        indices: Optional[Sequence[int]] = None) -> np.ndarray:
     """Convert class-wise probabilities into labels.
 
     Args:
@@ -153,8 +103,7 @@ def labels_from_probabilities(probabilities,
             labels = np.argmax(probabilities[:, indices], axis=1)
         else:
             thresholded_probabilities = probabilities[:, indices].copy()
-            thresholded_probabilities[
-                thresholded_probabilities < threshold] = 0
+            thresholded_probabilities[thresholded_probabilities < threshold] = 0
             labels = np.argmax(thresholded_probabilities > threshold, axis=1)
     else:
         raise ValueError(
@@ -214,7 +163,7 @@ def predict_segments(class_probabilities: np.ndarray,
     if segment_names is None:
         segment_names = [str(sd) for sd in segment_dims]
 
-    segments = dict()
+    segments: Dict[str, Any] = dict()
     if len(segment_dims):
         segments['samplerate_Hz'] = samplerate
         segments['index'] = segment_dims
@@ -223,7 +172,12 @@ def predict_segments(class_probabilities: np.ndarray,
             # prob = class_probabilities[:, segment_dims]
             # segments['probabilities'] = prob
             segments['probabilities'] = None
-            labels = dask.array.map_blocks(labels_from_probabilities, class_probabilities, segment_thres, segment_dims, dtype=np.intp, drop_axis=1)
+            labels = dask.array.map_blocks(labels_from_probabilities,
+                                           class_probabilities,
+                                           segment_thres,
+                                           segment_dims,
+                                           dtype=np.intp,
+                                           drop_axis=1)
         else:
             segments['probabilities'] = None
             labels = class_probabilities
@@ -231,21 +185,31 @@ def predict_segments(class_probabilities: np.ndarray,
         # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
         song_binary = (labels > 0).astype(np.int8)
         if segment_fillgap is not None:
-            song_binary = dask.array.map_overlap(segment_utils.fill_gaps, song_binary,
-                                               gap_dur=segment_fillgap * samplerate,
-                                               depth=segment_fillgap * samplerate + 1,
-                                               boundary=None, trim=True, align_arrays=True)
+            song_binary = dask.array.map_overlap(
+                segment_utils.fill_gaps,
+                song_binary,
+                gap_dur=int(segment_fillgap * samplerate),
+                depth=(int(segment_fillgap * samplerate + 1), 0),
+                boundary=None,
+                trim=True,
+                align_arrays=True)
         if segment_minlen is not None:
-            song_binary = dask.array.map_overlap(segment_utils.remove_short, song_binary,
-                                               min_len=segment_minlen * samplerate,
-                                               depth=segment_minlen * samplerate + 1,
-                                               boundary=None, trim=True, align_arrays=True)
+            song_binary = dask.array.map_overlap(
+                segment_utils.remove_short,
+                song_binary,
+                min_len=int(segment_minlen * samplerate),
+                depth=(int(segment_minlen * samplerate + 1), 0),
+                boundary=None,
+                trim=True,
+                align_arrays=True)
 
         # detect syllable on- and offsets
         # pre- and post-pend 0 so we detect on and offsets at boundaries
-        onsets = dask.array.where(dask.array.diff(song_binary, prepend=0) == 1)[0]
-        offsets = dask.array.where(dask.array.diff(song_binary, append=0) == -1)[0]
-        logging.info("   Deteting syllable on and offsets:")
+        onsets = dask.array.where(
+            dask.array.diff(song_binary, prepend=0) == 1)[0]
+        offsets = dask.array.where(
+            dask.array.diff(song_binary, append=0) == -1)[0]
+        logging.info("   Detecting syllable on and offsets:")
         with ProgressBar():
             onsets, offsets = dask.array.compute(onsets, offsets)
         segments['onsets_seconds'] = onsets.astype(float) / samplerate
@@ -276,13 +240,14 @@ def predict_segments(class_probabilities: np.ndarray,
 
             if cast_to is not None:
                 logging.info(f"   Casting labels to {cast_to}:")
-                labels = dask.array.map_blocks(lambda x : x.astype(cast_to), labels, dtype=np.int16)
+                labels = dask.array.map_blocks(lambda x: x.astype(cast_to),
+                                               labels,
+                                               dtype=np.int16)
 
             with ProgressBar():
                 labels = labels.compute()
 
-            sequence, labels = segment_utils.label_syllables_by_majority(
-                labels, segment_ref_onsets, segment_ref_offsets, samplerate)
+            sequence, labels = segment_utils.label_syllables_by_majority(labels, segment_ref_onsets, segment_ref_offsets, samplerate)
             # syllable-type for each syllable as int
             segments['sequence'] = sequence
         else:
@@ -292,10 +257,14 @@ def predict_segments(class_probabilities: np.ndarray,
 
 
 def _detect_events_oom(event_probability: np.ndarray,
-                       thres: float = 0.70, min_dist: int = 100,
-                       index: int = 0, block_info=None, pad=0) -> np.ndarray:
+                       thres: float = 0.70,
+                       min_dist: int = 100,
+                       index: int = 0,
+                       block_info=None,
+                       pad=0) -> np.ndarray:
     """Wrapper around detect_events that returns 2D np.ndarray for use in predict_oom."""
-    event_indices, event_confidence = event_utils.detect_events(event_probability, thres, min_dist, index)
+    event_indices, event_confidence = event_utils.detect_events(
+        event_probability, thres, min_dist, index)
 
     if block_info is not None:
         # add offset from position of chunk in
@@ -307,7 +276,8 @@ def _detect_events_oom(event_probability: np.ndarray,
         event_indices -= pad
 
         # delete detections in overlapping samples
-        good_events = np.logical_and(event_indices >= chunk_start_index, event_indices < chunk_end_index)
+        good_events = np.logical_and(event_indices >= chunk_start_index,
+                                     event_indices < chunk_end_index)
         if len(good_events):
             event_confidence = event_confidence[good_events]
             event_indices = event_indices[good_events]
@@ -355,7 +325,7 @@ def predict_events(class_probabilities: np.ndarray,
     if event_dist_max is None:
         event_dist_max = np.inf  #class_probabilities.shape[0] + 1
 
-    events = dict()
+    events: Dict[str, Any] = dict()
     if len(event_dims):
         events['samplerate_Hz'] = samplerate
         events['index'] = event_dims
@@ -376,10 +346,15 @@ def predict_events(class_probabilities: np.ndarray,
                 index=event_dim,
                 pad=pad,
                 depth=(pad, 0),
-                boundary="none", trim=False, dtype=int, meta=np.array(()))
+                boundary="none",
+                trim=False,
+                dtype=int,
+                meta=np.array(()))
             with ProgressBar():
-                event_indices_and_probs = dask.array.compute(event_indices_and_probs)
-            event_indices, event_probabilities = event_indices_and_probs[0][:, 0], event_indices_and_probs[0][:, 1]
+                event_indices_and_probs = dask.array.compute(
+                    event_indices_and_probs)
+            event_indices, event_probabilities = event_indices_and_probs[
+                0][:, 0], event_indices_and_probs[0][:, 1]
 
             events_seconds = event_indices.astype(float) / samplerate
             events_seconds += events_offset
@@ -396,7 +371,7 @@ def predict_events(class_probabilities: np.ndarray,
 
 
 def predict_song(class_probabilities: np.ndarray,
-                 params: dict[str, Any],
+                 params: Dict[str, Any],
                  event_thres: float = 0.5,
                  event_dist: float = 0.01,
                  event_dist_min: float = 0,
@@ -410,15 +385,20 @@ def predict_song(class_probabilities: np.ndarray,
     samplerate = params['samplerate_x_Hz']
     events_offset = 0
 
-    segment_dims = np.where([val == 'segment' for val in params['class_types']])[0]
-    segment_names = [str(params['class_names'][segment_dim]) for segment_dim in segment_dims]
+    segment_dims = np.where(
+        [val == 'segment' for val in params['class_types']])[0]
+    segment_names = [
+        str(params['class_names'][segment_dim]) for segment_dim in segment_dims
+    ]
     segments = predict_segments(class_probabilities, samplerate, segment_dims,
                                 segment_names, segment_ref_onsets,
                                 segment_ref_offsets, segment_thres,
                                 segment_minlen, segment_fillgap)
 
     event_dims = np.where([val == 'event' for val in params['class_types']])[0]
-    event_names = [str(params['class_names'][event_dim]) for event_dim in event_dims]
+    event_names = [
+        str(params['class_names'][event_dim]) for event_dim in event_dims
+    ]
     events = predict_events(class_probabilities, samplerate, event_dims,
                             event_names, event_thres, events_offset,
                             event_dist, event_dist_min, event_dist_max)
@@ -430,7 +410,7 @@ def predict(x: np.ndarray,
             verbose: int = 1,
             batch_size: int = None,
             model: models.keras.models.Model = None,
-            params: dict = None,
+            params: Dict = None,
             event_thres: float = 0.5,
             event_dist: float = 0.01,
             event_dist_min: float = 0,
@@ -528,8 +508,8 @@ def predict(x: np.ndarray,
         # pad with end val to fill
         x = np.pad(x, ((0, pad_len), (0, 0)), mode='edge')
 
-    class_probabilities = predict_probabililties(x, model, params, verbose,
-                                                 prepend_data_padding)
+    class_probabilities = predict_probabilities(x, model, params, verbose,
+                                                prepend_data_padding)
 
     if pad:
         # trim probs to original len of x
