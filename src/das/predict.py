@@ -210,7 +210,7 @@ def predict_segments(class_probabilities: np.ndarray,
         offsets = dask.array.where(
             dask.array.diff(song_binary, append=0) == -1)[0]
         logging.info("   Detecting syllable on and offsets:")
-        with ProgressBar():
+        with ProgressBar(minimum=5):
             onsets, offsets = dask.array.compute(onsets, offsets)
         segments['onsets_seconds'] = onsets.astype(float) / samplerate
         segments['offsets_seconds'] = offsets.astype(float) / samplerate
@@ -244,7 +244,7 @@ def predict_segments(class_probabilities: np.ndarray,
                                                labels,
                                                dtype=np.int16)
 
-            with ProgressBar():
+            with ProgressBar(minimum=5):
                 labels = labels.compute()
 
             sequence, labels = segment_utils.label_syllables_by_majority(labels, segment_ref_onsets, segment_ref_offsets, samplerate)
@@ -350,7 +350,7 @@ def predict_events(class_probabilities: np.ndarray,
                 trim=False,
                 dtype=int,
                 meta=np.array(()))
-            with ProgressBar():
+            with ProgressBar(minimum=5):
                 event_indices_and_probs = dask.array.compute(
                     event_indices_and_probs)
             event_indices, event_probabilities = event_indices_and_probs[
