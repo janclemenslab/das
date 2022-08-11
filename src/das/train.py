@@ -69,12 +69,12 @@ def train(*,
           balance: bool = False,
           version_data: bool = True,
           post_opt: bool = False,
-          fill_gaps_min: Optional[float] = None,
-          fill_gaps_max: Optional[float] = None,
-          fill_gaps_steps: Optional[float] = None,
-          min_len_min: Optional[float] = None,
-          min_len_max: Optional[float] = None,
-          min_len_steps: Optional[float] = None,
+          fill_gaps_min: float = 0.0005,
+          fill_gaps_max: float = 1.0,
+          fill_gaps_steps: int = 20,
+          min_len_min: float = 0.0005,
+          min_len_max: float = 1.0,
+          min_len_steps: int = 20,
           resnet_compute: bool = False,
           resnet_train: bool = False,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
@@ -191,12 +191,12 @@ def train(*,
 
         post_opt (bool): Optimize post processing (delete short detections, fill brief gaps).
                         Defaults to False.
-        fill_gaps_min (Optional[float]): None
-        fill_gaps_max (Optional[float]): None
-        fill_gaps_steps (Optional[float]): None
-        min_len_min (Optional[float]): None
-        min_len_max (Optional[float]): None
-        min_len_steps (Optional[float]): None
+        fill_gaps_min (float): Defaults to 0.0005 seconds.
+        fill_gaps_max (float): Defaults to 1 second.
+        fill_gaps_steps (int): Defaults to 20.
+        min_len_min (float): Defaults to 0.0005 seconds.
+        min_len_max (float): Defaults to 1 second.
+        min_len_steps (int): Defaults to 20.
 
         resnet_compute (bool): Defaults to False.
         resnet_train (bool): Defaults to False.
@@ -409,13 +409,8 @@ def train(*,
     if post_opt:
         logger.info('OPTIMIZING POSTPROCESSING:')
 
-        gap_durs = None
-        if fill_gaps_min is not None and fill_gaps_max is not None and fill_gaps_steps is not None:
-            gap_durs = np.geomspace(fill_gaps_min, fill_gaps_max, fill_gaps_steps)
-
-        min_lens = None
-        if min_len_min is not None and min_len_max is not None and min_len_steps is not None:
-            min_lens = np.geomspace(min_len_min, min_len_max, min_len_steps)
+        gap_durs = np.geomspace(fill_gaps_min, fill_gaps_max, fill_gaps_steps)
+        min_lens = np.geomspace(min_len_min, min_len_max, min_len_steps)
 
         best_gap_dur, best_min_len, scores = postprocessing.optimize(dataset_path=data_dir,
                                                                      model_save_name=save_name,
