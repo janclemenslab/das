@@ -49,15 +49,15 @@ def optimize_grid(labels_train_true, probs_train_pred, gap_durs, min_lens, segme
 
 def optimize(dataset_path: str,
              model_save_name: str,
-             gap_durs: Optional[List[float]] = None,
-             min_lens: Optional[List[float]] = None) -> Tuple[float, float, Dict[str, Union[float, List[float]]]]:
+             gap_durs: List[float],
+             min_lens: List[float]) -> Tuple[float, float, Dict[str, Union[float, List[float]]]]:
     """[summary]
 
     Args:
         dataset_path (str): [description]
         model_save_name (str): [description]
-        gap_durs (Optional[List[float]], optional): in seconds. Defaults to None.
-        min_lens (Optional[List[float]], optional): in seconds. Defaults to None.
+        gap_durs (List[float], optional): in seconds.
+        min_lens (List[float], optional): in seconds.
 
     Returns:
         Tuple[float, float, Dict[str, Union[float, List[float]]]]: [description]
@@ -66,19 +66,8 @@ def optimize(dataset_path: str,
     data = io.npy_dir.load(dataset_path, memmap_dirs='all')
     fs = data.attrs['samplerate_x_Hz']
 
-    # sensible(?) defaults 0.5--1000ms
-    values = (2**(np.arange(-1, 10.5, 0.5))) / 1_000  # between 0.5 and 1024 ms
-
-    # from seconds to samples
-    if gap_durs is not None:
-        gap_durs = (np.array(gap_durs) * fs).astype(int)
-    else:
-        gap_durs = (values * fs).astype(int)
-
-    if min_lens is not None:
-        min_lens = (np.array(min_lens) * fs).astype(int)
-    else:
-        min_lens = (values * fs).astype(int)
+    gap_durs = (gap_durs * fs).astype(int)
+    min_lens = (min_lens * fs).astype(int)
 
     # get raw predictions to run post-processing on
     logger.info('   Generating raw predictions')
