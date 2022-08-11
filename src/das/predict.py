@@ -3,6 +3,7 @@ import logging
 import os
 import scipy
 import flammkuchen
+import librosa
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any
@@ -431,10 +432,9 @@ def cli_predict(path: str, model_save_name: str, *,
         logging.info(f"   Loading data from {recording_filename}.")
         try:
             # else if path is file - predict only on file but make it single-item list
-            fs_audio, x = scipy.io.wavfile.read(recording_filename)
-
-            if x.ndim==1:
-                x = x[:, np.newaxis]
+            x, fs_audio = librosa.load(recording_filename, sr=None, mono=False)
+            x = x.T
+            x = x[:, np.newaxis] if x.ndim == 1 else x  # adds singleton dim for single-channel wavs
 
             if resample and fs_audio != fs_model:
                 logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")
