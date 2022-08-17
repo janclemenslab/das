@@ -12,7 +12,7 @@ classifiers = ["License :: OSI Approved :: MIT License"]
 requires-python = ">=3.6"
 requires = ['numpy', 'h5py', 'scipy', 'scikit-learn', 'pyyaml', 'peakutils', 'zarr',
             'flammkuchen', 'defopt', 'matplotlib', 'pandas', 'librosa', 'matplotlib',
-            'matplotlib_scalebar', 'colorcet', 'keras-tuner', 'kt-legacy']
+            'matplotlib_scalebar', 'colorcet', 'keras-tuner', 'kt-legacy', 'rich']
 description-file = "README.md"
 
 [tool.flit.scripts]
@@ -21,3 +21,6 @@ das = "das.cli:main"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests",]
+
+[tool.black]
+line-length = 128
