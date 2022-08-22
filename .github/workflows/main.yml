@@ -33,13 +33,19 @@ jobs:
       - run: conda --version
       - run: which python
       - run: conda list
-      - name: Conda environment creation
+      - name: Conda utils installation
         run: |
           conda install anaconda-client -q -n base
           conda install mamba -c conda-forge -n base -y
+      - name: Test with pytest (Linux, Macos)
+        shell: bash -l {0}
+        if: runner.os != 'Windows'
+        run: |
+          rm /usr/share/miniconda/pkgs/cache/*.json
+      - name: Conda environment creation
+        run: |
           conda create python=${{ matrix.python-version }} -n das
-          mamba install das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
-          conda install pytest -q -n das
+          mamba install das pytest -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
