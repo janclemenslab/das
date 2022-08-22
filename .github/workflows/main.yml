@@ -37,6 +37,7 @@ jobs:
         run: |
           conda install anaconda-client -q -n base
           conda install mamba -c conda-forge -n base -y
+          conda create python=${{ matrix.python-version }} -n das
           mamba install das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
           conda install pytest -q -n das
       - name: Install libsndfile (Linux only)
