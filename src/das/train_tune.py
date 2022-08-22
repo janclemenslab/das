@@ -22,21 +22,25 @@ try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
     physical_devices = tf.config.list_physical_devices('GPU')
     if physical_devices:
-        tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
+        tf.config.experimental.set_memory_growth(physical_devices[0],
+                                                 enable=True)
 except Exception as e:
     logging.exception(e)
 
 
 class TunableModel(kt.HyperModel):
+
     def __init__(self, params, tune_config=None):
         self.params = params.copy()
         self.tune_config = tune_config
         if self.tune_config is None:
-            self.tune_config = {'nb_filters': [4, 8, 16, 32, 64],
-                                'kernel_size': [4, 8, 16, 32, 64],
-                                'learning_rate': [0.01, 0.001, 0.0001],
-                                'nb_hist': [128, 256, 512, 1024, 2048],
-                                'nb_conv': [1, 2, 3, 4, 6, 8]}
+            self.tune_config = {
+                'nb_filters': [4, 8, 16, 32, 64],
+                'kernel_size': [4, 8, 16, 32, 64],
+                'learning_rate': [0.01, 0.001, 0.0001],
+                'nb_hist': [128, 256, 512, 1024, 2048],
+                'nb_conv': [1, 2, 3, 4, 6, 8]
+            }
 
     def build(self, hp):
         for name, values in self.tune_config.items():
@@ -53,7 +57,10 @@ class OracleCallback(Callback):
         self.tuner = tuner
 
     def on_epoch_end(self, epoch, logs=None):
-        self.tuner.on_epoch_end(self.tuner.current_trial, self.model, epoch, logs=logs)
+        self.tuner.on_epoch_end(self.tuner.current_trial,
+                                self.model,
+                                epoch,
+                                logs=logs)
 
 
 class ModelParamsCheckpoint(ModelCheckpoint):
@@ -68,7 +75,8 @@ class ModelParamsCheckpoint(ModelCheckpoint):
         """
         logs = logs or {}
 
-        if isinstance(self.save_freq, int) or self.epochs_since_last_save >= self.period:
+        if isinstance(self.save_freq,
+                      int) or self.epochs_since_last_save >= self.period:
             # Block only when saving interval is reached.
             logs = tf_utils.sync_to_numpy_or_python_type(logs)
             self.epochs_since_last_save = 0
@@ -78,44 +86,61 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                 if self.save_best_only:
                     current = logs.get(self.monitor)
                     if current is None:
-                        logging.warning('Can save best model only with %s available, '
-                                        'skipping.', self.monitor)
+                        logging.warning(
+                            f'Can save best model only with {self.monitor} available, skipping.'
+                        )
                     else:
                         if self.monitor_op(current, self.best):
                             if self.verbose > 0:
-                                print('\nEpoch %05d: %s improved from %0.5f to %0.5f,'
-                                      ' saving model to %s' % (epoch + 1, self.monitor, self.best, current, filepath))
+                                print(
+                                    f'\nEpoch {epoch + 1:05d}: {self.monitor} improved from {self.best:0.5f} to {current:0.5f}, saving model to {filepath}.'
+                                )
                             self.best = current
                             if self.save_weights_only:
-                                self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
+                                self.model.save_weights(filepath + '_model.h5',
+                                                        overwrite=True,
+                                                        options=self._options)
                             else:
-                                self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                                self.model.save(filepath + '_model.h5',
+                                                overwrite=True,
+                                                options=self._options)
                                 # TODO: clean up params dict
-                                utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
+                                utils.save_params(
+                                    self._normalize_tf_dict(self.model.params),
+                                    filepath)
                         else:
                             if self.verbose > 0:
-                                print('\nEpoch %05d: %s did not improve from %0.5f' %
-                                      (epoch + 1, self.monitor, self.best))
+                                print(
+                                    f'\nEpoch {epoch + 1:05d}: {self.monitor} did not improve from {self.best:0.5f}'
+                                )
                 else:
                     if self.verbose > 0:
-                        print('\nEpoch %05d: saving model to %s' % (epoch + 1, filepath))
+                        print(
+                            f'\nEpoch {epoch+1:05d}: saving model to {filepath}'
+                        )
                     if self.save_weights_only:
-                        self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
+                        self.model.save_weights(filepath + '_model.h5',
+                                                overwrite=True,
+                                                options=self._options)
                     else:
-                        self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
+                        self.model.save(filepath + '_model.h5',
+                                        overwrite=True,
+                                        options=self._options)
                         # TODO: clean up params dict
-                        utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
+                        utils.save_params(
+                            self._normalize_tf_dict(self.model.params),
+                            filepath)
                 self._maybe_remove_file()
             except IsADirectoryError as e:  # h5py 3.x
-                raise IOError('Please specify a non-directory filepath for '
-                              'ModelCheckpoint. Filepath used is an existing '
-                              'directory: {}'.format(filepath))
+                raise IOError(
+                    f'Please specify a non-directory filepath for ModelCheckpoint. Filepath used is an existing directory: {filepath}.'
+                )
             except IOError as e:
                 # `e.errno` appears to be `None` so checking the content of `e.args[0]`.
                 if 'is a directory' in str(e.args[0]).lower():
-                    raise IOError('Please specify a non-directory filepath for '
-                                  'ModelCheckpoint. Filepath used is an existing '
-                                  'directory: {}'.format(filepath))
+                    raise IOError(
+                        f'Please specify a non-directory filepath for ModelCheckpoint. Filepath used is an existing directory: {filepath}.'
+                    )
                 # Re-throw the error for any other causes.
                 raise e
 
@@ -134,9 +159,16 @@ class DasTuner(kt.Tuner):
         self.tracker = tracker
         super().__init__(*args, **kwargs)
 
-    def run_trial(self, trial, train_x, train_y, val_x=None, val_y=None,
-                  epochs=10, steps_per_epoch=None,
-                  verbose=1, class_weight=None,
+    def run_trial(self,
+                  trial,
+                  train_x,
+                  train_y,
+                  val_x=None,
+                  val_y=None,
+                  epochs=10,
+                  steps_per_epoch=None,
+                  verbose=1,
+                  class_weight=None,
                   callbacks=None):
         try:
             if callbacks is None:
@@ -152,14 +184,22 @@ class DasTuner(kt.Tuner):
             # these need updating based on current hyperparameters
             self.params['stride'] = self.params['nb_hist']
             if self.params['ignore_boundaries']:
-                self.params['data_padding'] = int(np.ceil(self.params['kernel_size'] * self.params['nb_conv']))  # this does not completely avoid boundary effects but should minimize them sufficiently
-                self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
+                self.params['data_padding'] = int(
+                    np.ceil(self.params['kernel_size'] *
+                            self.params['nb_conv'])
+                )  # this does not completely avoid boundary effects but should minimize them sufficiently
+                self.params['stride'] = self.params[
+                    'stride'] - 2 * self.params['data_padding']
 
-            data_gen = data.AudioSequence(train_x, train_y,
-                                          shuffle=True, nb_repeats=1,
-                                          last_sample=train_x.shape[0] - 2 * self.params['nb_hist'],
+            data_gen = data.AudioSequence(train_x,
+                                          train_y,
+                                          shuffle=True,
+                                          nb_repeats=1,
+                                          last_sample=train_x.shape[0] -
+                                          2 * self.params['nb_hist'],
                                           **self.params)
-            val_gen = data.AudioSequence(val_x, val_y,
+            val_gen = data.AudioSequence(val_x,
+                                         val_y,
                                          shuffle=False,
                                          **self.params)
             logging.info("Data:")
@@ -175,8 +215,12 @@ class DasTuner(kt.Tuner):
                 self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
             model.params = self.params  # attach params to model so we can save them in ModelParamsCheckpoint
-            model.fit(data_gen, validation_data=val_gen, epochs=epochs, steps_per_epoch=steps_per_epoch,
-                      callbacks=callbacks, verbose=verbose)
+            model.fit(data_gen,
+                      validation_data=val_gen,
+                      epochs=epochs,
+                      steps_per_epoch=steps_per_epoch,
+                      callbacks=callbacks,
+                      verbose=verbose)
             if self.tracker is not None:
                 self.tracker.finish()
             self.current_trial.status = 'RUNNING'
@@ -188,25 +232,50 @@ class DasTuner(kt.Tuner):
             self.current_trial.status = 'INVALID'
 
 
-def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
-          save_dir: str = './', save_prefix: Optional[str] = None, save_name: Optional[str] = None,
-          model_name: str = 'tcn', nb_filters: int = 16, kernel_size: int = 16,
-          nb_conv: int = 3, use_separable: List[bool] = False, nb_hist: int = 1024,
-          ignore_boundaries: bool = True, batch_norm: bool = True,
-          nb_pre_conv: int = 0, pre_nb_dft: int = 64,
-          pre_kernel_size: int = 3, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-          upsample: bool = True, dilations: Optional[List[int]] = None,
+def train(*,
+          data_dir: str,
+          x_suffix: str = '',
+          y_suffix: str = '',
+          save_dir: str = './',
+          save_prefix: Optional[str] = None,
+          save_name: Optional[str] = None,
+          model_name: str = 'tcn',
+          nb_filters: int = 16,
+          kernel_size: int = 16,
+          nb_conv: int = 3,
+          use_separable: List[bool] = False,
+          nb_hist: int = 1024,
+          ignore_boundaries: bool = True,
+          batch_norm: bool = True,
+          nb_pre_conv: int = 0,
+          pre_nb_dft: int = 64,
+          pre_kernel_size: int = 3,
+          pre_nb_filters: int = 16,
+          pre_nb_conv: int = 2,
+          upsample: bool = True,
+          dilations: Optional[List[int]] = None,
           nb_lstm_units: int = 0,
-          verbose: int = 2, batch_size: int = 32,
+          verbose: int = 2,
+          batch_size: int = 32,
           nb_epoch: int = 400,
-          learning_rate: Optional[float] = None, reduce_lr: bool = False, reduce_lr_patience: int = 5,
-          fraction_data: Optional[float] = None, seed: Optional[int] = None, batch_level_subsampling: bool = False,
+          learning_rate: Optional[float] = None,
+          reduce_lr: bool = False,
+          reduce_lr_patience: int = 5,
+          fraction_data: Optional[float] = None,
+          seed: Optional[int] = None,
+          batch_level_subsampling: bool = False,
           augmentations: str = None,
           tensorboard: bool = False,
-          wandb_api_token: Optional[str] = None, wandb_project: Optional[str] = None, wandb_entity: Optional[str] = None,
-          log_messages: bool = False, nb_stacks: int = 2, with_y_hist: bool = True,
-          balance: bool = False, version_data: bool = True,
-          tune_config: Optional[str] = None, nb_tune_trials: int = 1_000,
+          wandb_api_token: Optional[str] = None,
+          wandb_project: Optional[str] = None,
+          wandb_entity: Optional[str] = None,
+          log_messages: bool = False,
+          nb_stacks: int = 2,
+          with_y_hist: bool = True,
+          balance: bool = False,
+          version_data: bool = True,
+          tune_config: Optional[str] = None,
+          nb_tune_trials: int = 1_000,
           _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
     """Tune the hyperparameters of a DAS network.
 
@@ -332,7 +401,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         y_offset = 0
         sample_weight_mode = 'temporal'
         if ignore_boundaries:
-            data_padding = int(np.ceil(kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
+            data_padding = int(
+                np.ceil(kernel_size * nb_conv)
+            )  # this does not completely avoid boundary effects but should minimize them sufficiently
             stride = stride - 2 * data_padding
     else:  # classification
         return_sequences = False
@@ -340,7 +411,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         y_offset = int(round(nb_hist / 2))
 
     if stride <= 0:
-        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
+        raise ValueError(
+            'Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries'
+        )
 
     if not upsample:
         output_stride = int(2**nb_pre_conv)
@@ -363,7 +436,9 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
                 logging.exception(exc)
 
     if stride <= 0:
-        raise ValueError('Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries')
+        raise ValueError(
+            'Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries'
+        )
 
     # remove learning rate param if not set so the value from the model def is used
     if params['learning_rate'] is None:
@@ -385,24 +460,39 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     if fraction_data is not None:
         if fraction_data > 1.0:  # seconds
-            logging.info(f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data.")
-            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
+            logging.info(
+                f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data."
+            )
+            fraction_data = np.min(
+                (fraction_data /
+                 (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         elif fraction_data < 1.0:
-            logging.info(f"Using {fraction_data:1.4f} of the training and validation data.")
+            logging.info(
+                f"Using {fraction_data:1.4f} of the training and validation data."
+            )
 
     if fraction_data is not None and not batch_level_subsampling and fraction_data != 1.0:  # train on a subset
-        min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
-        first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        min_nb_samples = nb_hist * (
+            batch_size + 2
+        )  # ensure the generator contains at least one full batch
+        first_sample_train, last_sample_train = data.sub_range(
+            d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_val, last_sample_val = data.sub_range(
+            d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
     else:
         first_sample_train, last_sample_train = 0, None
         first_sample_val, last_sample_val = 0, None
 
     # TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data
-    params.update({'nb_freq': d['train']['x'].shape[1], 'nb_channels': d['train']['x'].shape[-1], 'nb_classes': len(params['class_names']),
-                   'first_sample_train': first_sample_train, 'last_sample_train': last_sample_train,
-                   'first_sample_val': first_sample_val, 'last_sample_val': last_sample_val,
-                   })
+    params.update({
+        'nb_freq': d['train']['x'].shape[1],
+        'nb_channels': d['train']['x'].shape[-1],
+        'nb_classes': len(params['class_names']),
+        'first_sample_train': first_sample_train,
+        'last_sample_train': last_sample_train,
+        'first_sample_val': first_sample_val,
+        'last_sample_val': last_sample_val,
+    })
     logging.info('Parameters:')
     logging.info(params)
 
@@ -419,7 +509,10 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
         logging.info("   Computing class weights.")
         y_train = np.argmax(d['train']['y'], axis=1)
         classes = np.unique(y_train)
-        params['class_weights'] = list(sklearn.utils.class_weight.compute_class_weight('balanced', classes=classes, y=y_train))
+        params['class_weights'] = list(
+            sklearn.utils.class_weight.compute_class_weight('balanced',
+                                                            classes=classes,
+                                                            y=y_train))
         logging.info(f"   {params['class_weights']}")
 
     logging.info('building network')
@@ -433,11 +526,18 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     logging.info(f'Will save to {save_name}.')
 
     # setup callbacks
-    callbacks = [ModelParamsCheckpoint(save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-                 EarlyStopping(monitor='val_loss', patience=15)]
+    callbacks = [
+        ModelParamsCheckpoint(save_name,
+                              save_best_only=True,
+                              save_weights_only=False,
+                              monitor='val_loss',
+                              verbose=1),
+        EarlyStopping(monitor='val_loss', patience=15)
+    ]
 
     if reduce_lr:
-        callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
+        callbacks.append(
+            ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
 
     if _qt_progress:
         callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
@@ -447,7 +547,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
     if wandb_api_token and wandb_project:  # could also get those from env vars!
         del params['wandb_api_token']
-        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
+        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity,
+                               params)
         if wandb:
             callbacks.append(wandb.callback())
     else:
@@ -456,7 +557,8 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     tuner = DasTuner(
         params=params,
         oracle=kt.oracles.BayesianOptimization(
-            objective=kt.Objective("val_loss", "min"), max_trials=nb_tune_trials,
+            objective=kt.Objective("val_loss", "min"),
+            max_trials=nb_tune_trials,
         ),
         hypermodel=TunableModel(params, tune_config),
         overwrite=False,
@@ -471,8 +573,10 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
     # TRAIN NETWORK
     logging.info('Start hyperparameter tuning')
     tuner.search(
-        train_x=d['train']['x'], train_y=d['train']['y'],
-        val_x=d['val']['x'], val_y=d['val']['y'],
+        train_x=d['train']['x'],
+        train_y=d['train']['y'],
+        val_x=d['val']['x'],
+        val_y=d['val']['y'],
         epochs=nb_epoch,
         verbose=verbose,
         callbacks=callbacks,
@@ -489,14 +593,17 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
         logging.info('predicting')
         # TODO: Need to update params with best hyperparams (e.g. nb-hist)
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'],
-                                                                 model=model, params=params)
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(
+            x=d['test']['x'], y=d['test']['y'], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
         logging.info('evaluating')
-        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+        conf_mat, report = evaluate.evaluate_segments(labels_test,
+                                                      labels_pred,
+                                                      params['class_names'],
+                                                      report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
         if wandb_api_token and wandb_project:  # could also get those from env vars!
@@ -504,16 +611,17 @@ def train(*, data_dir: str, x_suffix: str = '', y_suffix: str = '',
 
         save_filename = "{0}_results.h5".format(save_name)
         logging.info('saving to ' + save_filename + '.')
-        d = {'fit_hist': [],
-             'confusion_matrix': conf_mat,
-             'classification_report': report,
-             'x_test': x_test,
-             'y_test': y_test,
-             'y_pred': y_pred,
-             'labels_test': labels_test,
-             'labels_pred': labels_pred,
-             'params': params,
-            }
+        d = {
+            'fit_hist': [],
+            'confusion_matrix': conf_mat,
+            'classification_report': report,
+            'x_test': x_test,
+            'y_test': y_test,
+            'y_pred': y_pred,
+            'labels_test': labels_test,
+            'labels_pred': labels_pred,
+            'params': params,
+        }
 
         fl.save(save_filename, d)
 

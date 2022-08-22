@@ -4,7 +4,9 @@ import scipy.signal as ss
 from typing import List, Tuple
 
 
-def normalize_pulse(pulse: np.array, smooth_win: int = 15, flip_win: int = 10) -> np.array:
+def normalize_pulse(pulse: np.ndarray,
+                    smooth_win: int = 15,
+                    flip_win: int = 10) -> np.ndarray:
     """Normalize pulses.
 
     1. scales to unit-norm,
@@ -12,12 +14,12 @@ def normalize_pulse(pulse: np.array, smooth_win: int = 15, flip_win: int = 10) -
     3. flips so that pre-peak mean is positive
 
     Args:
-        pulse (np.array): should be [T,]
+        pulse (np.ndarray): should be [T,]
         smooth_win (int, optional): n samples of rect window used to smooth squared pulse for peak detection
         flip_win (int, optional): number of samples pre-peak used for determining sign of pulse for flipping.
 
     Returns:
-        np.array: normalized pulse
+        np.ndarray: normalized pulse [T,]
     """
     # scale
     pulse /= np.linalg.norm(pulse)
@@ -27,25 +29,26 @@ def normalize_pulse(pulse: np.array, smooth_win: int = 15, flip_win: int = 10) -
     gwin = ss.windows.boxcar(int(smooth_win))
     pulse_env = np.convolve(pulse**2, gwin, mode='valid')
     offset = np.argmax(pulse_env) + int(np.ceil(smooth_win / 2)) + 1
-    pulse = np.pad(pulse, (len(pulse) - offset, offset), mode='constant', constant_values=0)
+    pulse = np.pad(pulse, (len(pulse) - offset, offset),
+                   mode='constant',
+                   constant_values=0)
     # flip
     if np.sum(pulse[pulse_len - flip_win:pulse_len]) < 0:
         pulse *= -1
     return pulse[pulse_len_half:-pulse_len_half]
 
 
-def center_of_mass(x: np.array, y: np.array, thres: float = 0.5) -> float:
+def center_of_mass(x: np.ndarray, y: np.ndarray, thres: float = 0.5) -> float:
     """Calculate center of mass of y.
 
     Args:
-        x (np.array):
-        y (np.array):
+        x (np.ndarray):
+        y (np.ndarray):
         thres (float, optional): Threshold. Defaults to 0.5.
 
     Returns:
         float: Center of mass.
     """
-
     y /= np.max(y)
     y -= thres
     y[y < 0] = 0
@@ -54,27 +57,34 @@ def center_of_mass(x: np.array, y: np.array, thres: float = 0.5) -> float:
     return com
 
 
-def pulse_freq(pulse, fftlen=1000, sampling_rate=10000, mean_subtract=True) -> Tuple[float, np.array, np.array]:
+def pulse_freq(
+        pulse: np.ndarray,
+        fftlen: int = 1000,
+        sampling_rate: int = 10000,
+        mean_subtract: bool = True) -> Tuple[float, np.ndarray, np.ndarray]:
     """Calculate pulse frequency as center of mass of the pulse's amplitude spectrum.
 
     Args:
-        pulse (np.array): Waveform (shape [T,]).
+        pulse (np.ndarray): Waveform (shape [T,]).
         fftlen (int, optional): Sets freq resolution of the spectrum. Defaults to 1_000.
         sampling_rate (float, optional): Sample rate of the pulse, in Hz. Defaults to 10_000.
         mean_subtract (bool, optional): If true, removes f0 component by mean subtraction. Defaults to True.
     Returns:
-        Tuple[float, np.array, np.array]: Pulse frequency and frequency values and amplitude of the pulse spectrum (cut of at 1000 Hz).
+        Tuple[float, np.ndarray, np.ndarray]: Center frequency,
+                                              frequency and
+                                              amplitude values of the pulse spectrum (cut off at 1000 Hz).
     """
     if mean_subtract:
         pulse -= np.mean(pulse)
     F = np.fft.rfftfreq(fftlen, 1 / sampling_rate)
     A = np.abs(np.fft.rfft(pulse, fftlen))
-    idx = np.argmax(F > 1_000)
+    idx = int(np.argmax(F > 1_000))
     center_freq = center_of_mass(F[:idx], A[:idx])
     return center_freq, F[:idx], A[:idx]
 
 
-def get_pulseshapes(pulsecenters: List[int], song: np.array, win_hw: int) -> np.array:
+def get_pulseshapes(pulsecenters: List[int], song: np.ndarray,
+                    win_hw: int) -> np.ndarray:
     """Extract waveforms around `pulsecenters` from `song`.
 
     In case of multi-channel recordings, will return the waveform on the channel
@@ -82,11 +92,11 @@ def get_pulseshapes(pulsecenters: List[int], song: np.array, win_hw: int) -> np.
 
     Args:
         pulsecenters (List[int]): Location of each pulse center in `song`, in samples
-        song (np.array): Audio data ([samples, channels]).
+        song (np.ndarray): Audio data ([samples, channels]).
         win_hw (int): Half-width of the waveform cut out around each pulse center, in samples.
 
     Returns:
-        np.array: Extracted waveforms [2 * win_hw, nb_centers]
+        np.ndarray: Extracted waveforms [2 * win_hw, nb_centers]
     """
     pulseshapes = np.zeros((2 * win_hw, len(pulsecenters)))
     nb_channels = song.shape[1]

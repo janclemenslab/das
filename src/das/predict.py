@@ -10,7 +10,7 @@ import glob
 import tensorflow
 import zarr
 from tqdm.autonotebook import tqdm
-import dask
+import dask.array as da
 from dask.diagnostics import ProgressBar
 
 
@@ -69,7 +69,7 @@ def predict_probabilities(x: np.ndarray,
 
         class_probabilities.append(y_pred_unpacked_batch, axis=0)
 
-    class_probabilities = dask.array.from_zarr(class_probabilities, inline_array=True)
+    class_probabilities = da.from_zarr(class_probabilities, inline_array=True)
     class_probabilities = class_probabilities.rechunk((1_000_000, params['nb_classes']))
     return class_probabilities
 
@@ -157,7 +157,7 @@ def predict_segments(class_probabilities: np.ndarray,
         if not probs_are_labels:  # class_probabilities is [T, nb_classes]
             nb_classes = class_probabilities.shape[1]
         else:  # class_probabilities is [T,] with integer entries as class labels
-            nb_classes = int(dask.array.max(class_probabilities).compute())
+            nb_classes = int(da.max(class_probabilities).compute())
         segment_dims = list(range(nb_classes))
 
     if segment_names is None:
@@ -172,7 +172,7 @@ def predict_segments(class_probabilities: np.ndarray,
             # prob = class_probabilities[:, segment_dims]
             # segments['probabilities'] = prob
             segments['probabilities'] = None
-            labels = dask.array.map_blocks(labels_from_probabilities,
+            labels = da.map_blocks(labels_from_probabilities,
                                            class_probabilities,
                                            segment_thres,
                                            segment_dims,
@@ -185,33 +185,33 @@ def predict_segments(class_probabilities: np.ndarray,
         # turn into song (0), no song (1) sequence to detect onsets (0->1) and offsets (1->0)
         song_binary = (labels > 0).astype(np.int8)
         if segment_fillgap is not None:
-            song_binary = dask.array.map_overlap(
+            song_binary = da.map_overlap(
                 segment_utils.fill_gaps,
                 song_binary,
                 gap_dur=int(segment_fillgap * samplerate),
                 depth=(int(segment_fillgap * samplerate + 1), 0),
-                boundary=None,
+                boundary="none",
                 trim=True,
                 align_arrays=True)
         if segment_minlen is not None:
-            song_binary = dask.array.map_overlap(
+            song_binary = da.map_overlap(
                 segment_utils.remove_short,
                 song_binary,
                 min_len=int(segment_minlen * samplerate),
                 depth=(int(segment_minlen * samplerate + 1), 0),
-                boundary=None,
+                boundary="none",
                 trim=True,
                 align_arrays=True)
 
         # detect syllable on- and offsets
         # pre- and post-pend 0 so we detect on and offsets at boundaries
-        onsets = dask.array.where(
-            dask.array.diff(song_binary, prepend=0) == 1)[0]
-        offsets = dask.array.where(
-            dask.array.diff(song_binary, append=0) == -1)[0]
+        onsets = da.where(
+            da.diff(song_binary, prepend=0) == 1)[0]
+        offsets = da.where(
+            da.diff(song_binary, append=0) == -1)[0]
         logging.info("   Detecting syllable on and offsets:")
         with ProgressBar(minimum=5):
-            onsets, offsets = dask.array.compute(onsets, offsets)
+            onsets, offsets = da.compute(onsets, offsets)
         segments['onsets_seconds'] = onsets.astype(float) / samplerate
         segments['offsets_seconds'] = offsets.astype(float) / samplerate
 
@@ -240,7 +240,7 @@ def predict_segments(class_probabilities: np.ndarray,
 
             if cast_to is not None:
                 logging.info(f"   Casting labels to {cast_to}:")
-                labels = dask.array.map_blocks(lambda x: x.astype(cast_to),
+                labels = da.map_blocks(lambda x: x.astype(cast_to),
                                                labels,
                                                dtype=np.int16)
 
@@ -338,7 +338,7 @@ def predict_events(class_probabilities: np.ndarray,
         pad = int(event_dist * samplerate + 1)
         for event_dim, event_name in zip(event_dims, event_names):
 
-            event_indices_and_probs = dask.array.map_overlap(
+            event_indices_and_probs = da.map_overlap(
                 _detect_events_oom,
                 class_probabilities,
                 thres=event_thres,
@@ -351,7 +351,7 @@ def predict_events(class_probabilities: np.ndarray,
                 dtype=int,
                 meta=np.array(()))
             with ProgressBar(minimum=5):
-                event_indices_and_probs = dask.array.compute(
+                event_indices_and_probs = da.compute(
                     event_indices_and_probs)
             event_indices, event_probabilities = event_indices_and_probs[
                 0][:, 0], event_indices_and_probs[0][:, 1]

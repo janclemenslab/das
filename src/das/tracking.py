@@ -8,13 +8,12 @@ import logging
 import os
 from typing import Optional, Dict
 
-
 try:
     import wandb
     from wandb.keras import WandbCallback
     HAS_WANDB = True
 except ImportError as e:
-    # logging.exception('Could not import neptune libraries.')
+    logging.debug('Could not import neptune libraries.')
     HAS_WANDB = False
 HAS_WANDB = True
 
@@ -22,9 +21,12 @@ HAS_WANDB = True
 class Wandb():
     """Utility class for logging to wandb.ai during training."""
 
-    def __init__(self, project: Optional[str] = None, api_token: Optional[str] = None,
+    def __init__(self,
+                 project: Optional[str] = None,
+                 api_token: Optional[str] = None,
                  entity: Optional[str] = None,
-                 params: Optional[Dict] = None, infer_from_env: bool = False):
+                 params: Optional[Dict] = None,
+                 infer_from_env: bool = False):
         """
         Args:
             project (Optional[str], optional): Project to log to. Defaults to None.
@@ -49,7 +51,8 @@ class Wandb():
             wandb.login(key=api_token)
             self.project = project
             self.entity = entity
-            self.run = wandb.init(project=self.project, entity=self.entity,
+            self.run = wandb.init(project=self.project,
+                                  entity=self.entity,
                                   settings=wandb.Settings(start_method="fork"))
 
             if params is not None:
@@ -60,7 +63,9 @@ class Wandb():
             logging.exception('Wandb stuff went wrong.')
 
     def reinit(self, params=None):
-        self.run = wandb.init(reinit=True, project=self.project, entity=self.entity)
+        self.run = wandb.init(reinit=True,
+                              project=self.project,
+                              entity=self.entity)
         if params is not None:
             wandb.config.update(params)
 

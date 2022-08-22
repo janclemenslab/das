@@ -1,49 +1,47 @@
 """Segment (syllable) utilities."""
 import numpy as np
-import scipy.stats
-from typing import List, Tuple, Any
+from typing import Tuple
 
 
-def fill_gaps(labels: np.array, gap_dur: int = 100) -> np.ndarray:
+def fill_gaps(labels: np.ndarray, gap_dur: int = 100) -> np.ndarray:
     """Fill short gaps in a sequence of labelled samples.
 
     `---111111-1111---` -> `---11111111111---`
 
     Args:
-        labels (np.array): Sequence of labelled samples.
+        labels (np.ndarray): Sequence of labelled samples.
         gap_dur (int, optional): Minimal gap duration, in samples. Defaults to 100.
 
     Returns:
-        np.array: Labelled samples with short gaps filled.
+        np.ndarray: Labelled samples with short gaps filled.
     """
-    onsets = np.where(np.diff(labels.astype(np.int)) == 1)[0]
-    offsets = np.where(np.diff(labels.astype(np.int)) == -1)[0]
+    onsets = np.where(np.diff(labels.astype(int)) == 1)[0]
+    offsets = np.where(np.diff(labels.astype(int)) == -1)[0]
     if len(onsets) and len(offsets):
         onsets = onsets[onsets < offsets[-1]]
     if len(onsets) and len(offsets):
         offsets = offsets[offsets > onsets[0]]
     if len(onsets) and len(offsets) and len(onsets) == len(offsets):
-        durations = offsets - onsets
-        for idx, (onset, offset, duration) in enumerate(zip(onsets, offsets, durations)):
-            if idx > 0 and offsets[idx-1] > onsets[idx]-gap_dur:
-                labels[offsets[idx-1]:onsets[idx]+1] = 1
+        for idx in range(len(onsets)):
+            if idx > 0 and offsets[idx - 1] > onsets[idx] - gap_dur:
+                labels[offsets[idx - 1]:onsets[idx] + 1] = 1
     return labels
 
 
-def remove_short(labels: np.array, min_len: int = 100) -> np.array:
+def remove_short(labels: np.ndarray, min_len: int = 100) -> np.ndarray:
     """Remove short syllables from sequence of labelled samples.
 
     `---1111-1---1--` -> `---1111--------`
 
     Args:
-        labels (np.array): Sequence of labelled samples.
+        labels (np.ndarray): Sequence of labelled samples.
         min_len (int, optional): Minimal segment (syllable) duration, in samples. Defaults to 100.
 
     Returns:
-        np.array: Labelled samples with short syllables removed.
+        np.ndarray: Labelled samples with short syllables removed.
     """
-    onsets = np.where(np.diff(labels.astype(np.int)) == 1)[0]
-    offsets = np.where(np.diff(labels.astype(np.int)) == -1)[0]
+    onsets = np.where(np.diff(labels.astype(int)) == 1)[0]
+    offsets = np.where(np.diff(labels.astype(int)) == -1)[0]
     if len(onsets) and len(offsets):
         onsets = onsets[onsets < offsets[-1]]
     if len(onsets) and len(offsets):
@@ -56,33 +54,32 @@ def remove_short(labels: np.array, min_len: int = 100) -> np.array:
     return labels
 
 
-def label_syllables_by_majority(labels: np.array,
-                                onsets_seconds: List[float], offsets_seconds: List[float],
-                                samplerate: float) -> Tuple[np.array, np.array]:
+def label_syllables_by_majority(
+        labels: np.ndarray, onsets_seconds: np.ndarray,
+        offsets_seconds: np.ndarray,
+        samplerate: float) -> Tuple[np.ndarray, np.ndarray]:
     """Label syllables by a majority vote.
 
     Args:
-        labels (np.array): Sequence of dirty, per sample, labels.
+        labels (np.ndarray): Sequence of dirty, per sample, labels.
         onsets_seconds (List[float]): Onset of each syllable in `labels`, in seconds.
         offsets_seconds (List[float]): Offset of each syllable in `labels`, in seconds.
         samplerate (float): Samplerate of `labels`, in Hz.
 
     Returns:
-        Tuple[np.array, np.array]: Sequence of syllables, clean sequence of per-sample labels.
+        Tuple[np.ndarray, np.ndarray]: Sequence of syllables, clean sequence of per-sample labels.
     """
     syllables = []
     labels_clean = np.zeros_like(labels, dtype=int)
 
-    onsets_sample = (onsets_seconds * samplerate).astype('int')
-    offsets_sample = (offsets_seconds * samplerate).astype('int')
+    onsets_sample = (onsets_seconds * samplerate).astype(int)
+    offsets_sample = (offsets_seconds * samplerate).astype(int)
 
     for onset_sample, offset_sample in zip(onsets_sample, offsets_sample):
-        # majority_label = scipy.stats.mode(labels[onset_sample:offset_sample])[0]
-        # faster mode
-        values, counts = np.unique(labels[onset_sample:offset_sample], return_counts=True)
+        values, counts = np.unique(labels[onset_sample:offset_sample],
+                                   return_counts=True)
         if len(values):
             majority_label = values[counts.argmax()]
-            # if (majority_label):
             syllables.append(int(majority_label))
             labels_clean[onset_sample:offset_sample] = syllables[-1]
 

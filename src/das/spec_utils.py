@@ -5,7 +5,7 @@ try:
     import tensorflow_probability as tfp
 except ImportError:
     tfp = None
-    # logging.warning('No tensorflow-probability.')
+    logging.debug('No tensorflow-probability.')
     pass
 
 
@@ -73,22 +73,22 @@ class MelSpec(keras.layers.Layer):
         # # baseline subtract
         if tfp is not None:
             baseline = tfp.stats.percentile(mel, 50, axis=1, keepdims=True)
-            mel = tf.math.log(mel/(baseline + 0.000001))
-            mel = tf.clip_by_value(mel, clip_value_min=0, clip_value_max=100_000)
+            mel = tf.math.log(mel / (baseline + 0.000001))
+            mel = tf.clip_by_value(mel,
+                                   clip_value_min=0,
+                                   clip_value_max=100_000)
             mel /= tf.reduce_max(mel) * 255
         return mel
 
     def get_config(self):
         config = super(MelSpec, self).get_config()
-        config.update(
-            {
-                "frame_length": self.frame_length,
-                "frame_step": self.frame_step,
-                "fft_length": self.fft_length,
-                "sampling_rate": self.sampling_rate,
-                "num_mel_channels": self.num_mel_channels,
-                "freq_min": self.freq_min,
-                "freq_max": self.freq_max,
-            }
-        )
+        config.update({
+            "frame_length": self.frame_length,
+            "frame_step": self.frame_step,
+            "fft_length": self.fft_length,
+            "sampling_rate": self.sampling_rate,
+            "num_mel_channels": self.num_mel_channels,
+            "freq_min": self.freq_min,
+            "freq_max": self.freq_max,
+        })
         return config
