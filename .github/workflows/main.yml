@@ -36,7 +36,8 @@ jobs:
       - name: Conda environment creation
         run: |
           conda install anaconda-client -q -n base
-          conda env create ncb/das-env -q -n das
+          conda install mamba -c conda-forge -n base -y
+          mamba install das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
           conda install pytest -q -n das
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
