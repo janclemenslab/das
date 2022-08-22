@@ -37,11 +37,10 @@ jobs:
         run: |
           conda install anaconda-client -q -n base
           conda install mamba -c conda-forge -n base -y
-      - name: Test with pytest (Linux, Macos)
+      - name: 'Workaround for mamba-org/mamba#488 (Linux)'
         shell: bash -l {0}
-        if: runner.os != 'Windows'
-        run: |
-          rm /usr/share/miniconda/pkgs/cache/*.json
+        if: runner.os == 'Linux'
+        run: rm /usr/share/miniconda/pkgs/cache/*.json
       - name: Conda environment creation
         run: |
           conda create python=${{ matrix.python-version }} -n das
