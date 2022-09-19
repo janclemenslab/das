@@ -6,7 +6,6 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-
 from tensorflow.python.keras.utils import tf_utils
 from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
@@ -18,14 +17,15 @@ import sys
 from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash  #, timeseries
 
+logger = logging.getLogger(__name__)
+
 try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
     physical_devices = tf.config.list_physical_devices('GPU')
     if physical_devices:
-        tf.config.experimental.set_memory_growth(physical_devices[0],
-                                                 enable=True)
+        tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 except Exception as e:
-    logging.exception(e)
+    logger.exception(e)
 
 
 class TunableModel(kt.HyperModel):
@@ -57,10 +57,7 @@ class OracleCallback(Callback):
         self.tuner = tuner
 
     def on_epoch_end(self, epoch, logs=None):
-        self.tuner.on_epoch_end(self.tuner.current_trial,
-                                self.model,
-                                epoch,
-                                logs=logs)
+        self.tuner.on_epoch_end(self.tuner.current_trial, self.model, epoch, logs=logs)
 
 
 class ModelParamsCheckpoint(ModelCheckpoint):
@@ -75,8 +72,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
         """
         logs = logs or {}
 
-        if isinstance(self.save_freq,
-                      int) or self.epochs_since_last_save >= self.period:
+        if isinstance(self.save_freq, int) or self.epochs_since_last_save >= self.period:
             # Block only when saving interval is reached.
             logs = tf_utils.sync_to_numpy_or_python_type(logs)
             self.epochs_since_last_save = 0
@@ -86,9 +82,7 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                 if self.save_best_only:
                     current = logs.get(self.monitor)
                     if current is None:
-                        logging.warning(
-                            f'Can save best model only with {self.monitor} available, skipping.'
-                        )
+                        logger.warning(f'Can save best model only with {self.monitor} available, skipping.')
                     else:
                         if self.monitor_op(current, self.best):
                             if self.verbose > 0:
@@ -97,39 +91,23 @@ class ModelParamsCheckpoint(ModelCheckpoint):
                                 )
                             self.best = current
                             if self.save_weights_only:
-                                self.model.save_weights(filepath + '_model.h5',
-                                                        overwrite=True,
-                                                        options=self._options)
+                                self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
                             else:
-                                self.model.save(filepath + '_model.h5',
-                                                overwrite=True,
-                                                options=self._options)
+                                self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                                 # TODO: clean up params dict
-                                utils.save_params(
-                                    self._normalize_tf_dict(self.model.params),
-                                    filepath)
+                                utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
                         else:
                             if self.verbose > 0:
-                                print(
-                                    f'\nEpoch {epoch + 1:05d}: {self.monitor} did not improve from {self.best:0.5f}'
-                                )
+                                print(f'\nEpoch {epoch + 1:05d}: {self.monitor} did not improve from {self.best:0.5f}')
                 else:
                     if self.verbose > 0:
-                        print(
-                            f'\nEpoch {epoch+1:05d}: saving model to {filepath}'
-                        )
+                        print(f'\nEpoch {epoch+1:05d}: saving model to {filepath}')
                     if self.save_weights_only:
-                        self.model.save_weights(filepath + '_model.h5',
-                                                overwrite=True,
-                                                options=self._options)
+                        self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
                     else:
-                        self.model.save(filepath + '_model.h5',
-                                        overwrite=True,
-                                        options=self._options)
+                        self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
                         # TODO: clean up params dict
-                        utils.save_params(
-                            self._normalize_tf_dict(self.model.params),
-                            filepath)
+                        utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
                 self._maybe_remove_file()
             except IsADirectoryError as e:  # h5py 3.x
                 raise IOError(
@@ -185,29 +163,23 @@ class DasTuner(kt.Tuner):
             self.params['stride'] = self.params['nb_hist']
             if self.params['ignore_boundaries']:
                 self.params['data_padding'] = int(
-                    np.ceil(self.params['kernel_size'] *
-                            self.params['nb_conv'])
-                )  # this does not completely avoid boundary effects but should minimize them sufficiently
-                self.params['stride'] = self.params[
-                    'stride'] - 2 * self.params['data_padding']
+                    np.ceil(self.params['kernel_size'] * self.params['nb_conv']
+                           ))  # this does not completely avoid boundary effects but should minimize them sufficiently
+                self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
 
             data_gen = data.AudioSequence(train_x,
                                           train_y,
                                           shuffle=True,
                                           nb_repeats=1,
-                                          last_sample=train_x.shape[0] -
-                                          2 * self.params['nb_hist'],
+                                          last_sample=train_x.shape[0] - 2 * self.params['nb_hist'],
                                           **self.params)
-            val_gen = data.AudioSequence(val_x,
-                                         val_y,
-                                         shuffle=False,
-                                         **self.params)
-            logging.info("Data:")
-            logging.info(f"training: {data_gen}")
-            logging.info(f"validation: {val_gen}")
+            val_gen = data.AudioSequence(val_x, val_y, shuffle=False, **self.params)
+            logger.info("Data:")
+            logger.info(f"training: {data_gen}")
+            logger.info(f"validation: {val_gen}")
 
-            logging.info("Hyperparameters:")
-            logging.info(trial.hyperparameters.values)
+            logger.info("Hyperparameters:")
+            logger.info(trial.hyperparameters.values)
             if steps_per_epoch is None:
                 steps_per_epoch = min(len(data_gen), 1000)
 
@@ -225,10 +197,10 @@ class DasTuner(kt.Tuner):
                 self.tracker.finish()
             self.current_trial.status = 'RUNNING'
         except KeyboardInterrupt:
-            logging.exception('Interrupted')
+            logger.exception('Interrupted')
             sys.exit(0)
         except:
-            logging.exception("Something went wrong. Will try to continue.")
+            logger.exception("Something went wrong. Will try to continue.")
             self.current_trial.status = 'INVALID'
 
 
@@ -368,7 +340,7 @@ def train(*,
                                            Defaults to None (no logging to wandb).
         wandb_project (Optional[str]): Project to log to for wandb.
                                          Defaults to None (no logging to wandb).
-        wandb_entity (Optional[str]): Entity to log to for wandb.
+        wandb_entity (Optional[str]): Entity (user or team) to log to for wandb.
                                         Defaults to None (no logging to wandb).
         log_messages (bool): Sets terminal logging level to INFO.
                              Defaults to False (will follow existing settings).
@@ -386,9 +358,6 @@ def train(*,
             model (keras.Model)
             params (Dict[str, Any])
     """
-    # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
-    #        The queue is used to transmit progress updates to the GUI,
-    #        the event is set in the GUI to stop training.
     if log_messages:
         logging.basicConfig(level=logging.INFO)
 
@@ -401,9 +370,8 @@ def train(*,
         y_offset = 0
         sample_weight_mode = 'temporal'
         if ignore_boundaries:
-            data_padding = int(
-                np.ceil(kernel_size * nb_conv)
-            )  # this does not completely avoid boundary effects but should minimize them sufficiently
+            data_padding = int(np.ceil(
+                kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
             stride = stride - 2 * data_padding
     else:  # classification
         return_sequences = False
@@ -433,7 +401,7 @@ def train(*,
             try:
                 tune_config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
-                logging.exception(exc)
+                logger.exception(exc)
 
     if stride <= 0:
         raise ValueError(
@@ -447,38 +415,33 @@ def train(*,
     if '_multi' in model_name:
         params['unpack_channels'] = True
 
-    logging.info(f'Loading data from {data_dir}.')
+    logger.info(f'Loading data from {data_dir}.')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
 
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
         params['data_hash'] = data_hash.hash_data(data_dir)
-        logging.info(f"Version of the data:")
-        logging.info(f"   MD5 hash of {data_dir} is")
-        logging.info(f"   {params['data_hash']}")
+        logger.info(f"Version of the data:")
+        logger.info(f"   MD5 hash of {data_dir} is")
+        logger.info(f"   {params['data_hash']}")
 
     if fraction_data is not None:
         if fraction_data > 1.0:  # seconds
-            logging.info(
+            logger.info(
                 f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data."
             )
-            fraction_data = np.min(
-                (fraction_data /
-                 (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
+            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
         elif fraction_data < 1.0:
-            logging.info(
-                f"Using {fraction_data:1.4f} of the training and validation data."
-            )
+            logger.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
     if fraction_data is not None and not batch_level_subsampling and fraction_data != 1.0:  # train on a subset
-        min_nb_samples = nb_hist * (
-            batch_size + 2
-        )  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(
-            d['train']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
-        first_sample_val, last_sample_val = data.sub_range(
-            d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
+        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0],
+                                                               fraction_data,
+                                                               min_nb_samples,
+                                                               seed=seed)
+        first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
     else:
         first_sample_train, last_sample_train = 0, None
         first_sample_val, last_sample_val = 0, None
@@ -493,10 +456,10 @@ def train(*,
         'first_sample_val': first_sample_val,
         'last_sample_val': last_sample_val,
     })
-    logging.info('Parameters:')
-    logging.info(params)
+    logger.info('Parameters:')
+    logger.info(params)
 
-    logging.info('Preparing data')
+    logger.info('Preparing data')
     if fraction_data is not None and batch_level_subsampling:  # train on a subset
         np.random.seed(seed)
         shuffle_subset = fraction_data
@@ -505,17 +468,12 @@ def train(*,
 
     params['class_weights'] = None
     if balance:
-        logging.info("Balancing classes:")
-        logging.info("   Computing class weights.")
-        y_train = np.argmax(d['train']['y'], axis=1)
-        classes = np.unique(y_train)
-        params['class_weights'] = list(
-            sklearn.utils.class_weight.compute_class_weight('balanced',
-                                                            classes=classes,
-                                                            y=y_train))
-        logging.info(f"   {params['class_weights']}")
+        logger.info("Balancing classes:")
+        logger.info("   Computing class weights.")
+        params['class_weights'] = data.compute_class_weights(d['train']['y'][first_sample_train:last_sample_train])
+        logger.info(f"   {params['class_weights']}")
 
-    logging.info('building network')
+    logger.info('Building network')
 
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
     if save_name is None:
@@ -523,21 +481,16 @@ def train(*,
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
     params['save_name'] = save_name
 
-    logging.info(f'Will save to {save_name}.')
+    logger.info(f'Will save to {save_name}.')
 
     # setup callbacks
     callbacks = [
-        ModelParamsCheckpoint(save_name,
-                              save_best_only=True,
-                              save_weights_only=False,
-                              monitor='val_loss',
-                              verbose=1),
+        ModelParamsCheckpoint(save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
         EarlyStopping(monitor='val_loss', patience=15)
     ]
 
     if reduce_lr:
-        callbacks.append(
-            ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
+        callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
 
     if _qt_progress:
         callbacks.append(utils.QtProgressCallback(nb_epoch, _qt_progress))
@@ -547,8 +500,7 @@ def train(*,
 
     if wandb_api_token and wandb_project:  # could also get those from env vars!
         del params['wandb_api_token']
-        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity,
-                               params)
+        wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
         if wandb:
             callbacks.append(wandb.callback())
     else:
@@ -567,11 +519,11 @@ def train(*,
         tracker=wandb,
     )
 
-    logging.info(tuner.search_space_summary())
+    logger.info(tuner.search_space_summary())
     utils.save_params(params, save_name)
 
     # TRAIN NETWORK
-    logging.info('Start hyperparameter tuning')
+    logger.info('Start hyperparameter tuning')
     tuner.search(
         train_x=d['train']['x'],
         train_y=d['train']['y'],
@@ -582,35 +534,33 @@ def train(*,
         callbacks=callbacks,
         class_weight=params['class_weights'],
     )
-    logging.info(tuner.results_summary())
+    logger.info(tuner.results_summary())
 
     # TEST
-    if len(d['test']['x']) < nb_hist:
-        logging.info('No test data - skipping final evaluation step.')
+    if 'test' not in d or len(d['test']['x']) < nb_hist:
+        logger.info('   No test data - skipping final evaluation step.')
     else:
-        logging.info('re-loading last best model')
+        logger.info(f"   Re-loading last best model from {params['save_name']}.")
+        best_model = tuner.get_best_models()[0]
         model, params = utils.load_model_and_params(params['save_name'])
 
-        logging.info('predicting')
-        # TODO: Need to update params with best hyperparams (e.g. nb-hist)
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(
-            x=d['test']['x'], y=d['test']['y'], model=model, params=params)
+        logger.info('   Predicting')
+        # TODO: Need to update params with best hyperparams (e.g. nb-hist)?
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logging.info('evaluating')
-        conf_mat, report = evaluate.evaluate_segments(labels_test,
-                                                      labels_pred,
-                                                      params['class_names'],
-                                                      report_as_dict=True)
-        logging.info(conf_mat)
-        logging.info(report)
+        logger.info('   Evaluating')
+        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+        logger.info(conf_mat)
+        logger.info(report)
+
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
-        logging.info('saving to ' + save_filename + '.')
+        logger.info('   Saving to ' + save_filename + '.')
         d = {
             'fit_hist': [],
             'confusion_matrix': conf_mat,
@@ -622,8 +572,7 @@ def train(*,
             'labels_pred': labels_pred,
             'params': params,
         }
-
         fl.save(save_filename, d)
 
-    logging.info('DONE.')
-    return model, params
+    logger.info('DONE.')
+    return tuner, model, params
