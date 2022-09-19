@@ -355,7 +355,7 @@ def train(*,
     logger.info(f"Validation data:")
     logger.info(f"   {val_gen}")
 
-    logger.info('building network')
+    logger.info('Building network')
     try:
         model = models.model_dict[model_name](**params)
     except KeyError as e:
@@ -439,7 +439,7 @@ def train(*,
     # TEST
     # TODO use postprocessing params
     logger.info('TESTING:')
-    if len(d['test']['x']) < nb_hist:
+    if 'test' not in d or len(d['test']['x']) < nb_hist:
         logger.info('   No test data - skipping final evaluation step.')
     else:
         logger.info(f'   Re-loading last best model from {checkpoint_save_name}.')
