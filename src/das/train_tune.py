@@ -575,4 +575,4 @@ def train(*,
         fl.save(save_filename, d)
 
     logger.info('DONE.')
-    return tuner, model, params
+    return model, params, tuner

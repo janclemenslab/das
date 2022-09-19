@@ -367,6 +367,7 @@ def train(*,
     if save_name is None:
         save_name = time.strftime('%Y%m%d_%H%M%S')
     save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
+    params['save_name'] = save_name
     logger.info(f'Will save to {save_name}.')
 
     # SET UP CALLBACKS
@@ -475,4 +476,4 @@ def train(*,
         fl.save(save_filename, ddd)
 
     logger.info('DONE.')
-    return model, params
+    return model, params, fit_hist
