@@ -169,9 +169,7 @@ def predict_segments(class_probabilities: np.ndarray,
         segments['index'] = segment_dims
         segments['names'] = segment_names
         if not probs_are_labels:
-            # prob = class_probabilities[:, segment_dims]
-            # segments['probabilities'] = prob
-            segments['probabilities'] = None
+            segments['probabilities'] = class_probabilities[:, segment_dims]
             labels = da.map_blocks(labels_from_probabilities,
                                            class_probabilities,
                                            segment_thres,
