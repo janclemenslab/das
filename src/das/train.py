@@ -10,6 +10,7 @@ import os
 import yaml
 from typing import List, Optional, Tuple, Dict, Any, Union
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
+
 logger = logging.getLogger(__name__)
 
 try:  # fixes cuDNN error when using LSTM layer
@@ -445,16 +446,7 @@ def train(*,
         model.load_weights(checkpoint_save_name)
 
         logger.info('   Predicting.')
-        x_name = 'x'
-        if x_suffix:
-            x_name += f'_{x_suffix}'
-        y_name = 'y'
-        if y_suffix:
-            y_name += f'_{y_suffix}'
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test'][x_name],
-                                                                 y=d['test'][y_name],
-                                                                 model=model,
-                                                                 params=params)
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
