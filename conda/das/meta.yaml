@@ -13,7 +13,7 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
-  script: build_osx-arm.sh  # [arm64]
+  script: build_osx-arm64.sh  # [arm64]
   script: build_other.sh  # [not arm64]
 
 
