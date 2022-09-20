@@ -411,8 +411,8 @@ def train(*,
     if post_opt:
         logger.info('OPTIMIZING POSTPROCESSING:')
 
-        gap_durs = np.geomspace(fill_gaps_min, fill_gaps_max, fill_gaps_steps)
-        min_lens = np.geomspace(min_len_min, min_len_max, min_len_steps)
+        gap_durs = np.geomspace(float(fill_gaps_min), float(fill_gaps_max), int(fill_gaps_steps))
+        min_lens = np.geomspace(float(min_len_min), float(min_len_max), int(min_len_steps))
 
         best_gap_dur, best_min_len, scores = postprocessing.optimize(dataset_path=data_dir,
                                                                      model_save_name=save_name,
