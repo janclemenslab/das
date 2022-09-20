@@ -536,6 +536,10 @@ def train(*,
     )
     logger.info(tuner.results_summary())
 
+    # update params with best hp
+    # best_hp = tuner.get_best_hyperparameters()[0]
+    # params.update(best_hp) # ???
+
     # TEST
     if 'test' not in d or len(d['test']['x']) < nb_hist:
         logger.info('   No test data - skipping final evaluation step.')
@@ -555,6 +559,10 @@ def train(*,
         conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
         logger.info(conf_mat)
         logger.info(report)
+        params['conf_mat'] = conf_mat.tolist()
+        params['report'] = report
+        logger.info(f'   Updating params file "{save_name}_params.yaml" with the test results.')
+        utils.save_params(params, save_name)
 
         if wandb_api_token and wandb_project:  # could also get those from env vars!
             wandb.log_test_results(report)
