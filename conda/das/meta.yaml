@@ -44,7 +44,7 @@ requirements:
     - xarray-behave
     - cudatoolkit # [win or linux]
     - cudnn # [win or linux]
-    - tensorflow>=2.9 # [osx]
+    - tensorflow>=2.8 # [osx]
     # - tensorflow-gpu>=2.9 # [win or linux]
     - apple::tensorflow-deps  # [not osx and arm64]
     - numpy>=1.20
