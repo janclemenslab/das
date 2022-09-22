@@ -392,7 +392,8 @@ def predict(x: np.ndarray,
             segment_minlen: float = None,
             segment_fillgap: float = None,
             pad: bool = True,
-            prepend_data_padding: bool = True):
+            prepend_data_padding: bool = True,
+            save_memory: bool = False):
     """[summary]
 
     Usage:
@@ -442,6 +443,9 @@ def predict(x: np.ndarray,
         prepend_data_padding (bool, optional): Restores samples that are ignored
                     in the beginning of the first and the end of the last chunk
                     because of "ignore_boundaries". Defaults to True.
+        save_memory (bool): If true, will return memmaped dask.arrays that reside on disk for chunked computations.
+                            Convert to np.arrays via the array's `compute()` function.
+                            Defaults to False.
     Raises:
         ValueError: [description]
 
@@ -500,7 +504,10 @@ def predict(x: np.ndarray,
                                     segment_thres=segment_thres,
                                     segment_minlen=segment_minlen,
                                     segment_fillgap=segment_fillgap)
-
+    if not save_memory:
+        segments['probabilities'] = segments['probabilities'].compute()
+        segments['samples'] = segments['samples'].compute()
+        class_probabilities = class_probabilities.compute()
     return events, segments, class_probabilities, params['class_names']
 
 
@@ -595,10 +602,21 @@ def cli_predict(path: str,
 
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
-            events, segments, class_probabilities, class_names = predict(x, None, verbose, batch_size, model, params,
-                                                                         event_thres, event_dist, event_dist_min,
-                                                                         event_dist_max, segment_thres, segment_use_optimized,
-                                                                         segment_minlen, segment_fillgap)
+            events, segments, class_probabilities, class_names = predict(x,
+                                                                         None,
+                                                                         verbose,
+                                                                         batch_size,
+                                                                         model,
+                                                                         params,
+                                                                         event_thres,
+                                                                         event_dist,
+                                                                         event_dist_min,
+                                                                         event_dist_max,
+                                                                         segment_thres,
+                                                                         segment_use_optimized,
+                                                                         segment_minlen,
+                                                                         segment_fillgap,
+                                                                         save_memory=True)
 
             if 'event' in params["class_types"]:
                 logging.info(f"   found {len(events['seconds'])} instances of events '{list(set(events['sequence']))}'.")

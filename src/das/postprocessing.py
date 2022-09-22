@@ -33,7 +33,13 @@ def obj_fun(labels_true, probs_pred, gap_dur, min_len, segment_dims=None, segmen
     return score(labels_true, labels_pred)
 
 
-def optimize_grid(labels_train_true, probs_train_pred, gap_durs, min_lens, segment_dims=None, segment_names=None, nb_workers=-1):
+def optimize_grid(labels_train_true,
+                  probs_train_pred,
+                  gap_durs,
+                  min_lens,
+                  segment_dims=None,
+                  segment_names=None,
+                  nb_workers=-1):
     params = list(itertools.product(gap_durs, min_lens))
     f1_scores = Parallel(n_jobs=nb_workers)(
         delayed(obj_fun)(labels_train_true, probs_train_pred, gap_dur, min_len, segment_dims, segment_names)
@@ -75,7 +81,7 @@ def optimize(
 
     # get raw predictions to run post-processing on
     logger.info('   Generating raw predictions')
-    _, segments, probs_train_pred, _ = predict.predict(data['train']['x'], model_save_name=model_save_name)
+    _, segments, probs_train_pred, _ = predict.predict(data['train']['x'], model_save_name=model_save_name, save_memory=True)
     labels_train_true = postprocess(da.from_array(data['train']['y']),
                                     segment_dims=segments['index'],
                                     segment_names=segments['names'])
@@ -101,7 +107,7 @@ def optimize(
     # validate found parameters on validation set
     if len(data['val']['x']):
         # get raw predictions to run post-processing on
-        _, _, probs_val_pred, _ = predict.predict(data['val']['x'], model_save_name=model_save_name)
+        _, _, probs_val_pred, _ = predict.predict(data['val']['x'], model_save_name=model_save_name, save_memory=True)
         labels_val_true = postprocess(da.from_array(data['val']['y']),
                                       segment_dims=segments['index'],
                                       segment_names=segments['names'])
