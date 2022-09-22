@@ -5,7 +5,6 @@ import flammkuchen as fl
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
-import sklearn.utils
 import os
 import yaml
 from typing import List, Optional, Tuple, Dict, Any, Union
@@ -72,9 +71,14 @@ def train(*,
           post_opt: bool = False,
           post_opt_nb_workers: int = -1,
           post_opt_fill_gaps_min: float = 0.0005,
+          post_opt_fill_gaps_max: float = 1.0,
+          post_opt_fill_gaps_steps: int = 20,
+          post_opt_min_len_min: float = 0.0005,
+          post_opt_min_len_max: float = 1.0,
+          post_opt_min_len_steps: int = 20,
           resnet_compute: bool = False,
           resnet_train: bool = False,
-          _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any]]:
+          _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any], keras.callbacks.History]:
     """Train a DAS network.
 
     Args:
@@ -188,18 +192,20 @@ def train(*,
 
         post_opt (bool): Optimize post processing (delete short detections, fill brief gaps).
                         Defaults to False.
-        fill_gaps_min (float): Defaults to 0.0005 seconds.
-        fill_gaps_max (float): Defaults to 1 second.
-        fill_gaps_steps (int): Defaults to 20.
-        min_len_min (float): Defaults to 0.0005 seconds.
-        min_len_max (float): Defaults to 1 second.
-        min_len_steps (int): Defaults to 20.
+        post_opt_nb_workers (int): Number of parallel processes during post_opt. Defaults to -1 (same number as cores).
+        post_opt_fill_gaps_min (float): Defaults to 0.0005 seconds.
+        post_opt_fill_gaps_max (float): Defaults to 1 second.
+        post_opt_fill_gaps_steps (int): Defaults to 20.
+        post_opt_min_len_min (float): Defaults to 0.0005 seconds.
+        post_opt_min_len_max (float): Defaults to 1 second.
+        post_opt_min_len_steps (int): Defaults to 20.
 
         resnet_compute (bool): Defaults to False.
         resnet_train (bool): Defaults to False.
         Returns
             model (keras.Model)
             params (Dict[str, Any])
+            history (keras.callbacks.History)
         """
     # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
     #        The queue is used to transmit progress updates to the GUI,
@@ -407,13 +413,14 @@ def train(*,
     if post_opt:
         logger.info('OPTIMIZING POSTPROCESSING:')
 
-        gap_durs = np.geomspace(float(fill_gaps_min), float(fill_gaps_max), int(fill_gaps_steps))
-        min_lens = np.geomspace(float(min_len_min), float(min_len_max), int(min_len_steps))
+        gap_durs = np.geomspace(float(post_opt_fill_gaps_min), float(post_opt_fill_gaps_max), int(post_opt_fill_gaps_steps))
+        min_lens = np.geomspace(float(post_opt_min_len_min), float(post_opt_min_len_max), int(post_opt_min_len_steps))
 
         best_gap_dur, best_min_len, scores = postprocessing.optimize(dataset_path=data_dir,
                                                                      model_save_name=save_name,
                                                                      gap_durs=gap_durs,
-                                                                     min_lens=min_lens)
+                                                                     min_lens=min_lens,
+                                                                     nb_workers=post_opt_nb_workers)
 
         logger.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
         if scores['val_pre'] is not None:
