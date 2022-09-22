@@ -31,13 +31,14 @@ def find_nearest(array, values):
 
 
 def detect_events(event_probability: np.ndarray,
-                  thres: float = 0.70, min_dist: int = 100,
+                  thres: float = 0.5,
+                  min_dist: int = 100,
                   index: int = 0) -> Tuple[np.ndarray, np.ndarray]:
     """Detect events as peaks in probabilitiy.
 
     Args:
         event_probability ([np.ndarray]): [T, nb_classes]
-        thres (float, optional): [description]. Defaults to 0.70.
+        thres (float, optional): [description]. Defaults to 0.5.
         min_dist (int, optional): [description]. Defaults to 100 samples.
         index: (int, Optional): List of indices into axis 1 for which to compute the labels.
                                      Defaults to None (use all indices).
@@ -104,8 +105,8 @@ def event_interval_filter(events: Iterable, event_dist_min: float = 0, event_dis
     ipi_pre = np.diff(events, prepend=np.inf)
     ipi_post = np.diff(events, append=np.inf)
 
-    ipi_too_long = np.logical_and(ipi_pre>event_dist_max, ipi_post>event_dist_max)
-    ipi_too_short = np.logical_or(ipi_pre<event_dist_min, ipi_post<event_dist_min)
+    ipi_too_long = np.logical_and(ipi_pre > event_dist_max, ipi_post > event_dist_max)
+    ipi_too_short = np.logical_or(ipi_pre < event_dist_min, ipi_post < event_dist_min)
     if len(ipi_too_short):
         ipi_too_short[0] = False  # otherwise first event will always be removed
 
@@ -136,7 +137,8 @@ def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
     nearest_dist = nearest_dist_indices / samplerate  # convert back to seconds
 
     d = dict()
-    d['FP'] = np.sum(nearest_pred_event.mask)  # pred events that have no nearby true event (or there is another pred event nearer to the true event)
+    # pred events that have no nearby true event (or there is another pred event nearer to the true event)
+    d['FP'] = np.sum(nearest_pred_event.mask)
     d['TP'] = len(nearest_pred_event[np.isfinite(nearest_dist)].compressed())
     d['FN'] = max(0, np.sum(nearest_true_event.mask))
 
