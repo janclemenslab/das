@@ -47,87 +47,8 @@ class TunableModel(kt.HyperModel):
             hp.Choice(name, values=values)
 
         self.params.update(hp.values)
-        model = models.model_dict['tcn'](**self.params)
+        model = models.model_dict[self.params['model_name']](**self.params)
         return model
-
-
-class OracleCallback(Callback):
-
-    def __init__(self, tuner):
-        self.tuner = tuner
-
-    def on_epoch_end(self, epoch, logs=None):
-        self.tuner.on_epoch_end(self.tuner.current_trial, self.model, epoch, logs=logs)
-
-
-class ModelParamsCheckpoint(ModelCheckpoint):
-    """Callback to save the DAS model or model weights and parameters at some frequency."""
-
-    def _save_model(self, epoch=None, batch=None, logs=None):
-        """Saves the model.
-        Args:
-                epoch: the epoch this iteration is in.
-                batch: the batch this iteration is in. `None` if the `save_freq` is set to `epoch`.
-                logs: the `logs` dict passed in to `on_batch_end` or `on_epoch_end`.
-        """
-        logs = logs or {}
-
-        if isinstance(self.save_freq, int) or self.epochs_since_last_save >= self.period:
-            # Block only when saving interval is reached.
-            logs = tf_utils.sync_to_numpy_or_python_type(logs)
-            self.epochs_since_last_save = 0
-            filepath = self._get_file_path(epoch, batch, logs)
-
-            try:
-                if self.save_best_only:
-                    current = logs.get(self.monitor)
-                    if current is None:
-                        logger.warning(f'Can save best model only with {self.monitor} available, skipping.')
-                    else:
-                        if self.monitor_op(current, self.best):
-                            if self.verbose > 0:
-                                print(
-                                    f'\nEpoch {epoch + 1:05d}: {self.monitor} improved from {self.best:0.5f} to {current:0.5f}, saving model to {filepath}.'
-                                )
-                            self.best = current
-                            if self.save_weights_only:
-                                self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
-                            else:
-                                self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
-                                # TODO: clean up params dict
-                                utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
-                        else:
-                            if self.verbose > 0:
-                                print(f'\nEpoch {epoch + 1:05d}: {self.monitor} did not improve from {self.best:0.5f}')
-                else:
-                    if self.verbose > 0:
-                        print(f'\nEpoch {epoch+1:05d}: saving model to {filepath}')
-                    if self.save_weights_only:
-                        self.model.save_weights(filepath + '_model.h5', overwrite=True, options=self._options)
-                    else:
-                        self.model.save(filepath + '_model.h5', overwrite=True, options=self._options)
-                        # TODO: clean up params dict
-                        utils.save_params(self._normalize_tf_dict(self.model.params), filepath)
-                self._maybe_remove_file()
-            except IsADirectoryError as e:  # h5py 3.x
-                raise IOError(
-                    f'Please specify a non-directory filepath for ModelCheckpoint. Filepath used is an existing directory: {filepath}.'
-                )
-            except IOError as e:
-                # `e.errno` appears to be `None` so checking the content of `e.args[0]`.
-                if 'is a directory' in str(e.args[0]).lower():
-                    raise IOError(
-                        f'Please specify a non-directory filepath for ModelCheckpoint. Filepath used is an existing directory: {filepath}.'
-                    )
-                # Re-throw the error for any other causes.
-                raise e
-
-    def _normalize_tf_dict(self, d):
-        d = dict(d)
-        for key, val in d.items():
-            if isinstance(val, list):
-                d[key] = list(val)
-        return d
 
 
 class DasTuner(kt.Tuner):
@@ -141,8 +62,8 @@ class DasTuner(kt.Tuner):
                   trial,
                   train_x,
                   train_y,
-                  val_x=None,
-                  val_y=None,
+                  val_x,
+                  val_y,
                   epochs=10,
                   steps_per_epoch=None,
                   verbose=1,
@@ -151,20 +72,15 @@ class DasTuner(kt.Tuner):
         try:
             if callbacks is None:
                 callbacks = []
-            callbacks.append(OracleCallback(self))
 
             self.params.update(trial.hyperparameters.values)
-
-            trial.metrics.update('val_loss', np.nan, step=0)
-            trial.status = 'INVALID'
             self.current_trial = trial
 
             # these need updating based on current hyperparameters
             self.params['stride'] = self.params['nb_hist']
             if self.params['ignore_boundaries']:
-                self.params['data_padding'] = int(
-                    np.ceil(self.params['kernel_size'] * self.params['nb_conv']
-                           ))  # this does not completely avoid boundary effects but should minimize them sufficiently
+                # this does not completely avoid boundary effects but should minimize them sufficiently
+                self.params['data_padding'] = int(np.ceil(self.params['kernel_size'] * self.params['nb_conv']))
                 self.params['stride'] = self.params['stride'] - 2 * self.params['data_padding']
 
             data_gen = data.AudioSequence(train_x,
@@ -187,15 +103,13 @@ class DasTuner(kt.Tuner):
                 self.tracker.reinit(self.params)
             model = self.hypermodel.build(trial.hyperparameters)
             model.params = self.params  # attach params to model so we can save them in ModelParamsCheckpoint
-            model.fit(data_gen,
-                      validation_data=val_gen,
-                      epochs=epochs,
-                      steps_per_epoch=steps_per_epoch,
-                      callbacks=callbacks,
-                      verbose=verbose)
-            if self.tracker is not None:
-                self.tracker.finish()
-            self.current_trial.status = 'RUNNING'
+            fit_hist = model.fit(data_gen,
+                                 validation_data=val_gen,
+                                 epochs=epochs,
+                                 steps_per_epoch=steps_per_epoch,
+                                 callbacks=callbacks,
+                                 verbose=verbose)
+            return fit_hist
         except KeyboardInterrupt:
             logger.exception('Interrupted')
             sys.exit(0)
@@ -417,7 +331,10 @@ def train(*,
 
     logger.info(f'Loading data from {data_dir}.')
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
-
+    # FIXME throw error if no `val` in `d``
+    if 'val' not in d:
+        logging.error('No validation data found.')
+        raise ValueError('No validation data found.')
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
@@ -484,10 +401,7 @@ def train(*,
     logger.info(f'Will save to {save_name}.')
 
     # setup callbacks
-    callbacks = [
-        ModelParamsCheckpoint(save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-        EarlyStopping(monitor='val_loss', patience=15)
-    ]
+    callbacks = [EarlyStopping(monitor='val_loss', patience=15)]
 
     if reduce_lr:
         callbacks.append(ReduceLROnPlateau(patience=reduce_lr_patience, verbose=1))
@@ -537,19 +451,21 @@ def train(*,
     logger.info(tuner.results_summary())
 
     # update params with best hp
-    # best_hp = tuner.get_best_hyperparameters()[0]
-    # params.update(best_hp) # ???
+    best_hp = tuner.get_best_hyperparameters()[0].values
+    params.update(best_hp)
+
+    logger.info(f"   Saving best params and model to {params['save_name']}.")
+    utils.save_params(params, params['save_name'])
+    model = models.model_dict[params['model_name']](**params)
+    model.save(params['save_name'] + '_model.h5')
 
     # TEST
     if 'test' not in d or len(d['test']['x']) < nb_hist:
         logger.info('   No test data - skipping final evaluation step.')
     else:
         logger.info(f"   Re-loading last best model from {params['save_name']}.")
-        best_model = tuner.get_best_models()[0]
-        model, params = utils.load_model_and_params(params['save_name'])
 
         logger.info('   Predicting')
-        # TODO: Need to update params with best hyperparams (e.g. nb-hist)?
         x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
@@ -569,7 +485,7 @@ def train(*,
 
         save_filename = "{0}_results.h5".format(save_name)
         logger.info('   Saving to ' + save_filename + '.')
-        d = {
+        ddd = {
             'fit_hist': [],
             'confusion_matrix': conf_mat,
             'classification_report': report,
@@ -577,10 +493,10 @@ def train(*,
             'y_test': y_test,
             'y_pred': y_pred,
             'labels_test': labels_test,
-            'labels_pred': labels_pred,
+            'labels_pred': np.array(labels_pred),
             'params': params,
         }
-        fl.save(save_filename, d)
+        fl.save(save_filename, ddd)
 
     logger.info('DONE.')
     return model, params, tuner
