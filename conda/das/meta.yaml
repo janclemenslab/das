@@ -64,7 +64,7 @@ about:
   home: "http://github.com/janclemenslab/das"
   license: MIT
   license_family: MIT
-  license_file: "https://janclemenslab.org/das/LICENSE"
+  license_file:
   summary: "DAS"
   doc_url: "https://janclemenslab.org/das"
   dev_url: "http://github.com/janclemenslab/das"
