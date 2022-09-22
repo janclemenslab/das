@@ -259,7 +259,8 @@ def _detect_events_oom(event_probability: np.ndarray,
 
         event_indices += chunk_start_index
         # correct for overlap in all but the first chunk
-        event_indices -= pad
+        if chunk_start_index > 0:
+            event_indices -= pad
 
         # delete detections in overlapping samples
         good_events = np.logical_and(event_indices >= chunk_start_index, event_indices < chunk_end_index)
