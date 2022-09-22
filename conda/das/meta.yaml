@@ -45,7 +45,7 @@ requirements:
     - cudatoolkit # [win or linux]
     - cudnn # [win or linux]
     - tensorflow>=2.9 # [osx]
-    - tensorflow-gpu>=2.9 # [win or linux]
+    # - tensorflow-gpu>=2.9 # [win or linux]
     - apple::tensorflow-deps  # [not osx and arm64]
     - numpy>=1.20
     - ipython
@@ -64,7 +64,7 @@ about:
   home: "http://github.com/janclemenslab/das"
   license: MIT
   license_family: MIT
-  license_file:
+  license_file: "https://janclemenslab.org/das/LICENSE"
   summary: "DAS"
   doc_url: "https://janclemenslab.org/das"
   dev_url: "http://github.com/janclemenslab/das"

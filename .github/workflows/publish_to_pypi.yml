@@ -107,8 +107,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-#        python-version: [3.7, 3.8, 3.9, '3.10']
-        python-version: ['3.10']
+       python-version: [3.7, 3.8, 3.9, '3.10']
+        # python-version: ['3.10']
         os: [ubuntu-latest, windows-latest, macOS-latest]
 #         os: [ubuntu-latest, macOS-latest]
 #       os: [windows-latest]
@@ -117,7 +117,7 @@ jobs:
           python-version: 3.7
         - os: windows-latest
           python-version: 3.7
-          
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
@@ -136,7 +136,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify & conda config --set anaconda_upload yes & conda config --set always_yes yes --set changeps1 no
+          conda install -y -n base -c conda-forge python=3.10 boa anaconda-client conda-build conda-verify & conda config --set anaconda_upload yes & conda config --set always_yes yes --set changeps1 no
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
@@ -144,7 +144,7 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash -l {0}
         run: |
-          conda install -y -n base -c conda-forge python=3.8 boa anaconda-client conda-build conda-verify
+          conda install -y -n base -c conda-forge python=3.10 boa anaconda-client conda-build conda-verify
           conda config --set anaconda_upload yes
           conda config --set always_yes yes --set changeps1 no
 
