@@ -107,8 +107,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-       python-version: [3.8, 3.9, '3.10']
-       os: [ubuntu-latest, windows-latest, macOS-latest]
+       python-version: [3.9]  # [3.8, 3.9, '3.10']
+       os: [ubuntu-latest]  #, windows-latest, macOS-latest]
 
     steps:
       - name: Checkout source
@@ -144,7 +144,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: |
-          CONDA_CUDA_OVERRIDE="11.2" conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+          CONDA_CUDA_OVERRIDE="11.6" conda config --set anaconda_upload yes & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
@@ -152,6 +152,6 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash -l {0}
         run: |
-          CONDA_CUDA_OVERRIDE="11.2" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          CONDA_CUDA_OVERRIDE="11.6" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
