@@ -486,12 +486,12 @@ def predict(x: np.ndarray,
     class_probabilities = predict_probabilities(x, model, params, verbose, prepend_data_padding)
 
     if pad:
-        # trim probs to original len of x
-        class_probabilities = class_probabilities[:x_len_original, :]
         # set all song probs in padded section to zero to avoid out of bounds detections!
         # assumes that the non-song class is at index 0
-        # class_probabilities[-pad_len:, 1:] = 0
-        # class_probabilities[-pad_len:, 0] = 1
+        class_probabilities[-pad_len:, 1:] = 0
+        class_probabilities[-pad_len:, 0] = 1
+        # trim probs to original len of x
+        class_probabilities = class_probabilities[:x_len_original, :]
 
     events, segments = predict_song(class_probabilities=class_probabilities,
                                     params=params,
