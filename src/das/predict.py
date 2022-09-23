@@ -505,10 +505,16 @@ def predict(x: np.ndarray,
                                     segment_minlen=segment_minlen,
                                     segment_fillgap=segment_fillgap)
     if not save_memory:
-        segments['probabilities'] = segments['probabilities'].compute()
-        segments['samples'] = segments['samples'].compute()
-        class_probabilities = class_probabilities.compute()
+        segments['probabilities'] = _to_np(segments['probabilities'])
+        segments['samples'] = _to_np(segments['samples'])
+        class_probabilities = _to_np(class_probabilities)
     return events, segments, class_probabilities, params['class_names']
+
+
+def _to_np(array):
+    if isinstance(array, dask.array.core.Array):
+        array = array.compute()
+    return array
 
 
 def cli_predict(path: str,
