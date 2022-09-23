@@ -156,6 +156,6 @@ jobs:
           conda install -y -n base -c conda-forge python=3.10 boa anaconda-client conda-build conda-verify
           conda config --set anaconda_upload yes
           conda config --set always_yes yes --set changeps1 no
-          CONDA_CUDA_OVERRIDE="11.2" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
