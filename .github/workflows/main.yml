@@ -1,8 +1,8 @@
 name: Test install
 
 on:
-  push:
-    paths-ignore: docs/**
+#   push:
+#     paths-ignore: docs/**
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
