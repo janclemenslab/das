@@ -1,0 +1,13 @@
+name: anaconda-client-env
+channels:
+  - conda-forge
+  - anaconda
+  - ncb
+  - defaults
+dependencies:
+  - anaconda-client
+  - boa
+  - conda-build
+  - conda-verify
+  - pip
+  - git
