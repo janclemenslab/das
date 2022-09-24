@@ -43,14 +43,15 @@ jobs:
       - name: Build gui and upload to anaconda (win)
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
-        run: conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+        run: conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia -c numba--python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+          CONDA_OVERRIDE_CUDA: 11.2
 
       - name: Build gui and upload to anaconda (*x)
         if: runner.os != 'Windows'
         shell: bash -l {0}
-        run: CONDA_OVERRIDE_CUDA=11.2 conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        run: CONDA_OVERRIDE_CUDA=11.2 conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia -c numba --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
           CONDA_OVERRIDE_CUDA: 11.2
