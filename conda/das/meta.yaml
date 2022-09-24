@@ -45,9 +45,9 @@ requirements:
     - cudatoolkit # [win or linux]
     - cudnn # [win or linux]
     - tensorflow>=2.8 # [osx]
-    - tensorflow-gpu # [linux]
+    - anaconda::tensorflow==2.9.1=cuda* # [linux]
     - tensorflow-gpu>=2.4 # [win]
-    - apple::tensorflow-deps  # [not osx and arm64]
+    - apple::tensorflow-deps # [not osx and arm64]
     - numpy>=1.20
     - ipython
     - keras-tuner  # [not arm64]
