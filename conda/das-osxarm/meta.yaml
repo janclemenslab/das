@@ -19,7 +19,7 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - numpy>=1.22
+    - numpy>=1.19
   run:
     - python {{ python }}
     - defopt=6.3
@@ -37,7 +37,7 @@ requirements:
     - tqdm
     - xarray-behave
     - apple::tensorflow-deps
-    - numpy>=1.22
+    - numpy>=1.19
     - grpcio
     - ipython
 
