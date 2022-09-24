@@ -22,7 +22,7 @@ requirements:
     - numpy>=1.20
   run:
     - python {{ python }}
-    - defopt
+    - defopt=6.3
     - flammkuchen
     - h5py
     - librosa>0.8
@@ -36,8 +36,11 @@ requirements:
     - scikit-image
     - tqdm
     - xarray-behave
-    - apple::tensorflow-deps
+    - apple::tensorflow-deps=2.9.0
     - numpy>=1.20
+    # - tensorflow
+    # - keras-tuner
+    - grpcio
     - ipython
 
 test:
