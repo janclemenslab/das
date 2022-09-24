@@ -18,13 +18,12 @@ build:
   script_env:
     - CONDA_OVERRIDE_CUDA=11.2
 
-
 requirements:
   host:
     - python {{ python }}
     - pip
     - h5py
-    - numpy>=1.20
+    - numpy>=1.23
 
   run:
     - python {{ python }}
@@ -48,9 +47,8 @@ requirements:
     - cudnn # [win or linux]
     - anaconda::tensorflow==2.9.1 # [osx]
     - anaconda::tensorflow==2.9.1=cuda* # [linux or win]
-#     - tensorflow-gpu>=2.4 # [win]
     - apple::tensorflow-deps # [not osx and arm64]
-    - numpy>=1.20
+    - numpy>=1.23
     - ipython
     - keras-tuner  # [not arm64]
 
