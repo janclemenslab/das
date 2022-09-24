@@ -15,7 +15,8 @@ build:
     - das=das.cli:main
   # script: build_osx-arm64.sh  # [arm64]
   # script: build_other.sh  # [not arm64]
-
+  script_env:
+    - CONDA_OVERRIDE_CUDA=11.2
 
 
 requirements:
