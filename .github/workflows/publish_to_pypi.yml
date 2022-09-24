@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-       python-version: ['3.9']  #[3.8, 3.9]  #, '3.10']
+       python-version: ['3.10']  #[3.8, 3.9]  #, '3.10']
        os: [ubuntu-latest]  # , windows-latest, macOS-latest]
 
     steps:
@@ -43,22 +43,13 @@ jobs:
       - name: Build gui and upload to anaconda (win)
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
-#         run: |
-#           conda install -y -n base -c conda-forge boa anaconda-client conda-build conda-verify & conda config --set anaconda_upload yes & conda config --set always_yes yes --set changeps1 no & conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
-        run: |
-          conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
+        run: conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
 
       - name: Build gui and upload to anaconda (*x)
         if: runner.os != 'Windows'
         shell: bash -l {0}
-#         run: |
-#           conda install -y -n base -c conda-forge boa anaconda-client conda-build conda-verify
-#           conda config --set anaconda_upload yes
-#           conda config --set always_yes yes --set changeps1 no
-#           CONDA_CUDA_OVERRIDE="11.1" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
-        run: |
-          CONDA_CUDA_OVERRIDE="11.1" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        run: CONDA_CUDA_OVERRIDE="11.6" conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
