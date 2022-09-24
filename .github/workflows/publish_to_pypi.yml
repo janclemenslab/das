@@ -36,10 +36,9 @@ jobs:
           channels: conda-forge,ncb,anaconda
           use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
           use-mamba: true
-#           activate-environment: anaconda-client-env
-#           environment-file: build-environment.yml
-#           python-version: 3.10
-#           condarc-file: etc/example-condarc.yml
+          activate-environment: anaconda-client-env
+          environment-file: .conda/build-environment.yml
+          condarc-file: .conda/condarc.yml
 
 
       - name: Build gui and upload to anaconda (win)
