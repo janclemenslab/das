@@ -6,16 +6,14 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.python.keras.utils import tf_utils
-from tensorflow.keras.callbacks import Callback, EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, TensorBoard
 from tensorflow import keras
 import keras_tuner as kt
-import sklearn.utils
 import yaml
 import os
 import sys
 from typing import List, Optional, Tuple, Dict, Any
-from . import data, models, utils, predict, io, evaluate, tracking, data_hash  #, timeseries
+from . import data, models, utils, predict, io, evaluate, tracking, data_hash
 
 logger = logging.getLogger(__name__)
 
@@ -150,7 +148,7 @@ def train(*,
           fraction_data: Optional[float] = None,
           seed: Optional[int] = None,
           batch_level_subsampling: bool = False,
-          augmentations: str = None,
+          augmentations: Optional[str] = None,
           tensorboard: bool = False,
           wandb_api_token: Optional[str] = None,
           wandb_project: Optional[str] = None,
