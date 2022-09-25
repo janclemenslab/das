@@ -76,7 +76,9 @@ def label_syllables_by_majority(
     offsets_sample = (offsets_seconds * samplerate).astype(int)
 
     for onset_sample, offset_sample in zip(onsets_sample, offsets_sample):
-        values, counts = np.unique(labels[onset_sample:offset_sample],
+        # max sure the segment is at least one sample long
+        os = max(onset_sample+1, offset_sample)
+        values, counts = np.unique(labels[onset_sample:os],
                                    return_counts=True)
         if len(values):
             majority_label = values[counts.argmax()]
