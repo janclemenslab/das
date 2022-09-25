@@ -171,8 +171,8 @@ def train(*,
         batch_level_subsampling (bool): Select fraction of data for training from random subset of shuffled batches.
                                         If False, select a continuous chunk of the recording.
                                         Defaults to False.
-        augmentations (Optional[str]): yaml file with augmentations. Defaults to None (no augmentations).
-
+        augmentations (Optional[str]): Path to yaml file or dictionary with the specification of augmentations.
+                                       Defaults to None (no augmentations).
         tensorboard (bool): Write tensorboard logs to save_dir. Defaults to False.
         wandb_api_token (Optional[str]): API token for logging to wandb.
                                            Defaults to None (no logging to wandb).
@@ -312,8 +312,11 @@ def train(*,
         shuffle_subset = None
 
     if augmentations:
-        logger.info(f'Initializing augmentations from {augmentations}.')
-        aug_params = yaml.safe_load(open(augmentations, 'r'))
+        if isinstance(augmentations, str):
+            logger.info(f'Initializing augmentations from {augmentations}.')
+            aug_params = yaml.safe_load(open(augmentations, 'r'))
+        else:
+            aug_params = augmentations
         params['augmentations'] = aug_params
         augs = augmentation.Augmentations.from_dict(params['augmentations'])
         logger.info(f'   Got {len(augs)} augmentations.')
