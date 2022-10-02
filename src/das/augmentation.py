@@ -47,6 +47,7 @@ from dataclasses import dataclass
 from typing import Dict
 import logging
 
+logger = logging.getLogger(__name__)
 
 aug_dict = dict()
 params_dict = dict()
@@ -369,8 +370,8 @@ class Augmentations():
                 else:  # standard arg
                     params[a_name] = a_arg
 
-            print(params)
+            logger.debug(params)
             aug = aug_dict[name](**params)
-            print(aug)
+            logger.debug(aug)
             augs.append(aug)
         return cls(augs)
