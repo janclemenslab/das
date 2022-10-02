@@ -7,7 +7,6 @@ from typing import Optional, Dict, List, Any, Tuple, TypeVar
 import numpy as np
 import pandas as pd
 
-
 Block = TypeVar('Block')
 Group = TypeVar('Group')
 
@@ -26,15 +25,20 @@ def groupstats(stats: List, groups: List[Group]):
 
     group_stats = {}
     for index, group in enumerate(unique_groups):
-        group_stats[group] = np.mean(stats[group_index==index, :], axis=0)
+        group_stats[group] = np.mean(stats[group_index == index, :], axis=0)
     return group_stats
 
 
 def group_splits(data: np.ndarray, group_sizes: List[str]) -> List[np.ndarray]:
     group_cdf = np.insert(np.cumsum(group_sizes), 0, 0)[:-1]
-    split_points = (group_cdf * data.shape[0]).astype(np.int)
+    split_points = (group_cdf * data.shape[0]).astype(int)
     blocks = np.array_split(data, split_points[1:])
-    return blocks
+
+    split_points = list(split_points)
+    split_points.append(data.shape[0])
+    split_points = [(start, end) for start, end in zip(split_points[:-1], split_points[1:])]
+
+    return blocks, split_points
 
 
 def group_blocks(nb_blocks: int, group_sizes: List[str], group_names: List[Group]):
@@ -44,7 +48,7 @@ def group_blocks(nb_blocks: int, group_sizes: List[str], group_names: List[Group
     for cnt, s in enumerate(group_cdf):
         groups[group_probs >= s] = cnt
 
-    groups = [group_names[s] for s in groups ]
+    groups = [group_names[s] for s in groups]
     return groups
 
 
@@ -60,8 +64,7 @@ def score_grouping(block_stats, groups: List[Group]):
     group_stats = groupstats(block_stats, groups)
     group_scores = {}
     for group_name, group_stat in group_stats.items():
-        tmp = np.log2((group_stat[non_zero_stats] + 0.0000001) /
-                                    global_stats[non_zero_stats])
+        tmp = np.log2((group_stat[non_zero_stats] + 0.0000001) / global_stats[non_zero_stats])
         group_scores[group_name] = np.sum(np.abs(tmp))
 
     # compute total score over all groups
@@ -69,7 +72,10 @@ def score_grouping(block_stats, groups: List[Group]):
     return total_score
 
 
-def opt_grouping(block_stats: np.ndarray, group_sizes: List[Group], group_names: List[Group], nb_perms: int = 100) -> List[Group]:
+def opt_grouping(block_stats: np.ndarray,
+                 group_sizes: List[Group],
+                 group_names: List[Group],
+                 nb_perms: int = 100) -> List[Group]:
 
     nb_blocks = len(block_stats)
     grouping = group_blocks(nb_blocks, group_sizes, group_names)
@@ -127,7 +133,7 @@ def blockstats_from_data(data: np.ndarray, block_size: int, gap: int = 0) -> Dic
 
     blockstats = {}
     for split_start, split_end, block in zip(split_points[:-1], split_points[1:], blocks):
-        blockstats[(split_start, split_end)] = np.mean(block[gap:block.shape[0]-gap], axis=0)
+        blockstats[(split_start, split_end)] = np.mean(block[gap:block.shape[0] - gap], axis=0)
     return blockstats
 
 
@@ -173,8 +179,12 @@ def format_by_block(blocks, block_names):
     return block_dict
 
 
-def block(block_names: List[np.ndarray], group_sizes: List[float], group_names: List[Group],
-          block_stats: Optional[List[Block]] = None, shuffle: bool = True, seed: Optional[float] = None) -> Dict[Group, List[Block]]:
+def block(block_names: List[np.ndarray],
+          group_sizes: List[float],
+          group_names: List[Group],
+          block_stats: Optional[List[Block]] = None,
+          shuffle: bool = True,
+          seed: Optional[float] = None) -> Dict[Group, List[Block]]:
 
     if seed is not None:
         np.random.seed(seed)
