@@ -359,16 +359,17 @@ class Augmentations():
         for name, args in aug_spec.items():
             name = name.split('-', 1)[0]  # split off "-WHATEVER" suffix
             params = dict()
-            for a_name, a_arg in args.items():
-                if isinstance(a_arg, dict): # Param-type arg
-                    p_name = list(a_arg.keys())[0]
-                    p_args = a_arg[p_name]
-                    # if no args for Params are provided, use defaults
-                    if p_args is None:
-                        p_args = {}
-                    params[a_name] = params_dict[p_name](**p_args)
-                else:  # standard arg
-                    params[a_name] = a_arg
+            if args is not None:  # for augs without args
+                for a_name, a_arg in args.items():
+                    if isinstance(a_arg, dict): # Param-type arg
+                        p_name = list(a_arg.keys())[0]
+                        p_args = a_arg[p_name]
+                        # if no args for Params are provided, use defaults
+                        if p_args is None:
+                            p_args = {}
+                        params[a_name] = params_dict[p_name](**p_args)
+                    else:  # standard arg
+                        params[a_name] = a_arg
 
             logger.debug(params)
             aug = aug_dict[name](**params)
