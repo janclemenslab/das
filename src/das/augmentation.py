@@ -179,6 +179,42 @@ class Gain(Augmentation):
 
 
 @_register_augmentation
+class NormalizeMax(Augmentation):
+    """Multiply signal with gain factor."""
+
+    def __init__(self):
+        pass
+
+    def _apply(self, x):
+        x /= np.nanmax(np.abs(x), initial=1.0)
+        return x
+
+
+@_register_augmentation
+class NormalizePercentile(Augmentation):
+    """Multiply signal with gain factor."""
+
+    def __init__(self, percentile: Param):
+        self.percentile = percentile
+
+    def _apply(self, x):
+        x /= np.nanpercentile(x, percentile=self.percentile)
+        return x
+
+
+@_register_augmentation
+class NormalizeStd(Augmentation):
+    """Multiply signal with gain factor."""
+
+    def __init__(self):
+        pass
+
+    def _apply(self, x):
+        x /= np.nanstd(x)
+        return x
+
+
+@_register_augmentation
 class Offset(Augmentation):
     """Add horizontal offset."""
 
