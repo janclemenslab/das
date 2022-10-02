@@ -1,13 +1,13 @@
 """Code for training and evaluating networks."""
 import logging
 import os
-import scipy
 import flammkuchen
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any, Sequence
 import glob
 import tensorflow
+import librosa
 import zarr
 from tqdm.autonotebook import tqdm
 import dask.config
@@ -141,7 +141,8 @@ def predict_segments(class_probabilities: np.ndarray,
         segment_thres (float, optional): [description]. Defaults to 0.5.
         segment_minlen (Optional[float], optional): seconds. Defaults to None.
         segment_fillgap (Optional[float], optional): seconds. Defaults to None.
-        segment_labels_by_majority (bool, optional): Segment labels given by majority of label values within on- and offsets. Defaults to True.
+        segment_labels_by_majority (bool, optional): Segment labels given by majority of label values within on- and offsets.
+                                                     Defaults to True.
 
     Returns:
         dict['segmentnames']['denselabels-samples'/'onsets'/'offsets'/'probabilities']
@@ -292,8 +293,10 @@ def predict_events(class_probabilities: np.ndarray,
         event_thres (float, optional): [description]. Defaults to 0.5.
         events_offset (float, optional): . Defaults to 0 seconds.
         event_dist (float, optional): minimal distance between events for detection (in seconds). Defaults to 100 seconds.
-        event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds). Defaults to 0 seconds.
-        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds). Defaults to None (no upper limit).
+        event_dist_min (float, optional): minimal distance to nearest event for post detection interval filter (in seconds).
+                                          Defaults to 0 seconds.
+        event_dist_max (float, optional): maximal distance to nearest event for post detection interval filter (in seconds).
+                                          Defaults to None (no upper limit).
 
     Raises:
         ValueError: [description]
@@ -309,7 +312,7 @@ def predict_events(class_probabilities: np.ndarray,
         event_names = event_dims
 
     if event_dist_max is None:
-        event_dist_max = np.inf  #class_probabilities.shape[0] + 1
+        event_dist_max = np.inf
 
     events: Dict[str, Any] = dict()
     if len(event_dims):
@@ -416,7 +419,8 @@ def predict(x: np.ndarray,
 
         verbose (int): display progress bar during prediction. Defaults to 1.
         batch_size (int): number of chunks processed at once . Defaults to None (the default used during training).
-                         Larger batches lead to faster inference. Limited by memory size, in particular for GPUs which typically have 8GB.
+                         Larger batches lead to faster inference.
+                         Limited by memory size, in particular for GPUs which typically have 8GB.
                          Large batch sizes lead to loss of samples since only complete batches are used.
         pad (bool): Append zeros to fill up batch. Otherwise the end can be cut.
                     Defaults to False
@@ -435,11 +439,13 @@ def predict(x: np.ndarray,
                                       If segment_minlen and segment_fillgap are provided,
                                       then they will override the values from the param file.
                                       Defaults to True.
-        segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections. Defaults to None.
-        segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses. Defaults to None.
+        segment_minlen (float): Minimal duration in seconds of a segment used for filtering out spurious detections.
+                                Defaults to None.
+        segment_fillgap (float): Gap in seconds between adjacent segments to be filled. Useful for correcting brief lapses.
+                                 Defaults to None.
 
-        pad (bool): prepend values (repeat last sample value) to fill the last batch. Otherwise, the end of the data will not be annotated because
-                    the last, non-full batch will be skipped.
+        pad (bool): prepend values (repeat last sample value) to fill the last batch.
+                    Otherwise, the end of the data will not be annotated because the last, non-full batch will be skipped.
         prepend_data_padding (bool, optional): Restores samples that are ignored
                     in the beginning of the first and the end of the last chunk
                     because of "ignore_boundaries". Defaults to True.
@@ -540,10 +546,11 @@ def cli_predict(path: str,
 
     Args:
         path (str): Path to a single WAV file with the audio data or to a folder with WAV files.
-        model_save_name (str): Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
+        model_save_name (str): Stem of the path for the model (and parameters).
+                               File to load will be MODEL_SAVE_NAME + _model.h5.
         save_filename (Optional[str]): Path to save annotations to.
-                                       If omitted, will construct save_filename by
-                                       stripping the extension from recording_filename and adding '_das.h5' or '_annotations.csv'.
+                                       If omitted, will construct save_filename by stripping the extension
+                                       from recording_filename and adding '_das.h5' or '_annotations.csv'.
                                        Will be ignored if `path` is a folder.
         save_format (str): 'csv' or 'h5'.
                            csv: tabular text file with label, start and end seconds for each predicted song.
@@ -597,7 +604,7 @@ def cli_predict(path: str,
         logging.info(f"   Loading data from {recording_filename}.")
         try:
             # else if path is file - predict only on file but make it single-item list
-            fs_audio, x = scipy.io.wavfile.read(recording_filename)
+            x, fs_audio = librosa.load(recording_filename, sr=None, mono=False)
 
             if x.ndim == 1:
                 x = x[:, np.newaxis]
@@ -642,14 +649,14 @@ def cli_predict(path: str,
                     save_filename = os.path.splitext(recording_filename)[0] + '_das.h5'
                 logging.info(f"   Saving results to {save_filename}.")
                 flammkuchen.save(save_filename, d)
-                logging.info(f"Done.")
+                logging.info("Done.")
             elif save_format == 'csv':
                 evt = annot.Events.from_predict(events, segments)
                 if save_filename is None:
                     save_filename = os.path.splitext(recording_filename)[0] + '_annotations.csv'
                 logging.info(f"   Saving results to {save_filename}.")
                 evt.to_df().to_csv(save_filename)
-                logging.info(f"Done.")
+                logging.info("Done.")
 
             # reset
             if os.path.isdir(path):
