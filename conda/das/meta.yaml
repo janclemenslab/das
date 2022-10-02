@@ -42,7 +42,7 @@ requirements:
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave
+    - xarray-behave>=0.33.4
     - cudatoolkit # [win or linux]
     - cudnn # [win or linux]
     - anaconda::tensorflow==2.9.1 # [osx]
