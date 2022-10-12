@@ -45,9 +45,16 @@ def wave_net_activation(x: Layer) -> Layer:
     return keras.layers.multiply([tanh_out, sigm_out])
 
 
-def residual_block(x: Layer, s: int, i: int, activation: str, nb_filters:int ,
-                   kernel_size: int, padding: str = 'causal', use_separable: bool = False,
-                   dropout_rate: float = 0, name: str = '') -> Tuple[Layer, Layer]:
+def residual_block(x: Layer,
+                   s: int,
+                   i: int,
+                   activation: str,
+                   nb_filters: int,
+                   kernel_size: int,
+                   padding: str = 'causal',
+                   use_separable: bool = False,
+                   dropout_rate: float = 0,
+                   name: str = '') -> Tuple[Layer, Layer]:
     """Defines the residual block for the WaveNet TCN
 
     Args:
@@ -70,11 +77,13 @@ def residual_block(x: Layer, s: int, i: int, activation: str, nb_filters:int ,
     original_x = x
 
     if use_separable:
-        conv = SeparableConv1D(filters=nb_filters, kernel_size=kernel_size,
-                    dilation_rate=i, depth_multiplier=4, padding=padding)(x)
+        conv = SeparableConv1D(filters=nb_filters,
+                               kernel_size=kernel_size,
+                               dilation_rate=i,
+                               depth_multiplier=4,
+                               padding=padding)(x)
     else:
-        conv = Conv1D(filters=nb_filters, kernel_size=kernel_size,
-                    dilation_rate=i, padding=padding)(x)
+        conv = Conv1D(filters=nb_filters, kernel_size=kernel_size, dilation_rate=i, padding=padding)(x)
 
     if activation == 'norm_relu':
         x = Activation('relu')(conv)
@@ -93,6 +102,7 @@ def residual_block(x: Layer, s: int, i: int, activation: str, nb_filters:int ,
 
 
 def process_dilations(dilations):
+
     def is_power_of_two(num):
         return num != 0 and ((num & (num - 1)) == 0)
 
@@ -100,7 +110,7 @@ def process_dilations(dilations):
         return dilations
 
     else:
-        new_dilations = [2 ** i for i in dilations]
+        new_dilations = [2**i for i in dilations]
         return new_dilations
 
 
@@ -136,8 +146,7 @@ class TCN:
                  padding='causal',
                  dropout_rate=0.0,
                  return_sequences=True,
-                 name='tcn'
-                 ):
+                 name='tcn'):
         self.name = name
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
@@ -159,7 +168,6 @@ class TCN:
         self.nb_filters = nb_filters
         self.padding = padding
 
-
     def __call__(self, inputs):
         if self.dilations is None:
             self.dilations = [1, 2, 4, 8, 16, 32]
@@ -168,8 +176,7 @@ class TCN:
         skip_connections = []
         for s in range(self.nb_stacks):
             for i in self.dilations:
-                x, skip_out = residual_block(x, s, i, self.activation, self.nb_filters,
-                                             self.kernel_size, self.padding,
+                x, skip_out = residual_block(x, s, i, self.activation, self.nb_filters, self.kernel_size, self.padding,
                                              self.use_separable[s], self.dropout_rate)
                 skip_connections.append(skip_out)
         if self.use_skip_connections:
