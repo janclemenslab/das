@@ -19,9 +19,15 @@ class Spectrogram(Layer):
                     )
     """
 
-    def __init__(self, n_dft: int = 512, n_hop: Optional[int] = None, padding: str  ='same',
-                 power_spectrogram: float = 2.0, return_decibel_spectrogram: bool = False,
-                 trainable_kernel: bool = False, image_data_format: str = 'default', **kwargs) -> Layer:
+    def __init__(self,
+                 n_dft: int = 512,
+                 n_hop: Optional[int] = None,
+                 padding: str = 'same',
+                 power_spectrogram: float = 2.0,
+                 return_decibel_spectrogram: bool = False,
+                 trainable_kernel: bool = False,
+                 image_data_format: str = 'default',
+                 **kwargs) -> Layer:
         """[summary]
 
         Args:
@@ -78,10 +84,7 @@ class Spectrogram(Layer):
         if self.len_src is not None:
             assert self.len_src >= self.n_dft, f'Hey! The input is too short! {self.len_src} >= {self.n_dft}'
 
-        self.n_frame = conv_output_length(self.len_src,
-                                          self.n_dft,
-                                          self.padding,
-                                          self.n_hop)
+        self.n_frame = conv_output_length(self.len_src, self.n_dft, self.padding, self.n_hop)
 
         dft_real_kernels, dft_imag_kernels = backend.get_stft_kernels(self.n_dft)
         self.dft_real_kernels = K.variable(dft_real_kernels, dtype=K.floatx(), name="real_kernels")
@@ -107,9 +110,7 @@ class Spectrogram(Layer):
         output = self._spectrogram_mono(x[:, :, 0:1])
         if self.is_mono is False:
             for ch_idx in range(1, self.n_ch):
-                output = K.concatenate((output,
-                                       self._spectrogram_mono(x[:, :, ch_idx:ch_idx + 1])),
-                                       axis=self.ch_axis_idx)
+                output = K.concatenate((output, self._spectrogram_mono(x[:, :, ch_idx:ch_idx + 1])), axis=self.ch_axis_idx)
         # output = output[..., 0]
         if self.power_spectrogram != 2.0:
             output = K.pow(K.sqrt(output), self.power_spectrogram)
@@ -118,13 +119,15 @@ class Spectrogram(Layer):
         return output
 
     def get_config(self):
-        config = {'n_dft': self.n_dft,
-                  'n_hop': self.n_hop,
-                  'padding': self.padding,
-                  'power_spectrogram': self.power_spectrogram,
-                  'return_decibel_spectrogram': self.return_decibel_spectrogram,
-                  'trainable_kernel': self.trainable_kernel,
-                  'image_data_format': self.image_data_format}
+        config = {
+            'n_dft': self.n_dft,
+            'n_hop': self.n_hop,
+            'padding': self.padding,
+            'power_spectrogram': self.power_spectrogram,
+            'return_decibel_spectrogram': self.return_decibel_spectrogram,
+            'trainable_kernel': self.trainable_kernel,
+            'image_data_format': self.image_data_format
+        }
         base_config = super(Spectrogram, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
 
@@ -133,15 +136,9 @@ class Spectrogram(Layer):
         returns 2D batch of a mono power-spectrogram'''
         x = K.expand_dims(x, 3)  # add a dummy dimension (channel axis)
         subsample = (self.n_hop, 1)
-        output_real = K.conv2d(x, self.dft_real_kernels,
-                               strides=subsample,
-                               padding=self.padding,
-                               data_format='channels_last')
-        output_imag = K.conv2d(x, self.dft_imag_kernels,
-                               strides=subsample,
-                               padding=self.padding,
-                               data_format='channels_last')
-        output = output_real ** 2 + output_imag ** 2
+        output_real = K.conv2d(x, self.dft_real_kernels, strides=subsample, padding=self.padding, data_format='channels_last')
+        output_imag = K.conv2d(x, self.dft_imag_kernels, strides=subsample, padding=self.padding, data_format='channels_last')
+        output = output_real**2 + output_imag**2
         # now shape is (batch_sample, n_frame, 1, freq)
         if self.image_data_format == 'channels_last':
             output = K.permute_dimensions(output, [0, 1, 3, 2])
@@ -226,9 +223,16 @@ d
     '''
 
     def __init__(self,
-                 sr=22050, n_mels=128, fmin=0.0, fmax=None,
-                 power_melgram=1.0, return_decibel_melgram=False,
-                 trainable_fb=False, htk=False, norm=1, **kwargs):
+                 sr=22050,
+                 n_mels=128,
+                 fmin=0.0,
+                 fmax=None,
+                 power_melgram=1.0,
+                 return_decibel_melgram=False,
+                 trainable_fb=False,
+                 htk=False,
+                 norm=1,
+                 **kwargs):
 
         super(Melspectrogram, self).__init__(**kwargs)
         assert sr > 0
@@ -255,8 +259,8 @@ d
         super(Melspectrogram, self).build(input_shape)
         self.built = False
         # compute freq2mel matrix -->
-        mel_basis = backend.mel(self.sr, self.n_dft, self.n_mels, self.fmin, self.fmax,
-                                self.htk, self.norm)  # (128, 1025) (mel_bin, n_freq)
+        mel_basis = backend.mel(self.sr, self.n_dft, self.n_mels, self.fmin, self.fmax, self.htk,
+                                self.norm)  # (128, 1025) (mel_bin, n_freq)
         mel_basis = np.transpose(mel_basis)
 
         self.freq2mel = K.variable(mel_basis, dtype=K.floatx())
@@ -294,20 +298,22 @@ d
         return output
 
     def get_config(self):
-        config = {'sr': self.sr,
-                  'n_mels': self.n_mels,
-                  'fmin': self.fmin,
-                  'fmax': self.fmax,
-                  'trainable_fb': self.trainable_fb,
-                  'power_melgram': self.power_melgram,
-                  'return_decibel_melgram': self.return_decibel_melgram,
-                  'htk': self.htk,
-                  'norm': self.norm}
+        config = {
+            'sr': self.sr,
+            'n_mels': self.n_mels,
+            'fmin': self.fmin,
+            'fmax': self.fmax,
+            'trainable_fb': self.trainable_fb,
+            'power_melgram': self.power_melgram,
+            'return_decibel_melgram': self.return_decibel_melgram,
+            'htk': self.htk,
+            'norm': self.norm
+        }
         base_config = super(Melspectrogram, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
 
-def conv_output_length(input_length, filter_size,
-                       padding, stride, dilation=1):
+
+def conv_output_length(input_length, filter_size, padding, stride, dilation=1):
     """Determines output length of a convolution given input length.
     # Arguments
         input_length: integer.
