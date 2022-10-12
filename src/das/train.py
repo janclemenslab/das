@@ -7,6 +7,7 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLRO
 from tensorflow import keras
 import os
 import yaml
+import dask.array as da
 from typing import List, Optional, Tuple, Dict, Any, Union
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
 
@@ -232,6 +233,7 @@ def train(*,
         return_sequences = False
         stride = 1  # should take every sample, since sampling rates of both x and y are now the same
         y_offset = int(round(nb_hist / 2))
+        upsample = False
 
     if stride <= 0:
         raise ValueError(
@@ -472,18 +474,20 @@ def train(*,
 
         save_filename = "{0}_results.h5".format(save_name)
         logger.info(f'   Saving to {save_filename}.')
-        ddd = {
-            'fit_hist': fit_hist.history,
+        del params['data_splits']  # paths with '/' break flammkuchen/pytables
+        results_dict = {
+            'fit_hist': dict(fit_hist.history),
             'confusion_matrix': conf_mat,
             'classification_report': report,
             'x_test': x_test,
             'y_test': y_test,
-            'y_pred': y_pred,
+            # 'y_pred': np.array(y_pred),
             'labels_test': labels_test,
-            'labels_pred': np.array(labels_pred),
+            # 'labels_pred': np.array(labels_pred),
             'params': params,
         }
-        fl.save(save_filename, ddd)
+        fl.save(save_filename, results_dict)
+        da.to_hdf5(save_filename, {'/y_pred': y_pred, '/labels_pred': labels_pred})
 
     logger.info('DONE.')
     return model, params, fit_hist

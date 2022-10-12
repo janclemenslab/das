@@ -605,7 +605,7 @@ def cli_predict(path: str,
         try:
             # else if path is file - predict only on file but make it single-item list
             x, fs_audio = librosa.load(recording_filename, sr=None, mono=False)
-
+            x = x.T  # [channels, time] -> [time, channels]
             if x.ndim == 1:
                 x = x[:, np.newaxis]
 
