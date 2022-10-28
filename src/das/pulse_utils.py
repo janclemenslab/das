@@ -4,9 +4,7 @@ import scipy.signal as ss
 from typing import List, Tuple
 
 
-def normalize_pulse(pulse: np.ndarray,
-                    smooth_win: int = 15,
-                    flip_win: int = 10) -> np.ndarray:
+def normalize_pulse(pulse: np.ndarray, smooth_win: int = 15, flip_win: int = 10) -> np.ndarray:
     """Normalize pulses.
 
     1. scales to unit-norm,
@@ -29,9 +27,7 @@ def normalize_pulse(pulse: np.ndarray,
     gwin = ss.windows.boxcar(int(smooth_win))
     pulse_env = np.convolve(pulse**2, gwin, mode='valid')
     offset = np.argmax(pulse_env) + int(np.ceil(smooth_win / 2)) + 1
-    pulse = np.pad(pulse, (len(pulse) - offset, offset),
-                   mode='constant',
-                   constant_values=0)
+    pulse = np.pad(pulse, (len(pulse) - offset, offset), mode='constant', constant_values=0)
     # flip
     if np.sum(pulse[pulse_len - flip_win:pulse_len]) < 0:
         pulse *= -1
@@ -57,11 +53,10 @@ def center_of_mass(x: np.ndarray, y: np.ndarray, thres: float = 0.5) -> float:
     return com
 
 
-def pulse_freq(
-        pulse: np.ndarray,
-        fftlen: int = 1000,
-        sampling_rate: int = 10000,
-        mean_subtract: bool = True) -> Tuple[float, np.ndarray, np.ndarray]:
+def pulse_freq(pulse: np.ndarray,
+               fftlen: int = 1000,
+               sampling_rate: int = 10000,
+               mean_subtract: bool = True) -> Tuple[float, np.ndarray, np.ndarray]:
     """Calculate pulse frequency as center of mass of the pulse's amplitude spectrum.
 
     Args:
@@ -83,8 +78,7 @@ def pulse_freq(
     return center_freq, F[:idx], A[:idx]
 
 
-def get_pulseshapes(pulsecenters: List[int], song: np.ndarray,
-                    win_hw: int) -> np.ndarray:
+def get_pulseshapes(pulsecenters: List[int], song: np.ndarray, win_hw: int) -> np.ndarray:
     """Extract waveforms around `pulsecenters` from `song`.
 
     In case of multi-channel recordings, will return the waveform on the channel
@@ -101,8 +95,8 @@ def get_pulseshapes(pulsecenters: List[int], song: np.ndarray,
     pulseshapes = np.zeros((2 * win_hw, len(pulsecenters)))
     nb_channels = song.shape[1]
     for cnt, p in enumerate(pulsecenters):
-        t0 = int(p - 2 * win_hw)
-        t1 = int(p + 0 * win_hw)
+        t0 = int(p - win_hw)
+        t1 = int(p + win_hw)
         if t0 > 0 and t1 < song.shape[0]:
             if nb_channels > 1:
                 tmp = song[t0:t1, :]
