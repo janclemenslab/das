@@ -27,7 +27,7 @@ def version():
     except (ImportError, ModuleNotFoundError):
         has_gui = False
 
-    gpu = len(tf.config.list_physical_devices('GPU'))>0
+    gpu = len(tf.config.list_physical_devices('GPU')) > 0
 
     logger.info(f"  {platform.platform()}")
     logger.info(f"  DAS v{das.__version__}")
