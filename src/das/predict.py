@@ -4,7 +4,7 @@ import os
 import flammkuchen
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
-from typing import List, Optional, Dict, Any, Sequence
+from typing import List, Optional, Dict, Any, Sequence, Iterable, Union
 import glob
 import tensorflow
 import librosa
@@ -73,7 +73,7 @@ def predict_probabilities(x: np.ndarray,
 
 def labels_from_probabilities(probabilities,
                               threshold: Optional[float] = None,
-                              indices: Optional[Sequence[int]] = None) -> np.ndarray:
+                              indices: Optional[Union[Sequence[int], slice]] = None) -> np.ndarray:
     """Convert class-wise probabilities into labels.
 
     Args:
@@ -276,8 +276,8 @@ def _detect_events_oom(event_probability: np.ndarray,
 
 def predict_events(class_probabilities: np.ndarray,
                    samplerate: float = 1.0,
-                   event_dims: Sequence[int] = None,
-                   event_names: Sequence[str] = None,
+                   event_dims: Optional[Iterable[int]] = None,
+                   event_names: Optional[Iterable[str]] = None,
                    event_thres: float = 0.5,
                    events_offset: float = 0,
                    event_dist: float = 100,
@@ -309,7 +309,7 @@ def predict_events(class_probabilities: np.ndarray,
         event_dims = np.arange(1, nb_classes)
 
     if event_names is None:
-        event_names = event_dims
+        event_names = [str(d) for d in event_dims]
 
     if event_dist_max is None:
         event_dist_max = np.inf
@@ -389,7 +389,7 @@ def predict(x: np.ndarray,
             event_thres: float = 0.5,
             event_dist: float = 0.01,
             event_dist_min: float = 0,
-            event_dist_max: float = None,
+            event_dist_max: float = np.inf,
             segment_thres: float = 0.5,
             segment_use_optimized: bool = True,
             segment_minlen: float = None,
@@ -432,7 +432,7 @@ def predict(x: np.ndarray,
         event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
                                 Defaults to 0.
         event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.
-                                Defaults to None (no upper limit).
+                                Defaults to np.inf.
 
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
         segment_use_optimized (bool): Use minlen and fillgap values from param file if they exist.
@@ -533,9 +533,9 @@ def cli_predict(path: str,
                 event_thres: float = 0.5,
                 event_dist: float = 0.01,
                 event_dist_min: float = 0,
-                event_dist_max: Optional[float] = None,
+                event_dist_max: float = np.inf,
                 segment_thres: float = 0.5,
-                segment_use_optimized: Optional[bool] = None,
+                segment_use_optimized: bool = True,
                 segment_minlen: Optional[float] = None,
                 segment_fillgap: Optional[float] = None,
                 resample: bool = True):
@@ -566,11 +566,11 @@ def cli_predict(path: str,
                             Defaults to 0.01.
         event_dist_min (float): MINimal inter-event interval for the event filter run during post processing.
                                 Defaults to 0.
-        event_dist_max (Optional[float]): MAXimal inter-event interval for the event filter run during post processing.
-                                          Defaults to None (no upper limit).
+        event_dist_max (float): MAXimal inter-event interval for the event filter run during post processing.
+                                          Defaults to np.inf.
 
         segment_thres (float): Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
-        segment_use_optimized (Optional[bool]): Use minlen and fillgap values from param file if they exist.
+        segment_use_optimized (bool): Use minlen and fillgap values from param file if they exist.
                                       If segment_minlen and segment_fillgap are provided,
                                       then they will override the values from the param file.
                                       Defaults to True.
