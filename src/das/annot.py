@@ -263,6 +263,9 @@ class Events(UserDict):
             start_seconds ([type]): [description]
             stop_seconds ([type], optional): [description]. Defaults to None.
         """
+        if name not in self:
+            raise ValueError(f"Song type {name} not added yet. Add via 'self.add_name(name, category)'")
+
         if stop_seconds is None:
             stop_seconds = start_seconds
 
