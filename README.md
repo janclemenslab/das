@@ -36,6 +36,11 @@ conda install mamba -c conda-forge -n base -y
 mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
+For linux, the last line needs to be:
+```shell
+CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+```
+
 ## Usage
 To start the graphical user interface:
 ```shell
