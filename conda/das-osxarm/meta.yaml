@@ -24,19 +24,19 @@ requirements:
     - python {{ python }}
     - defopt=6.3
     - flammkuchen
-    - h5py
     - librosa>0.8
     - matplotlib
     - matplotlib-scalebar
     - pandas
     - peakutils
     - pyyaml
+    - pyside6
     - scipy
     - scikit-learn
     - scikit-image
     - tqdm
     - xarray-behave
-    - apple::tensorflow-deps
+    - apple::tensorflow-deps=2.9
     - numpy>=1.19
     - grpcio
     - ipython
