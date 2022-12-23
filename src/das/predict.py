@@ -205,10 +205,11 @@ def predict_segments(class_probabilities: np.ndarray,
         segments['offsets_seconds'] = offsets.astype(float) / samplerate
 
         # there is just a single segment type plus noise - in that case we use the gap-filled, short-deleted pred
+        sequence: List[int] = []  # default to empty list
         if len(segment_dims) == 2:
             labels = song_binary
             # syllable-type for each syllable as int
-            segments['sequence'] = [str(segment_names[1])] * len(segments['offsets_seconds'])
+            sequence = [str(segment_names[1])] * len(segments['offsets_seconds'])
         # if >1 segment type (plus noise) label sylls by majority vote on un-smoothed labels
         elif len(segment_dims) > 2 and segment_labels_by_majority:
             # if no refs provided, use use on/offsets from smoothed labels
@@ -234,13 +235,11 @@ def predict_segments(class_probabilities: np.ndarray,
             with ProgressBar(minimum=5):
                 labels = labels.compute()
 
+            # syllable-type for each syllable as int
             sequence, labels = segment_utils.label_syllables_by_majority(labels, segment_ref_onsets, segment_ref_offsets,
                                                                          samplerate)
-            # syllable-type for each syllable as int
-            segments['sequence'] = sequence
-        else:
-            segments['sequence'] = None
         segments['samples'] = labels
+        segments['sequence'] = sequence
     return segments
 
 
