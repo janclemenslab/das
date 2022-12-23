@@ -165,7 +165,8 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -183,6 +184,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -212,7 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -272,7 +275,7 @@
     <span class="kn">import</span> <span class="nn">tensorflow_probability</span> <span class="k">as</span> <span class="nn">tfp</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">tfp</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="c1"># logging.warning(&#39;No tensorflow-probability.&#39;)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;No tensorflow-probability.&#39;</span><span class="p">)</span>
     <span class="k">pass</span>
 
 
@@ -340,24 +343,24 @@
         <span class="c1"># # baseline subtract</span>
         <span class="k">if</span> <span class="n">tfp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">baseline</span> <span class="o">=</span> <span class="n">tfp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">mel</span><span class="o">/</span><span class="p">(</span><span class="n">baseline</span> <span class="o">+</span> <span class="mf">0.000001</span><span class="p">))</span>
-            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span> <span class="n">clip_value_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">clip_value_max</span><span class="o">=</span><span class="mi">100_000</span><span class="p">)</span>
+            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">mel</span> <span class="o">/</span> <span class="p">(</span><span class="n">baseline</span> <span class="o">+</span> <span class="mf">0.000001</span><span class="p">))</span>
+            <span class="n">mel</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">mel</span><span class="p">,</span>
+                                   <span class="n">clip_value_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                   <span class="n">clip_value_max</span><span class="o">=</span><span class="mi">100_000</span><span class="p">)</span>
             <span class="n">mel</span> <span class="o">/=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_max</span><span class="p">(</span><span class="n">mel</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span>
         <span class="k">return</span> <span class="n">mel</span></div>
 
 <div class="viewcode-block" id="MelSpec.get_config"><a class="viewcode-back" href="../../api/das.spec_utils.html#das.spec_utils.MelSpec.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">MelSpec</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;frame_length&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span><span class="p">,</span>
-                <span class="s2">&quot;frame_step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_step</span><span class="p">,</span>
-                <span class="s2">&quot;fft_length&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span><span class="p">,</span>
-                <span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span><span class="p">,</span>
-                <span class="s2">&quot;num_mel_channels&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mel_channels</span><span class="p">,</span>
-                <span class="s2">&quot;freq_min&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_min</span><span class="p">,</span>
-                <span class="s2">&quot;freq_max&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_max</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;frame_length&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_length</span><span class="p">,</span>
+            <span class="s2">&quot;frame_step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_step</span><span class="p">,</span>
+            <span class="s2">&quot;fft_length&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fft_length</span><span class="p">,</span>
+            <span class="s2">&quot;sampling_rate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span><span class="p">,</span>
+            <span class="s2">&quot;num_mel_channels&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mel_channels</span><span class="p">,</span>
+            <span class="s2">&quot;freq_min&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_min</span><span class="p">,</span>
+            <span class="s2">&quot;freq_max&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">freq_max</span><span class="p">,</span>
+        <span class="p">})</span>
         <span class="k">return</span> <span class="n">config</span></div></div>
 </pre></div>
         </article>

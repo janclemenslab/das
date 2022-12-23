@@ -34,4 +34,6 @@ command-line interface provide more control, flexibility and automation:
    label_segments
    evaluate_fly
    evaluate_bird
-   realtimg
+   realtime
+   architecture_tuning
+   experiment_tracking

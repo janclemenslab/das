@@ -166,7 +166,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -184,6 +185,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -213,7 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
@@ -270,13 +273,13 @@
 <p>Segment (syllable) utilities.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.segment_utils.fill_gaps">
-<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">fill_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#fill_gaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.fill_gaps" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">fill_gaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_dur</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#fill_gaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.fill_gaps" title="Permalink to this definition">#</a></dt>
 <dd><p>Fill short gaps in a sequence of labelled samples.</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">---111111-1111---</span></code> -&gt; <code class="xref py py-obj docutils literal notranslate"><span class="pre">---11111111111---</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<em>np.array</em>) – Sequence of labelled samples.</p></li>
+<li><p><strong>labels</strong> (<em>np.ndarray</em>) – Sequence of labelled samples.</p></li>
 <li><p><strong>gap_dur</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimal gap duration, in samples. Defaults to 100.</p></li>
 </ul>
 </dd>
@@ -284,19 +287,19 @@
 <dd class="field-even"><p>Labelled samples with short gaps filled.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.segment_utils.label_syllables_by_majority">
-<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">label_syllables_by_majority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onsets_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#label_syllables_by_majority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.label_syllables_by_majority" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">label_syllables_by_majority</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">onsets_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offsets_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#label_syllables_by_majority"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.label_syllables_by_majority" title="Permalink to this definition">#</a></dt>
 <dd><p>Label syllables by a majority vote.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<em>np.array</em>) – Sequence of dirty, per sample, labels.</p></li>
+<li><p><strong>labels</strong> (<em>np.ndarray</em>) – Sequence of dirty, per sample, labels.</p></li>
 <li><p><strong>onsets_seconds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Onset of each syllable in <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>, in seconds.</p></li>
 <li><p><strong>offsets_seconds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Offset of each syllable in <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>, in seconds.</p></li>
 <li><p><strong>samplerate</strong> (<em>float</em>) – Samplerate of <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>, in Hz.</p></li>
@@ -306,7 +309,7 @@
 <dd class="field-even"><p>Sequence of syllables, clean sequence of per-sample labels.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[np.array, np.array]</p>
+<dd class="field-odd"><p>Tuple[np.ndarray, np.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,13 +338,13 @@ required to transform <code class="xref py py-obj docutils literal notranslate">
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.segment_utils.remove_short">
-<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">remove_short</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#remove_short"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.remove_short" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">das.segment_utils.</span></span><span class="sig-name descname"><span class="pre">remove_short</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/segment_utils.html#remove_short"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.segment_utils.remove_short" title="Permalink to this definition">#</a></dt>
 <dd><p>Remove short syllables from sequence of labelled samples.</p>
 <p><code class="xref py py-obj docutils literal notranslate"><span class="pre">---1111-1---1--</span></code> -&gt; <code class="xref py py-obj docutils literal notranslate"><span class="pre">---1111--------</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<em>np.array</em>) – Sequence of labelled samples.</p></li>
+<li><p><strong>labels</strong> (<em>np.ndarray</em>) – Sequence of labelled samples.</p></li>
 <li><p><strong>min_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimal segment (syllable) duration, in samples. Defaults to 100.</p></li>
 </ul>
 </dd>
@@ -349,7 +352,7 @@ required to transform <code class="xref py py-obj docutils literal notranslate">
 <dd class="field-even"><p>Labelled samples with short syllables removed.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>

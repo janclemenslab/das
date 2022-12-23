@@ -166,7 +166,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -184,6 +185,9 @@
 <li class="toctree-l2"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -213,7 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -272,7 +275,7 @@
 <li><p>load the outputs of training or generate predictions anew.</p></li>
 <li><p>generate diagnostic plots to evaluate network performance and detect and troubleshoot any issues.</p></li>
 </ul>
-<p><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
+<p><strong>Note:</strong> For this tutorial to work, you first need to download example data and models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;jpg&#39;  # smaller mem footprint for page
@@ -285,8 +288,15 @@
 <span class="kn">import</span> <span class="nn">librosa.feature</span><span class="o">,</span> <span class="nn">librosa.display</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 <span class="kn">import</span> <span class="nn">das.utils</span><span class="o">,</span> <span class="nn">das.utils_plot</span><span class="o">,</span> <span class="nn">das.predict</span><span class="o">,</span> <span class="nn">das.event_utils</span><span class="o">,</span> <span class="nn">das.segment_utils</span><span class="o">,</span> <span class="nn">das.io</span><span class="o">,</span> <span class="nn">das.evaluate</span>
+<span class="kn">from</span> <span class="nn">tqdm.autonotebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ncb.mplstyle&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/janc/Dropbox/code.py/das/src/das/data.py:6: TqdmExperimentalWarning: Using `tqdm.autonotebook.tqdm` in notebook mode. Use `tqdm.tqdm` instead to force console mode (e.g. in jupyter console)
+  from tqdm.autonotebook import tqdm
 </pre></div>
 </div>
 </div>
@@ -393,32 +403,37 @@ model predicts pulses at index 2
 and short segments can be removed (<code class="docutils literal notranslate"><span class="pre">segment_minlen=0.02</span></code>) or brief gaps filled (<code class="docutils literal notranslate"><span class="pre">segment_fillgap=0.02</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">load_results</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="k">if</span> <span class="n">load_results</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_name</span> <span class="o">+</span> <span class="s1">&#39;_results.h5&#39;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;loading results file produced at the end of training.&#39;</span><span class="p">)</span>
-    <span class="n">datasets</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_from</span><span class="p">(</span><span class="n">save_name</span> <span class="o">+</span> <span class="s1">&#39;_results.h5&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;x_test&#39;</span><span class="p">,</span> <span class="s1">&#39;y_test&#39;</span><span class="p">,</span> <span class="s1">&#39;y_pred&#39;</span><span class="p">])</span>
-    <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[</span><span class="n">datasets</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;x_test&#39;</span><span class="p">,</span> <span class="s1">&#39;y_test&#39;</span><span class="p">,</span> <span class="s1">&#39;y_pred&#39;</span><span class="p">]]</span>  <span class="c1"># unpack dict items to vars</span>
-    <span class="c1"># predict events and segments from loaded confidence scores</span>
-    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict_song</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> 
-                        <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># Load training data set - path is in params[&#39;data_dir&#39;]. If you trained on a different machine set a custom path </span>
-    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dat/dmel_single_stern_raw.npy&#39;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">])</span>
-    <span class="n">x_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
-    <span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
-    <span class="c1"># create confidence scores by running the models and predict events and segments</span>
-    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load training data set - path is in params[&#39;data_dir&#39;]. If you trained on a different machine set a custom path </span>
+<span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dat/dmel_single_stern_raw.npy&#39;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">])</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="c1"># create confidence scores by running the models and predict events and segments</span>
+<span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">model_save_name</span><span class="o">=</span><span class="n">save_name</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="c1"># y_pred = y_pred.compute()</span>
+<span class="c1"># print(type(y_pred))</span>
+<span class="c1"># print(&#39;events&#39;)</span>
+<span class="c1"># [print(key, type(val)) for key, val in events.items()]</span>
+<span class="c1"># print(&#39;segments&#39;)</span>
+<span class="c1"># [print(key, type(val)) for key, val in segments.items()]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/janc/miniconda3/lib/python3.8/site-packages/keras/layers/core.py:1043: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
-  warnings.warn(&#39;{} is not loaded, but a Lambda layer uses it. &#39;
-/Users/janc/miniconda3/lib/python3.8/site-packages/keras/optimizer_v2/optimizer_v2.py:355: UserWarning: The `lr` argument is deprecated, use `learning_rate` instead.
-  warnings.warn(
-/Users/janc/miniconda3/lib/python3.8/site-packages/keras/engine/training.py:2470: UserWarning: `Model.state_updates` will be removed in a future version. This property should not be used in TensorFlow 2.0, as `updates` are applied automatically.
-  warnings.warn(&#39;`Model.state_updates` will be removed in a future version. &#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Metal device set to: Apple M1 Pro
+
+systemMemory: 32.00 GB
+maxCacheSize: 10.67 GB
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/janc/miniconda3/envs/dev/lib/python3.9/site-packages/keras/layers/core/lambda_layer.py:303: UserWarning: dss.tcn.tcn is not loaded, but a Lambda layer uses it. It may cause errors.
+  function = cls._parse_function_from_config(config, custom_objects,
+2022-09-25 19:23:21.875572: I tensorflow/core/common_runtime/pluggable_device/pluggable_device_factory.cc:305] Could not identify NUMA node of platform GPU ID 0, defaulting to 0. Your kernel may not have been built with NUMA support.
+2022-09-25 19:23:21.875906: I tensorflow/core/common_runtime/pluggable_device/pluggable_device_factory.cc:271] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 0 MB memory) -&gt; physical PluggableDevice (device: 0, name: METAL, pci bus id: &lt;undefined&gt;)
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "441f3ca0852f4455b0c0f7fdefa80d4d", "version_major": 2, "version_minor": 0}</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-25 19:23:22.716655: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz
+2022-09-25 19:23:22.717541: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:113] Plugin optimizer for device_type GPU is enabled.
 </pre></div>
 </div>
 </div>
@@ -459,8 +474,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/522876a813c74d3d453240de1e2e3f7164e76723a2aaac4c3b24befef4d8e8a3.jpg" src="../_images/522876a813c74d3d453240de1e2e3f7164e76723a2aaac4c3b24befef4d8e8a3.jpg" />
-<img alt="../_images/e0c3d3abf0e79f511512e5d38311f75eefc96d06a574d3765d1c6e9142068855.jpg" src="../_images/e0c3d3abf0e79f511512e5d38311f75eefc96d06a574d3765d1c6e9142068855.jpg" />
+<img alt="../_images/411ad01b915cabb08f441d57ed6c1395642c93fdba43c5ab6a3664995bb157ab.jpg" src="../_images/411ad01b915cabb08f441d57ed6c1395642c93fdba43c5ab6a3664995bb157ab.jpg" />
+<img alt="../_images/0f4e455010d95626191b2c7cf3b5bb49f9aeaa9a4b91c3d3a77728209e542b28.jpg" src="../_images/0f4e455010d95626191b2c7cf3b5bb49f9aeaa9a4b91c3d3a77728209e542b28.jpg" />
 </div>
 </div>
 </section>
@@ -469,7 +484,7 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 <p>Evaluate event timing and compute performance metrics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prc_pulse</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prc_pulse</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
     <span class="n">precision</span> <span class="o">=</span> <span class="p">[]</span>
@@ -477,8 +492,8 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
     <span class="n">f1_score</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">threshold</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">for</span> <span class="n">thres</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
-        <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">pulsetimes_pred_confidence</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">thres</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">thresholds</span><span class="p">):</span>
+        <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">pulsetimes_pred_confidence</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="n">min_dist</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
         <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">pulsetimes_pred</span> <span class="o">/</span> <span class="n">fs</span>
         <span class="n">d</span><span class="p">,</span> <span class="n">nn_pred_pulse</span><span class="p">,</span> <span class="n">nn_true_pulse</span><span class="p">,</span> <span class="n">nn_dist</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
         <span class="n">precision</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">])</span>
@@ -492,35 +507,27 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 <span class="n">min_dist</span> <span class="o">=</span> <span class="mf">0.01</span>
     
 <span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">y_test</span><span class="p">[:,</span> <span class="n">pulse_pred_index</span><span class="p">],</span> <span class="n">thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">detect_events</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">thres</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">pulse_pred_index</span><span class="p">)</span>
     <span class="n">pulsetimes_true</span> <span class="o">=</span>  <span class="n">pulsetimes_true</span> <span class="o">/</span> <span class="n">fs</span>
-    <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">]</span>
+    <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">])</span>
 
-    <span class="c1"># Evalute event times (match predicted pulse times to their nearest true pulses)</span>
+    <span class="c1"># # # Evalute event times (match predicted pulse times to their nearest true pulses)</span>
     <span class="n">d</span><span class="p">,</span> <span class="n">nn_pred_pulse</span><span class="p">,</span> <span class="n">nn_true_pulse</span><span class="p">,</span> <span class="n">nn_dist</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">event_utils</span><span class="o">.</span><span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">pulsetimes_pred</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">)</span>
     
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, TP </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, FN </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;precision </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, recall </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;recall&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">, f1-score </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;f1_score&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">1.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
     <span class="c1"># calc performance metrics (precision, recall, f1 score) for different thresholds</span>
-    <span class="n">threshold</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">prc_pulse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[:,</span> <span class="n">pulse_pred_index</span><span class="p">],</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span> <span class="o">*</span> <span class="n">fs</span><span class="p">)</span>
+    <span class="n">threshold</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">f1_score</span> <span class="o">=</span> <span class="n">prc_pulse</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span> <span class="o">*</span> <span class="n">fs</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">pulse_pred_index</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">5</span><span class="o">-</span><span class="mi">5</span><span class="n">bb25ce5e803</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span> <span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span> <span class="c1">#     pulsetimes_true, _ = das.event_utils.detect_events(y_test[:, pulse_pred_index], thres=0.5)</span>
-<span class="ne">---&gt; </span><span class="mi">25</span>     <span class="n">pulsetimes_true</span> <span class="o">=</span>  <span class="n">pulsetimes_true</span> <span class="o">/</span> <span class="n">fs</span>
-<span class="g g-Whitespace">     </span><span class="mi">26</span>     <span class="n">pulsetimes_pred</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">]</span>
-<span class="g g-Whitespace">     </span><span class="mi">27</span> 
-
-<span class="ne">NameError</span>: name &#39;pulsetimes_true&#39; is not defined
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FP 49, TP 634, FN 7
+precision 0.93, recall 0.99, f1-score 0.96
 </pre></div>
 </div>
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "561ce37c848344619abd434af37a3e92", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <section id="event-sequences">
 <h3>Event sequences<a class="headerlink" href="#event-sequences" title="Permalink to this headline">#</a></h3>
@@ -537,6 +544,9 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/8866e0d0472b30efbee828d80f76edc46540e0bb8ac2fb22e0e38319c5287c3c.jpg" src="../_images/8866e0d0472b30efbee828d80f76edc46540e0bb8ac2fb22e0e38319c5287c3c.jpg" />
+</div>
 </div>
 </section>
 <section id="performance-metrics">
@@ -547,26 +557,29 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># if pulse_pred_index is not None:</span>
-<span class="c1">#     plt.subplot(121)</span>
-<span class="c1">#     plt.plot(precision, recall, c=&#39;k&#39;)</span>
-<span class="c1">#     plt.scatter(precision, recall, c=threshold)</span>
-<span class="c1">#     plt.xlabel(&#39;Precision&#39;)</span>
-<span class="c1">#     plt.ylabel(&#39;Recall&#39;)</span>
-<span class="c1">#     plt.axis(&#39;square&#39;)</span>
-<span class="c1">#     plt.xlim(0, 1.01)</span>
-<span class="c1">#     plt.ylim(0, 1.01)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">recall</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Precision&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Recall&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
 
-<span class="c1">#     plt.subplot(122)</span>
-<span class="c1">#     plt.plot(threshold, f1_score, c=&#39;k&#39;)</span>
-<span class="c1">#     plt.scatter(threshold, f1_score, c=threshold)</span>
-<span class="c1">#     plt.xlabel(&#39;Threshold&#39;)</span>
-<span class="c1">#     plt.ylabel(&#39;F1 score&#39;)</span>
-<span class="c1">#     plt.axis(&#39;square&#39;)</span>
-<span class="c1">#     plt.xlim(0, 1)</span>
-<span class="c1">#     plt.ylim(0, 1.01)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Threshold&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;F1 score&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/18f69ae6eccfcaef9677e0db0e0223dcf2011fdc33c3c65f17dcf5b56f154725.jpg" src="../_images/18f69ae6eccfcaef9677e0db0e0223dcf2011fdc33c3c65f17dcf5b56f154725.jpg" />
 </div>
 </div>
 </section>
@@ -592,11 +605,14 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/bd4feef74fd6786267ce2fc20695be861a5c06f7e4b973ee72c6ba79292d6f5d.jpg" src="../_images/bd4feef74fd6786267ce2fc20695be861a5c06f7e4b973ee72c6ba79292d6f5d.jpg" />
+</div>
 </div>
 </section>
 <section id="event-shapes">
 <h3>Event shapes<a class="headerlink" href="#event-shapes" title="Permalink to this headline">#</a></h3>
-<p>Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from wrong annotations</p>
+<p>Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from annotations errors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.pulse_utils</span>
@@ -641,6 +657,9 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/30eacca7324ff8d5eb2b8a221da4d1e31e83a9da73b5f02656c038110f164fc5.jpg" src="../_images/30eacca7324ff8d5eb2b8a221da4d1e31e83a9da73b5f02656c038110f164fc5.jpg" />
+</div>
 </div>
 </section>
 <section id="troubleshooting">
@@ -648,7 +667,7 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 <p>Things to do when the predictions look weird:</p>
 <ul class="simple">
 <li><p>Plot the raw predictions alongside the input song recording, the labels used for training, and the raw event times. This will reveal whether there is an offset or even a mismatch in sampling frequencies.</p></li>
-<li><p>Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the groundtruth (manual annotation).</p></li>
+<li><p>Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the manual annotations.</p></li>
 <li><p>Inspect the amplitude and frequency of false negative and false positive pulses and look for patterns. Maybe the network fails for soft pulses</p></li>
 </ul>
 </section>
@@ -669,7 +688,7 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">((</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">((</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_snippet</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nb_channels</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
@@ -692,11 +711,12 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 
 <span class="c1"># compute and display spectrograms for each audio channel</span>
 <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x_snippet</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
-    <span class="n">specgram</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">specgram</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">melspectrogram</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nb_channels</span><span class="o">+</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="o">+</span><span class="n">cnt</span><span class="p">)</span>
-    <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">specgram</span><span class="p">),</span> <span class="n">sr</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_axis</span><span class="o">=</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;ms&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;turbo&#39;</span><span class="p">)</span>
+    <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">specgram</span><span class="p">),</span> <span class="n">sr</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_axis</span><span class="o">=</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;ms&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;turbo&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">clim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">specgram</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">fs</span><span class="p">)</span>
     <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">cnt</span><span class="o">&lt;</span><span class="n">nb_channels</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">([])</span>
@@ -704,6 +724,16 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Freq on chan </span><span class="si">{</span><span class="n">cnt</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/bc/5m_c7nkj1vnc2w7xmmnhpfww0000gn/T/ipykernel_51252/953492864.py:7: DeprecationWarning: `np.float` is a deprecated alias for the builtin `float`. To silence this warning, use `float` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.float64` here.
+Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdocs/release/1.20.0-notes.html#deprecations
+  segment_labels_true = (y_test[:, segment_pred_index]&gt;0.5).astype(np.float)
+/var/folders/bc/5m_c7nkj1vnc2w7xmmnhpfww0000gn/T/ipykernel_51252/953492864.py:35: FutureWarning: Pass y=[ 0.001671  0.00399   0.007664 ... -0.01528  -0.01444  -0.01643 ] as keyword args. From version 0.10 passing these as positional arguments will result in an error
+  specgram = librosa.feature.melspectrogram(x, sr=fs, n_fft=512, hop_length=1, power=1)
+</pre></div>
+</div>
+<img alt="../_images/3594e0999cf561fa210f5aa128dc8c1bdf1cd54cfc522303870b7ac0996d6d81.jpg" src="../_images/3594e0999cf561fa210f5aa128dc8c1bdf1cd54cfc522303870b7ac0996d6d81.jpg" />
 </div>
 </div>
 <section id="sample-wise-performance-metrics">
@@ -773,6 +803,19 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              precision    recall  f1-score   support
+
+       noise      0.996     0.987     0.991   1063375
+        sine      0.920     0.977     0.947    165628
+
+    accuracy                          0.985   1229003
+   macro avg      0.958     0.982     0.969   1229003
+weighted avg      0.986     0.985     0.986   1229003
+</pre></div>
+</div>
+<img alt="../_images/7962da1c27c61360e1c35f7f230b67c31fe8dfe3fefeb90e1e63d25c2865a2ce.jpg" src="../_images/7962da1c27c61360e1c35f7f230b67c31fe8dfe3fefeb90e1e63d25c2865a2ce.jpg" />
+</div>
 </div>
 </section>
 <section id="evaluate-segment-timing">
@@ -824,9 +867,18 @@ and short segments can be removed (<code class="docutils literal notranslate"><s
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Count&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     <span class="n">das</span><span class="o">.</span><span class="n">utils_plot</span><span class="o">.</span><span class="n">remove_axes</span><span class="p">()</span>
-    
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10000
+{&#39;FP&#39;: 11, &#39;TP&#39;: 33, &#39;FN&#39;: 6, &#39;precision&#39;: 0.75, &#39;recall&#39;: 0.8461538461538461, &#39;f1_score&#39;: 0.7951807228915662}
+{&#39;FP&#39;: 11, &#39;TP&#39;: 33, &#39;FN&#39;: 6, &#39;precision&#39;: 0.75, &#39;recall&#39;: 0.8461538461538461, &#39;f1_score&#39;: 0.7951807228915662}
+Temporal errors of all predicted sine onsets: 10.20 ms
+Temporal errors of all predicted sine offsets: 12.10 ms
+</pre></div>
+</div>
+<img alt="../_images/6f8b4b2ebfcd0679a3727b0192658ca56d59490c9c0362db4d3cea0224fd2429.jpg" src="../_images/6f8b4b2ebfcd0679a3727b0192658ca56d59490c9c0362db4d3cea0224fd2429.jpg" />
 </div>
 </div>
 </section>

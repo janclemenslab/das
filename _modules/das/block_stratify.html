@@ -165,7 +165,8 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -183,6 +184,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -212,7 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -274,7 +277,6 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-
 <span class="n">Block</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;Block&#39;</span><span class="p">)</span>
 <span class="n">Group</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;Group&#39;</span><span class="p">)</span>
 
@@ -293,15 +295,20 @@
 
     <span class="n">group_stats</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_groups</span><span class="p">):</span>
-        <span class="n">group_stats</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">group_index</span><span class="o">==</span><span class="n">index</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">group_stats</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="n">group_index</span> <span class="o">==</span> <span class="n">index</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">group_stats</span></div>
 
 
 <span class="k">def</span> <span class="nf">group_splits</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="n">group_cdf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">group_sizes</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">split_points</span> <span class="o">=</span> <span class="p">(</span><span class="n">group_cdf</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+    <span class="n">split_points</span> <span class="o">=</span> <span class="p">(</span><span class="n">group_cdf</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">blocks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">split_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="k">return</span> <span class="n">blocks</span>
+
+    <span class="n">split_points</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">split_points</span><span class="p">)</span>
+    <span class="n">split_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">split_points</span> <span class="o">=</span> <span class="p">[(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">split_points</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">split_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
+
+    <span class="k">return</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">split_points</span>
 
 
 <span class="k">def</span> <span class="nf">group_blocks</span><span class="p">(</span><span class="n">nb_blocks</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">group_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">]):</span>
@@ -311,7 +318,7 @@
     <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">group_cdf</span><span class="p">):</span>
         <span class="n">groups</span><span class="p">[</span><span class="n">group_probs</span> <span class="o">&gt;=</span> <span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">cnt</span>
 
-    <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group_names</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">groups</span> <span class="p">]</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">group_names</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">groups</span>
 
 
@@ -327,8 +334,7 @@
     <span class="n">group_stats</span> <span class="o">=</span> <span class="n">groupstats</span><span class="p">(</span><span class="n">block_stats</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
     <span class="n">group_scores</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">group_stat</span> <span class="ow">in</span> <span class="n">group_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="n">group_stat</span><span class="p">[</span><span class="n">non_zero_stats</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.0000001</span><span class="p">)</span> <span class="o">/</span>
-                                    <span class="n">global_stats</span><span class="p">[</span><span class="n">non_zero_stats</span><span class="p">])</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="n">group_stat</span><span class="p">[</span><span class="n">non_zero_stats</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.0000001</span><span class="p">)</span> <span class="o">/</span> <span class="n">global_stats</span><span class="p">[</span><span class="n">non_zero_stats</span><span class="p">])</span>
         <span class="n">group_scores</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
 
     <span class="c1"># compute total score over all groups</span>
@@ -336,7 +342,10 @@
     <span class="k">return</span> <span class="n">total_score</span>
 
 
-<span class="k">def</span> <span class="nf">opt_grouping</span><span class="p">(</span><span class="n">block_stats</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span> <span class="n">group_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span> <span class="n">nb_perms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">opt_grouping</span><span class="p">(</span><span class="n">block_stats</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                 <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span>
+                 <span class="n">group_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span>
+                 <span class="n">nb_perms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">]:</span>
 
     <span class="n">nb_blocks</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">block_stats</span><span class="p">)</span>
     <span class="n">grouping</span> <span class="o">=</span> <span class="n">group_blocks</span><span class="p">(</span><span class="n">nb_blocks</span><span class="p">,</span> <span class="n">group_sizes</span><span class="p">,</span> <span class="n">group_names</span><span class="p">)</span>
@@ -394,7 +403,7 @@
 
     <span class="n">blockstats</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">split_start</span><span class="p">,</span> <span class="n">split_end</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">split_points</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">split_points</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">blocks</span><span class="p">):</span>
-        <span class="n">blockstats</span><span class="p">[(</span><span class="n">split_start</span><span class="p">,</span> <span class="n">split_end</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="n">gap</span><span class="p">:</span><span class="n">block</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">gap</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">blockstats</span><span class="p">[(</span><span class="n">split_start</span><span class="p">,</span> <span class="n">split_end</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="n">gap</span><span class="p">:</span><span class="n">block</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">gap</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">blockstats</span></div>
 
 
@@ -440,8 +449,12 @@
     <span class="k">return</span> <span class="n">block_dict</span>
 
 
-<span class="k">def</span> <span class="nf">block</span><span class="p">(</span><span class="n">block_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">group_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span>
-          <span class="n">block_stats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]]:</span>
+<span class="k">def</span> <span class="nf">block</span><span class="p">(</span><span class="n">block_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+          <span class="n">group_sizes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+          <span class="n">group_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Group</span><span class="p">],</span>
+          <span class="n">block_stats</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+          <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Group</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Block</span><span class="p">]]:</span>
 
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>

@@ -165,7 +165,8 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -183,6 +184,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -212,7 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -271,7 +274,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
-<div class="viewcode-block" id="normalize_pulse"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">[docs]</a><span class="k">def</span> <span class="nf">normalize_pulse</span><span class="p">(</span><span class="n">pulse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">smooth_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">flip_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="normalize_pulse"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">[docs]</a><span class="k">def</span> <span class="nf">normalize_pulse</span><span class="p">(</span><span class="n">pulse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">smooth_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">flip_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Normalize pulses.</span>
 
 <span class="sd">    1. scales to unit-norm,</span>
@@ -279,12 +282,12 @@
 <span class="sd">    3. flips so that pre-peak mean is positive</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pulse (np.array): should be [T,]</span>
+<span class="sd">        pulse (np.ndarray): should be [T,]</span>
 <span class="sd">        smooth_win (int, optional): n samples of rect window used to smooth squared pulse for peak detection</span>
 <span class="sd">        flip_win (int, optional): number of samples pre-peak used for determining sign of pulse for flipping.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        np.array: normalized pulse</span>
+<span class="sd">        np.ndarray: normalized pulse [T,]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># scale</span>
     <span class="n">pulse</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pulse</span><span class="p">)</span>
@@ -301,18 +304,17 @@
     <span class="k">return</span> <span class="n">pulse</span><span class="p">[</span><span class="n">pulse_len_half</span><span class="p">:</span><span class="o">-</span><span class="n">pulse_len_half</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="center_of_mass"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.center_of_mass">[docs]</a><span class="k">def</span> <span class="nf">center_of_mass</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<div class="viewcode-block" id="center_of_mass"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.center_of_mass">[docs]</a><span class="k">def</span> <span class="nf">center_of_mass</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Calculate center of mass of y.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        x (np.array):</span>
-<span class="sd">        y (np.array):</span>
+<span class="sd">        x (np.ndarray):</span>
+<span class="sd">        y (np.ndarray):</span>
 <span class="sd">        thres (float, optional): Threshold. Defaults to 0.5.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        float: Center of mass.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">y</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">-=</span> <span class="n">thres</span>
     <span class="n">y</span><span class="p">[</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -321,27 +323,32 @@
     <span class="k">return</span> <span class="n">com</span></div>
 
 
-<div class="viewcode-block" id="pulse_freq"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.pulse_freq">[docs]</a><span class="k">def</span> <span class="nf">pulse_freq</span><span class="p">(</span><span class="n">pulse</span><span class="p">,</span> <span class="n">fftlen</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sampling_rate</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">mean_subtract</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+<div class="viewcode-block" id="pulse_freq"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.pulse_freq">[docs]</a><span class="k">def</span> <span class="nf">pulse_freq</span><span class="p">(</span><span class="n">pulse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+               <span class="n">fftlen</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+               <span class="n">sampling_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+               <span class="n">mean_subtract</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Calculate pulse frequency as center of mass of the pulse&#39;s amplitude spectrum.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        pulse (np.array): Waveform (shape [T,]).</span>
+<span class="sd">        pulse (np.ndarray): Waveform (shape [T,]).</span>
 <span class="sd">        fftlen (int, optional): Sets freq resolution of the spectrum. Defaults to 1_000.</span>
 <span class="sd">        sampling_rate (float, optional): Sample rate of the pulse, in Hz. Defaults to 10_000.</span>
 <span class="sd">        mean_subtract (bool, optional): If true, removes f0 component by mean subtraction. Defaults to True.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        Tuple[float, np.array, np.array]: Pulse frequency and frequency values and amplitude of the pulse spectrum (cut of at 1000 Hz).</span>
+<span class="sd">        Tuple[float, np.ndarray, np.ndarray]: Center frequency,</span>
+<span class="sd">                                              frequency and</span>
+<span class="sd">                                              amplitude values of the pulse spectrum (cut off at 1000 Hz).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">mean_subtract</span><span class="p">:</span>
         <span class="n">pulse</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pulse</span><span class="p">)</span>
     <span class="n">F</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfftfreq</span><span class="p">(</span><span class="n">fftlen</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sampling_rate</span><span class="p">)</span>
     <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">pulse</span><span class="p">,</span> <span class="n">fftlen</span><span class="p">))</span>
-    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">F</span> <span class="o">&gt;</span> <span class="mi">1_000</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">F</span> <span class="o">&gt;</span> <span class="mi">1_000</span><span class="p">))</span>
     <span class="n">center_freq</span> <span class="o">=</span> <span class="n">center_of_mass</span><span class="p">(</span><span class="n">F</span><span class="p">[:</span><span class="n">idx</span><span class="p">],</span> <span class="n">A</span><span class="p">[:</span><span class="n">idx</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">center_freq</span><span class="p">,</span> <span class="n">F</span><span class="p">[:</span><span class="n">idx</span><span class="p">],</span> <span class="n">A</span><span class="p">[:</span><span class="n">idx</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_pulseshapes"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.get_pulseshapes">[docs]</a><span class="k">def</span> <span class="nf">get_pulseshapes</span><span class="p">(</span><span class="n">pulsecenters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">song</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">win_hw</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
+<div class="viewcode-block" id="get_pulseshapes"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.get_pulseshapes">[docs]</a><span class="k">def</span> <span class="nf">get_pulseshapes</span><span class="p">(</span><span class="n">pulsecenters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">song</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">win_hw</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Extract waveforms around `pulsecenters` from `song`.</span>
 
 <span class="sd">    In case of multi-channel recordings, will return the waveform on the channel</span>
@@ -349,17 +356,17 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">        pulsecenters (List[int]): Location of each pulse center in `song`, in samples</span>
-<span class="sd">        song (np.array): Audio data ([samples, channels]).</span>
+<span class="sd">        song (np.ndarray): Audio data ([samples, channels]).</span>
 <span class="sd">        win_hw (int): Half-width of the waveform cut out around each pulse center, in samples.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        np.array: Extracted waveforms [2 * win_hw, nb_centers]</span>
+<span class="sd">        np.ndarray: Extracted waveforms [2 * win_hw, nb_centers]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">pulseshapes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">win_hw</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">pulsecenters</span><span class="p">)))</span>
     <span class="n">nb_channels</span> <span class="o">=</span> <span class="n">song</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">cnt</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pulsecenters</span><span class="p">):</span>
-        <span class="n">t0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">win_hw</span><span class="p">)</span>
-        <span class="n">t1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">0</span> <span class="o">*</span> <span class="n">win_hw</span><span class="p">)</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">win_hw</span><span class="p">)</span>
+        <span class="n">t1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="n">win_hw</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">t0</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">t1</span> <span class="o">&lt;</span> <span class="n">song</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">nb_channels</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">tmp</span> <span class="o">=</span> <span class="n">song</span><span class="p">[</span><span class="n">t0</span><span class="p">:</span><span class="n">t1</span><span class="p">,</span> <span class="p">:]</span>

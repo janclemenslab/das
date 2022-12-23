@@ -1,0 +1,174 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import das.train_tune"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "2022-09-19 14:19:02.406030: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA\n",
+      "To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Search space summary\n",
+      "Default search space size: 3\n",
+      "nb_conv (Choice)\n",
+      "{'default': 2, 'conditions': [], 'values': [2, 3], 'ordered': True}\n",
+      "nb_hist (Choice)\n",
+      "{'default': 64, 'conditions': [], 'values': [64, 128, 256], 'ordered': True}\n",
+      "learning_rate (Choice)\n",
+      "{'default': 0.001, 'conditions': [], 'values': [0.001, 0.0001], 'ordered': True}\n",
+      "\n",
+      "Search: Running Trial #1\n",
+      "\n",
+      "Hyperparameter    |Value             |Best Value So Far \n",
+      "nb_conv           |3                 |?                 \n",
+      "nb_hist           |256               |?                 \n",
+      "learning_rate     |0.001             |?                 \n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras_tuner/engine/metrics_tracking.py:105: RuntimeWarning: All-NaN axis encountered\n",
+      "  return np.nanmin(values)\n",
+      "2022-09-19 14:19:03.179490: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:185] None of the MLIR Optimization Passes are enabled (registered 2)\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Epoch 1/400\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Interrupted\n",
+      "Traceback (most recent call last):\n",
+      "  File \"/Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py\", line 190, in run_trial\n",
+      "    model.fit(data_gen,\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/wandb/integration/keras/keras.py\", line 168, in new_v2\n",
+      "    return old_v2(*args, **kwargs)\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras/engine/training.py\", line 1215, in fit\n",
+      "    val_logs = self.evaluate(\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras/engine/training.py\", line 1501, in evaluate\n",
+      "    tmp_logs = self.test_function(iterator)\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py\", line 885, in __call__\n",
+      "    result = self._call(*args, **kwds)\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py\", line 924, in _call\n",
+      "    results = self._stateful_fn(*args, **kwds)\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py\", line 3039, in __call__\n",
+      "    return graph_function._call_flat(\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py\", line 1963, in _call_flat\n",
+      "    return self._build_call_outputs(self._inference_function.call(\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py\", line 591, in call\n",
+      "    outputs = execute.execute(\n",
+      "  File \"/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/execute.py\", line 59, in quick_execute\n",
+      "    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,\n",
+      "KeyboardInterrupt\n"
+     ]
+    },
+    {
+     "ename": "AssertionError",
+     "evalue": "",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mKeyboardInterrupt\u001b[0m                         Traceback (most recent call last)",
+      "File \u001b[0;32m/Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:190\u001b[0m, in \u001b[0;36mDasTuner.run_trial\u001b[0;34m(self, trial, train_x, train_y, val_x, val_y, epochs, steps_per_epoch, verbose, class_weight, callbacks)\u001b[0m\n\u001b[1;32m    189\u001b[0m model\u001b[39m.\u001b[39mparams \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mparams  \u001b[39m# attach params to model so we can save them in ModelParamsCheckpoint\u001b[39;00m\n\u001b[0;32m--> 190\u001b[0m model\u001b[39m.\u001b[39;49mfit(data_gen,\n\u001b[1;32m    191\u001b[0m           validation_data\u001b[39m=\u001b[39;49mval_gen,\n\u001b[1;32m    192\u001b[0m           epochs\u001b[39m=\u001b[39;49mepochs,\n\u001b[1;32m    193\u001b[0m           steps_per_epoch\u001b[39m=\u001b[39;49msteps_per_epoch,\n\u001b[1;32m    194\u001b[0m           callbacks\u001b[39m=\u001b[39;49mcallbacks,\n\u001b[1;32m    195\u001b[0m           verbose\u001b[39m=\u001b[39;49mverbose)\n\u001b[1;32m    196\u001b[0m \u001b[39mif\u001b[39;00m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mtracker \u001b[39mis\u001b[39;00m \u001b[39mnot\u001b[39;00m \u001b[39mNone\u001b[39;00m:\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/wandb/integration/keras/keras.py:168\u001b[0m, in \u001b[0;36mpatch_tf_keras.<locals>.new_v2\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m    167\u001b[0m         set_wandb_attrs(cbk, val_data)\n\u001b[0;32m--> 168\u001b[0m \u001b[39mreturn\u001b[39;00m old_v2(\u001b[39m*\u001b[39;49margs, \u001b[39m*\u001b[39;49m\u001b[39m*\u001b[39;49mkwargs)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/keras/engine/training.py:1215\u001b[0m, in \u001b[0;36mModel.fit\u001b[0;34m(self, x, y, batch_size, epochs, verbose, callbacks, validation_split, validation_data, shuffle, class_weight, sample_weight, initial_epoch, steps_per_epoch, validation_steps, validation_batch_size, validation_freq, max_queue_size, workers, use_multiprocessing)\u001b[0m\n\u001b[1;32m   1202\u001b[0m   \u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_eval_data_handler \u001b[39m=\u001b[39m data_adapter\u001b[39m.\u001b[39mget_data_handler(\n\u001b[1;32m   1203\u001b[0m       x\u001b[39m=\u001b[39mval_x,\n\u001b[1;32m   1204\u001b[0m       y\u001b[39m=\u001b[39mval_y,\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m   1213\u001b[0m       model\u001b[39m=\u001b[39m\u001b[39mself\u001b[39m,\n\u001b[1;32m   1214\u001b[0m       steps_per_execution\u001b[39m=\u001b[39m\u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_steps_per_execution)\n\u001b[0;32m-> 1215\u001b[0m val_logs \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mevaluate(\n\u001b[1;32m   1216\u001b[0m     x\u001b[39m=\u001b[39;49mval_x,\n\u001b[1;32m   1217\u001b[0m     y\u001b[39m=\u001b[39;49mval_y,\n\u001b[1;32m   1218\u001b[0m     sample_weight\u001b[39m=\u001b[39;49mval_sample_weight,\n\u001b[1;32m   1219\u001b[0m     batch_size\u001b[39m=\u001b[39;49mvalidation_batch_size \u001b[39mor\u001b[39;49;00m batch_size,\n\u001b[1;32m   1220\u001b[0m     steps\u001b[39m=\u001b[39;49mvalidation_steps,\n\u001b[1;32m   1221\u001b[0m     callbacks\u001b[39m=\u001b[39;49mcallbacks,\n\u001b[1;32m   1222\u001b[0m     max_queue_size\u001b[39m=\u001b[39;49mmax_queue_size,\n\u001b[1;32m   1223\u001b[0m     workers\u001b[39m=\u001b[39;49mworkers,\n\u001b[1;32m   1224\u001b[0m     use_multiprocessing\u001b[39m=\u001b[39;49muse_multiprocessing,\n\u001b[1;32m   1225\u001b[0m     return_dict\u001b[39m=\u001b[39;49m\u001b[39mTrue\u001b[39;49;00m,\n\u001b[1;32m   1226\u001b[0m     _use_cached_eval_dataset\u001b[39m=\u001b[39;49m\u001b[39mTrue\u001b[39;49;00m)\n\u001b[1;32m   1227\u001b[0m val_logs \u001b[39m=\u001b[39m {\u001b[39m'\u001b[39m\u001b[39mval_\u001b[39m\u001b[39m'\u001b[39m \u001b[39m+\u001b[39m name: val \u001b[39mfor\u001b[39;00m name, val \u001b[39min\u001b[39;00m val_logs\u001b[39m.\u001b[39mitems()}\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/keras/engine/training.py:1501\u001b[0m, in \u001b[0;36mModel.evaluate\u001b[0;34m(self, x, y, batch_size, verbose, sample_weight, steps, callbacks, max_queue_size, workers, use_multiprocessing, return_dict, **kwargs)\u001b[0m\n\u001b[1;32m   1500\u001b[0m callbacks\u001b[39m.\u001b[39mon_test_batch_begin(step)\n\u001b[0;32m-> 1501\u001b[0m tmp_logs \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mtest_function(iterator)\n\u001b[1;32m   1502\u001b[0m \u001b[39mif\u001b[39;00m data_handler\u001b[39m.\u001b[39mshould_sync:\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py:885\u001b[0m, in \u001b[0;36mFunction.__call__\u001b[0;34m(self, *args, **kwds)\u001b[0m\n\u001b[1;32m    884\u001b[0m \u001b[39mwith\u001b[39;00m OptionalXlaContext(\u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_jit_compile):\n\u001b[0;32m--> 885\u001b[0m   result \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49m_call(\u001b[39m*\u001b[39;49margs, \u001b[39m*\u001b[39;49m\u001b[39m*\u001b[39;49mkwds)\n\u001b[1;32m    887\u001b[0m new_tracing_count \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mexperimental_get_tracing_count()\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py:924\u001b[0m, in \u001b[0;36mFunction._call\u001b[0;34m(self, *args, **kwds)\u001b[0m\n\u001b[1;32m    922\u001b[0m \u001b[39m# In this case we have not created variables on the first call. So we can\u001b[39;00m\n\u001b[1;32m    923\u001b[0m \u001b[39m# run the first trace but we should fail if variables are created.\u001b[39;00m\n\u001b[0;32m--> 924\u001b[0m results \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49m_stateful_fn(\u001b[39m*\u001b[39;49margs, \u001b[39m*\u001b[39;49m\u001b[39m*\u001b[39;49mkwds)\n\u001b[1;32m    925\u001b[0m \u001b[39mif\u001b[39;00m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_created_variables \u001b[39mand\u001b[39;00m \u001b[39mnot\u001b[39;00m ALLOW_DYNAMIC_VARIABLE_CREATION:\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:3039\u001b[0m, in \u001b[0;36mFunction.__call__\u001b[0;34m(self, *args, **kwargs)\u001b[0m\n\u001b[1;32m   3037\u001b[0m   (graph_function,\n\u001b[1;32m   3038\u001b[0m    filtered_flat_args) \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_maybe_define_function(args, kwargs)\n\u001b[0;32m-> 3039\u001b[0m \u001b[39mreturn\u001b[39;00m graph_function\u001b[39m.\u001b[39;49m_call_flat(\n\u001b[1;32m   3040\u001b[0m     filtered_flat_args, captured_inputs\u001b[39m=\u001b[39;49mgraph_function\u001b[39m.\u001b[39;49mcaptured_inputs)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:1963\u001b[0m, in \u001b[0;36mConcreteFunction._call_flat\u001b[0;34m(self, args, captured_inputs, cancellation_manager)\u001b[0m\n\u001b[1;32m   1960\u001b[0m \u001b[39mif\u001b[39;00m (possible_gradient_type \u001b[39m==\u001b[39m gradients_util\u001b[39m.\u001b[39mPOSSIBLE_GRADIENT_TYPES_NONE\n\u001b[1;32m   1961\u001b[0m     \u001b[39mand\u001b[39;00m executing_eagerly):\n\u001b[1;32m   1962\u001b[0m   \u001b[39m# No tape is watching; skip to running the function.\u001b[39;00m\n\u001b[0;32m-> 1963\u001b[0m   \u001b[39mreturn\u001b[39;00m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_build_call_outputs(\u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49m_inference_function\u001b[39m.\u001b[39;49mcall(\n\u001b[1;32m   1964\u001b[0m       ctx, args, cancellation_manager\u001b[39m=\u001b[39;49mcancellation_manager))\n\u001b[1;32m   1965\u001b[0m forward_backward \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39m_select_forward_and_backward_functions(\n\u001b[1;32m   1966\u001b[0m     args,\n\u001b[1;32m   1967\u001b[0m     possible_gradient_type,\n\u001b[1;32m   1968\u001b[0m     executing_eagerly)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:591\u001b[0m, in \u001b[0;36m_EagerDefinedFunction.call\u001b[0;34m(self, ctx, args, cancellation_manager)\u001b[0m\n\u001b[1;32m    590\u001b[0m \u001b[39mif\u001b[39;00m cancellation_manager \u001b[39mis\u001b[39;00m \u001b[39mNone\u001b[39;00m:\n\u001b[0;32m--> 591\u001b[0m   outputs \u001b[39m=\u001b[39m execute\u001b[39m.\u001b[39;49mexecute(\n\u001b[1;32m    592\u001b[0m       \u001b[39mstr\u001b[39;49m(\u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49msignature\u001b[39m.\u001b[39;49mname),\n\u001b[1;32m    593\u001b[0m       num_outputs\u001b[39m=\u001b[39;49m\u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49m_num_outputs,\n\u001b[1;32m    594\u001b[0m       inputs\u001b[39m=\u001b[39;49margs,\n\u001b[1;32m    595\u001b[0m       attrs\u001b[39m=\u001b[39;49mattrs,\n\u001b[1;32m    596\u001b[0m       ctx\u001b[39m=\u001b[39;49mctx)\n\u001b[1;32m    597\u001b[0m \u001b[39melse\u001b[39;00m:\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/execute.py:59\u001b[0m, in \u001b[0;36mquick_execute\u001b[0;34m(op_name, num_outputs, inputs, attrs, ctx, name)\u001b[0m\n\u001b[1;32m     58\u001b[0m   ctx\u001b[39m.\u001b[39mensure_initialized()\n\u001b[0;32m---> 59\u001b[0m   tensors \u001b[39m=\u001b[39m pywrap_tfe\u001b[39m.\u001b[39;49mTFE_Py_Execute(ctx\u001b[39m.\u001b[39;49m_handle, device_name, op_name,\n\u001b[1;32m     60\u001b[0m                                       inputs, attrs, num_outputs)\n\u001b[1;32m     61\u001b[0m \u001b[39mexcept\u001b[39;00m core\u001b[39m.\u001b[39m_NotOkStatusException \u001b[39mas\u001b[39;00m e:\n",
+      "\u001b[0;31mKeyboardInterrupt\u001b[0m: ",
+      "\nDuring handling of the above exception, another exception occurred:\n",
+      "\u001b[0;31mSystemExit\u001b[0m                                Traceback (most recent call last)",
+      "    \u001b[0;31m[... skipping hidden 1 frame]\u001b[0m\n",
+      "\u001b[1;32m/Volumes/shinkansen/Dropbox/code.py/das/docs/tutorials/tuning.ipynb Cell 2\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> <a href='vscode-notebook-cell:/Volumes/shinkansen/Dropbox/code.py/das/docs/tutorials/tuning.ipynb#W2sZmlsZQ%3D%3D?line=0'>1</a>\u001b[0m tuner, model, params \u001b[39m=\u001b[39m das\u001b[39m.\u001b[39;49mtrain_tune\u001b[39m.\u001b[39;49mtrain(data_dir\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mtutorial_dataset.npy\u001b[39;49m\u001b[39m'\u001b[39;49m, save_dir\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mres\u001b[39;49m\u001b[39m'\u001b[39;49m, kernel_size\u001b[39m=\u001b[39;49m\u001b[39m16\u001b[39;49m, tune_config\u001b[39m=\u001b[39;49m\u001b[39m'\u001b[39;49m\u001b[39mtuning.yml\u001b[39;49m\u001b[39m'\u001b[39;49m)\n",
+      "File \u001b[0;32m/Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:527\u001b[0m, in \u001b[0;36mtrain\u001b[0;34m(data_dir, x_suffix, y_suffix, save_dir, save_prefix, save_name, model_name, nb_filters, kernel_size, nb_conv, use_separable, nb_hist, ignore_boundaries, batch_norm, nb_pre_conv, pre_nb_dft, pre_kernel_size, pre_nb_filters, pre_nb_conv, upsample, dilations, nb_lstm_units, verbose, batch_size, nb_epoch, learning_rate, reduce_lr, reduce_lr_patience, fraction_data, seed, batch_level_subsampling, augmentations, tensorboard, wandb_api_token, wandb_project, wandb_entity, log_messages, nb_stacks, with_y_hist, balance, version_data, tune_config, nb_tune_trials, _qt_progress)\u001b[0m\n\u001b[1;32m    526\u001b[0m logger\u001b[39m.\u001b[39minfo(\u001b[39m'\u001b[39m\u001b[39mStart hyperparameter tuning\u001b[39m\u001b[39m'\u001b[39m)\n\u001b[0;32m--> 527\u001b[0m tuner\u001b[39m.\u001b[39;49msearch(\n\u001b[1;32m    528\u001b[0m     train_x\u001b[39m=\u001b[39;49md[\u001b[39m'\u001b[39;49m\u001b[39mtrain\u001b[39;49m\u001b[39m'\u001b[39;49m][\u001b[39m'\u001b[39;49m\u001b[39mx\u001b[39;49m\u001b[39m'\u001b[39;49m],\n\u001b[1;32m    529\u001b[0m     train_y\u001b[39m=\u001b[39;49md[\u001b[39m'\u001b[39;49m\u001b[39mtrain\u001b[39;49m\u001b[39m'\u001b[39;49m][\u001b[39m'\u001b[39;49m\u001b[39my\u001b[39;49m\u001b[39m'\u001b[39;49m],\n\u001b[1;32m    530\u001b[0m     val_x\u001b[39m=\u001b[39;49md[\u001b[39m'\u001b[39;49m\u001b[39mval\u001b[39;49m\u001b[39m'\u001b[39;49m][\u001b[39m'\u001b[39;49m\u001b[39mx\u001b[39;49m\u001b[39m'\u001b[39;49m],\n\u001b[1;32m    531\u001b[0m     val_y\u001b[39m=\u001b[39;49md[\u001b[39m'\u001b[39;49m\u001b[39mval\u001b[39;49m\u001b[39m'\u001b[39;49m][\u001b[39m'\u001b[39;49m\u001b[39my\u001b[39;49m\u001b[39m'\u001b[39;49m],\n\u001b[1;32m    532\u001b[0m     epochs\u001b[39m=\u001b[39;49mnb_epoch,\n\u001b[1;32m    533\u001b[0m     verbose\u001b[39m=\u001b[39;49mverbose,\n\u001b[1;32m    534\u001b[0m     callbacks\u001b[39m=\u001b[39;49mcallbacks,\n\u001b[1;32m    535\u001b[0m     class_weight\u001b[39m=\u001b[39;49mparams[\u001b[39m'\u001b[39;49m\u001b[39mclass_weights\u001b[39;49m\u001b[39m'\u001b[39;49m],\n\u001b[1;32m    536\u001b[0m )\n\u001b[1;32m    537\u001b[0m logger\u001b[39m.\u001b[39minfo(tuner\u001b[39m.\u001b[39mresults_summary())\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/keras_tuner/engine/base_tuner.py:179\u001b[0m, in \u001b[0;36mBaseTuner.search\u001b[0;34m(self, *fit_args, **fit_kwargs)\u001b[0m\n\u001b[1;32m    178\u001b[0m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mon_trial_begin(trial)\n\u001b[0;32m--> 179\u001b[0m results \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mrun_trial(trial, \u001b[39m*\u001b[39;49mfit_args, \u001b[39m*\u001b[39;49m\u001b[39m*\u001b[39;49mfit_kwargs)\n\u001b[1;32m    180\u001b[0m \u001b[39m# `results` is None indicates user updated oracle in `run_trial()`.\u001b[39;00m\n",
+      "File \u001b[0;32m/Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:201\u001b[0m, in \u001b[0;36mDasTuner.run_trial\u001b[0;34m(self, trial, train_x, train_y, val_x, val_y, epochs, steps_per_epoch, verbose, class_weight, callbacks)\u001b[0m\n\u001b[1;32m    200\u001b[0m     logger\u001b[39m.\u001b[39mexception(\u001b[39m'\u001b[39m\u001b[39mInterrupted\u001b[39m\u001b[39m'\u001b[39m)\n\u001b[0;32m--> 201\u001b[0m     sys\u001b[39m.\u001b[39;49mexit(\u001b[39m0\u001b[39;49m)\n\u001b[1;32m    202\u001b[0m \u001b[39mexcept\u001b[39;00m:\n",
+      "\u001b[0;31mSystemExit\u001b[0m: 0",
+      "\nDuring handling of the above exception, another exception occurred:\n",
+      "\u001b[0;31mAssertionError\u001b[0m                            Traceback (most recent call last)",
+      "    \u001b[0;31m[... skipping hidden 1 frame]\u001b[0m\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/interactiveshell.py:1927\u001b[0m, in \u001b[0;36mInteractiveShell.showtraceback\u001b[0;34m(self, exc_tuple, filename, tb_offset, exception_only, running_compiled_code)\u001b[0m\n\u001b[1;32m   1924\u001b[0m \u001b[39mif\u001b[39;00m exception_only:\n\u001b[1;32m   1925\u001b[0m     stb \u001b[39m=\u001b[39m [\u001b[39m'\u001b[39m\u001b[39mAn exception has occurred, use \u001b[39m\u001b[39m%\u001b[39m\u001b[39mtb to see \u001b[39m\u001b[39m'\u001b[39m\n\u001b[1;32m   1926\u001b[0m            \u001b[39m'\u001b[39m\u001b[39mthe full traceback.\u001b[39m\u001b[39m\\n\u001b[39;00m\u001b[39m'\u001b[39m]\n\u001b[0;32m-> 1927\u001b[0m     stb\u001b[39m.\u001b[39mextend(\u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mInteractiveTB\u001b[39m.\u001b[39;49mget_exception_only(etype,\n\u001b[1;32m   1928\u001b[0m                                                      value))\n\u001b[1;32m   1929\u001b[0m \u001b[39melse\u001b[39;00m:\n\u001b[1;32m   1930\u001b[0m     \u001b[39mtry\u001b[39;00m:\n\u001b[1;32m   1931\u001b[0m         \u001b[39m# Exception classes can customise their traceback - we\u001b[39;00m\n\u001b[1;32m   1932\u001b[0m         \u001b[39m# use this in IPython.parallel for exceptions occurring\u001b[39;00m\n\u001b[1;32m   1933\u001b[0m         \u001b[39m# in the engines. This should return a list of strings.\u001b[39;00m\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:578\u001b[0m, in \u001b[0;36mListTB.get_exception_only\u001b[0;34m(self, etype, value)\u001b[0m\n\u001b[1;32m    570\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39mget_exception_only\u001b[39m(\u001b[39mself\u001b[39m, etype, value):\n\u001b[1;32m    571\u001b[0m     \u001b[39m\"\"\"Only print the exception type and message, without a traceback.\u001b[39;00m\n\u001b[1;32m    572\u001b[0m \n\u001b[1;32m    573\u001b[0m \u001b[39m    Parameters\u001b[39;00m\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m    576\u001b[0m \u001b[39m    value : exception value\u001b[39;00m\n\u001b[1;32m    577\u001b[0m \u001b[39m    \"\"\"\u001b[39;00m\n\u001b[0;32m--> 578\u001b[0m     \u001b[39mreturn\u001b[39;00m ListTB\u001b[39m.\u001b[39;49mstructured_traceback(\u001b[39mself\u001b[39;49m, etype, value)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:436\u001b[0m, in \u001b[0;36mListTB.structured_traceback\u001b[0;34m(self, etype, evalue, etb, tb_offset, context)\u001b[0m\n\u001b[1;32m    433\u001b[0m     chained_exc_ids\u001b[39m.\u001b[39madd(\u001b[39mid\u001b[39m(exception[\u001b[39m1\u001b[39m]))\n\u001b[1;32m    434\u001b[0m     chained_exceptions_tb_offset \u001b[39m=\u001b[39m \u001b[39m0\u001b[39m\n\u001b[1;32m    435\u001b[0m     out_list \u001b[39m=\u001b[39m (\n\u001b[0;32m--> 436\u001b[0m         \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mstructured_traceback(\n\u001b[1;32m    437\u001b[0m             etype, evalue, (etb, chained_exc_ids),\n\u001b[1;32m    438\u001b[0m             chained_exceptions_tb_offset, context)\n\u001b[1;32m    439\u001b[0m         \u001b[39m+\u001b[39m chained_exception_message\n\u001b[1;32m    440\u001b[0m         \u001b[39m+\u001b[39m out_list)\n\u001b[1;32m    442\u001b[0m \u001b[39mreturn\u001b[39;00m out_list\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:1105\u001b[0m, in \u001b[0;36mAutoFormattedTB.structured_traceback\u001b[0;34m(self, etype, value, tb, tb_offset, number_of_lines_of_context)\u001b[0m\n\u001b[1;32m   1103\u001b[0m \u001b[39melse\u001b[39;00m:\n\u001b[1;32m   1104\u001b[0m     \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mtb \u001b[39m=\u001b[39m tb\n\u001b[0;32m-> 1105\u001b[0m \u001b[39mreturn\u001b[39;00m FormattedTB\u001b[39m.\u001b[39;49mstructured_traceback(\n\u001b[1;32m   1106\u001b[0m     \u001b[39mself\u001b[39;49m, etype, value, tb, tb_offset, number_of_lines_of_context)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:999\u001b[0m, in \u001b[0;36mFormattedTB.structured_traceback\u001b[0;34m(self, etype, value, tb, tb_offset, number_of_lines_of_context)\u001b[0m\n\u001b[1;32m    996\u001b[0m mode \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mmode\n\u001b[1;32m    997\u001b[0m \u001b[39mif\u001b[39;00m mode \u001b[39min\u001b[39;00m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mverbose_modes:\n\u001b[1;32m    998\u001b[0m     \u001b[39m# Verbose modes need a full traceback\u001b[39;00m\n\u001b[0;32m--> 999\u001b[0m     \u001b[39mreturn\u001b[39;00m VerboseTB\u001b[39m.\u001b[39;49mstructured_traceback(\n\u001b[1;32m   1000\u001b[0m         \u001b[39mself\u001b[39;49m, etype, value, tb, tb_offset, number_of_lines_of_context\n\u001b[1;32m   1001\u001b[0m     )\n\u001b[1;32m   1002\u001b[0m \u001b[39melif\u001b[39;00m mode \u001b[39m==\u001b[39m \u001b[39m'\u001b[39m\u001b[39mMinimal\u001b[39m\u001b[39m'\u001b[39m:\n\u001b[1;32m   1003\u001b[0m     \u001b[39mreturn\u001b[39;00m ListTB\u001b[39m.\u001b[39mget_exception_only(\u001b[39mself\u001b[39m, etype, value)\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:852\u001b[0m, in \u001b[0;36mVerboseTB.structured_traceback\u001b[0;34m(self, etype, evalue, etb, tb_offset, number_of_lines_of_context)\u001b[0m\n\u001b[1;32m    850\u001b[0m \u001b[39m\"\"\"Return a nice text document describing the traceback.\"\"\"\u001b[39;00m\n\u001b[1;32m    851\u001b[0m \u001b[39massert\u001b[39;00m etb \u001b[39mis\u001b[39;00m \u001b[39mnot\u001b[39;00m \u001b[39mNone\u001b[39;00m\n\u001b[0;32m--> 852\u001b[0m formatted_exception \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mformat_exception_as_a_whole(etype, evalue, etb, number_of_lines_of_context,\n\u001b[1;32m    853\u001b[0m                                                        tb_offset)\n\u001b[1;32m    855\u001b[0m colors \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mColors  \u001b[39m# just a shorthand + quicker name lookup\u001b[39;00m\n\u001b[1;32m    856\u001b[0m colorsnormal \u001b[39m=\u001b[39m colors\u001b[39m.\u001b[39mNormal  \u001b[39m# used a lot\u001b[39;00m\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:786\u001b[0m, in \u001b[0;36mVerboseTB.format_exception_as_a_whole\u001b[0;34m(self, etype, evalue, etb, number_of_lines_of_context, tb_offset)\u001b[0m\n\u001b[1;32m    784\u001b[0m \u001b[39massert\u001b[39;00m \u001b[39misinstance\u001b[39m(tb_offset, \u001b[39mint\u001b[39m)\n\u001b[1;32m    785\u001b[0m head \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mprepare_header(etype, \u001b[39mself\u001b[39m\u001b[39m.\u001b[39mlong_header)\n\u001b[0;32m--> 786\u001b[0m records \u001b[39m=\u001b[39m \u001b[39mself\u001b[39;49m\u001b[39m.\u001b[39;49mget_records(etb, number_of_lines_of_context, tb_offset)\n\u001b[1;32m    788\u001b[0m frames \u001b[39m=\u001b[39m []\n\u001b[1;32m    789\u001b[0m skipped \u001b[39m=\u001b[39m \u001b[39m0\u001b[39m\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:840\u001b[0m, in \u001b[0;36mVerboseTB.get_records\u001b[0;34m(self, etb, number_of_lines_of_context, tb_offset)\u001b[0m\n\u001b[1;32m    834\u001b[0m options \u001b[39m=\u001b[39m stack_data\u001b[39m.\u001b[39mOptions(\n\u001b[1;32m    835\u001b[0m     before\u001b[39m=\u001b[39mbefore,\n\u001b[1;32m    836\u001b[0m     after\u001b[39m=\u001b[39mafter,\n\u001b[1;32m    837\u001b[0m     pygments_formatter\u001b[39m=\u001b[39mformatter,\n\u001b[1;32m    838\u001b[0m )\n\u001b[1;32m    839\u001b[0m \u001b[39massert\u001b[39;00m etb \u001b[39mis\u001b[39;00m \u001b[39mnot\u001b[39;00m \u001b[39mNone\u001b[39;00m\n\u001b[0;32m--> 840\u001b[0m \u001b[39mreturn\u001b[39;00m \u001b[39mlist\u001b[39;49m(stack_data\u001b[39m.\u001b[39;49mFrameInfo\u001b[39m.\u001b[39;49mstack_data(etb, options\u001b[39m=\u001b[39;49moptions))[tb_offset:]\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/stack_data/core.py:546\u001b[0m, in \u001b[0;36mFrameInfo.stack_data\u001b[0;34m(cls, frame_or_tb, options, collapse_repeated_frames)\u001b[0m\n\u001b[1;32m    530\u001b[0m \u001b[39m@classmethod\u001b[39m\n\u001b[1;32m    531\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39mstack_data\u001b[39m(\n\u001b[1;32m    532\u001b[0m         \u001b[39mcls\u001b[39m,\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m    536\u001b[0m         collapse_repeated_frames: \u001b[39mbool\u001b[39m \u001b[39m=\u001b[39m \u001b[39mTrue\u001b[39;00m\n\u001b[1;32m    537\u001b[0m ) \u001b[39m-\u001b[39m\u001b[39m>\u001b[39m Iterator[Union[\u001b[39m'\u001b[39m\u001b[39mFrameInfo\u001b[39m\u001b[39m'\u001b[39m, RepeatedFrames]]:\n\u001b[1;32m    538\u001b[0m     \u001b[39m\"\"\"\u001b[39;00m\n\u001b[1;32m    539\u001b[0m \u001b[39m    An iterator of FrameInfo and RepeatedFrames objects representing\u001b[39;00m\n\u001b[1;32m    540\u001b[0m \u001b[39m    a full traceback or stack. Similar consecutive frames are collapsed into RepeatedFrames\u001b[39;00m\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m    544\u001b[0m \u001b[39m    and optionally an Options object to configure.\u001b[39;00m\n\u001b[1;32m    545\u001b[0m \u001b[39m    \"\"\"\u001b[39;00m\n\u001b[0;32m--> 546\u001b[0m     stack \u001b[39m=\u001b[39m \u001b[39mlist\u001b[39;49m(iter_stack(frame_or_tb))\n\u001b[1;32m    548\u001b[0m     \u001b[39m# Reverse the stack from a frame so that it's in the same order\u001b[39;00m\n\u001b[1;32m    549\u001b[0m     \u001b[39m# as the order from a traceback, which is the order of a printed\u001b[39;00m\n\u001b[1;32m    550\u001b[0m     \u001b[39m# traceback when read top to bottom (most recent call last)\u001b[39;00m\n\u001b[1;32m    551\u001b[0m     \u001b[39mif\u001b[39;00m is_frame(frame_or_tb):\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:98\u001b[0m, in \u001b[0;36miter_stack\u001b[0;34m(frame_or_tb)\u001b[0m\n\u001b[1;32m     96\u001b[0m \u001b[39mwhile\u001b[39;00m frame_or_tb:\n\u001b[1;32m     97\u001b[0m     \u001b[39myield\u001b[39;00m frame_or_tb\n\u001b[0;32m---> 98\u001b[0m     \u001b[39mif\u001b[39;00m is_frame(frame_or_tb):\n\u001b[1;32m     99\u001b[0m         frame_or_tb \u001b[39m=\u001b[39m frame_or_tb\u001b[39m.\u001b[39mf_back\n\u001b[1;32m    100\u001b[0m     \u001b[39melse\u001b[39;00m:\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:91\u001b[0m, in \u001b[0;36mis_frame\u001b[0;34m(frame_or_tb)\u001b[0m\n\u001b[1;32m     90\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39mis_frame\u001b[39m(frame_or_tb: Union[FrameType, TracebackType]) \u001b[39m-\u001b[39m\u001b[39m>\u001b[39m \u001b[39mbool\u001b[39m:\n\u001b[0;32m---> 91\u001b[0m     assert_(\u001b[39misinstance\u001b[39;49m(frame_or_tb, (types\u001b[39m.\u001b[39;49mFrameType, types\u001b[39m.\u001b[39;49mTracebackType)))\n\u001b[1;32m     92\u001b[0m     \u001b[39mreturn\u001b[39;00m \u001b[39misinstance\u001b[39m(frame_or_tb, (types\u001b[39m.\u001b[39mFrameType,))\n",
+      "File \u001b[0;32m~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:172\u001b[0m, in \u001b[0;36massert_\u001b[0;34m(condition, error)\u001b[0m\n\u001b[1;32m    170\u001b[0m \u001b[39mif\u001b[39;00m \u001b[39misinstance\u001b[39m(error, \u001b[39mstr\u001b[39m):\n\u001b[1;32m    171\u001b[0m     error \u001b[39m=\u001b[39m \u001b[39mAssertionError\u001b[39;00m(error)\n\u001b[0;32m--> 172\u001b[0m \u001b[39mraise\u001b[39;00m error\n",
+      "\u001b[0;31mAssertionError\u001b[0m: "
+     ]
+    }
+   ],
+   "source": [
+    "tuner, model, params = das.train_tune.train(data_dir='tutorial_dataset.npy', save_dir='res', kernel_size=16, tune_config='tuning.yml')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "interpreter": {
+   "hash": "7ea0ec616133ead53c1908c8f6539f5c0cb9b2f78368e2bb6ab3f847e89ca400"
+  },
+  "kernelspec": {
+   "display_name": "Python 3.9.9 ('base')",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.9"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

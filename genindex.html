@@ -164,7 +164,8 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_gui/annotate.html">Annotate song</a></li>
@@ -182,6 +183,9 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -211,7 +215,6 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
@@ -367,11 +370,7 @@
         <li><a href="api/das.augmentation.html#das.augmentation.CircShift">CircShift (class in das.augmentation)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.cli_predict">cli_predict() (in module das.predict)</a>
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#das.predict_oom.cli_predict">(in module das.predict_oom)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.models_legacy.html#das.models_legacy.cnn">cnn() (in module das.models_legacy)</a>
 </li>
         <li><a href="api/das.models_legacy.html#das.models_legacy.cnn2D">cnn2D() (in module das.models_legacy)</a>
@@ -556,13 +555,6 @@
 
         <ul>
           <li><a href="api/das.predict.html#module-das.predict">module</a>
-</li>
-        </ul></li>
-        <li>
-    das.predict_oom
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#module-das.predict_oom">module</a>
 </li>
         </ul></li>
         <li>
@@ -784,11 +776,7 @@
         <li><a href="api/das.segment_utils.html#das.segment_utils.label_syllables_by_majority">label_syllables_by_majority() (in module das.segment_utils)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.labels_from_probabilities">labels_from_probabilities() (in module das.predict)</a>
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#das.predict_oom.labels_from_probabilities">(in module das.predict_oom)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.segment_utils.html#das.segment_utils.levenshtein">levenshtein() (in module das.segment_utils)</a>
 </li>
         <li><a href="api/das.io.html#das.io.load">load() (in module das.io)</a>
@@ -836,8 +824,6 @@
         <li><a href="api/das.spec_utils.html#das.spec_utils.MelSpec">MelSpec (class in das.spec_utils)</a>
 </li>
         <li><a href="api/das.kapre.time_frequency.html#das.kapre.time_frequency.Melspectrogram">Melspectrogram (class in das.kapre.time_frequency)</a>
-</li>
-        <li><a href="api/das.train_tune.html#das.train_tune.ModelParamsCheckpoint">ModelParamsCheckpoint (class in das.train_tune)</a>
 </li>
         <li>
     module
@@ -887,8 +873,6 @@
 </li>
           <li><a href="api/das.predict.html#module-das.predict">das.predict</a>
 </li>
-          <li><a href="api/das.predict_oom.html#module-das.predict_oom">das.predict_oom</a>
-</li>
           <li><a href="api/das.pulse_utils.html#module-das.pulse_utils">das.pulse_utils</a>
 </li>
           <li><a href="api/das.segment_utils.html#module-das.segment_utils">das.segment_utils</a>
@@ -928,11 +912,17 @@
 </li>
         <li><a href="api/das.kapre.utils.html#das.kapre.utils.Normalization2D">Normalization2D (class in das.kapre.utils)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.make_dataset.html#das.make_dataset.normalize_probabilities">normalize_probabilities() (in module das.make_dataset)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">normalize_pulse() (in module das.pulse_utils)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.NormalizeMax">NormalizeMax (class in das.augmentation)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.NormalizePercentile">NormalizePercentile (class in das.augmentation)</a>
+</li>
+        <li><a href="api/das.augmentation.html#das.augmentation.NormalizeStd">NormalizeStd (class in das.augmentation)</a>
 </li>
         <li><a href="api/das.augmentation.html#das.augmentation.NotchFilter">NotchFilter (class in das.augmentation)</a>
 </li>
@@ -946,12 +936,8 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/das.augmentation.html#das.augmentation.Offset">Offset (class in das.augmentation)</a>
 </li>
-        <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback.on_epoch_end">on_epoch_end() (das.train_tune.OracleCallback method)</a>
-
-        <ul>
-          <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">(das.utils.QtProgressCallback method)</a>
+        <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">on_epoch_end() (das.utils.QtProgressCallback method)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_predict_batch_end">on_predict_batch_end() (das.utils.QtProgressCallback method)</a>
 </li>
         <li><a href="api/das.utils.html#das.utils.QtProgressCallback.on_test_batch_end">on_test_batch_end() (das.utils.QtProgressCallback method)</a>
@@ -966,8 +952,6 @@
 </li>
         <li><a href="api/das.postprocessing.html#das.postprocessing.optimize">optimize() (in module das.postprocessing)</a>
 </li>
-        <li><a href="api/das.train_tune.html#das.train_tune.OracleCallback">OracleCallback (class in das.train_tune)</a>
-</li>
     </ul></td>
   </tr></table>
 </section>
@@ -981,29 +965,15 @@
         <li><a href="api/das.utils_plot.html#das.utils_plot.Pdf">Pdf (class in das.utils_plot)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.predict">predict() (in module das.predict)</a>
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#das.predict_oom.predict">(in module das.predict_oom)</a>
 </li>
-        </ul></li>
-        <li><a href="api/das.predict.html#das.predict.predict_events">predict_events() (in module das.predict)</a>
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#das.predict_oom.predict_events">(in module das.predict_oom)</a>
-</li>
-        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/das.predict.html#das.predict.predict_probabililties">predict_probabililties() (in module das.predict)</a>
+        <li><a href="api/das.predict.html#das.predict.predict_events">predict_events() (in module das.predict)</a>
 </li>
-        <li><a href="api/das.predict_oom.html#das.predict_oom.predict_probabilities">predict_probabilities() (in module das.predict_oom)</a>
+        <li><a href="api/das.predict.html#das.predict.predict_probabilities">predict_probabilities() (in module das.predict)</a>
 </li>
         <li><a href="api/das.predict.html#das.predict.predict_segments">predict_segments() (in module das.predict)</a>
-
-        <ul>
-          <li><a href="api/das.predict_oom.html#das.predict_oom.predict_segments">(in module das.predict_oom)</a>
 </li>
-        </ul></li>
         <li><a href="api/das.pulse_utils.html#das.pulse_utils.pulse_freq">pulse_freq() (in module das.pulse_utils)</a>
 </li>
     </ul></td>

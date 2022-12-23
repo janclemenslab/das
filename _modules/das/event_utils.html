@@ -165,7 +165,8 @@
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -183,6 +184,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -212,7 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -298,13 +301,14 @@
 
 
 <div class="viewcode-block" id="detect_events"><a class="viewcode-back" href="../../api/das.event_utils.html#das.event_utils.detect_events">[docs]</a><span class="k">def</span> <span class="nf">detect_events</span><span class="p">(</span><span class="n">event_probability</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                  <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.70</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+                  <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">min_dist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
                   <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Detect events as peaks in probabilitiy.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        event_probability ([np.ndarray]): [T, nb_classes]</span>
-<span class="sd">        thres (float, optional): [description]. Defaults to 0.70.</span>
+<span class="sd">        thres (float, optional): [description]. Defaults to 0.5.</span>
 <span class="sd">        min_dist (int, optional): [description]. Defaults to 100 samples.</span>
 <span class="sd">        index: (int, Optional): List of indices into axis 1 for which to compute the labels.</span>
 <span class="sd">                                     Defaults to None (use all indices).</span>
@@ -371,9 +375,10 @@
     <span class="n">ipi_pre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">prepend</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
     <span class="n">ipi_post</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
 
-    <span class="n">ipi_too_long</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ipi_pre</span><span class="o">&gt;</span><span class="n">event_dist_max</span><span class="p">,</span> <span class="n">ipi_post</span><span class="o">&gt;</span><span class="n">event_dist_max</span><span class="p">)</span>
-    <span class="n">ipi_too_short</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">ipi_pre</span><span class="o">&lt;</span><span class="n">event_dist_min</span><span class="p">,</span> <span class="n">ipi_post</span><span class="o">&lt;</span><span class="n">event_dist_min</span><span class="p">)</span>
-    <span class="n">ipi_too_short</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># otherwise first event will always be removed</span>
+    <span class="n">ipi_too_long</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">ipi_pre</span> <span class="o">&gt;</span> <span class="n">event_dist_max</span><span class="p">,</span> <span class="n">ipi_post</span> <span class="o">&gt;</span> <span class="n">event_dist_max</span><span class="p">)</span>
+    <span class="n">ipi_too_short</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">ipi_pre</span> <span class="o">&lt;</span> <span class="n">event_dist_min</span><span class="p">,</span> <span class="n">ipi_post</span> <span class="o">&lt;</span> <span class="n">event_dist_min</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ipi_too_short</span><span class="p">):</span>
+        <span class="n">ipi_too_short</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># otherwise first event will always be removed</span>
 
     <span class="n">good_event_indices</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">ipi_too_long</span><span class="p">,</span> <span class="n">ipi_too_short</span><span class="p">)</span>
 
@@ -402,7 +407,8 @@
     <span class="n">nearest_dist</span> <span class="o">=</span> <span class="n">nearest_dist_indices</span> <span class="o">/</span> <span class="n">samplerate</span>  <span class="c1"># convert back to seconds</span>
 
     <span class="n">d</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nearest_pred_event</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>  <span class="c1"># pred events that have no nearby true event (or there is another pred event nearer to the true event)</span>
+    <span class="c1"># pred events that have no nearby true event (or there is another pred event nearer to the true event)</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;FP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nearest_pred_event</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
     <span class="n">d</span><span class="p">[</span><span class="s1">&#39;TP&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nearest_pred_event</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">nearest_dist</span><span class="p">)]</span><span class="o">.</span><span class="n">compressed</span><span class="p">())</span>
     <span class="n">d</span><span class="p">[</span><span class="s1">&#39;FN&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nearest_true_event</span><span class="o">.</span><span class="n">mask</span><span class="p">))</span>
 

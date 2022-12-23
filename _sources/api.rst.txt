@@ -29,7 +29,6 @@ Developer API
    das.npy_dir
    das.postprocessing
    das.predict
-   das.predict_oom
    das.pulse_utils
    das.segment_utils
    das.spec_utils

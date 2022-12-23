@@ -166,7 +166,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -184,6 +185,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -213,7 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.spec_utils.html">das.spec_utils</a></li>
@@ -323,36 +326,47 @@ optional arguments:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das train [-h] -d DATA_DIR [-x X_SUFFIX] [-y Y_SUFFIX]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das train [-h] --data-dir DATA_DIR [-x X_SUFFIX] [-y Y_SUFFIX]
                  [--save-dir SAVE_DIR] [--save-prefix SAVE_PREFIX]
-                 [-m MODEL_NAME] [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]
-                 [--nb-conv NB_CONV] [-u [USE_SEPARABLE [USE_SEPARABLE ...]]]
+                 [--save-name SAVE_NAME] [--model-name MODEL_NAME]
+                 [--nb-filters NB_FILTERS] [-k KERNEL_SIZE]
+                 [--nb-conv NB_CONV] [--use-separable [USE_SEPARABLE ...]]
                  [--nb-hist NB_HIST]
                  [-i | --ignore-boundaries | --no-ignore-boundaries]
                  [--batch-norm | --no-batch-norm] [--nb-pre-conv NB_PRE_CONV]
                  [--pre-nb-dft PRE_NB_DFT] [--pre-kernel-size PRE_KERNEL_SIZE]
                  [--pre-nb-filters PRE_NB_FILTERS] [--pre-nb-conv PRE_NB_CONV]
+                 [--upsample | --no-upsample] [--dilations [DILATIONS ...]]
                  [--nb-lstm-units NB_LSTM_UNITS] [--verbose VERBOSE]
                  [--batch-size BATCH_SIZE] [--nb-epoch NB_EPOCH]
                  [--learning-rate LEARNING_RATE]
                  [--reduce-lr | --no-reduce-lr]
-                 [--reduce-lr-patience REDUCE_LR_PATIENCE] [-f FRACTION_DATA]
-                 [--seed SEED]
+                 [--reduce-lr-patience REDUCE_LR_PATIENCE]
+                 [--fraction-data FRACTION_DATA]
+                 [--first-sample-train FIRST_SAMPLE_TRAIN]
+                 [--last-sample-train LAST_SAMPLE_TRAIN]
+                 [--first-sample-val FIRST_SAMPLE_VAL]
+                 [--last-sample-val LAST_SAMPLE_VAL] [--seed SEED]
                  [--batch-level-subsampling | --no-batch-level-subsampling]
-                 [-t | --tensorboard | --no-tensorboard]
-                 [--neptune-api-token NEPTUNE_API_TOKEN]
-                 [--neptune-project NEPTUNE_PROJECT]
+                 [-a AUGMENTATIONS] [-t | --tensorboard | --no-tensorboard]
+                 [--wandb-api-token WANDB_API_TOKEN]
+                 [--wandb-project WANDB_PROJECT] [--wandb-entity WANDB_ENTITY]
                  [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]
-                 [-w | --with-y-hist | --no-with-y-hist]
-                 [--balance | --no-balance]
+                 [--with-y-hist | --no-with-y-hist] [--balance | --no-balance]
                  [--version-data | --no-version-data]
+                 [--post-opt | --no-post-opt] [--fill-gaps-min FILL_GAPS_MIN]
+                 [--fill-gaps-max FILL_GAPS_MAX]
+                 [--fill-gaps-steps FILL_GAPS_STEPS]
+                 [--min-len-min MIN_LEN_MIN] [--min-len-max MIN_LEN_MAX]
+                 [--min-len-steps MIN_LEN_STEPS]
+                 [--resnet-compute | --no-resnet-compute]
+                 [--resnet-train | --no-resnet-train]
 
-Train a DeepSS network.
+Train a DAS network.
 
 optional arguments:
   -h, --help            show this help message and exit
-  -d DATA_DIR, --data-dir DATA_DIR
-                        Path to the directory or file with the dataset for training.
+  --data-dir DATA_DIR   Path to the directory or file with the dataset for training.
                         Accepts npy-dirs (recommended), h5 files or zarr files.
                         See documentation for how the dataset should be organized.
   -x X_SUFFIX, --x-suffix X_SUFFIX
@@ -371,9 +385,13 @@ optional arguments:
                         Name of files created will be start with SAVE_DIR/SAVE_PREFIX + &quot;_&quot; + TIMESTAMP
                         or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
                         Defaults to &#39;&#39; (empty).
-  -m MODEL_NAME, --model-name MODEL_NAME
+  --save-name SAVE_NAME
+                        Append to prefix.
+                        Name of files created will be start with SAVE_DIR/SAVE_PREFIX + &quot;_&quot; + SAVE_NAME
+                        or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
+                        Defaults to the timestamp YYYYMMDD_hhmmss.
+  --model-name MODEL_NAME
                         Network architecture to use.
-                        Use tcn (TCN) or tcn_stft (TCN with STFT frontend).
                         See das.models for a description of all models.
                         Defaults to tcn.
   --nb-filters NB_FILTERS
@@ -384,7 +402,7 @@ optional arguments:
                         Defaults to 16.
   --nb-conv NB_CONV     Number of TCN blocks in the network.
                         Defaults to 3.
-  -u [USE_SEPARABLE [USE_SEPARABLE ...]], --use-separable [USE_SEPARABLE [USE_SEPARABLE ...]]
+  --use-separable [USE_SEPARABLE ...]
                         Specify which TCN blocks should use separable convolutions.
                         Provide as a space-separated sequence of &quot;False&quot; or &quot;True.
                         For instance: &quot;True False False&quot; will set the first block in a
@@ -406,7 +424,8 @@ optional arguments:
                         if model is tcn_stft: adds a trainable STFT frontend.
                         Defaults to 0 (no frontend, no downsampling).
   --pre-nb-dft PRE_NB_DFT
-                        Number of DFT points (roughly corresponding to number of Fourier filters) in the STFT frontend.
+                        Duration of filters (in samples) for the STFT frontend.
+                        Number of filters is pre_nb_dft // 2 + 1.
                         Defaults to 64.
   --pre-kernel-size PRE_KERNEL_SIZE
                         Duration of filters (=kernels) in samples in the pre-processing TCN.
@@ -415,6 +434,218 @@ optional arguments:
                         Number of filters per layer in the pre-processing TCN.
                         Defaults to 16.
   --pre-nb-conv PRE_NB_CONV
+  --upsample, --no-upsample
+                        whether or not to restore the model output to the input samplerate.
+                        Should generally be True during training and evaluation but my speed up inference.
+                        Defaults to True.
+  --dilations [DILATIONS ...]
+                        List of dilation rate, defaults to [1, 2, 4, 8, 16] (5 layer with 2x dilation per TCN block)
+  --nb-lstm-units NB_LSTM_UNITS
+                        If &gt;0, adds LSTM with nb_lstm_units LSTM units to the output of the stack of TCN blocks.
+                        Defaults to 0 (no LSTM layer).
+  --verbose VERBOSE     Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
+                        Defaults to 2.
+  --batch-size BATCH_SIZE
+                        Batch size
+                        Defaults to 32.
+  --nb-epoch NB_EPOCH   Maximal number of training epochs.
+                        Training will stop early if validation loss did not decrease in the last 20 epochs.
+                        Defaults to 400.
+  --learning-rate LEARNING_RATE
+                        Learning rate of the model. Defaults should work in most cases.
+                        Values typically range between 0.1 and 0.00001.
+                        If None, uses model specific defaults: tcn 0.0001, tcn_stft and tcn_tcn 0.0005.
+                        Defaults to None.
+  --reduce-lr, --no-reduce-lr
+                        Reduce learning rate when the validation loss plateaus.
+                        Defaults to False.
+  --reduce-lr-patience REDUCE_LR_PATIENCE
+                        Number of epochs w/o a reduction in validation loss after which
+                        to trigger a reduction in learning rate.
+                        Defaults to 5 epochs.
+  --fraction-data FRACTION_DATA
+                        Fraction of training and validation data to use.
+                        Defaults to 1.0.
+                        Overriden by setting all four _sample_ args.
+  --first-sample-train FIRST_SAMPLE_TRAIN
+                        Defaults to 0 (first sample in training dataset).
+                        Note 1: all four _sample_ args must be set - otherwise they will be ignored.
+                        Note 2: Overrides fraction_data.
+  --last-sample-train LAST_SAMPLE_TRAIN
+                        Defaults to None (use last sample in training dataset).
+  --first-sample-val FIRST_SAMPLE_VAL
+                        Defaults to 0 (first sample in validation dataset).
+  --last-sample-val LAST_SAMPLE_VAL
+                        Defaults to None (use last sample in validation dataset).
+  --seed SEED           Random seed to reproducibly select fractions of the data.
+                        Defaults to None (no seed).
+  --batch-level-subsampling, --no-batch-level-subsampling
+                        Select fraction of data for training from random subset of shuffled batches.
+                        If False, select a continuous chunk of the recording.
+                        Defaults to False.
+  -a AUGMENTATIONS, --augmentations AUGMENTATIONS
+                        yaml file with augmentations. Defaults to None (no augmentations).
+  -t, --tensorboard, --no-tensorboard
+                        Write tensorboard logs to save_dir. Defaults to False.
+  --wandb-api-token WANDB_API_TOKEN
+                        API token for logging to wandb.
+                        Defaults to None (no logging to wandb).
+  --wandb-project WANDB_PROJECT
+                        Project to log to for wandb.
+                        Defaults to None (no logging to wandb).
+  --wandb-entity WANDB_ENTITY
+                        Entity to log to for wandb.
+                        Defaults to None (no logging to wandb).
+  --log-messages, --no-log-messages
+                        Sets terminal logging level to INFO.
+                        Defaults to False (will follow existing settings).
+  --nb-stacks NB_STACKS
+                        Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to 2.
+  --with-y-hist, --no-with-y-hist
+                        Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to True.
+  --balance, --no-balance
+                        Balance data. Weights class-wise errors by the inverse of the class frequencies.
+                        Defaults to False.
+  --version-data, --no-version-data
+                        Save MD5 hash of the data_dir to log and params.yaml.
+                        Defaults to True (set to False for large datasets since it can be slow).
+  --post-opt, --no-post-opt
+                        Optimize post processing (delete short detections, fill brief gaps).
+                        Defaults to False.
+  --fill-gaps-min FILL_GAPS_MIN
+                        Defaults to 0.0005 seconds.
+  --fill-gaps-max FILL_GAPS_MAX
+                        Defaults to 1 second.
+  --fill-gaps-steps FILL_GAPS_STEPS
+                        Defaults to 20.
+  --min-len-min MIN_LEN_MIN
+                        Defaults to 0.0005 seconds.
+  --min-len-max MIN_LEN_MAX
+                        Defaults to 1 second.
+  --min-len-steps MIN_LEN_STEPS
+                        Defaults to 20.
+  --resnet-compute, --no-resnet-compute
+                        Defaults to False.
+  --resnet-train, --no-resnet-train
+                        Defaults to False.
+
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="tune">
+<h2>Tune<a class="headerlink" href="#tune" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das tune --help
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das tune [-h] --data-dir DATA_DIR [-x X_SUFFIX] [-y Y_SUFFIX]
+                [--save-dir SAVE_DIR] [--save-prefix SAVE_PREFIX]
+                [--save-name SAVE_NAME] [-m MODEL_NAME]
+                [--nb-filters NB_FILTERS] [-k KERNEL_SIZE] [--nb-conv NB_CONV]
+                [--use-separable [USE_SEPARABLE ...]] [--nb-hist NB_HIST]
+                [-i | --ignore-boundaries | --no-ignore-boundaries]
+                [--batch-norm | --no-batch-norm] [--nb-pre-conv NB_PRE_CONV]
+                [--pre-nb-dft PRE_NB_DFT] [--pre-kernel-size PRE_KERNEL_SIZE]
+                [--pre-nb-filters PRE_NB_FILTERS] [--pre-nb-conv PRE_NB_CONV]
+                [--upsample | --no-upsample] [--dilations [DILATIONS ...]]
+                [--nb-lstm-units NB_LSTM_UNITS] [--verbose VERBOSE]
+                [--batch-size BATCH_SIZE] [--nb-epoch NB_EPOCH]
+                [--learning-rate LEARNING_RATE] [--reduce-lr | --no-reduce-lr]
+                [--reduce-lr-patience REDUCE_LR_PATIENCE] [-f FRACTION_DATA]
+                [--seed SEED]
+                [--batch-level-subsampling | --no-batch-level-subsampling]
+                [-a AUGMENTATIONS] [--tensorboard | --no-tensorboard]
+                [--wandb-api-token WANDB_API_TOKEN]
+                [--wandb-project WANDB_PROJECT] [--wandb-entity WANDB_ENTITY]
+                [--log-messages | --no-log-messages] [--nb-stacks NB_STACKS]
+                [--with-y-hist | --no-with-y-hist] [--balance | --no-balance]
+                [--version-data | --no-version-data]
+                [--tune-config TUNE_CONFIG] [--nb-tune-trials NB_TUNE_TRIALS]
+
+Tune the hyperparameters of a DAS network.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --data-dir DATA_DIR   Path to the directory or file with the dataset for training.
+                        Accepts npy-dirs (recommended), h5 files or zarr files.
+                        See documentation for how the dataset should be organized.
+  -x X_SUFFIX, --x-suffix X_SUFFIX
+                        Select dataset used for training in the data_dir by suffix (y_ + X_SUFFIX).
+                        Defaults to &#39;&#39; (will use the standard data &#39;x&#39;)
+  -y Y_SUFFIX, --y-suffix Y_SUFFIX
+                        Select dataset used as a training target in the data_dir by suffix (y_ + Y_SUFFIX).
+                        Song-type specific targets can be created with a training dataset,
+                        Defaults to &#39;&#39; (will use the standard target &#39;y&#39;)
+  --save-dir SAVE_DIR   Directory to save training outputs.
+                        The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,
+                        and the time stamp of the start of training.
+                        Defaults to the current directory (&#39;./&#39;).
+  --save-prefix SAVE_PREFIX
+                        Prepend to timestamp.
+                        Name of files created will be start with SAVE_DIR/SAVE_PREFIX + &quot;_&quot; + TIMESTAMP
+                        or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
+                        Defaults to &#39;&#39; (empty).
+  --save-name SAVE_NAME
+                        Append to prefix.
+                        Name of files created will be start with SAVE_DIR/SAVE_PREFIX + &quot;_&quot; + SAVE_NAME
+                        or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
+                        Defaults to TIMESTAMP.
+  -m MODEL_NAME, --model-name MODEL_NAME
+                        Network architecture to use.
+                        Use tcn (TCN) or tcn_stft (TCN with STFT frontend).
+                        See das.models for a description of all models.
+                        Defaults to tcn.
+  --nb-filters NB_FILTERS
+                        Number of filters per layer.
+                        Defaults to 16.
+  -k KERNEL_SIZE, --kernel-size KERNEL_SIZE
+                        Duration of the filters (=kernels) in samples.
+                        Defaults to 16.
+  --nb-conv NB_CONV     Number of TCN blocks in the network.
+                        Defaults to 3.
+  --use-separable [USE_SEPARABLE ...]
+                        Specify which TCN blocks should use separable convolutions.
+                        Provide as a space-separated sequence of &quot;False&quot; or &quot;True.
+                        For instance: &quot;True False False&quot; will set the first block in a
+                        three-block (as given by nb_conv) network to use separable convolutions.
+                        Defaults to False (no block uses separable convolutions).
+  --nb-hist NB_HIST     Number of samples processed at once by the network (a.k.a chunk duration).
+                        Defaults to 1024 samples.
+  -i, --ignore-boundaries, --no-ignore-boundaries
+                        Minimize edge effects by discarding predictions at the edges of chunks.
+                        Defaults to True.
+  --batch-norm, --no-batch-norm
+                        Batch normalize.
+                        Defaults to True.
+  --nb-pre-conv NB_PRE_CONV
+                        Adds fronted with downsampling. The downsampling factor is 2**nb_pre_conv.
+                        The type of frontend depends on the model:
+                        if model is tcn: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+                        if model is tcn_tcn: adds a frontend of N TCN blocks to the TCN.
+                        if model is tcn_stft: adds a trainable STFT frontend.
+                        Defaults to 0 (no frontend, no downsampling).
+  --pre-nb-dft PRE_NB_DFT
+                        Duration of filters (in samples) for the STFT frontend.
+                        Number of filters is pre_nb_dft // 2 + 1.
+                        Defaults to 64.
+  --pre-kernel-size PRE_KERNEL_SIZE
+                        Duration of filters (=kernels) in samples in the pre-processing TCN.
+                        Defaults to 3.
+  --pre-nb-filters PRE_NB_FILTERS
+                        Number of filters per layer in the pre-processing TCN.
+                        Defaults to 16.
+  --pre-nb-conv PRE_NB_CONV
+  --upsample, --no-upsample
+                        whether or not to restore the model output to the input samplerate.
+                        Should generally be True during training and evaluation but my speed up inference.
+                        Defaults to True.
+  --dilations [DILATIONS ...]
+                        List of dilation rate, defaults to [1, 2, 4, 8, 16] (5 layer with 2x dilation per TCN block)
   --nb-lstm-units NB_LSTM_UNITS
                         If &gt;0, adds LSTM with nb_lstm_units LSTM units to the output of the stack of TCN blocks.
                         Defaults to 0 (no LSTM layer).
@@ -447,20 +678,24 @@ optional arguments:
                         Select fraction of data for training from random subset of shuffled batches.
                         If False, select a continuous chunk of the recording.
                         Defaults to False.
-  -t, --tensorboard, --no-tensorboard
+  -a AUGMENTATIONS, --augmentations AUGMENTATIONS
+  --tensorboard, --no-tensorboard
                         Write tensorboard logs to save_dir. Defaults to False.
-  --neptune-api-token NEPTUNE_API_TOKEN
-                        API token for logging to neptune.ai.
-                        Defaults to None (no logging to neptune.ai).
-  --neptune-project NEPTUNE_PROJECT
-                        Project to log to for neptune.ai.
-                        Defaults to None (no logging to neptune.ai).
+  --wandb-api-token WANDB_API_TOKEN
+                        API token for logging to wandb.
+                        Defaults to None (no logging to wandb).
+  --wandb-project WANDB_PROJECT
+                        Project to log to for wandb.
+                        Defaults to None (no logging to wandb).
+  --wandb-entity WANDB_ENTITY
+                        Entity (user or team) to log to for wandb.
+                        Defaults to None (no logging to wandb).
   --log-messages, --no-log-messages
                         Sets terminal logging level to INFO.
                         Defaults to False (will follow existing settings).
   --nb-stacks NB_STACKS
                         Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to 2.
-  -w, --with-y-hist, --no-with-y-hist
+  --with-y-hist, --no-with-y-hist
                         Unused if model name is tcn, tcn_tcn, or tcn_stft. Defaults to True.
   --balance, --no-balance
                         Balance data. Weights class-wise errors by the inverse of the class frequencies.
@@ -468,6 +703,11 @@ optional arguments:
   --version-data, --no-version-data
                         Save MD5 hash of the data_dir to log and params.yaml.
                         Defaults to True (set to False for large datasets since it can be slow).
+  --tune-config TUNE_CONFIG
+                        Yaml file with key:value pairs defining the search space for tuning.
+                        Keys are parameter names, values are lists of possible parameter values.
+  --nb-tune-trials NB_TUNE_TRIALS
+                        Number of model variants to test during hyper parameter tuning. Defaults to 1_000.
 
 </pre></div>
 </div>
@@ -483,21 +723,25 @@ optional arguments:
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das predict [-h] [--save-filename SAVE_FILENAME] [-v VERBOSE]
-                   [-b BATCH_SIZE] [--event-thres EVENT_THRES]
-                   [--event-dist EVENT_DIST] [--event-dist-min EVENT_DIST_MIN]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>usage: das predict [-h] [--save-filename SAVE_FILENAME]
+                   [--save-format SAVE_FORMAT] [-v VERBOSE] [-b BATCH_SIZE]
+                   [--event-thres EVENT_THRES] [--event-dist EVENT_DIST]
+                   [--event-dist-min EVENT_DIST_MIN]
                    [--event-dist-max EVENT_DIST_MAX]
                    [--segment-thres SEGMENT_THRES]
+                   [--segment-use-optimized | --no-segment-use-optimized]
                    [--segment-minlen SEGMENT_MINLEN]
                    [--segment-fillgap SEGMENT_FILLGAP]
-                   recording_filename model_save_name
+                   [-r | --resample | --no-resample]
+                   path model_save_name
 
-Predict song labels in a wav file. 
- 
-Saves hdf5 file with keys: events, segments, class_probabilities
+Predict song labels for a wav file or a folder of wav files.
+
+Saves hdf5 files with keys: events, segments, class_probabilities
+OR csv files with columns: label/start_seconds/stop_seconds
 
 positional arguments:
-  recording_filename    Path to the WAV file with the audio data.
+  path                  Path to a single WAV file with the audio data or to a folder with WAV files.
   model_save_name       Stem of the path for the model (and parameters). File to load will be MODEL_SAVE_NAME + _model.h5.
 
 optional arguments:
@@ -505,7 +749,13 @@ optional arguments:
   --save-filename SAVE_FILENAME
                         Path to save annotations to.
                         If omitted, will construct save_filename by
-                        stripping the extension from recording_filename and adding &#39;_das.h5&#39;.
+                        stripping the extension from recording_filename and adding &#39;_das.h5&#39; or &#39;_annotations.csv&#39;.
+                        Will be ignored if path is a folder.
+  --save-format SAVE_FORMAT
+                        &#39;csv&#39; or &#39;h5&#39;.
+                        csv: tabular text file with label, start and end seconds for each predicted song.
+                        h5: same information as in csv plus confidence values for each sample and song type.
+                        Defaults to &#39;csv&#39;.
   -v VERBOSE, --verbose VERBOSE
                         Display progress bar during prediction. Defaults to 1.
   -b BATCH_SIZE, --batch-size BATCH_SIZE
@@ -525,12 +775,55 @@ optional arguments:
                         Defaults to None (no upper limit).
   --segment-thres SEGMENT_THRES
                         Confidence threshold for detecting segments. Range 0..1. Defaults to 0.5.
+  --segment-use-optimized, --no-segment-use-optimized
+                        Use minlen and fillgap values from param file if they exist.
+                        If segment_minlen and segment_fillgap are provided,
+                        then they will override the values from the param file.
+                        Defaults to True.
   --segment-minlen SEGMENT_MINLEN
                         Minimal duration of a segment used for filtering out spurious detections.
                         Defaults to None (keep all segments).
   --segment-fillgap SEGMENT_FILLGAP
                         Gap between adjacent segments to be filled. Useful for correcting brief lapses.
                         Defaults to None (do not fill gaps).
+  -r, --resample, --no-resample
+                        Resample audio data to the rate expected by the model. Defaults to True.
+
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="version-information">
+<h2>Version information<a class="headerlink" href="#version-information" title="Permalink to this headline">#</a></h2>
+<p>The output of this will depend on the specifics of your system and installation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das version
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:das.cli:  macOS-12.4-arm64-arm-64bit
+INFO:das.cli:  DAS v0.26.9
+INFO:das.cli:     GUI is available.
+INFO:das.cli:     xarray-behave v0.33.1
+INFO:das.cli:     pyqtgraph v0.12.4
+INFO:das.cli:     PyQt5 vNone
+INFO:das.cli:     Qt vNone
+INFO:das.cli:
+INFO:das.cli:  tensorflow v2.8.0
+INFO:das.cli:  keras v2.8.0
+INFO:das.cli:     GPU is  available.
+INFO:das.cli:
+INFO:das.cli:  python v3.9.13 | packaged by conda-forge | (main, May 27 2022, 17:00:33) 
+[Clang 13.0.1 ]
+INFO:das.cli:  pandas v1.4.2
+INFO:das.cli:  numpy v1.22.4
+INFO:das.cli:  h5py v3.6.0
+INFO:das.cli:  scipy v1.8.1
+INFO:das.cli:  scikit-learn v1.1.1
+INFO:das.cli:  xarray v2022.3.0
 
 </pre></div>
 </div>
@@ -599,7 +892,9 @@ optional arguments:
 <li><a class="reference internal" href="#">Command line interfaces</a><ul>
 <li><a class="reference internal" href="#graphical-user-interface">Graphical user interface</a></li>
 <li><a class="reference internal" href="#train">Train</a></li>
+<li><a class="reference internal" href="#tune">Tune</a></li>
 <li><a class="reference internal" href="#predict">Predict</a></li>
+<li><a class="reference internal" href="#version-information">Version information</a></li>
 </ul>
 </li>
 </ul>

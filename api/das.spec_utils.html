@@ -166,7 +166,8 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quick start tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_bird.html">Quick start tutorial (bird)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/annotate.html">Annotate song</a></li>
@@ -184,6 +185,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/realtime.html">Annotate audio in realtime</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -213,7 +217,6 @@
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.predict_oom.html">das.predict_oom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.spec_utils</a></li>
@@ -274,10 +277,10 @@
 <dt class="sig sig-object py" id="das.spec_utils.MelSpec.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/spec_utils.html#MelSpec.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.spec_utils.MelSpec.call" title="Permalink to this definition">#</a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
-<p>Note here that <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> is little bit different
-from <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API. In <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API, you can pass support masking for
-layers as additional arguments. Whereas <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> has <code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask()</span></code>
-method to support masking.</p>
+<p>The <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
+It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code> method
+that is called automatically before <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

@@ -16,6 +16,10 @@ Create an anaconda environment called `das` that contains all the required packa
 conda install mamba -c conda-forge -n base -y
 mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
+For linux, the last line needs to be:
+```shell
+CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+```
 
 ## Test the installation (Optional)
 To quickly test the installation, run these  commands in the terminal:
