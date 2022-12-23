@@ -36,7 +36,7 @@ requirements:
     - pandas
     - peakutils
     - pyyaml
-    - numba::numba>=0.56.2 [not win]
+    # - numba::numba>=0.56.2 [not win]
     - numba::numba>=0.55.2 [win]
     - scipy
     - scikit-learn
