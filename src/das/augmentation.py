@@ -33,14 +33,13 @@ NotchFilter:
   Q: 30  # standard arg
   samplerate_Hz: 10_000  # standard arg
 ```
-Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the class name if you want to use a class multiple times
+Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the class name
+         if you want to use a class multiple times
 
 `augs = Augmentations.from_yaml(filename)`
-
-
 """
 import numpy as np
-from typing import List, Optional, Callable
+from typing import List, Optional
 import scipy.signal
 import yaml
 from dataclasses import dataclass
@@ -71,6 +70,9 @@ class Param():
 
     Parameters are callables that return parameter values.
     """
+
+    def __call__(self) -> np.ndarray:
+        ...
 
 
 @_register_param
@@ -120,6 +122,7 @@ class Normal(Param):
 @_register_param
 class Uniform(Param):
     """Uniformly distributed parameter."""
+
     def __init__(self, lower: float = -1.0, upper: float = 1.0):
         """
         Args:
@@ -140,7 +143,7 @@ class Uniform(Param):
 
 
 @dataclass
-class Augmentation(Callable):
+class Augmentation():
     """Base class for all augmentations.
 
     Augmentations are callables that return the augmented input.
@@ -149,6 +152,7 @@ class Augmentation(Callable):
     batch_x is expected to be [batch, time, channel].
     _apply works on [time, channel] inputs
     """
+
     def __call__(self, batch_x, batch_y=None):
         this_batch_x = batch_x.copy()
         for batch in range(batch_x.shape[0]):
@@ -157,6 +161,9 @@ class Augmentation(Callable):
             return this_batch_x
         else:
             return this_batch_x, batch_y
+
+    def _apply(self, x: np.ndarray) -> np.ndarray:
+        return x
 
 
 @_register_augmentation
@@ -198,7 +205,7 @@ class NormalizePercentile(Augmentation):
         self.percentile = percentile
 
     def _apply(self, x):
-        x /= np.nanpercentile(x, percentile=self.percentile)
+        x /= np.nanpercentile(x, self.percentile())
         return x
 
 
@@ -259,7 +266,7 @@ class Upsampling(Augmentation):
         Raises:
             ValueError: if 'lower' attr of factor is <1 (would correspond to downsampling).
         """
-        if hasattr(factor, 'lower') and factor.lower < 1:
+        if hasattr(factor, 'lower') and factor.lower < 1:  # type: ignore
             raise ValueError(f'Factor is {factor} - at the moment only upsampling (factors >= 1) is allowed.')
         self.factor = factor
 
@@ -274,8 +281,11 @@ class Upsampling(Augmentation):
 class MaskNoise(Augmentation):
     """Add noise or replace signal by noise for the full duration or a part of it."""
 
-    def __init__(self, std: Optional[Param] = None, mean: Optional[Param] = None,
-                 duration: Optional[Param] = None, add: bool = True):
+    def __init__(self,
+                 std: Optional[Param] = None,
+                 mean: Optional[Param] = None,
+                 duration: Optional[Param] = None,
+                 add: bool = True):
         """
         Args:
             std (Optional[Param]): std of noise. Defaults to 1.
@@ -283,10 +293,14 @@ class MaskNoise(Augmentation):
             duration (Optional[Param]): nb_samples, Optional. If omitted will mask full duration.
             add (bool): add or replace. Defaults to True.
         """
+        if std is None:
+            std = Constant(1)
         self.std = std
+
         if mean is None:
             mean = Constant(0)
         self.mean = mean
+
         self.duration = duration
         self.add = add
 
@@ -397,7 +411,7 @@ class Augmentations():
             params = dict()
             if args is not None:  # for augs without args
                 for a_name, a_arg in args.items():
-                    if isinstance(a_arg, dict): # Param-type arg
+                    if isinstance(a_arg, dict):  # Param-type arg
                         p_name = list(a_arg.keys())[0]
                         p_args = a_arg[p_name]
                         # if no args for Params are provided, use defaults
