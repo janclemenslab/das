@@ -27,7 +27,8 @@ requirements:
 
   run:
     - python {{ python }}
-    - defopt=6.3
+#     - defopt=6.3
+    - defopt
     - rich
     - flammkuchen
     - h5py
@@ -45,8 +46,10 @@ requirements:
     - xarray-behave>=0.33.11
     - cudatoolkit # [win]
     - cudnn # [win]
-    - cudatoolkit=10.1 # [linux]
-    - cudnn=7.6 # [linux]
+#     - cudatoolkit=10.1 # [linux]
+#     - cudnn=7.6 # [linux]
+    - cudatoolkit # [linux]
+    - cudnn # [linux]
     - anaconda::tensorflow==2.9.1 # [osx]
     # - anaconda::tensorflow==2.9.1=cuda* # [linux]
     - anaconda::tensorflow-gpu>2.5 # [win]
