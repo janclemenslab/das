@@ -54,7 +54,7 @@ requirements:
     - anaconda::tensorflow==2.9.1 # [osx]
     # - anaconda::tensorflow==2.9.1=cuda* # [linux]
     - anaconda::tensorflow-gpu>2.5 # [win]
-    - anaconda::tensorflow-gpu>2.5 # [linux]
+    - anaconda::tensorflow-gpu=2.6 # [linux]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
     - numpy>=1.21
