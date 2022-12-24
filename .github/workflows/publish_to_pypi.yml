@@ -26,16 +26,6 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
-      - name: Cache conda
-        uses: actions/cache@v2
-        env:
-          # Increase this value to reset cache if etc/example-environment.yml has not changed
-          CACHE_NUMBER: 0
-        with:
-          path: ~/conda_pkgs_dir
-          key:
-            ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
-            hashFiles('*.yml') }}
       - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
         # https://github.com/conda-incubator/setup-miniconda
@@ -48,19 +38,17 @@ jobs:
           activate-environment: anaconda-client-env
           environment-file: build_env.yml
           condarc-file: condarc.yml
-
+      - name: Update conda and mamba
+        run: mamba update mamba conda -c conda-forge -y -n base
       - name: Build gui and upload to anaconda (win)
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
         run: conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia -c numba --python ${{ matrix.python-version }} --user ncb --token %ANACONDA_TOKEN%
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-          CONDA_OVERRIDE_CUDA: 11.2
-
       - name: Build gui and upload to anaconda (*x)
         if: runner.os != 'Windows'
         shell: bash -l {0}
         run: conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia -c numba --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-          CONDA_OVERRIDE_CUDA: 11.2
