@@ -37,8 +37,9 @@ requirements:
     - pandas
     - peakutils
     - pyyaml
+    - numba # [not win]
     # - numba::numba>=0.56.2 [not win]
-    - numba::numba>=0.55.2 [win]
+    - numba::numba>=0.55.2 # [win]
     - scipy
     - scikit-learn
     - scikit-image
@@ -53,7 +54,7 @@ requirements:
     - anaconda::tensorflow==2.9.1 # [osx]
     # - anaconda::tensorflow==2.9.1=cuda* # [linux]
     - anaconda::tensorflow-gpu>2.5 # [win]
-    - tensorflow-gpu>2.1 # [linux]
+    - anaconda::tensorflow-gpu>2.5 # [linux]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
     - numpy>=1.21
