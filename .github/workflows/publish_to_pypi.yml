@@ -48,6 +48,8 @@ jobs:
           condarc-file: condarc.yml
       - name: Update conda and mamba
         run: mamba update mamba conda -c conda-forge -y -n base
+      - name: Conda info
+        run: conda info
       - name: Build gui and upload to anaconda (win)
         if: runner.os == 'Windows'
         shell: cmd /C CALL {0}
