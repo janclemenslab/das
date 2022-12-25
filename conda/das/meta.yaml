@@ -15,16 +15,15 @@ build:
     - das=das.cli:main
   # script: build_osx-arm64.sh  # [arm64]
   # script: build_other.sh  # [not arm64]
-  # script_env:
-  #   - CONDA_OVERRIDE_CUDA=10.2
+  script_env:
+    - CONDA_OVERRIDE_CUDA=11.2
 
 requirements:
   host:
     - python {{ python }}
     - pip
     - h5py
-#     - conda-forge::numpy
-    - sleap::tensorflow=2.6.3
+    - conda-forge::numpy=1.23
 
   run:
     - python {{ python }}
@@ -48,14 +47,14 @@ requirements:
     - xarray-behave>=0.33.11
     - cudatoolkit # [win]
     - cudnn # [win]
-    - cudatoolkit=11.3.1 # [linux]
-    - cudnn=8.2.1 # [linux]
-    - nvidia::cuda-nvcc=11.3
+    - conda-forge::cudatoolkit=11.7.1 # [linux]
+    - conda-forge::cudnn=8.4.1 # [linux]
+#     - nvidia::cuda-nvcc=11.3
     - anaconda::tensorflow==2.9.1 # [osx]
     - anaconda::tensorflow-gpu>2.5 # [win]
-    - sleap::tensorflow=2.6.3 # [linux]
+    - conda-forge::tensorflow=2.9.1=cuda112 # [linux]
     - apple::tensorflow-deps # [not osx and arm64]
-    - keras
+#     - keras
     - keras-tuner  # [not arm64]
 
 test:
