@@ -23,7 +23,7 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - conda-forge::numpy=1.19.5
+#     - conda-forge::numpy
     - sleap::tensorflow=2.6.3
 
   run:
@@ -38,9 +38,9 @@ requirements:
     - pandas
     - peakutils
     - pyyaml
-    - numba # [not win]
+#     - numba
     # - numba::numba>=0.56.2 [not win]
-    - numba::numba>=0.55.2 # [win]
+#     - numba::numba>=0.55.2 # [win]
 #     - scipy
     - scikit-learn
     - scikit-image
@@ -48,19 +48,14 @@ requirements:
     - xarray-behave>=0.33.11
     - cudatoolkit # [win]
     - cudnn # [win]
-#     - cudatoolkit=10.1 # [linux]
-#     - cudnn=7.6 # [linux]
     - cudatoolkit=11.3.1 # [linux]
     - cudnn=8.2.1 # [linux]
+    - nvidia::cuda-nvcc=11.3
     - anaconda::tensorflow==2.9.1 # [osx]
-    # - anaconda::tensorflow==2.9.1=cuda* # [linux]
     - anaconda::tensorflow-gpu>2.5 # [win]
-    - sleap::tensorflow=2.6.3
-    - conda-forge::numpy=1.19.5
+    - sleap::tensorflow=2.6.3 # [linux]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
-#     - numpy>=1.21
-#     - ipython
     - keras-tuner  # [not arm64]
 
 test:
