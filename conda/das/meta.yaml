@@ -52,7 +52,7 @@ requirements:
 #     - nvidia::cuda-nvcc=11.3
     - anaconda::tensorflow==2.9.1 # [osx]
     - anaconda::tensorflow-gpu>2.5 # [win]
-    - conda-forge::tensorflow=2.9.1=cuda* # [linux]
+    - conda-forge::tensorflow=2.9.1 # [linux]
     - apple::tensorflow-deps # [not osx and arm64]
 #     - keras
     - keras-tuner  # [not arm64]
