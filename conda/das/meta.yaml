@@ -16,7 +16,7 @@ build:
   # script: build_osx-arm64.sh  # [arm64]
   # script: build_other.sh  # [not arm64]
   script_env:
-    - CONDA_OVERRIDE_CUDA=10.2
+    - CONDA_OVERRIDE_CUDA=11.2
 
 requirements:
   host:
@@ -47,8 +47,8 @@ requirements:
     - xarray-behave>=0.33.11
     - cudatoolkit # [win]
     - cudnn # [win]
-    - conda-forge::cudatoolkit # [linux]
-    - conda-forge::cudnn # [linux]
+    - conda-forge::cudatoolkit=11.7 # [linux]
+    - conda-forge::cudnn=8.4 # [linux]
 #     - nvidia::cuda-nvcc=11.3
     - anaconda::tensorflow==2.9.1 # [osx]
     - anaconda::tensorflow-gpu>2.5 # [win]
