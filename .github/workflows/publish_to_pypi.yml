@@ -57,6 +57,6 @@ jobs:
       - name: Build gui and upload to anaconda (*x)
         if: runner.os != 'Windows'
         shell: bash -l {0}
-        run: conda mambabuild conda/das -c conda-forge -c ncb -c nvidia -c sleap --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        run: conda mambabuild conda/das -c conda-forge -c ncb --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
         env:
           ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
