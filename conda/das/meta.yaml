@@ -23,7 +23,8 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - numpy # >=1.22
+    - conda-forge::numpy=1.19.5
+    - sleap::tensorflow=2.6.3
 
   run:
     - python {{ python }}
