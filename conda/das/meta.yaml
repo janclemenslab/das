@@ -34,7 +34,7 @@ requirements:
     - flammkuchen
     - h5py
     - matplotlib
-    - matplotlib-scalebar
+#     - matplotlib-scalebar
     - pandas
     - peakutils
     - pyyaml
