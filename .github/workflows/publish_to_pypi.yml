@@ -26,6 +26,14 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
+      - name: Cache conda
+        uses: actions/cache@v1
+        env:
+          # Increase this value to reset cache if environment_build.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{ hashFiles('build_env.yml') }}
       - name: Setup Mamba
         uses: conda-incubator/setup-miniconda@v2
         # https://github.com/conda-incubator/setup-miniconda
