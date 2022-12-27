@@ -23,7 +23,7 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - numpy<1.24
+    - numpy<1.24,>1.20
 
   run:
     - python {{ python }}
@@ -32,7 +32,7 @@ requirements:
     - h5py
     - matplotlib
     - pandas
-    - numpy<1.24
+    - numpy<1.24,>1.20
     - peakutils
     - pyyaml 
     - scikit-learn
