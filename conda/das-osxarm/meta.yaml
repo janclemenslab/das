@@ -19,27 +19,23 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - numpy>=1.19
+    - numpy<1.24
   run:
     - python {{ python }}
-    - defopt=6.3
+    - rich
     - flammkuchen
-    - librosa>0.8
     - matplotlib
-    - matplotlib-scalebar
     - pandas
+    - numpy<1.24
     - peakutils
     - pyyaml
-    - pyside6
-    - scipy
     - scikit-learn
     - scikit-image
     - tqdm
     - xarray-behave
     - apple::tensorflow-deps=2.9
-    - numpy>=1.19
-    - grpcio
-    - ipython
+    - keras
+    - keras-tuner
 
 test:
   imports:
