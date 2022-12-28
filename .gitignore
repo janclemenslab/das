@@ -122,21 +122,23 @@ fig*
 /*
 /*/
 !/src/
+!/docs/
 !/tests/
 !/env/
-docs/
 !/*.toml
 !/.github
 !/colab
 !/conda
 src/*.egg-info/
-src/deepsongsegmenter.egg-info/PKG-INFO
-src/deepsongsegmenter.egg-info/SOURCES.txt
-src/deepsongsegmenter.egg-info/top_level.txt
-src/*.egg-info
-src/deepsongsegmenter.egg-info/dependency_links.txt
-src/deepsongsegmenter.egg-info/not-zip-safe
-src/deepsongsegmenter.egg-info/PKG-INFO
-src/deepsongsegmenter.egg-info/SOURCES.txt
-src/deepsongsegmenter.egg-info/top_level.txt
+# ignore binaries and data files in docs
+docs/**/*.h5
+docs/**/*.mat
+docs/**/*.npy
+docs/**/*.yaml
+docs/**/*.yml
+docs/**/*.wav
+docs/**/*.csv
+docs/images
+docs/tutorials/res
+docs/_*
 
