@@ -118,7 +118,6 @@ Technical documentation
 
    Introduction <self>
    installation
-   quickstart_bird
    quickstart_fly
    tutorials_gui/tutorials_gui
    tutorials/tutorials

@@ -166,7 +166,6 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart_bird.html">Quick start tutorial (bird)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_gui/load.html">Load and view data</a></li>
@@ -177,17 +176,17 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/tutorials.html">Programming documentation</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/convert.html">Convert your own annotations and audio data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/predict.html">Predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/colab.html">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/structparams.html">Choice of structural network parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/evaluate_bird.html">Evaluate a bird song network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/realtime.html">Annotate audio in realtime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/architecture_tuning.html">Architecture tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -225,14 +224,14 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -348,12 +347,6 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="api/das.utils_plot.html#module-das.utils_plot" title="das.utils_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.utils_plot</span></code></a></p></td>
 <td><p>Plot utilities.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/das.tcn.tcn.html#module-das.tcn.tcn" title="das.tcn.tcn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/das.tcn.tcn_new.html#module-das.tcn.tcn_new" title="das.tcn.tcn_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn_new</span></code></a></p></td>
-<td><p></p></td>
-</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/das.kapre.augmentation.html#module-das.kapre.augmentation" title="das.kapre.augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.augmentation</span></code></a></p></td>
 <td><p></p></td>
 </tr>
@@ -374,6 +367,12 @@ Functions with Keras' backend is in backend_keras.py.</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/das.kapre.utils.html#module-das.kapre.utils" title="das.kapre.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.kapre.utils</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/das.tcn.tcn.html#module-das.tcn.tcn" title="das.tcn.tcn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/das.tcn.tcn_new.html#module-das.tcn.tcn_new" title="das.tcn.tcn_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">das.tcn.tcn_new</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>

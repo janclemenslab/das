@@ -26,14 +26,15 @@ command-line interface provide more control, flexibility and automation:
 
    :toctree: pro
    convert
-   structparams
    make_ds_notebook
    train
    predict
    colab
+   structparams
+   architecture_tuning
+   experiment_tracking
    label_segments
    evaluate_fly
    evaluate_bird
    realtime
-   architecture_tuning
-   experiment_tracking
+

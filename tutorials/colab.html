@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Generate segment labels" href="label_segments.html" /><link rel="prev" title="Predict" href="predict.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Choice of structural network parameters" href="structparams.html" /><link rel="prev" title="Predict" href="predict.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Training and inference with colab - DAS documentation</title>
@@ -166,7 +166,6 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../quickstart_bird.html">Quick start tutorial (bird)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials_gui/load.html">Load and view data</a></li>
@@ -177,17 +176,17 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="tutorials.html">Programming documentation</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="convert.html">Convert your own annotations and audio data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="structparams.html">Choice of structural network parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="make_ds_notebook.html">Make a dataset from custom data formats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="train.html">Train</a></li>
 <li class="toctree-l2"><a class="reference internal" href="predict.html">Predict</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Training and inference with colab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structparams.html">Choice of structural network parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture_tuning.html">Architecture tuning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="label_segments.html">Generate segment labels</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evaluate_fly.html">Evaluate a sine and pulse network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evaluate_bird.html">Evaluate a bird song network</a></li>
 <li class="toctree-l2"><a class="reference internal" href="realtime.html">Annotate audio in realtime</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture_tuning.html">Architecture tuning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="experiment_tracking.html">Experiment tracking with Weights &amp; Biases</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../unsupervised/unsupervised.html">Unsupervised classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -225,14 +224,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -1096,12 +1095,12 @@ Attributes:
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="label_segments.html">
+          <a class="next-page" href="structparams.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Generate segment labels</div>
+                <div class="title">Choice of structural network parameters</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>

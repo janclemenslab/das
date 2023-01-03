@@ -84,8 +84,8 @@ For the script to work on a different machine, it likely require some edits:
 
 ## Files generated during training
 The following files will be created in the _save folder_:
-- `_model.h5`: architecture and weights in one file.
+- `_model.h5`: trained network model.
 - `_params.yaml`: info on data formats etc.
-- `_results.h5`: results form the test data set.
+- `_results.h5`: test results.
 
 The `_model.h5` and `_params.yaml` are required for using the network for predictions and need to be copied to your local machine if you train remotely.
