@@ -110,7 +110,7 @@ Training requires the audio data and the to be in a [specific format](technical/
 Export audio data and annotations for the annotated range from 0 to 18 seconds.
 :::
 
-Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 40:
+Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 0.4, with the train split left at 0.6:
 
 :::{figure-md} xb_assemble-fig
 <img src="images/xb_quick_make_ds.png" alt="assemble dataset" width=600>
@@ -152,4 +152,6 @@ In contrast to training, prediction is very fast, and does not require a GPU---i
 To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors---add missing annotations, remove false positive annotations, adjust the timing of annotations. See [Create annotations](#create-annotations-manually) and [Edit annotations](#edit-annotations). Once you have corrected all errors in the view, select the proposals type you want to fix (`sine_proposals` or `pulse_proposals`), and approve the corresponding annotations with `G`. This will rename the proposals in the view to the original names (for instance, `sine_proposals` -> `sine`). Alternatively, `H` will approve proposals of all song types in view.
 
 ## Go back to "Export"
-Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
+Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. Every prediction should use the latest model in the `quickstart.res` folder. If prediction performance is adequate, fully train the network by increasing the `Number of epochs` to a larger number (400, for example), and this time using a completely new recording as the test set. Alternatively, you can use the same recording and split by samples.
+
+Once the model is good enough to predict on new recordings, uncheck  `Proof reading mode` on these recordings so the annotations produced have the proper 'pulse' and 'sine' labels.
