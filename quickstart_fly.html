@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="GUI documentation" href="tutorials_gui/tutorials_gui.html" /><link rel="prev" title="Installation" href="installation.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="GUI documentation" href="tutorials_gui/tutorials_gui.html" /><link rel="prev" title="Quick start tutorial (bird)" href="quickstart_bird.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Quick start tutorial (fly) - DAS documentation</title>
@@ -166,6 +166,7 @@
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart_bird.html">Quick start tutorial (bird)</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Quick start tutorial (fly)</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials_gui/tutorials_gui.html">GUI documentation</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials_gui/load.html">Load and view data</a></li>
@@ -371,7 +372,7 @@ das gui
 <p><span class="caption-text">Export audio data and annotations for the annotated range from 0 to 18 seconds.</span><a class="headerlink" href="#xb-export-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Then make a dataset, via <em>DAS/Make dataset for training</em>. In the file dialog, select the <code class="docutils literal notranslate"><span class="pre">quickstart</span></code> folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 40:</p>
+<p>Then make a dataset, via <em>DAS/Make dataset for training</em>. In the file dialog, select the <code class="docutils literal notranslate"><span class="pre">quickstart</span></code> folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 0.4, with the train split left at 0.6:</p>
 <figure class="align-default" id="xb-assemble-fig">
 <a class="reference internal image-reference" href="_images/xb_quick_make_ds.png"><img alt="assemble dataset" src="_images/xb_quick_make_ds.png" style="width: 600px;" /></a>
 <figcaption>
@@ -418,7 +419,8 @@ das gui
 </section>
 <section id="go-back-to-export">
 <h2>Go back to “Export”<a class="headerlink" href="#go-back-to-export" title="Permalink to this headline">#</a></h2>
-<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.</p>
+<p>Once all proposals have been approved, export all annotations (now between 0 and 78 seconds), make a new dataset, train, predict, and repeat. Every prediction should use the latest model in the <code class="docutils literal notranslate"><span class="pre">quickstart.res</span></code> folder. If prediction performance is adequate, fully train the network by increasing the <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">epochs</span></code> to a larger number (400, for example), and this time using a completely new recording as the test set. Alternatively, you can use the same recording and split by samples.</p>
+<p>Once the model is good enough to predict on new recordings, uncheck  <code class="docutils literal notranslate"><span class="pre">Proof</span> <span class="pre">reading</span> <span class="pre">mode</span></code> on these recordings so the annotations produced have the proper ‘pulse’ and ‘sine’ labels.</p>
 </section>
 </section>
 
@@ -436,14 +438,14 @@ das gui
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="installation.html">
+          <a class="prev-page" href="quickstart_bird.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Installation</div>
+                <div class="title">Quick start tutorial (bird)</div>
                 
               </div>
             </a>
