@@ -59,7 +59,7 @@ Before you can annotate song, you need to register the sine and pulse song types
 Add two new song types for annotation via the _Add/edit_ button at the top of the windows or via the _Annotations/Add or edit song types_ menu: 'pulse' of category 'event' and 'sine' of category 'segment':
 
 :::{figure-md} xb_make-fig
-<img src="images/xb_make.png" alt="edit annotation types" height="400px">
+<img src="images/xb_quick_make.png" alt="edit annotation types" height="400px">
 
 Create two new song types for annotation.
 :::
@@ -122,6 +122,7 @@ This will create a dataset folder called `quickstart.npy` that contains the audi
 
 ## Fast training
 Configure a network and start training via _DAS/Train_. This will ask you to select folder with the dataset you just created, `quickstart.npy`. Then, a dialog allows you to configure the network. For the fast training change the following:
+- Set `Downsampling frontend` to `None`.
 - Set both `Number of filters` and `Filter duration (samples)` to 16. This will result in a smaller network with fewer parameters, which will train faster.
 - Set `Number of epochs` to 10, to finish training earlier.
 :::{figure-md} xb_train-fig
