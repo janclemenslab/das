@@ -134,9 +134,7 @@ def tcn_stft(nb_freq: int,
 
     if compile:
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.)
-        model.compile(optimizer=optimizer,
-                      loss=loss,
-                      sample_weight_mode=sample_weight_mode)
+        model.compile(optimizer=optimizer, loss=loss, sample_weight_mode=sample_weight_mode)
     return model
 
 
@@ -184,7 +182,8 @@ def stft_res_dense(nb_freq: int,
         out = tf.stack((out, out, out), axis=-1)
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights='imagenet', include_top=False)
         out = vision_model(out, training=False)
-        out = kl.TimeDistributed(kl.Dense(min(32, 4 * nb_classes), activation='tanh', kernel_regularizer=regularizers.L1(1e-4)))(out)
+        out = kl.TimeDistributed(kl.Dense(min(32, 4 * nb_classes), activation='tanh',
+                                          kernel_regularizer=regularizers.L1(1e-4)))(out)
 
     if len(out.shape) > 1:
         out = kl.Flatten()(out)
