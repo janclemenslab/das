@@ -37,11 +37,11 @@ Developer API
    das.train_tune
    das.utils
    das.utils_plot
+   das.tcn.tcn
+   das.tcn.tcn_new
    das.kapre.augmentation
    das.kapre.backend
    das.kapre.backend_keras
    das.kapre.filterbank
    das.kapre.time_frequency
    das.kapre.utils
-   das.tcn.tcn
-   das.tcn.tcn_new

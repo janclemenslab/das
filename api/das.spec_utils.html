@@ -225,14 +225,14 @@
 <li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -277,10 +277,10 @@
 <dt class="sig sig-object py" id="das.spec_utils.MelSpec.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/spec_utils.html#MelSpec.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.spec_utils.MelSpec.call" title="Permalink to this definition">#</a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
-<p>Note here that <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> is little bit different
-from <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API. In <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API, you can pass support masking for
-layers as additional arguments. Whereas <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> has <code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask()</span></code>
-method to support masking.</p>
+<p>The <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
+It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code> method
+that is called automatically before <a class="reference internal" href="#das.spec_utils.MelSpec.call" title="das.spec_utils.MelSpec.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

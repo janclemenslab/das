@@ -225,14 +225,14 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -323,7 +323,7 @@ das gui
 </ul>
 <p>Add two new song types for annotation via the <em>Add/edit</em> button at the top of the windows or via the <em>Annotations/Add or edit song types</em> menu: ‘pulse’ of category ‘event’ and ‘sine’ of category ‘segment’:</p>
 <figure class="align-default" id="xb-make-fig">
-<a class="reference internal image-reference" href="_images/xb_make.png"><img alt="edit annotation types" src="_images/xb_make.png" style="height: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/xb_quick_make.png"><img alt="edit annotation types" src="_images/xb_quick_make.png" style="height: 400px;" /></a>
 <figcaption>
 <p><span class="caption-text">Create two new song types for annotation.</span><a class="headerlink" href="#xb-make-fig" title="Permalink to this image">#</a></p>
 </figcaption>
@@ -385,6 +385,7 @@ das gui
 <h2>Fast training<a class="headerlink" href="#fast-training" title="Permalink to this headline">#</a></h2>
 <p>Configure a network and start training via <em>DAS/Train</em>. This will ask you to select folder with the dataset you just created, <code class="docutils literal notranslate"><span class="pre">quickstart.npy</span></code>. Then, a dialog allows you to configure the network. For the fast training change the following:</p>
 <ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">Downsampling</span> <span class="pre">frontend</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p>Set both <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">filters</span></code> and <code class="docutils literal notranslate"><span class="pre">Filter</span> <span class="pre">duration</span> <span class="pre">(samples)</span></code> to 16. This will result in a smaller network with fewer parameters, which will train faster.</p></li>
 <li><p>Set <code class="docutils literal notranslate"><span class="pre">Number</span> <span class="pre">of</span> <span class="pre">epochs</span></code> to 10, to finish training earlier.</p></li>
 </ul>

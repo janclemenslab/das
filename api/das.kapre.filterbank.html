@@ -225,14 +225,14 @@
 <li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -340,8 +340,10 @@ E.g., if channel_first,</p>
 <dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
 <p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
-layer instantiation and layer call.</p>
-<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses.</p>
+layer instantiation and layer call. It is invoked automatically before
+the first execution of <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
+<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+(at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>input_shape</strong> – Instance of <code class="xref py py-obj docutils literal notranslate"><span class="pre">TensorShape</span></code>, or list of instances of
@@ -355,10 +357,10 @@ layer instantiation and layer call.</p>
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.call" title="Permalink to this definition">#</a></dt>
 <dd><p>This is where the layer’s logic lives.</p>
-<p>Note here that <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> is little bit different
-from <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API. In <code class="xref py py-obj docutils literal notranslate"><span class="pre">keras</span></code> API, you can pass support masking for
-layers as additional arguments. Whereas <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> has <code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_mask()</span></code>
-method to support masking.</p>
+<p>The <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
+It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <a class="reference internal" href="#das.kapre.filterbank.Filterbank.build" title="das.kapre.filterbank.Filterbank.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code></a> method
+that is called automatically before <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -413,9 +415,9 @@ layer with masking support).</p></li>
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.compute_output_shape" title="Permalink to this definition">#</a></dt>
 <dd><p>Computes the output shape of the layer.</p>
-<p>If the layer has not been built, this method will call <a class="reference internal" href="#das.kapre.filterbank.Filterbank.build" title="das.kapre.filterbank.Filterbank.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a> on the
-layer. This assumes that the layer will later be used with inputs that
-match the input shape provided here.</p>
+<p>This method will cause the layer’s state to be built, if that has not
+happened before. This requires that the layer will later be used with
+inputs that match the input shape provided here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>input_shape</strong> – Shape tuple (tuple of integers)
