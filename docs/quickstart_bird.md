@@ -1,10 +1,10 @@
 # Quick start tutorial (bird)
-This quick start tutorial walks through all steps required to make _DAS_ work with your data, using a recording of fly song as an example. A comprehensive documentation of all menus and options can be found in the [GUI documentation](/tutorials_gui/tutorials_gui).
+This quick start tutorial walks through all steps required to make _DAS_ work with your data, using a recording of zebra finch song as an example. A comprehensive documentation of all menus and options can be found in the [GUI documentation](/tutorials_gui/tutorials_gui).
 
-In the tutorial, we will train _DAS_ using an iterative and adaptive protocol that allows to quickly create a large dataset of annotations: Annotate a few song events, fast-train a network on those annotations, and then use that network to predict new annotations on a larger part of the recording. These first predictions require manually correction, but correcting is typically much faster than annotating everything from scratch. This correct-train-predict cycle is then repeated with ever larger datasets until network performance is satisfactory.
+In the tutorial, we will train _DAS_ using an iterative and adaptive protocol that allows to quickly create a large dataset of annotations: Annotate a few syllable renditions, fast-train a network on those annotations, and then use that network to predict new annotations on a larger part of the recording. These first predictions require manually correction, but correcting is typically much faster than annotating everything from scratch. This correct-train-predict cycle is then repeated with ever larger datasets until network performance is satisfactory.
 
 ## Download example data
-To follow the tutorial, download and open this [audio file](https://github.com/janclemenslab/DAS/releases/download/data/Dmel_male.wav). The recording is of a _Drosophila melanogaster_ male courting a female, recorded by David Stern (Janelia, part of [this dataset](https://www.janelia.org/lab/stern-lab/tools-reagents-data)). We will walk through loading, annotating, training and predicting using this file as an example.
+To follow the tutorial, download and open this [audio file](https://github.com/janclemenslab/DAS/releases/download/data/birdname_130519_110831.1.wav). The recording is of a Zebra finch male, recorded by Jack Goffinet et al. (part of [this dataset](https://research.repository.duke.edu/concern/datasets/9k41zf38g)). We will walk through loading, annotating, training and predicting using this file as an example.
 
 ## Start the GUI
 
@@ -28,70 +28,61 @@ Start screen.
 
 Choose _Load audio from file_ and select the downloaded recording of fly song.
 
-In the dialog that opens, leave everything as is except set _Minimal/Maximal spectrogram frequency_---the range of frequencies in the spectrogram display---to 50 and 1000 Hz. This will restrict the spectrogram view to only show the frequencies found in fly song.
+In the dialog that opens, leave everything as is except.
 
 :::{figure-md} xb_load-fig
-<img src="images/xb_quick_load.png" alt="loading screen">
+<img src="images/xb_quick_bird_load.png" alt="loading screen">
 
 Loading screen.
 :::
 
 
 ## Waveform and spectrogram display
-Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom). You will see the two major modes of fly song---pulse and sine. The recording starts with sine song---a relatively soft oscillation resulting in a spectral power at ~150 Hz. Pulse song starts after ~0.75 seconds, evident as trains of brief wavelets with a regular interval.
+Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom).
 
 To navigate the view: Move forward/backward along the time axis via the `A`/`D` keys and zoom in/out the time axis with the `W`/`S` keys (see also the _Playback_ menu). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal and frequency resolution of the spectrogram can be adjusted with the `R` and `T` keys.
+
+The first rendition of the bird's main motif starts at 6.65 seconds - go there by pressing `D` repeatedly.
 
 You can play back the waveform on display through your headphones/speakers by pressing `E`.
 
 :::{figure-md} xb_display-fig
-<img src="images/xb_quick_view.png" alt="waveform and spectrogram display" width="100%">
+<img src="images/xb_quick_bird_view.png" alt="waveform and spectrogram display" width="100%">
 
 Waveform (top) and spectrogram (bottom) display of fly song.
 :::
 
 
-## Initialize or edit song types
-Before you can annotate song, you need to register the sine and pulse song types for annotation. _DAS_ discriminates two principal categories of song types:
-- _Segments_ are song types that extend over time and are defined by a start and a stop time. The aforementioned sine song and the syllables of mouse and bird vocalizations fall into the segment category.
-- _Events_ are defined by a single time of occurrence. The aforementioned pulse song is a song type of the event category.
+## Initialize or edit syllable
+Before you can annotate song, you need to register the different syllable of the main motif. This bird's motif consists of six syllables.
 
-Add two new song types for annotation via the _Add/edit_ button at the top of the windows or via the _Annotations/Add or edit song types_ menu: 'pulse' of category 'event' and 'sine' of category 'segment':
+Add the six syllables for annotation via the _Add/edit_ button at the top of the windows or via the _Annotations/Add or edit song types_ menu. Let's name them `syll1` to `syll6`:
 
 :::{figure-md} xb_make-fig
-<img src="images/xb_make.png" alt="edit annotation types" height="400px">
+<img src="images/xb_quick_bird_make.png" alt="edit annotation types" height="400px">
 
-Create two new song types for annotation.
+Create six new syllables for annotation.
 :::
 
 
 ## Create annotations manually
-The two new song types _pulse_ or _sine_ can now be activated for annotation using the dropdown menu on the top left of the window. The active song type can also be changed with the number keys indicated in the dropdown menu---in this case `1` activates pulse, `2` activates sine.
+The six syllables can now be activated for annotation using the dropdown menu on the top left of the window. The active syllable can also be changed with the number keys indicated in the dropdown menu---in this case `1`...`6`.
 
-Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks---one for each boundary of the segment.
+Song is annotated by left-clicking the waveform or spectrogram view.Annotating a syllable requires two clicks---one for the onset and one for the offset of the syllable.
 
 :::{figure-md} xb_create-fig
-<img src="/images/xb_create.gif" alt="annotate song" width="700px">
+<img src="/images/xb_bird_create.gif" alt="annotate song" width="700px">
 
 Left clicks in waveform or spectrogram view create annotations.
 :::
 
-## Annotate by thresholding the waveform
-Annotation of events can be sped up with a "Thresholding mode”, which detects peaks in the sound energy exceeding a threshold. Activate thresholding mode via the _Annotations_ menu. This will display a draggable horizontal line---the detection threshold---and a smooth pink waveform---the envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press `I` to annotate these peaks as events.
-
-:::{figure-md} xb_thres-fig
-<img src="images/xb_thres.gif" alt="annotate song" width="700px">
-
-Annotations assisted by thresholding and peak detection.
-:::
-
 ## Edit annotations
-In case you misclicked, you can edit and delete annotations. Edit event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the _Annotations_ menu.
+In case you misclicked, you can edit and delete annotations. Edit  syllable bounds by dragging the boundaries of segments. Drag the shaded area itself to move a syllable without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the _Annotations_ menu.
 
-Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or of only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
+Delete annotations of the active syllable by right-clicking on the annotation. Annotations of all syllable types or of only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
 
 :::{figure-md} xb_edit-fig
-<img src="images/xb_edit.gif" alt="annotate song" width="700px">
+<img src="images/xb_bird_edit.gif" alt="annotate song" width="700px">
 
 Dragging moves, right click deletes annotations.
 :::
@@ -100,12 +91,12 @@ Change the label of an annotation via CMD/CTRL+Left click on an existing annotat
 
 
 ## Export annotations and make a dataset
-_DAS_ achieves good performance from few annotated examples. Once you have completely annotated the song in the first 18 seconds of the tutorial recording---*all* pulses and sine song segments in that section of the song---you can train a network to help with annotating the rest of the data.
+_DAS_ achieves good performance from few annotated examples. Once you have completely annotated the syllables in the first 6 motifs of the tutorial recording you can train a network to help with annotating the rest of the data.
 
 Training requires the audio data and the to be in a [specific format](technical/data_formats). First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`. In the following dialog set start seconds and end seconds to the annotated time range: 0 and 18 seconds, respectively.
 
 :::{figure-md} xb_export-fig
-<img src="images/xb_quick_export.png" alt="export audio and annotations" width=450>
+<img src="images/xb_quick_bird_export.png" alt="export audio and annotations" width=450>
 
 Export audio data and annotations for the annotated range from 0 to 18 seconds.
 :::
@@ -113,7 +104,7 @@ Export audio data and annotations for the annotated range from 0 to 18 seconds.
 Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 40:
 
 :::{figure-md} xb_assemble-fig
-<img src="images/xb_quick_make_ds.png" alt="assemble dataset" width=600>
+<img src="images/xb_quick_bird_make_ds.png" alt="assemble dataset" width=600>
 
 Make a dataset for training.
 :::
@@ -125,7 +116,7 @@ Configure a network and start training via _DAS/Train_. This will ask you to sel
 - Set both `Number of filters` and `Filter duration (samples)` to 16. This will result in a smaller network with fewer parameters, which will train faster.
 - Set `Number of epochs` to 10, to finish training earlier.
 :::{figure-md} xb_train-fig
-<img src="images/xb_quick_train.png" alt="train" width=500>
+<img src="images/xb_quick_bird_train.png" alt="train" width=500>
 
 Train options
 :::
