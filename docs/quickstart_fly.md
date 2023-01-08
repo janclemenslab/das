@@ -110,7 +110,7 @@ Training requires the audio data and the to be in a [specific format](technical/
 Export audio data and annotations for the annotated range from 0 to 18 seconds.
 :::
 
-Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the test split to 0.0 (not test) and the validation split to 0.4, with the train split left at 0.6:
+Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the training split to 0.60,  the validation split to 0.40 and the test split to 0.00 (not test):
 
 :::{figure-md} xb_assemble-fig
 <img src="images/xb_quick_make_ds.png" alt="assemble dataset" width=600>
