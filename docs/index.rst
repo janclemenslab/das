@@ -32,16 +32,6 @@ Tutorials
 
 .. panels ::
 
-    .. link-button :: quickstart_bird
-        :text: Quick start tutorial (bird)
-        :type: ref
-        :classes: stretched-link
-    +++
-
-    Annotate song, train a network, and predict on new samples.
-
-    ---
-
     .. link-button :: quickstart_fly
         :text: Quick start tutorial (fly)
         :type: ref
