@@ -157,8 +157,8 @@ class TCN:
         except TypeError:
             use_separable = [use_separable] * nb_stacks
 
-        if len(use_separable) < nb_stacks:
-            use_separable.extend(use_separable[-1] * nb_stacks)
+        while len(use_separable) < nb_stacks:
+            use_separable.append(use_separable[-1])
         self.use_separable = use_separable
 
         self.activation = activation
