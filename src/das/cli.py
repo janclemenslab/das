@@ -23,11 +23,12 @@ def version():
         import pyqtgraph
         import qtpy
         import xarray_behave.gui.app
+
         has_gui = True
     except (ImportError, ModuleNotFoundError):
         has_gui = False
 
-    gpu = len(tf.config.list_physical_devices('GPU')) > 0
+    gpu = len(tf.config.list_physical_devices("GPU")) > 0
 
     logger.info(f"  {platform.platform()}")
     logger.info(f"  DAS v{das.__version__}")
@@ -61,19 +62,20 @@ def no_xb_gui():
 
 def main():
     """Command line interface for DAS."""
-    subcommands = {'train': train.train, 'tune': train_tune.train, 'predict': predict.cli_predict, 'version': version}
+    subcommands = {"train": train.train, "tune": train_tune.train, "predict": predict.cli_predict, "version": version}
 
     try:
         import xarray_behave.gui.app
-        subcommands['gui'] = xarray_behave.gui.app.main_das
+
+        subcommands["gui"] = xarray_behave.gui.app.main_das
     except (ImportError, ModuleNotFoundError):
-        logging.exception('No GUI avalaible.')
+        logging.exception("No GUI avalaible.")
         # fall back to function that displays helpful instructions
-        subcommands['gui'] = no_xb_gui
+        subcommands["gui"] = no_xb_gui
 
     logging.basicConfig(level=logging.INFO, force=True)
     defopt.run(subcommands, show_defaults=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

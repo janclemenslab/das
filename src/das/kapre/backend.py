@@ -16,6 +16,7 @@ Notes
 from tensorflow.keras import backend as K
 import numpy as np
 import librosa
+
 # Forward compatability to replace xrange
 from builtins import range
 
@@ -35,9 +36,7 @@ def mel(sr, n_dft, n_mels=128, fmin=0.0, fmax=None, htk=False, norm=1):
     fmax : highest frequency [Hz]
         If `None`, use `sr / 2.0`
     """
-    return librosa.filters.mel(sr=sr, n_fft=n_dft, n_mels=n_mels,
-                               fmin=fmin, fmax=fmax,
-                               htk=htk, norm=norm).astype(K.floatx())
+    return librosa.filters.mel(sr=sr, n_fft=n_dft, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(K.floatx())
 
 
 def get_stft_kernels(n_dft):
@@ -59,8 +58,7 @@ def get_stft_kernels(n_dft):
     * n_win = n_dft
 
     """
-    assert n_dft > 1 and ((n_dft & (n_dft - 1)) == 0), \
-        ('n_dft should be > 1 and power of 2, but n_dft == %d' % n_dft)
+    assert n_dft > 1 and ((n_dft & (n_dft - 1)) == 0), "n_dft should be > 1 and power of 2, but n_dft == %d" % n_dft
 
     nb_filter = int(n_dft // 2 + 1)
 
@@ -71,7 +69,7 @@ def get_stft_kernels(n_dft):
     dft_imag_kernels = -np.sin(w_ks.reshape(-1, 1) * timesteps.reshape(1, -1))
 
     # windowing DFT filters
-    dft_window = librosa.filters.get_window('hann', n_dft, fftbins=True)  # _hann(n_dft, sym=False)
+    dft_window = librosa.filters.get_window("hann", n_dft, fftbins=True)  # _hann(n_dft, sym=False)
     dft_window = dft_window.astype(K.floatx())
     dft_window = dft_window.reshape((1, -1))
     dft_real_kernels = np.multiply(dft_real_kernels, dft_window)
@@ -86,13 +84,11 @@ def get_stft_kernels(n_dft):
 
 
 def filterbank_mel(sr, n_freq, n_mels=128, fmin=0.0, fmax=None, htk=False, norm=1):
-    """[np] """
-    return mel(sr, (n_freq - 1) * 2, n_mels=n_mels, fmin=fmin, fmax=fmax
-               , htk=htk, norm=norm).astype(K.floatx())
+    """[np]"""
+    return mel(sr, (n_freq - 1) * 2, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(K.floatx())
 
 
-def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12,
-                   fmin=None, spread=0.125):  # pragma: no cover
+def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12, fmin=None, spread=0.125):  # pragma: no cover
     """[np] Approximate a constant-Q filter bank for a fixed-window STFT.
 
     Each filter is a log-normal window centered at the corresponding frequency.
@@ -143,8 +139,7 @@ def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12,
         c_freq = fmin * (2.0 ** (float(i) / bins_per_octave))
 
         # Place a log-normal window around c_freq
-        basis[i, 1:] = np.exp(-0.5 * ((log_freqs - np.log2(c_freq)) / sigma) ** 2
-                              - np.log2(sigma) - log_freqs)
+        basis[i, 1:] = np.exp(-0.5 * ((log_freqs - np.log2(c_freq)) / sigma) ** 2 - np.log2(sigma) - log_freqs)
 
     # Normalize the filters
     basis = librosa.util.normalize(basis, norm=1, axis=1)

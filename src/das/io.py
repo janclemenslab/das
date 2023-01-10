@@ -7,23 +7,23 @@ from . import npy_dir
 
 
 def _select(data, x_suffix, y_suffix):
-    for lvl in ['test', 'val', 'train']:
+    for lvl in ["test", "val", "train"]:
         if lvl in data:
-            if 'y_' + y_suffix in data[lvl]:
-                data[lvl]['y'] = data[lvl]['y_' + y_suffix]
-                if 'eventtimes_' + y_suffix in data[lvl]:
-                    data[lvl]['eventtimes'] = data[lvl]['eventtimes_' + y_suffix]
-            if 'x_' + x_suffix in data[lvl]:
-                data[lvl]['x'] = data[lvl]['x_' + x_suffix]
-                if 'eventtimes_' + x_suffix in data[lvl]:
-                    data[lvl]['eventtimes'] = data[lvl]['eventtimes_' + x_suffix]
+            if "y_" + y_suffix in data[lvl]:
+                data[lvl]["y"] = data[lvl]["y_" + y_suffix]
+                if "eventtimes_" + y_suffix in data[lvl]:
+                    data[lvl]["eventtimes"] = data[lvl]["eventtimes_" + y_suffix]
+            if "x_" + x_suffix in data[lvl]:
+                data[lvl]["x"] = data[lvl]["x_" + x_suffix]
+                if "eventtimes_" + x_suffix in data[lvl]:
+                    data[lvl]["eventtimes"] = data[lvl]["eventtimes_" + x_suffix]
 
-    if f'samplerate_x_{x_suffix}_Hz' in data.attrs:
-        data.attrs['samplerate_x_Hz'] = data.attrs[f'samplerate_x_{x_suffix}_Hz']
+    if f"samplerate_x_{x_suffix}_Hz" in data.attrs:
+        data.attrs["samplerate_x_Hz"] = data.attrs[f"samplerate_x_{x_suffix}_Hz"]
 
-    if 'class_names_' + y_suffix in data.attrs and 'class_types_' + y_suffix in data.attrs:
-        data.attrs['class_names'] = data.attrs['class_names_' + y_suffix]
-        data.attrs['class_types'] = data.attrs['class_types_' + y_suffix]
+    if "class_names_" + y_suffix in data.attrs and "class_types_" + y_suffix in data.attrs:
+        data.attrs["class_names"] = data.attrs["class_names_" + y_suffix]
+        data.attrs["class_types"] = data.attrs["class_types_" + y_suffix]
     return data
 
 
@@ -38,7 +38,7 @@ def _to_dict(data):
     return d
 
 
-def load(location, x_suffix='', y_suffix=''):
+def load(location, x_suffix="", y_suffix=""):
     """Load data for training/testing from zarr store, npy directory, or hdf5 file.
 
     Args:
@@ -49,16 +49,20 @@ def load(location, x_suffix='', y_suffix=''):
     """
 
     location = os.path.normpath(location)  # remove trailing path separators
-    if location.endswith('.zarr'):
+    if location.endswith(".zarr"):
         import zarr
-        data = zarr.open(location, mode='r')
-    elif location.endswith('.h5'):
+
+        data = zarr.open(location, mode="r")
+    elif location.endswith(".h5"):
         import h5py
-        data = h5py.File.open(location, mode='r')
-    elif location.endswith('.npy'):
+
+        data = h5py.File.open(location, mode="r")
+    elif location.endswith(".npy"):
         data = npy_dir.load(location)
     else:
-        raise ValueError(f'Could not load data. Location {location} has unknown extension - needs to end either in ".zarr", ".npy", or ".h5".')
+        raise ValueError(
+            f'Could not load data. Location {location} has unknown extension - needs to end either in ".zarr", ".npy", or ".h5".'
+        )
 
     data = _to_dict(data)
 

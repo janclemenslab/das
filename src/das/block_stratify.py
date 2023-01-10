@@ -7,8 +7,8 @@ from typing import Optional, Dict, List, Any, Tuple, TypeVar
 import numpy as np
 import pandas as pd
 
-Block = TypeVar('Block')
-Group = TypeVar('Group')
+Block = TypeVar("Block")
+Group = TypeVar("Group")
 
 
 def groupstats(stats: List, groups: List[Group]):
@@ -72,10 +72,9 @@ def score_grouping(block_stats, groups: List[Group]):
     return total_score
 
 
-def opt_grouping(block_stats: np.ndarray,
-                 group_sizes: List[Group],
-                 group_names: List[Group],
-                 nb_perms: int = 100) -> List[Group]:
+def opt_grouping(
+    block_stats: np.ndarray, group_sizes: List[Group], group_names: List[Group], nb_perms: int = 100
+) -> List[Group]:
 
     nb_blocks = len(block_stats)
     grouping = group_blocks(nb_blocks, group_sizes, group_names)
@@ -112,7 +111,7 @@ def block_data(data: np.ndarray, block_size: int):
 def blocks_from_split_points(data: np.ndarray, split_points: List[Tuple[int, int]]):
     blocks = []
     for split_point in split_points:
-        blocks.append(data[split_point[0]:split_point[1]])
+        blocks.append(data[split_point[0] : split_point[1]])
     return blocks
 
 
@@ -133,7 +132,7 @@ def blockstats_from_data(data: np.ndarray, block_size: int, gap: int = 0) -> Dic
 
     blockstats = {}
     for split_start, split_end, block in zip(split_points[:-1], split_points[1:], blocks):
-        blockstats[(split_start, split_end)] = np.mean(block[gap:block.shape[0] - gap], axis=0)
+        blockstats[(split_start, split_end)] = np.mean(block[gap : block.shape[0] - gap], axis=0)
     return blockstats
 
 
@@ -179,12 +178,14 @@ def format_by_block(blocks, block_names):
     return block_dict
 
 
-def block(block_names: List[np.ndarray],
-          group_sizes: List[float],
-          group_names: List[Group],
-          block_stats: Optional[List[Block]] = None,
-          shuffle: bool = True,
-          seed: Optional[float] = None) -> Dict[Group, List[Block]]:
+def block(
+    block_names: List[np.ndarray],
+    group_sizes: List[float],
+    group_names: List[Group],
+    block_stats: Optional[List[Block]] = None,
+    shuffle: bool = True,
+    seed: Optional[float] = None,
+) -> Dict[Group, List[Block]]:
 
     if seed is not None:
         np.random.seed(seed)

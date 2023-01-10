@@ -24,7 +24,7 @@ def fill_gaps(labels: np.ndarray, gap_dur: int = 100) -> np.ndarray:
     if len(onsets) and len(offsets) and len(onsets) == len(offsets):
         for idx in range(len(onsets)):
             if idx > 0 and offsets[idx - 1] > onsets[idx] - gap_dur:
-                labels[offsets[idx - 1]:onsets[idx] + 1] = 1
+                labels[offsets[idx - 1] : onsets[idx] + 1] = 1
     return labels
 
 
@@ -50,14 +50,13 @@ def remove_short(labels: np.ndarray, min_len: int = 100) -> np.ndarray:
         durations = offsets - onsets
         for onset, offset, duration in zip(onsets, offsets, durations):
             if duration < min_len:
-                labels[onset:offset + 1] = 0
+                labels[onset : offset + 1] = 0
     return labels
 
 
 def label_syllables_by_majority(
-        labels: np.ndarray, onsets_seconds: np.ndarray,
-        offsets_seconds: np.ndarray,
-        samplerate: float) -> Tuple[np.ndarray, np.ndarray]:
+    labels: np.ndarray, onsets_seconds: np.ndarray, offsets_seconds: np.ndarray, samplerate: float
+) -> Tuple[np.ndarray, np.ndarray]:
     """Label syllables by a majority vote.
 
     Args:
@@ -77,9 +76,8 @@ def label_syllables_by_majority(
 
     for onset_sample, offset_sample in zip(onsets_sample, offsets_sample):
         # max sure the segment is at least one sample long
-        os = max(onset_sample+1, offset_sample)
-        values, counts = np.unique(labels[onset_sample:os],
-                                   return_counts=True)
+        os = max(onset_sample + 1, offset_sample)
+        values, counts = np.unique(labels[onset_sample:os], return_counts=True)
         if len(values):
             majority_label = values[counts.argmax()]
             syllables.append(int(majority_label))

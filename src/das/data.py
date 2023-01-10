@@ -68,7 +68,7 @@ def compute_class_weights(y: np.ndarray) -> List[float]:
 
     # count classes over blocks (dask.array.map_blocks does nto work fsr)
     counts = np.zeros((nb_chunks, nb_classes))
-    for cnt, block in enumerate(tqdm(yy.blocks, total=nb_chunks, desc='Counting class occurrences')):
+    for cnt, block in enumerate(tqdm(yy.blocks, total=nb_chunks, desc="Counting class occurrences")):
         counts[cnt, :] = np.sum(block.compute().astype(float), axis=0)
 
     # aggregate and normalize
@@ -85,13 +85,29 @@ class AudioSequence(keras.utils.Sequence):
         ...
     """
 
-    def __init__(self, x: np.ndarray, y: Optional[np.ndarray] = None, batch_size: int = 32, shuffle: bool = True, nb_hist: int = 1, y_offset: Optional[int] = None,
-                 stride: int = 1, cut_trailing_dim: bool = False, with_y_hist: bool = False, data_padding: int = 0,
-                 first_sample: int = 0, last_sample: Optional[int] = None, output_stride: int = 1, nb_repeats: int = 1,
-                 shuffle_subset: Optional[float] = None, unpack_channels: bool = False, mask_input: Optional[int] = None,
-                 batch_processor: Optional[Callable[[np.ndarray], np.ndarray]] = None,
-                 class_weights: Optional[Sequence[float]] = None,
-                 **kwargs):
+    def __init__(
+        self,
+        x: np.ndarray,
+        y: Optional[np.ndarray] = None,
+        batch_size: int = 32,
+        shuffle: bool = True,
+        nb_hist: int = 1,
+        y_offset: Optional[int] = None,
+        stride: int = 1,
+        cut_trailing_dim: bool = False,
+        with_y_hist: bool = False,
+        data_padding: int = 0,
+        first_sample: int = 0,
+        last_sample: Optional[int] = None,
+        output_stride: int = 1,
+        nb_repeats: int = 1,
+        shuffle_subset: Optional[float] = None,
+        unpack_channels: bool = False,
+        mask_input: Optional[int] = None,
+        batch_processor: Optional[Callable[[np.ndarray], np.ndarray]] = None,
+        class_weights: Optional[Sequence[float]] = None,
+        **kwargs
+    ):
         """[summary]
 
         x and y can be mem-mapped numpy arrays or lazily loaded hdf5 (zarr, xarray) datasets. Dask arrays do not work since they are immutable.
@@ -147,9 +163,9 @@ class AudioSequence(keras.utils.Sequence):
         s1 = (self.last_sample - self.x_hist - 1) / self.stride
         self.allowed_batches = np.arange(s0, s1, dtype=np.uintp)  # choose from all existing batches
         if self.shuffle_subset is not None:  # only choose from a fixed subset of existing batches
-            self.allowed_batches = np.random.choice(self.allowed_batches,
-                                                    size=int(len(self.allowed_batches) * self.shuffle_subset),
-                                                    replace=False)
+            self.allowed_batches = np.random.choice(
+                self.allowed_batches, size=int(len(self.allowed_batches) * self.shuffle_subset), replace=False
+            )
 
         if y_offset is None:
             self.y_offset = int(self.x_hist / 2)
@@ -160,8 +176,8 @@ class AudioSequence(keras.utils.Sequence):
         if self.with_y_hist:
             self.weights = np.ones((self.batch_size, self.x_hist))
             if self.data_padding > 0:
-                self.weights[:, :self.data_padding] = 0
-                self.weights[:, -self.data_padding:] = 0
+                self.weights[:, : self.data_padding] = 0
+                self.weights[:, -self.data_padding :] = 0
             self.weights = self.weights[:, ::output_stride]
         else:
             self.weights = np.ones((self.batch_size,))
@@ -184,7 +200,11 @@ class AudioSequence(keras.utils.Sequence):
         if return_x:
             xx = np.zeros((len(self), self.batch_size, self.x_hist, *self.x.shape[1:]))  # this is probably more general
         if self.with_y_hist:
-            yy = np.zeros((len(self), self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes)) if self.with_y else None
+            yy = (
+                np.zeros((len(self), self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes))
+                if self.with_y
+                else None
+            )
         else:
             yy = np.zeros((len(self), self.batch_size, self.nb_classes)) if self.with_y else None
 
@@ -201,26 +221,42 @@ class AudioSequence(keras.utils.Sequence):
             if return_x:
                 xx = xx.reshape((len(self) * self.batch_size, self.x_hist, *self.x.shape[1:]))  # this is probably more general
             if self.with_y_hist:
-                yy = yy.reshape((len(self) * self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes)) if self.with_y else None
+                yy = (
+                    yy.reshape((len(self) * self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes))
+                    if self.with_y
+                    else None
+                )
             else:
                 yy = yy.reshape((len(self) * self.batch_size, self.nb_classes)) if self.with_y else None
 
         if self.with_y:
             out = (xx, yy)
         else:
-            out = (xx, )
+            out = (xx,)
         return out
 
     def __len__(self):
         """Number of batches."""
-        return int(self.nb_repeats * max(0, np.floor((self.nb_samples - ((self.stride*(self.batch_size-1)) + self.x_hist)) / (self.stride * (self.batch_size))) + 1))
+        return int(
+            self.nb_repeats
+            * max(
+                0,
+                np.floor(
+                    (self.nb_samples - ((self.stride * (self.batch_size - 1)) + self.x_hist))
+                    / (self.stride * (self.batch_size))
+                )
+                + 1,
+            )
+        )
 
     def __str__(self):
-        string = ['AudioSequence with {} batches each with {} items.\n'.format(len(self), self.batch_size),
-                  '   Total of {} samples with\n'.format(self.nb_samples),
-                  '   each x={} and\n'.format(self.x.shape[1:])]
-        string.append('   each y={}'.format(self.y.shape[1:])) if self.y is not None else 'no y.'
-        return ''.join(string)
+        string = [
+            "AudioSequence with {} batches each with {} items.\n".format(len(self), self.batch_size),
+            "   Total of {} samples with\n".format(self.nb_samples),
+            "   each x={} and\n".format(self.x.shape[1:]),
+        ]
+        string.append("   each y={}".format(self.y.shape[1:])) if self.y is not None else "no y."
+        return "".join(string)
 
     def __getitem__(self, idx):
         """Get item from AudioSequence
@@ -238,25 +274,29 @@ class AudioSequence(keras.utils.Sequence):
 
         if self.with_y:
             if self.with_y_hist:
-                batch_y = np.zeros((self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes), dtype=self.y.dtype)
+                batch_y = np.zeros(
+                    (self.batch_size, int(self.x_hist / self.output_stride), self.nb_classes), dtype=self.y.dtype
+                )
             else:
                 batch_y = np.zeros((self.batch_size, self.nb_classes), dtype=self.y.dtype)
 
         if self.shuffle:
             # pts = np.random.randint(self.first_sample / self.stride, (self.last_sample - self.x_hist - 1) / self.stride, self.batch_size)
-            pts = np.random.choice(self.allowed_batches,
-                                   size=self.batch_size,
-                                   replace=False)
+            pts = np.random.choice(self.allowed_batches, size=self.batch_size, replace=False)
         else:
-            pts = range(int(self.first_sample/self.stride) + idx * self.batch_size,
-                        int(self.first_sample/self.stride) + (idx + 1) * self.batch_size)
+            pts = range(
+                int(self.first_sample / self.stride) + idx * self.batch_size,
+                int(self.first_sample / self.stride) + (idx + 1) * self.batch_size,
+            )
 
         for cnt, bat in enumerate(pts):
-            batch_x[cnt, ...] = self.x[int(bat * self.stride):int(bat * self.stride + self.x_hist), ...].copy()
+            batch_x[cnt, ...] = self.x[int(bat * self.stride) : int(bat * self.stride + self.x_hist), ...].copy()
 
             if self.with_y:
                 if self.with_y_hist:
-                    batch_y[cnt, ...] = self.y[int(bat * self.stride):int(bat * self.stride + self.x_hist):self.output_stride, ...]
+                    batch_y[cnt, ...] = self.y[
+                        int(bat * self.stride) : int(bat * self.stride + self.x_hist) : self.output_stride, ...
+                    ]
                 else:
                     batch_y[cnt, ...] = self.y[int(bat * self.stride + self.y_offset), ...]
         if self.unpack_channels:
@@ -264,7 +304,7 @@ class AudioSequence(keras.utils.Sequence):
 
         # "mask" input
         if self.mask_input is not None:
-            batch_x[:, int(batch_x.shape[1]/2 - self.mask_input):int(batch_x.shape[1]/2 + self.mask_input), :] = 0
+            batch_x[:, int(batch_x.shape[1] / 2 - self.mask_input) : int(batch_x.shape[1] / 2 + self.mask_input), :] = 0
 
         if self.batch_processor is not None:
             batch_x = self.batch_processor(batch_x)
@@ -285,5 +325,5 @@ class AudioSequence(keras.utils.Sequence):
             if self.data_padding > 0:
                 out = (batch_x, batch_y, weights)
         else:
-            out = (batch_x, )
+            out = (batch_x,)
         return out

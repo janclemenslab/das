@@ -65,7 +65,7 @@ def _register_param(func):
 
 
 @dataclass
-class Param():
+class Param:
     """Base class for all parameters.
 
     Parameters are callables that return parameter values.
@@ -143,7 +143,7 @@ class Uniform(Param):
 
 
 @dataclass
-class Augmentation():
+class Augmentation:
     """Base class for all augmentations.
 
     Augmentations are callables that return the augmented input.
@@ -266,8 +266,8 @@ class Upsampling(Augmentation):
         Raises:
             ValueError: if 'lower' attr of factor is <1 (would correspond to downsampling).
         """
-        if hasattr(factor, 'lower') and factor.lower < 1:  # type: ignore
-            raise ValueError(f'Factor is {factor} - at the moment only upsampling (factors >= 1) is allowed.')
+        if hasattr(factor, "lower") and factor.lower < 1:  # type: ignore
+            raise ValueError(f"Factor is {factor} - at the moment only upsampling (factors >= 1) is allowed.")
         self.factor = factor
 
     def _apply(self, x):
@@ -281,11 +281,9 @@ class Upsampling(Augmentation):
 class MaskNoise(Augmentation):
     """Add noise or replace signal by noise for the full duration or a part of it."""
 
-    def __init__(self,
-                 std: Optional[Param] = None,
-                 mean: Optional[Param] = None,
-                 duration: Optional[Param] = None,
-                 add: bool = True):
+    def __init__(
+        self, std: Optional[Param] = None, mean: Optional[Param] = None, duration: Optional[Param] = None, add: bool = True
+    ):
         """
         Args:
             std (Optional[Param]): std of noise. Defaults to 1.
@@ -314,9 +312,9 @@ class MaskNoise(Augmentation):
             mask_start = np.random.randint(low=0, high=len_x - duration)
         noise = np.random.randn(duration, *x.shape[1:]) * self.std() + self.mean()
         if self.add:
-            x[mask_start:mask_start + duration, :] += noise
+            x[mask_start : mask_start + duration, :] += noise
         else:
-            x[mask_start:mask_start + duration, :] = noise
+            x[mask_start : mask_start + duration, :] = noise
         return x
 
     def __repr__(self):
@@ -338,7 +336,7 @@ class MaskMean(Augmentation):
         len_x = x.shape[0]
         duration = int(self.duration())
         mask_start = np.random.randint(low=0, high=len_x - duration)
-        x[mask_start:mask_start + duration, :] = np.mean(x[mask_start:mask_start + duration], axis=0)
+        x[mask_start : mask_start + duration, :] = np.mean(x[mask_start : mask_start + duration], axis=0)
         return x
 
 
@@ -377,7 +375,7 @@ class NotchFilter(Augmentation):
         return x
 
 
-class Augmentations():
+class Augmentations:
     """Bundles several augmentations."""
 
     def __init__(self, augmentations: List[Augmentation]):
@@ -400,14 +398,14 @@ class Augmentations():
 
     @classmethod
     def from_yaml(cls, filename: str):
-        aug_spec = yaml.safe_load(open(filename, 'r'))
+        aug_spec = yaml.safe_load(open(filename, "r"))
         return cls.from_dict(aug_spec)
 
     @classmethod
     def from_dict(cls, aug_spec: Dict):
         augs = []
         for name, args in aug_spec.items():
-            name = name.split('-', 1)[0]  # split off "-WHATEVER" suffix
+            name = name.split("-", 1)[0]  # split off "-WHATEVER" suffix
             params = dict()
             if args is not None:  # for augs without args
                 for a_name, a_arg in args.items():

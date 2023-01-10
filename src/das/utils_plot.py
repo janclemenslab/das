@@ -12,7 +12,7 @@ import itertools
 from typing import Optional, List
 
 
-def scalebar(length, dx=1, units='', label=None, axis=None, location='lower right', frameon=False, **kwargs):
+def scalebar(length, dx=1, units="", label=None, axis=None, location="lower right", frameon=False, **kwargs):
     """Add scalebar to axis.
 
     Usage:
@@ -40,15 +40,15 @@ def scalebar(length, dx=1, units='', label=None, axis=None, location='lower righ
     if axis is None:
         axis = plt.gca()
 
-    if 'dimension' not in kwargs:
-        kwargs['dimension'] = matplotlib_scalebar.dimension._Dimension(units)
+    if "dimension" not in kwargs:
+        kwargs["dimension"] = matplotlib_scalebar.dimension._Dimension(units)
 
     scalebar = ScaleBar(dx=dx, units=units, label=label, fixed_value=length, location=location, frameon=frameon, **kwargs)
     axis.add_artist(scalebar)
     return scalebar
 
 
-def remove_axes(axis=None, all=False, which='tblr'):
+def remove_axes(axis=None, all=False, which="tblr"):
     """Remove top & left border around plot or all axes & ticks.
 
     Args:
@@ -60,24 +60,24 @@ def remove_axes(axis=None, all=False, which='tblr'):
 
     # Hide the right and top spines
 
-    axis.spines['right'].set_visible(False)
-    axis.spines['top'].set_visible(False)
+    axis.spines["right"].set_visible(False)
+    axis.spines["top"].set_visible(False)
     # Only show ticks on the left and bottom spines
-    axis.yaxis.set_ticks_position('left')
-    axis.xaxis.set_ticks_position('bottom')
+    axis.yaxis.set_ticks_position("left")
+    axis.xaxis.set_ticks_position("bottom")
 
     if all:
         # Hide the left and bottom spines
-        axis.spines['left'].set_visible(False)
-        axis.spines['bottom'].set_visible(False)
+        axis.spines["left"].set_visible(False)
+        axis.spines["bottom"].set_visible(False)
         # Remove all tick labels
         axis.yaxis.set_ticks([])
         axis.xaxis.set_ticks([])
 
 
-def despine(which='tr', axis=None):
+def despine(which="tr", axis=None):
 
-    sides = {'t': 'top', 'b': 'bottom', 'l': 'left', 'r': 'right'}
+    sides = {"t": "top", "b": "bottom", "l": "left", "r": "right"}
 
     if axis is None:
         axis = plt.gca()
@@ -87,22 +87,22 @@ def despine(which='tr', axis=None):
         axis.spines[sides[side]].set_visible(False)
 
     # Hide the tick marks and labels
-    if 'r' in which:
-        axis.yaxis.set_ticks_position('left')
+    if "r" in which:
+        axis.yaxis.set_ticks_position("left")
 
-    if 't' in which:
-        axis.xaxis.set_ticks_position('bottom')
+    if "t" in which:
+        axis.xaxis.set_ticks_position("bottom")
 
-    if 'l' in which:
+    if "l" in which:
         axis.yaxis.set_ticks([])
 
-    if 'b' in which:
+    if "b" in which:
         axis.xaxis.set_ticks([])
-
 
 
 import string
 from itertools import cycle
+
 
 def label_axes(fig=None, labels=None, loc=None, **kwargs):
     """
@@ -128,36 +128,34 @@ def label_axes(fig=None, labels=None, loc=None, **kwargs):
     if labels is None:
         labels = string.ascii_uppercase
 
-    if 'size' not in kwargs:
-        kwargs['size'] = 13
+    if "size" not in kwargs:
+        kwargs["size"] = 13
 
     # if 'weight' not in kwargs:
     #     kwargs['weight'] = 'bold'
     # re-use labels rather than stop labeling
     labels = cycle(labels)
     if loc is None:
-        loc = (-0.2, .9)
+        loc = (-0.2, 0.9)
     for ax, lab in zip(fig.axes, labels):
-        ax.annotate(lab, xy=loc,
-                    xycoords='axes fraction',
-                    **kwargs)
+        ax.annotate(lab, xy=loc, xycoords="axes fraction", **kwargs)
 
 
-def downsample_plot(x,y, ds=20):
+def downsample_plot(x, y, ds=20):
     """Reduces complexity of exported pdfs w/o impairing visual appearance.
 
     Modified from pyqtgraph - downsampleMethod=peak.
     Keeps peaks so the envelope of the waveform is preserved.
     """
     n = len(x) // ds
-    x1 = np.empty((n,2))
-    x1[:] = x[:n*ds:ds,np.newaxis]
-    x0 = x1.reshape(n*2)
-    y1 = np.empty((n,2))
-    y2 = y[:n*ds].reshape((n, ds))
-    y1[:,0] = y2.max(axis=1)
-    y1[:,1] = y2.min(axis=1)
-    y0 = y1.reshape(n*2)
+    x1 = np.empty((n, 2))
+    x1[:] = x[: n * ds : ds, np.newaxis]
+    x0 = x1.reshape(n * 2)
+    y1 = np.empty((n, 2))
+    y2 = y[: n * ds].reshape((n, ds))
+    y1[:, 0] = y2.max(axis=1)
+    y1[:, 1] = y2.min(axis=1)
+    y0 = y1.reshape(n * 2)
     return x0, y0
 
 
@@ -228,7 +226,6 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
     # ncol : int
     #     Number of columns.
 
-
     # Other Parameters
     # ----------------
 
@@ -238,7 +235,7 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
     #################### same as `matplotlib.axes.Axes.legend` #####################
     handles, labels, extra_args, kwargs = mlegend._parse_legend_args([ax], *args, **kwargs)
     if len(extra_args):
-        raise TypeError('legend only accepts two non-keyword arguments')
+        raise TypeError("legend only accepts two non-keyword arguments")
 
     if col_labels is None and row_labels is None:
         ax.legend_ = mlegend.Legend(ax, handles, labels, **kwargs)
@@ -246,12 +243,12 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
         return ax.legend_
     #################### modifications for table legend ############################
     else:
-        ncol = kwargs.pop('ncol')
-        handletextpad = kwargs.pop('handletextpad', 0 if col_labels is None else -2)
+        ncol = kwargs.pop("ncol")
+        handletextpad = kwargs.pop("handletextpad", 0 if col_labels is None else -2)
         title_label = [title_label]
 
         # blank rectangle handle
-        extra = [Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor='none', linewidth=0)]
+        extra = [Rectangle((0, 0), 1, 1, fc="w", fill=False, edgecolor="none", linewidth=0)]
 
         # empty label
         empty = [""]
@@ -261,32 +258,40 @@ def tablelegend(ax, col_labels=None, row_labels=None, title_label="", *args, **k
 
         # organise the list of handles and labels for table construction
         if col_labels is None:
-            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (nrow, len(row_labels))
+            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (
+                nrow,
+                len(row_labels),
+            )
             leg_handles = extra * nrow
-            leg_labels  = row_labels
+            leg_labels = row_labels
         elif row_labels is None:
             assert ncol == len(col_labels), "ncol = %s, but should be equal to len(col_labels) = %s." % (ncol, len(col_labels))
             leg_handles = []
-            leg_labels  = []
+            leg_labels = []
         else:
-            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (nrow, len(row_labels))
+            assert nrow == len(row_labels), "nrow = len(handles) // ncol = %s, but should be equal to len(row_labels) = %s." % (
+                nrow,
+                len(row_labels),
+            )
             assert ncol == len(col_labels), "ncol = %s, but should be equal to len(col_labels) = %s." % (ncol, len(col_labels))
             leg_handles = extra + extra * nrow
-            leg_labels  = title_label + row_labels
+            leg_labels = title_label + row_labels
         for col in range(ncol):
             if col_labels is not None:
                 leg_handles += extra
-                leg_labels  += [col_labels[col]]
-            leg_handles += handles[col*nrow:(col+1)*nrow]
-            leg_labels  += empty * nrow
+                leg_labels += [col_labels[col]]
+            leg_handles += handles[col * nrow : (col + 1) * nrow]
+            leg_labels += empty * nrow
 
         # Create legend
-        ax.legend_ = mlegend.Legend(ax, leg_handles, leg_labels, ncol=ncol+int(row_labels is not None), handletextpad=handletextpad, **kwargs)
+        ax.legend_ = mlegend.Legend(
+            ax, leg_handles, leg_labels, ncol=ncol + int(row_labels is not None), handletextpad=handletextpad, **kwargs
+        )
         ax.legend_._remove_method = ax._remove_legend
         return ax.legend_
 
 
-def imshow_text(data, labels=None, ax=None, color_high='w', color_low='k', color_threshold=50, skip_zeros=False):
+def imshow_text(data, labels=None, ax=None, color_high="w", color_low="k", color_threshold=50, skip_zeros=False):
     """Text labels for individual cells of an imshow plot
 
     Args:
@@ -307,9 +312,9 @@ def imshow_text(data, labels=None, ax=None, color_high='w', color_low='k', color
     for x, y in itertools.product(range(data.shape[0]), range(data.shape[1])):
         if labels[y, x] == 0:
             continue
-        ax.text(x, y, f'{labels[y, x]:1.0f}',
-                ha='center', va='center',
-                c=color_high if data[y, x]>color_threshold else color_low)
+        ax.text(
+            x, y, f"{labels[y, x]:1.0f}", ha="center", va="center", c=color_high if data[y, x] > color_threshold else color_low
+        )
 
 
 def bar_text(ax=None, spacing=-20, to_int=True):
@@ -332,14 +337,14 @@ def bar_text(ax=None, spacing=-20, to_int=True):
         # Number of points between bar and label. Change to your liking.
         space = spacing
         # Vertical alignment for positive values
-        va = 'bottom'
+        va = "bottom"
 
         # If value of bar is negative: Place label below bar
         if y_value < 0:
             # Invert space to place label below
             space *= -1
             # Vertically align label at top
-            va = 'top'
+            va = "top"
 
         # Use Y value as label and format number with one decimal place
         if to_int:
@@ -349,14 +354,15 @@ def bar_text(ax=None, spacing=-20, to_int=True):
 
         # Create annotation
         ax.annotate(
-            label,                      # Use `label` as label
-            (x_value, y_value),         # Place label at end of the bar
-            xytext=(0, space),          # Vertically shift label by `space`
-            textcoords="offset points", # Interpret `xytext` as offset in points
-            ha='center',                # Horizontally center label
+            label,  # Use `label` as label
+            (x_value, y_value),  # Place label at end of the bar
+            xytext=(0, space),  # Vertically shift label by `space`
+            textcoords="offset points",  # Interpret `xytext` as offset in points
+            ha="center",  # Horizontally center label
             va=va,
-            color='w')                      # Vertically align label differently for
-                                        # positive and negative values.
+            color="w",
+        )  # Vertically align label differently for
+        # positive and negative values.
 
 
 def generate_colors(nb_colors: int = 1, start_color=None, start=0, step=1):
@@ -371,7 +377,7 @@ def generate_colors(nb_colors: int = 1, start_color=None, start=0, step=1):
     Returns:
         [type]: [description]
     """
-    cmap = colorcet.palette['glasbey_light'][start::step]
+    cmap = colorcet.palette["glasbey_light"][start::step]
     cmap = list(cmap)[:nb_colors]
     if start_color is not None:
         cmap.insert(0, start_color)
@@ -444,4 +450,3 @@ def annotate_segments(onset_seconds, offset_seconds, segment_names=None, tmin: f
             else:
                 label = None
             plt.axvspan(xmin=on, xmax=off, facecolor=color[unique_names.index(name)], alpha=0.25, label=label)
-

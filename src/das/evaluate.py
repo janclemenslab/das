@@ -8,12 +8,9 @@ from .event_utils import evaluate_eventtimes
 
 
 # to segment_utils
-def evaluate_segments(labels_test,
-                      labels_pred,
-                      class_names,
-                      confmat_as_pandas: bool = False,
-                      report_as_dict: bool = False,
-                      labels=None):
+def evaluate_segments(
+    labels_test, labels_pred, class_names, confmat_as_pandas: bool = False, report_as_dict: bool = False, labels=None
+):
     """
 
     Args:
@@ -36,17 +33,14 @@ def evaluate_segments(labels_test,
 
     conf_mat = sklearn.metrics.confusion_matrix(labels_test, labels_pred)
     if confmat_as_pandas:
-        conf_mat = pd.DataFrame(data=conf_mat,
-                                columns=['true ' + p for p in class_names],
-                                index=['pred ' + p for p in class_names])
+        conf_mat = pd.DataFrame(
+            data=conf_mat, columns=["true " + p for p in class_names], index=["pred " + p for p in class_names]
+        )
     if labels is None:
         labels = np.arange(len(class_names))
-    report = sklearn.metrics.classification_report(labels_test,
-                                                   labels_pred,
-                                                   labels=labels,
-                                                   target_names=class_names,
-                                                   output_dict=report_as_dict,
-                                                   digits=3)
+    report = sklearn.metrics.classification_report(
+        labels_test, labels_pred, labels=labels, target_names=class_names, output_dict=report_as_dict, digits=3
+    )
     return conf_mat, report
 
 
@@ -67,10 +61,12 @@ def evaluate_segment_timing(segment_labels_true, segment_labels_pred, samplerate
 
     # ensure evaluate_eventtimes returns nearest_predicted_onsets (nearest true event for each predicted event),
     # if not, rename var
-    segment_onsets_report, _, _, nearest_predicted_onsets = evaluate_eventtimes(segment_onsets_true, segment_onsets_pred,
-                                                                                samplerate, event_tol)
-    segment_offsets_report, _, _, nearest_predicted_offsets = evaluate_eventtimes(segment_offsets_true, segment_offsets_pred,
-                                                                                  samplerate, event_tol)
+    segment_onsets_report, _, _, nearest_predicted_onsets = evaluate_eventtimes(
+        segment_onsets_true, segment_onsets_pred, samplerate, event_tol
+    )
+    segment_offsets_report, _, _, nearest_predicted_offsets = evaluate_eventtimes(
+        segment_offsets_true, segment_offsets_pred, samplerate, event_tol
+    )
     return segment_onsets_report, segment_offsets_report, nearest_predicted_onsets, nearest_predicted_offsets
 
 
@@ -82,12 +78,14 @@ def segment_timing(labels, samplerate: float):
     return segment_onset_times, segment_offset_times
 
 
-def evaluate_probabilities(x,
-                           y,
-                           model: Optional[models.keras.models.Model] = None,
-                           params: Optional[Dict] = None,
-                           model_savename: Optional[str] = None,
-                           verbose: int = 1):
+def evaluate_probabilities(
+    x,
+    y,
+    model: Optional[models.keras.models.Model] = None,
+    params: Optional[Dict] = None,
+    model_savename: Optional[str] = None,
+    verbose: int = 1,
+):
     """[summary]
 
     evaluate_probabilities(x, y, model=keras_model, params=params_dict)
@@ -110,7 +108,7 @@ def evaluate_probabilities(x,
             model, params = utils.load_model_and_params(model_savename)
         else:
             raise ValueError(
-                f'Required: Either a model and params OR a model_savename so we can load model and params. But model={model}, params={params}, model_savename={model_savename}.'
+                f"Required: Either a model and params OR a model_savename so we can load model and params. But model={model}, params={params}, model_savename={model_savename}."
             )
 
     # do not prepend padding since we create y from the generator
@@ -123,40 +121,38 @@ def evaluate_probabilities(x,
 
 
 def evaluate(savename: str, custom_objects: Optional[Dict[str, Callable]] = None, full_output: bool = True, verbose: int = 1):
-    logging.info('Loading last best model.')
+    logging.info("Loading last best model.")
     model, params = utils.load_model_and_params(savename, custom_objects=custom_objects)
     logging.info(model.summary())
 
     logging.info(f"Loading data from {params['data_dir']}.")
-    d = io.load(params['data_dir'], x_suffix=params['x_suffix'], y_suffix=params['y_suffix'])
+    d = io.load(params["data_dir"], x_suffix=params["x_suffix"], y_suffix=params["y_suffix"])
 
     output: Dict[str, Any] = dict()
-    if len(d['test']['x']) < params['nb_hist']:
-        logging.info('No test data - skipping final evaluation step.')
+    if len(d["test"]["x"]) < params["nb_hist"]:
+        logging.info("No test data - skipping final evaluation step.")
         if full_output:
             return None, None, output
         else:
             return None, None
     else:
-        logging.info('predicting')
-        x_test, y_test, y_pred = evaluate_probabilities(x=d['test']['x'],
-                                                        y=d['test']['y'],
-                                                        model=model,
-                                                        params=params,
-                                                        verbose=verbose)
+        logging.info("predicting")
+        x_test, y_test, y_pred = evaluate_probabilities(
+            x=d["test"]["x"], y=d["test"]["y"], model=model, params=params, verbose=verbose
+        )
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logging.info('evaluating')
-        conf_mat, report = evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+        logging.info("evaluating")
+        conf_mat, report = evaluate_segments(labels_test, labels_pred, params["class_names"], report_as_dict=True)
         logging.info(conf_mat)
         logging.info(report)
-        output['x_test'] = x_test
-        output['y_test'] = y_test
-        output['y_pred'] = y_pred
-        output['labels_test'] = labels_test
-        output['labels_pred'] = labels_pred
+        output["x_test"] = x_test
+        output["y_test"] = y_test
+        output["y_pred"] = y_pred
+        output["labels_test"] = labels_test
+        output["labels_pred"] = labels_pred
         if full_output:
             return conf_mat, report, output
         else:

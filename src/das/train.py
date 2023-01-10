@@ -9,13 +9,14 @@ import os
 import yaml
 import dask.array as da
 from typing import List, Optional, Tuple, Dict, Any, Union
-from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  #, timeseries
+from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  # , timeseries
 
 logger = logging.getLogger(__name__)
 
 try:  # fixes cuDNN error when using LSTM layer
     import tensorflow as tf
-    physical_devices = tf.config.list_physical_devices('GPU')
+
+    physical_devices = tf.config.list_physical_devices("GPU")
     if physical_devices:
         for device in physical_devices:
             tf.config.experimental.set_memory_growth(device, enable=True)
@@ -23,63 +24,65 @@ except Exception as e:
     logger.exception(e)
 
 
-def train(*,
-          data_dir: str,
-          x_suffix: str = '',
-          y_suffix: str = '',
-          save_dir: str = './',
-          save_prefix: Optional[str] = None,
-          save_name: Optional[str] = None,
-          model_name: str = 'tcn',
-          nb_filters: int = 16,
-          kernel_size: int = 16,
-          nb_conv: int = 3,
-          use_separable: List[bool] = False,
-          nb_hist: int = 1024,
-          ignore_boundaries: bool = True,
-          batch_norm: bool = True,
-          nb_pre_conv: int = 0,
-          pre_nb_conv: int = 3,
-          pre_nb_dft: int = 64,
-          pre_kernel_size: int = 3,
-          pre_nb_filters: int = 16,
-          upsample: bool = True,
-          dilations: Optional[List[int]] = None,
-          nb_lstm_units: int = 0,
-          verbose: int = 2,
-          batch_size: int = 32,
-          nb_epoch: int = 400,
-          learning_rate: Optional[float] = None,
-          reduce_lr: bool = False,
-          reduce_lr_patience: int = 5,
-          fraction_data: Optional[float] = None,
-          first_sample_train: Optional[int] = 0,
-          last_sample_train: Optional[int] = None,
-          first_sample_val: Optional[int] = 0,
-          last_sample_val: Optional[int] = None,
-          seed: Optional[int] = None,
-          batch_level_subsampling: bool = False,
-          augmentations: Optional[str] = None,
-          tensorboard: bool = False,
-          wandb_api_token: Optional[str] = None,
-          wandb_project: Optional[str] = None,
-          wandb_entity: Optional[str] = None,
-          log_messages: bool = False,
-          nb_stacks: int = 2,
-          with_y_hist: bool = True,
-          balance: bool = False,
-          version_data: bool = True,
-          post_opt: bool = False,
-          post_opt_nb_workers: int = -1,
-          post_opt_fill_gaps_min: float = 0.0005,
-          post_opt_fill_gaps_max: float = 1.0,
-          post_opt_fill_gaps_steps: int = 20,
-          post_opt_min_len_min: float = 0.0005,
-          post_opt_min_len_max: float = 1.0,
-          post_opt_min_len_steps: int = 20,
-          resnet_compute: bool = False,
-          resnet_train: bool = False,
-          _qt_progress: bool = False) -> Tuple[keras.Model, Dict[str, Any], keras.callbacks.History]:
+def train(
+    *,
+    data_dir: str,
+    x_suffix: str = "",
+    y_suffix: str = "",
+    save_dir: str = "./",
+    save_prefix: Optional[str] = None,
+    save_name: Optional[str] = None,
+    model_name: str = "tcn",
+    nb_filters: int = 16,
+    kernel_size: int = 16,
+    nb_conv: int = 3,
+    use_separable: List[bool] = False,
+    nb_hist: int = 1024,
+    ignore_boundaries: bool = True,
+    batch_norm: bool = True,
+    nb_pre_conv: int = 0,
+    pre_nb_conv: int = 3,
+    pre_nb_dft: int = 64,
+    pre_kernel_size: int = 3,
+    pre_nb_filters: int = 16,
+    upsample: bool = True,
+    dilations: Optional[List[int]] = None,
+    nb_lstm_units: int = 0,
+    verbose: int = 2,
+    batch_size: int = 32,
+    nb_epoch: int = 400,
+    learning_rate: Optional[float] = None,
+    reduce_lr: bool = False,
+    reduce_lr_patience: int = 5,
+    fraction_data: Optional[float] = None,
+    first_sample_train: Optional[int] = 0,
+    last_sample_train: Optional[int] = None,
+    first_sample_val: Optional[int] = 0,
+    last_sample_val: Optional[int] = None,
+    seed: Optional[int] = None,
+    batch_level_subsampling: bool = False,
+    augmentations: Optional[str] = None,
+    tensorboard: bool = False,
+    wandb_api_token: Optional[str] = None,
+    wandb_project: Optional[str] = None,
+    wandb_entity: Optional[str] = None,
+    log_messages: bool = False,
+    nb_stacks: int = 2,
+    with_y_hist: bool = True,
+    balance: bool = False,
+    version_data: bool = True,
+    post_opt: bool = False,
+    post_opt_nb_workers: int = -1,
+    post_opt_fill_gaps_min: float = 0.0005,
+    post_opt_fill_gaps_max: float = 1.0,
+    post_opt_fill_gaps_steps: int = 20,
+    post_opt_min_len_min: float = 0.0005,
+    post_opt_min_len_max: float = 1.0,
+    post_opt_min_len_steps: int = 20,
+    resnet_compute: bool = False,
+    resnet_train: bool = False,
+    _qt_progress: bool = False,
+) -> Tuple[keras.Model, Dict[str, Any], keras.callbacks.History]:
     """Train a DAS network.
 
     Args:
@@ -207,7 +210,7 @@ def train(*,
             model (keras.Model)
             params (Dict[str, Any])
             history (keras.callbacks.History)
-        """
+    """
     # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
     #        The queue is used to transmit progress updates to the GUI,
     #        the event is set in the GUI to stop training.
@@ -224,10 +227,11 @@ def train(*,
         return_sequences = True
         stride = nb_hist
         y_offset = 0
-        sample_weight_mode = 'temporal'
+        sample_weight_mode = "temporal"
         if ignore_boundaries:
-            data_padding = int(np.ceil(
-                kernel_size * nb_conv))  # this does not completely avoid boundary effects but should minimize them sufficiently
+            data_padding = int(
+                np.ceil(kernel_size * nb_conv)
+            )  # this does not completely avoid boundary effects but should minimize them sufficiently
             stride = stride - 2 * data_padding
     else:  # classification
         return_sequences = False
@@ -237,76 +241,84 @@ def train(*,
 
     if stride <= 0:
         raise ValueError(
-            'Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries'
+            "Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries"
         )
 
     if not upsample:
-        output_stride = int(2**nb_pre_conv)
+        output_stride = int(2 ** nb_pre_conv)
     else:
         output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
 
     if save_prefix is None:
-        save_prefix = ''
+        save_prefix = ""
 
     if len(save_prefix):
-        save_prefix = save_prefix + '_'
+        save_prefix = save_prefix + "_"
     params = locals()
-    del params['_qt_progress']
+    del params["_qt_progress"]
 
     # remove learning rate param if not set so the value from the model def is used
-    if params['learning_rate'] is None:
-        del params['learning_rate']
+    if params["learning_rate"] is None:
+        del params["learning_rate"]
 
-    if '_multi' in model_name:
-        params['unpack_channels'] = True
+    if "_multi" in model_name:
+        params["unpack_channels"] = True
 
-    logger.info(f'Loading data from {data_dir}.')
+    logger.info(f"Loading data from {data_dir}.")
     d = io.load(data_dir, x_suffix=x_suffix, y_suffix=y_suffix)
 
     params.update(d.attrs)  # add metadata from data.attrs to params for saving
 
     if version_data:
         logger.info("Versioning the data:")
-        params['data_hash'] = data_hash.hash_data(data_dir)
+        params["data_hash"] = data_hash.hash_data(data_dir)
         logger.info(f"   MD5 hash of {data_dir} is")
         logger.info(f"   {params['data_hash']}")
 
-    sample_bounds_provided = first_sample_train is not None and last_sample_train is not None and first_sample_val is not None and last_sample_val is not None
+    sample_bounds_provided = (
+        first_sample_train is not None
+        and last_sample_train is not None
+        and first_sample_val is not None
+        and last_sample_val is not None
+    )
 
     if fraction_data is not None and not sample_bounds_provided:
         if fraction_data > 1.0:  # seconds
             logger.info(
                 f"{fraction_data} seconds corresponds to {fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']):1.4f} of the training data."
             )
-            fraction_data = np.min((fraction_data / (d['train']['x'].shape[0] / d.attrs['samplerate_x_Hz']), 1.0))
+            fraction_data = np.min((fraction_data / (d["train"]["x"].shape[0] / d.attrs["samplerate_x_Hz"]), 1.0))
         elif fraction_data < 1.0:
             logger.info(f"Using {fraction_data:1.4f} of the training and validation data.")
 
-    if fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0:  # train on a subset
+    if (
+        fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0
+    ):  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(d['train']['x'].shape[0],
-                                                               fraction_data,
-                                                               min_nb_samples,
-                                                               seed=seed)
-        first_sample_val, last_sample_val = data.sub_range(d['val']['x'].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_train, last_sample_train = data.sub_range(
+            d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed
+        )
+        first_sample_val, last_sample_val = data.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
     elif sample_bounds_provided:
         logger.info("Using provided start/end samples:")
         logger.info(f"Train: {first_sample_train}:{last_sample_train}, Val: {first_sample_val}:{last_sample_val}.")
 
     # TODO clarify nb_channels, nb_freq semantics - always [nb_samples,..., nb_channels] -  nb_freq is ill-defined for 2D data
-    params.update({
-        'nb_freq': d['train']['x'].shape[1],
-        'nb_channels': d['train']['x'].shape[-1],
-        'nb_classes': len(params['class_names']),
-        'first_sample_train': first_sample_train,
-        'last_sample_train': last_sample_train,
-        'first_sample_val': first_sample_val,
-        'last_sample_val': last_sample_val,
-    })
-    logger.info('Parameters:')
+    params.update(
+        {
+            "nb_freq": d["train"]["x"].shape[1],
+            "nb_channels": d["train"]["x"].shape[-1],
+            "nb_classes": len(params["class_names"]),
+            "first_sample_train": first_sample_train,
+            "last_sample_train": last_sample_train,
+            "first_sample_val": first_sample_val,
+            "last_sample_val": last_sample_val,
+        }
+    )
+    logger.info("Parameters:")
     logger.info(params)
 
-    logger.info('Preparing data')
+    logger.info("Preparing data")
     if fraction_data is not None and batch_level_subsampling:  # train on a subset
         np.random.seed(seed)
         shuffle_subset = fraction_data
@@ -315,39 +327,43 @@ def train(*,
 
     if augmentations:
         if isinstance(augmentations, str):
-            logger.info(f'Initializing augmentations from {augmentations}.')
-            aug_params = yaml.safe_load(open(augmentations, 'r'))
+            logger.info(f"Initializing augmentations from {augmentations}.")
+            aug_params = yaml.safe_load(open(augmentations, "r"))
         else:
             aug_params = augmentations
-        params['augmentations'] = aug_params
-        augs = augmentation.Augmentations.from_dict(params['augmentations'])
-        logger.info(f'   Got {len(augs)} augmentations.')
+        params["augmentations"] = aug_params
+        augs = augmentation.Augmentations.from_dict(params["augmentations"])
+        logger.info(f"   Got {len(augs)} augmentations.")
     else:
         augs = None
 
-    params['class_weights'] = None
+    params["class_weights"] = None
     if balance:
         logger.info("Balancing classes:")
         logger.info("   Computing class weights.")
-        params['class_weights'] = data.compute_class_weights(d['train']['y'][first_sample_train:last_sample_train])
+        params["class_weights"] = data.compute_class_weights(d["train"]["y"][first_sample_train:last_sample_train])
         logger.info(f"   {params['class_weights']}")
 
-    data_gen = data.AudioSequence(d['train']['x'],
-                                  d['train']['y'],
-                                  shuffle=True,
-                                  shuffle_subset=shuffle_subset,
-                                  first_sample=first_sample_train,
-                                  last_sample=last_sample_train,
-                                  nb_repeats=1,
-                                  batch_processor=augs,
-                                  **params)
-    val_gen = data.AudioSequence(d['val']['x'],
-                                 d['val']['y'],
-                                 shuffle=False,
-                                 shuffle_subset=shuffle_subset,
-                                 first_sample=first_sample_val,
-                                 last_sample=last_sample_val,
-                                 **params)
+    data_gen = data.AudioSequence(
+        d["train"]["x"],
+        d["train"]["y"],
+        shuffle=True,
+        shuffle_subset=shuffle_subset,
+        first_sample=first_sample_train,
+        last_sample=last_sample_train,
+        nb_repeats=1,
+        batch_processor=augs,
+        **params,
+    )
+    val_gen = data.AudioSequence(
+        d["val"]["x"],
+        d["val"]["y"],
+        shuffle=False,
+        shuffle_subset=shuffle_subset,
+        first_sample=first_sample_val,
+        last_sample=last_sample_val,
+        **params,
+    )
     # data_gen = timeseries.timeseries_dataset_from_array(d['train']['x'], d['train']['y'],
     #                               sequence_length=params['nb_hist'], sequence_stride=stride,
     #                               shuffle=True, batch_size=batch_size,
@@ -362,26 +378,26 @@ def train(*,
     logger.info(f"Validation data:")
     logger.info(f"   {val_gen}")
 
-    logger.info('Building network')
+    logger.info("Building network")
     try:
         model = models.model_dict[model_name](**params)
     except KeyError as e:
         logger.exception(e)
-        raise ValueError(f'Model name was {model_name} but only {list(models.model_dict)} allowed.')
+        raise ValueError(f"Model name was {model_name} but only {list(models.model_dict)} allowed.")
 
     logger.info(model.summary())
     os.makedirs(os.path.abspath(save_dir), exist_ok=True)
     if save_name is None:
-        save_name = time.strftime('%Y%m%d_%H%M%S')
-    save_name = '{0}/{1}{2}'.format(save_dir, save_prefix, save_name)
-    params['save_name'] = save_name
-    logger.info(f'Will save to {save_name}.')
+        save_name = time.strftime("%Y%m%d_%H%M%S")
+    save_name = "{0}/{1}{2}".format(save_dir, save_prefix, save_name)
+    params["save_name"] = save_name
+    logger.info(f"Will save to {save_name}.")
 
     # SET UP CALLBACKS
     checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
     callbacks = [
-        ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor='val_loss', verbose=1),
-        EarlyStopping(monitor='val_loss', patience=20, verbose=1),
+        ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor="val_loss", verbose=1),
+        EarlyStopping(monitor="val_loss", patience=20, verbose=1),
     ]
 
     if reduce_lr:
@@ -394,7 +410,7 @@ def train(*,
         callbacks.append(TensorBoard(log_dir=save_dir))
 
     if wandb_api_token and wandb_project:  # could also get those from env vars!
-        del params['wandb_api_token']
+        del params["wandb_api_token"]
         wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
         if wandb:
             callbacks.append(wandb.callback())
@@ -402,7 +418,7 @@ def train(*,
     utils.save_params(params, save_name)
 
     # TRAIN NETWORK
-    logger.info('start training')
+    logger.info("start training")
     fit_hist = model.fit(
         data_gen,
         epochs=nb_epoch,
@@ -416,56 +432,58 @@ def train(*,
 
     # OPTIMIZE POSTPROCESSING
     if post_opt:
-        logger.info('OPTIMIZING POSTPROCESSING:')
+        logger.info("OPTIMIZING POSTPROCESSING:")
 
         gap_durs = np.geomspace(float(post_opt_fill_gaps_min), float(post_opt_fill_gaps_max), int(post_opt_fill_gaps_steps))
         min_lens = np.geomspace(float(post_opt_min_len_min), float(post_opt_min_len_max), int(post_opt_min_len_steps))
 
-        best_gap_dur, best_min_len, scores = postprocessing.optimize(dataset_path=data_dir,
-                                                                     model_save_name=save_name,
-                                                                     gap_durs=gap_durs,
-                                                                     min_lens=min_lens,
-                                                                     nb_workers=post_opt_nb_workers)
+        best_gap_dur, best_min_len, scores = postprocessing.optimize(
+            dataset_path=data_dir,
+            model_save_name=save_name,
+            gap_durs=gap_durs,
+            min_lens=min_lens,
+            nb_workers=post_opt_nb_workers,
+        )
 
         logger.info(f"  Score on training data changed from {scores['train_pre']:1.4} to {scores['train']:1.4}.")
-        if scores['val_pre'] is not None:
+        if scores["val_pre"] is not None:
             logger.info(f"  Score on validation data changed from {scores['val_pre']:1.4} to {scores['val']:1.4}.")
-        logger.info('  Optimal parameters for postprocessing:')
-        logger.info(f'     gap_dur={best_gap_dur} seconds')
-        logger.info(f'     min_len={best_min_len} seconds')
+        logger.info("  Optimal parameters for postprocessing:")
+        logger.info(f"     gap_dur={best_gap_dur} seconds")
+        logger.info(f"     min_len={best_min_len} seconds")
 
-        params['post_opt'] = {
-            'gap_dur': best_gap_dur,
-            'min_len': best_min_len,
-            'score_train': scores['train'],
-            'score_val': scores['val'],
+        params["post_opt"] = {
+            "gap_dur": best_gap_dur,
+            "min_len": best_min_len,
+            "score_train": scores["train"],
+            "score_val": scores["val"],
         }
 
         logger.info(f'   Updating params file "{save_name}_params.yaml" with the results.')
         utils.save_params(params, save_name)
-        logger.info('DONE')
+        logger.info("DONE")
 
     # TEST
     # TODO use postprocessing params
-    logger.info('TESTING:')
-    if 'test' not in d or len(d['test']['x']) < nb_hist:
-        logger.info('   No test data - skipping final evaluation step.')
+    logger.info("TESTING:")
+    if "test" not in d or len(d["test"]["x"]) < nb_hist:
+        logger.info("   No test data - skipping final evaluation step.")
     else:
-        logger.info(f'   Re-loading last best model from {checkpoint_save_name}.')
+        logger.info(f"   Re-loading last best model from {checkpoint_save_name}.")
         model.load_weights(checkpoint_save_name)
 
-        logger.info('   Predicting.')
-        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d['test']['x'], y=d['test']['y'], model=model, params=params)
+        logger.info("   Predicting.")
+        x_test, y_test, y_pred = evaluate.evaluate_probabilities(x=d["test"]["x"], y=d["test"]["y"], model=model, params=params)
 
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logger.info('   Evaluating.')
-        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params['class_names'], report_as_dict=True)
+        logger.info("   Evaluating.")
+        conf_mat, report = evaluate.evaluate_segments(labels_test, labels_pred, params["class_names"], report_as_dict=True)
         logger.info(conf_mat)
         logger.info(report)
-        params['conf_mat'] = conf_mat.tolist()
-        params['report'] = report
+        params["conf_mat"] = conf_mat.tolist()
+        params["report"] = report
         logger.info(f'   Updating params file "{save_name}_params.yaml" with the test results.')
         utils.save_params(params, save_name)
 
@@ -473,21 +491,21 @@ def train(*,
             wandb.log_test_results(report)
 
         save_filename = "{0}_results.h5".format(save_name)
-        logger.info(f'   Saving to {save_filename}.')
-        del params['data_splits']  # paths with '/' break flammkuchen/pytables
+        logger.info(f"   Saving to {save_filename}.")
+        del params["data_splits"]  # paths with '/' break flammkuchen/pytables
         results_dict = {
-            'fit_hist': dict(fit_hist.history),
-            'confusion_matrix': conf_mat,
-            'classification_report': report,
-            'x_test': x_test,
-            'y_test': y_test,
+            "fit_hist": dict(fit_hist.history),
+            "confusion_matrix": conf_mat,
+            "classification_report": report,
+            "x_test": x_test,
+            "y_test": y_test,
             # 'y_pred': np.array(y_pred),
-            'labels_test': labels_test,
+            "labels_test": labels_test,
             # 'labels_pred': np.array(labels_pred),
-            'params': params,
+            "params": params,
         }
         fl.save(save_filename, results_dict)
-        da.to_hdf5(save_filename, {'/y_pred': y_pred, '/labels_pred': labels_pred})
+        da.to_hdf5(save_filename, {"/y_pred": y_pred, "/labels_pred": labels_pred})
 
-    logger.info('DONE.')
+    logger.info("DONE.")
     return model, params, fit_hist

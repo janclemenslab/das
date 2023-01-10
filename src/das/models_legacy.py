@@ -17,11 +17,22 @@ def _register_as_model(func):
 
 
 @_register_as_model
-def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
-        nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
-        batch_norm=False, return_sequences=False, sample_weight_mode: str = None,
-        learning_rate: float = 0.0001,
-        **kwignored):
+def cnn(
+    nb_freq,
+    nb_classes,
+    nb_channels=1,
+    nb_hist=1,
+    nb_filters=16,
+    nb_stacks=2,
+    kernel_size=3,
+    nb_conv=3,
+    loss="categorical_crossentropy",
+    batch_norm=False,
+    return_sequences=False,
+    sample_weight_mode: str = None,
+    learning_rate: float = 0.0001,
+    **kwignored
+):
     """CNN for single-frequency and multi-channel data - uses 1D convolutions.
 
     Args:
@@ -46,33 +57,45 @@ def cnn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
         [type]: [description]
     """
     if return_sequences:
-        raise ValueError('Cannot perform regression with CNN.')
+        raise ValueError("Cannot perform regression with CNN.")
     inp = kl.Input(shape=(nb_hist, nb_channels))
     out = inp
     for conv in range(nb_conv):
         for _ in range(nb_stacks):
-            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding='same', activation='relu')(out)
+            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
     out = kl.Flatten()(out)
-    out = kl.Dense(nb_classes * 4, activation='relu')(out)
-    out = kl.Dense(nb_classes * 2, activation='relu')(out)
-    out = kl.Dense(nb_classes, activation='relu')(out)
+    out = kl.Dense(nb_classes * 4, activation="relu")(out)
+    out = kl.Dense(nb_classes * 2, activation="relu")(out)
+    out = kl.Dense(nb_classes, activation="relu")(out)
     out = kl.Activation("softmax")(out)
 
-    model = keras.models.Model(inp, out, name='FCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(inp, out, name="FCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
+    )
     return model
 
 
 @_register_as_model
-def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
-          nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
-          batch_norm=False, return_sequences=False, sample_weight_mode: str = None,
-          learning_rate: float = 0.0001,
-          **kwignored):
+def cnn2D(
+    nb_freq,
+    nb_classes,
+    nb_channels=1,
+    nb_hist=1,
+    nb_filters=16,
+    nb_stacks=2,
+    kernel_size=3,
+    nb_conv=3,
+    loss="categorical_crossentropy",
+    batch_norm=False,
+    return_sequences=False,
+    sample_weight_mode: str = None,
+    learning_rate: float = 0.0001,
+    **kwignored
+):
     """CNN for multi-frequency and multi-channel data - uses 2D convolutions.
 
     Args:
@@ -100,32 +123,46 @@ def cnn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = inp
     for conv in range(nb_conv):
         for stack in range(nb_stacks):
-            out = kl.Conv2D(nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding='same', activation='relu')(out)
+            out = kl.Conv2D(
+                nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
+            )(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
 
         out = kl.MaxPooling2D((min(int(out.shape[1]), 2), 2))(out)
     out = kl.Flatten()(out)
-    out = kl.Dense(int(nb_classes * 8 * nb_filters), activation='relu')(out)
+    out = kl.Dense(int(nb_classes * 8 * nb_filters), activation="relu")(out)
     out = kl.Dropout(0.1)(out)
-    out = kl.Dense(int(nb_classes * 4 * nb_filters), activation='relu')(out)
+    out = kl.Dense(int(nb_classes * 4 * nb_filters), activation="relu")(out)
     out = kl.Dropout(0.1)(out)
-    out = kl.Dense(int(nb_classes * 2 * nb_filters), activation='relu')(out)
+    out = kl.Dense(int(nb_classes * 2 * nb_filters), activation="relu")(out)
     out = kl.Dropout(0.1)(out)
-    out = kl.Dense(nb_classes, activation='relu')(out)
+    out = kl.Dense(nb_classes, activation="relu")(out)
     out = kl.Activation("softmax")(out)
 
-    model = keras.models.Model(inp, out, name='CNN2D')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(inp, out, name="CNN2D")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
+    )
     return model
 
 
 @_register_as_model
-def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
-        nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
-        batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
-        learning_rate: float = 0.0001,
-        **kwignored):
+def fcn(
+    nb_freq,
+    nb_classes,
+    nb_channels=1,
+    nb_hist=1,
+    nb_filters=16,
+    nb_stacks=2,
+    kernel_size=3,
+    nb_conv=3,
+    loss="categorical_crossentropy",
+    batch_norm=False,
+    return_sequences=True,
+    sample_weight_mode: str = None,
+    learning_rate: float = 0.0001,
+    **kwignored
+):
     """[summary]
 
     Args:
@@ -149,34 +186,44 @@ def fcn(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = inp
     for conv in range(nb_conv):
         for _ in range(nb_stacks):
-            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size,
-                            padding='same', activation='relu')(out)
+            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
     for conv in range(nb_conv, 0, -1):
         out = kl.UpSampling1D(size=2)(out)
-        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size,
-                        padding='same', activation='relu')(out)
+        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
 
     if not return_sequences:
         out = kl.Flatten()(out)
     out = kl.Dense(nb_classes)(out)
     out = kl.Activation("softmax")(out)
 
-    model = keras.models.Model(inp, out, name='FCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(inp, out, name="FCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
+    )
 
     return model
 
 
 @_register_as_model
-def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
-          nb_stacks=2, kernel_size=3, nb_conv=3, loss="categorical_crossentropy",
-          batch_norm=False, return_sequences=True, sample_weight_mode: str = None,
-          learning_rate: float = 0.0005,
-          **kwignored):
+def fcn2D(
+    nb_freq,
+    nb_classes,
+    nb_channels=1,
+    nb_hist=1,
+    nb_filters=16,
+    nb_stacks=2,
+    kernel_size=3,
+    nb_conv=3,
+    loss="categorical_crossentropy",
+    batch_norm=False,
+    return_sequences=True,
+    sample_weight_mode: str = None,
+    learning_rate: float = 0.0005,
+    **kwignored
+):
     """[summary]
 
     Args:
@@ -200,33 +247,49 @@ def fcn2D(nb_freq, nb_classes, nb_channels=1, nb_hist=1, nb_filters=16,
     out = inp
     for conv in range(nb_conv):
         for stack in range(nb_stacks):
-            out = kl.Conv2D(nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding='same', activation='relu')(out)
+            out = kl.Conv2D(
+                nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
+            )(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling2D((min(int(out.shape[1]), 2), 2))(out)
     for conv in range(nb_conv, 0, -1):
-        out = kl.Conv2D(int(nb_filters * (conv / 2)), (max(1, int(out.shape[1])), kernel_size), padding='same', activation='relu')(out)
+        out = kl.Conv2D(
+            int(nb_filters * (conv / 2)), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
+        )(out)
         out = kl.BatchNormalization()(out) if batch_norm else out
 
     out = kl.Flatten()(out)
-    out = kl.Dense(nb_classes, activation='relu')(out)
+    out = kl.Dense(nb_classes, activation="relu")(out)
     out = kl.Activation("softmax")(out)
 
-    model = keras.models.Model(inp, out, name='CNN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True),
-                  loss=loss)
+    model = keras.models.Model(inp, out, name="CNN")
+    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss)
     return model
 
 
 @_register_as_model
-def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-            nb_conv: int = 1, loss: str = "categorical_crossentropy",
-            dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
-            use_skip_connections: bool = True, return_sequences: bool = True,
-            dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0001, upsample: bool = True,
-            out_activation: str = 'softmax',
-            use_separable: bool = False,
-            **kwignored):
+def tcn_seq(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    nb_filters: int = 16,
+    kernel_size: int = 3,
+    nb_conv: int = 1,
+    loss: str = "categorical_crossentropy",
+    dilations: List[int] = [1, 2, 4, 8, 16],
+    activation: str = "norm_relu",
+    use_skip_connections: bool = True,
+    return_sequences: bool = True,
+    dropout_rate: float = 0.00,
+    padding: str = "same",
+    sample_weight_mode: str = None,
+    nb_pre_conv: int = 0,
+    learning_rate: float = 0.0001,
+    upsample: bool = True,
+    out_activation: str = "softmax",
+    use_separable: bool = False,
+    **kwignored
+):
     """Create TCN network.
 
     Args:
@@ -257,22 +320,34 @@ def tcn_seq(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     for conv in range(nb_pre_conv):
-        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding='same', activation='relu')(out)
+        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
         out = kl.BatchNormalization()(out)
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations, activation=activation,
-                      use_skip_connections=use_skip_connections, padding=padding, dropout_rate=dropout_rate, return_sequences=return_sequences,
-                      use_separable=use_separable)(out)
+    x = tcn_layer.TCN(
+        nb_filters=nb_filters,
+        kernel_size=kernel_size,
+        nb_stacks=nb_conv,
+        dilations=dilations,
+        activation=activation,
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        use_separable=use_separable,
+    )(out)
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation(out_activation)(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
     output_layer = x
 
-    model = keras.models.Model(input_layer, output_layer, name='TCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(input_layer, output_layer, name="TCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        loss=loss,
+        sample_weight_mode=sample_weight_mode,
+    )
     return model
 
 
@@ -283,14 +358,27 @@ def tcn(*args, **kwargs):
 
 
 @_register_as_model
-def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-            nb_conv: int = 1, loss: str = "categorical_crossentropy",
-            dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
-            use_skip_connections: bool = True, return_sequences: bool = True,
-            dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-            nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
-            use_separable: bool = False,
-            **kwignored):
+def tcn_tcn(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    nb_filters: int = 16,
+    kernel_size: int = 3,
+    nb_conv: int = 1,
+    loss: str = "categorical_crossentropy",
+    dilations: List[int] = [1, 2, 4, 8, 16],
+    activation: str = "norm_relu",
+    use_skip_connections: bool = True,
+    return_sequences: bool = True,
+    dropout_rate: float = 0.00,
+    padding: str = "same",
+    sample_weight_mode: str = None,
+    nb_pre_conv: int = 0,
+    learning_rate: float = 0.0005,
+    upsample: bool = True,
+    use_separable: bool = False,
+    **kwignored
+):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
     Args:
@@ -324,37 +412,70 @@ def tcn_tcn(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 1
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
-        out = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_pre_conv, dilations=dilations,
-                            activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                            dropout_rate=dropout_rate, return_sequences=return_sequences,
-                            use_separable=use_separable, name='frontend')(out)
-        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
+        out = tcn_layer.TCN(
+            nb_filters=nb_filters,
+            kernel_size=kernel_size,
+            nb_stacks=nb_pre_conv,
+            dilations=dilations,
+            activation=activation,
+            use_skip_connections=use_skip_connections,
+            padding=padding,
+            dropout_rate=dropout_rate,
+            return_sequences=return_sequences,
+            use_separable=use_separable,
+            name="frontend",
+        )(out)
+        out = kl.MaxPooling1D(pool_size=2 ** nb_pre_conv, strides=2 ** nb_pre_conv)(out)  # or avg pooling?
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
-                      activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                      use_separable=use_separable)(out)
+    x = tcn_layer.TCN(
+        nb_filters=nb_filters,
+        kernel_size=kernel_size,
+        nb_stacks=nb_conv,
+        dilations=dilations,
+        activation=activation,
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        use_separable=use_separable,
+    )(out)
     x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
+    x = kl.Activation("softmax")(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
     output_layer = x
-    model = keras.models.Model(input_layer, output_layer, name='TCN')
+    model = keras.models.Model(input_layer, output_layer, name="TCN")
 
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        loss=loss,
+        sample_weight_mode=sample_weight_mode,
+    )
     return model
 
 
 @_register_as_model
-def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-              nb_conv: int = 1, loss: str = "categorical_crossentropy",
-              dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
-              use_skip_connections: bool = True, return_sequences: bool = True,
-              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-              nb_pre_conv: int = 0, learning_rate: float = 0.0005, upsample: bool = True,
-              use_separable: bool = False,
-              **kwignored):
+def tcn_small(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    nb_filters: int = 16,
+    kernel_size: int = 3,
+    nb_conv: int = 1,
+    loss: str = "categorical_crossentropy",
+    dilations: List[int] = [1, 2, 4, 8, 16],
+    activation: str = "norm_relu",
+    use_skip_connections: bool = True,
+    return_sequences: bool = True,
+    dropout_rate: float = 0.00,
+    padding: str = "same",
+    sample_weight_mode: str = None,
+    nb_pre_conv: int = 0,
+    learning_rate: float = 0.0005,
+    upsample: bool = True,
+    use_separable: bool = False,
+    **kwignored
+):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
     Args:
@@ -388,39 +509,72 @@ def tcn_small(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
-        out = tcn_layer.TCN(nb_filters=32, kernel_size=3, nb_stacks=1, dilations=dilations,
-                            activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                            dropout_rate=dropout_rate, return_sequences=return_sequences,
-                            use_separable=use_separable, name='frontend')(out)
-        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
+        out = tcn_layer.TCN(
+            nb_filters=32,
+            kernel_size=3,
+            nb_stacks=1,
+            dilations=dilations,
+            activation=activation,
+            use_skip_connections=use_skip_connections,
+            padding=padding,
+            dropout_rate=dropout_rate,
+            return_sequences=return_sequences,
+            use_separable=use_separable,
+            name="frontend",
+        )(out)
+        out = kl.MaxPooling1D(pool_size=2 ** nb_pre_conv, strides=2 ** nb_pre_conv)(out)  # or avg pooling?
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
-                      activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                      use_separable=use_separable)(out)
+    x = tcn_layer.TCN(
+        nb_filters=nb_filters,
+        kernel_size=kernel_size,
+        nb_stacks=nb_conv,
+        dilations=dilations,
+        activation=activation,
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        use_separable=use_separable,
+    )(out)
     x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
+    x = kl.Activation("softmax")(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
     output_layer = x
 
-    model = keras.models.Model(input_layer, output_layer, name='TCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(input_layer, output_layer, name="TCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        loss=loss,
+        sample_weight_mode=sample_weight_mode,
+    )
     return model
 
 
 @_register_as_model
-def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-             nb_conv: int = 1, loss: str = "categorical_crossentropy",
-             dilations: Optional[List[int]] = None, activation: str = 'norm_relu',
-             use_skip_connections: bool = True, return_sequences: bool = True,
-             dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-             nb_pre_conv: int = 0, pre_nb_dft: int = 64,
-             nb_lstm_units: int = 0,
-             learning_rate: float = 0.0005, upsample: bool = True,
-             use_separable: bool = False,
-             **kwignored):
+def tcn_stft(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    nb_filters: int = 16,
+    kernel_size: int = 3,
+    nb_conv: int = 1,
+    loss: str = "categorical_crossentropy",
+    dilations: Optional[List[int]] = None,
+    activation: str = "norm_relu",
+    use_skip_connections: bool = True,
+    return_sequences: bool = True,
+    dropout_rate: float = 0.00,
+    padding: str = "same",
+    sample_weight_mode: str = None,
+    nb_pre_conv: int = 0,
+    pre_nb_dft: int = 64,
+    nb_lstm_units: int = 0,
+    learning_rate: float = 0.0005,
+    upsample: bool = True,
+    use_separable: bool = False,
+    **kwignored
+):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
     Args:
@@ -460,43 +614,74 @@ def tcn_stft(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     if nb_pre_conv > 0:
-        out = Spectrogram(n_dft=pre_nb_dft, n_hop=2**nb_pre_conv,
-                          return_decibel_spectrogram=True, power_spectrogram=1.0,
-                          trainable_kernel=True, name='trainable_stft', image_data_format='channels_last')(out)
+        out = Spectrogram(
+            n_dft=pre_nb_dft,
+            n_hop=2 ** nb_pre_conv,
+            return_decibel_spectrogram=True,
+            power_spectrogram=1.0,
+            trainable_kernel=True,
+            name="trainable_stft",
+            image_data_format="channels_last",
+        )(out)
         # out = AmplitudeToDB()(out)
         out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
-                      activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                      use_separable=use_separable)(out)
+    x = tcn_layer.TCN(
+        nb_filters=nb_filters,
+        kernel_size=kernel_size,
+        nb_stacks=nb_conv,
+        dilations=dilations,
+        activation=activation,
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        use_separable=use_separable,
+    )(out)
 
     if nb_lstm_units > 0:
         x = kl.Bidirectional(kl.LSTM(units=nb_lstm_units, return_sequences=True))(x)
 
     x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
+    x = kl.Activation("softmax")(x)
 
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
 
     output_layer = x
 
-    model = keras.models.Model(input_layer, output_layer, name='TCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(input_layer, output_layer, name="TCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        loss=loss,
+        sample_weight_mode=sample_weight_mode,
+    )
     return model
 
 
 @_register_as_model
-def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int = 16, kernel_size: int = 3,
-              nb_conv: int = 1, loss: str = "categorical_crossentropy",
-              dilations: List[int] = [1, 2, 4, 8, 16], activation: str = 'norm_relu',
-              use_skip_connections: bool = True, return_sequences: bool = True,
-              dropout_rate: float = 0.00, padding: str = 'same', sample_weight_mode: str = None,
-              learning_rate: float = 0.0005, use_separable: bool = False,
-              pre_kernel_size: int = 16, pre_nb_filters: int = 16, pre_nb_conv: int = 2,
-              **kwignored):
+def tcn_multi(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    nb_filters: int = 16,
+    kernel_size: int = 3,
+    nb_conv: int = 1,
+    loss: str = "categorical_crossentropy",
+    dilations: List[int] = [1, 2, 4, 8, 16],
+    activation: str = "norm_relu",
+    use_skip_connections: bool = True,
+    return_sequences: bool = True,
+    dropout_rate: float = 0.00,
+    padding: str = "same",
+    sample_weight_mode: str = None,
+    learning_rate: float = 0.0005,
+    use_separable: bool = False,
+    pre_kernel_size: int = 16,
+    pre_nb_filters: int = 16,
+    pre_nb_conv: int = 2,
+    **kwignored
+):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
 
     Args:
@@ -526,7 +711,6 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         [keras.models.Model]: Compiled TCN network model.
     """
 
-
     # define the per-channel model
     nb_channels = nb_freq
     channels_in = []
@@ -534,10 +718,18 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
         channels_in.append(kl.Input(shape=(nb_hist, 1), name="channel_{0}".format(chan)))
 
     # channel model will be shared, weights and all
-    channel_model = tcn_layer.TCN_new(nb_filters=pre_nb_filters, kernel_size=pre_kernel_size, nb_stacks=pre_nb_conv, dilations=dilations,
-                                      activation='relu', use_skip_connections=use_skip_connections, padding=padding,
-                                      dropout_rate=dropout_rate, return_sequences=return_sequences,
-                                      use_separable=use_separable)#, name='channel')
+    channel_model = tcn_layer.TCN_new(
+        nb_filters=pre_nb_filters,
+        kernel_size=pre_kernel_size,
+        nb_stacks=pre_nb_conv,
+        dilations=dilations,
+        activation="relu",
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        use_separable=use_separable,
+    )  # , name='channel')
     # if nb_pre_conv > 0:
     #     out = tcn_layer.TCN(nb_filters=32, kernel_size=3, nb_stacks=1, dilations=dilations,
     #                         activation=activation, use_skip_connections=use_skip_connections, padding=padding,
@@ -550,16 +742,28 @@ def tcn_multi(nb_freq: int, nb_classes: int, nb_hist: int = 1, nb_filters: int =
 
     out = kl.concatenate(channels_out)
 
-    x = tcn_layer.TCN(nb_filters=nb_filters, kernel_size=kernel_size, nb_stacks=nb_conv, dilations=dilations,
-                      activation=activation, use_skip_connections=use_skip_connections, padding=padding,
-                      dropout_rate=dropout_rate, return_sequences=return_sequences, name='merge',
-                      use_separable=use_separable)(out)
+    x = tcn_layer.TCN(
+        nb_filters=nb_filters,
+        kernel_size=kernel_size,
+        nb_stacks=nb_conv,
+        dilations=dilations,
+        activation=activation,
+        use_skip_connections=use_skip_connections,
+        padding=padding,
+        dropout_rate=dropout_rate,
+        return_sequences=return_sequences,
+        name="merge",
+        use_separable=use_separable,
+    )(out)
 
     x = kl.Dense(nb_classes)(x)
-    x = kl.Activation('softmax')(x)
+    x = kl.Activation("softmax")(x)
     output_layer = x
 
-    model = keras.models.Model(channels_in, output_layer, name='TCN')
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.),
-                  loss=loss, sample_weight_mode=sample_weight_mode)
+    model = keras.models.Model(channels_in, output_layer, name="TCN")
+    model.compile(
+        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        loss=loss,
+        sample_weight_mode=sample_weight_mode,
+    )
     return model

@@ -12,11 +12,14 @@ from . import models
 from typing import Dict, Callable, Any, List, Tuple, Optional
 
 
-def load_model(file_trunk: str, model_dict: Dict[str, Callable],
-               model_ext: str = '_model.h5',
-               params_ext: str = '_params.yaml',
-               compile: bool = True,
-               custom_objects: Optional[Dict[str, Callable]] = None):
+def load_model(
+    file_trunk: str,
+    model_dict: Dict[str, Callable],
+    model_ext: str = "_model.h5",
+    params_ext: str = "_params.yaml",
+    compile: bool = True,
+    custom_objects: Optional[Dict[str, Callable]] = None,
+):
     """Load model with weights.
 
     First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
@@ -35,24 +38,28 @@ def load_model(file_trunk: str, model_dict: Dict[str, Callable],
     """
 
     if custom_objects is None:
-        custom_objects={'Spectrogram': kapre.time_frequency.Spectrogram,
-                        'TCN': tcn.tcn_new.TCN}
+        custom_objects = {"Spectrogram": kapre.time_frequency.Spectrogram, "TCN": tcn.tcn_new.TCN}
 
     try:
         model_filename = _download_if_url(file_trunk + model_ext)
-        model = keras.models.load_model(model_filename,
-                                        custom_objects=custom_objects)
+        model = keras.models.load_model(model_filename, custom_objects=custom_objects)
     except (SystemError, ValueError, AttributeError):
-        logging.debug('Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.', exc_info=False)
-        logging.debug('', exc_info=True)
+        logging.debug(
+            "Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.",
+            exc_info=False,
+        )
+        logging.debug("", exc_info=True)
         model = load_model_from_params(file_trunk, model_dict, weights_ext=model_ext, params_ext=params_ext, compile=compile)
     return model
 
 
-def load_model_from_params(file_trunk: str, model_dict: Dict[str, Callable],
-                           weights_ext: str = '_model.h5',
-                           params_ext: str = '_params.yaml',
-                           compile: bool = True):
+def load_model_from_params(
+    file_trunk: str,
+    model_dict: Dict[str, Callable],
+    weights_ext: str = "_model.h5",
+    params_ext: str = "_params.yaml",
+    compile: bool = True,
+):
     """Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.
 
     Args:
@@ -67,19 +74,20 @@ def load_model_from_params(file_trunk: str, model_dict: Dict[str, Callable],
     """
     params = load_params(file_trunk, params_ext=params_ext)
 
-    model = model_dict[params['model_name']](**params)  # get the model - calls the function that generates a model with parameters
+    model = model_dict[params["model_name"]](
+        **params
+    )  # get the model - calls the function that generates a model with parameters
     weights_filename = _download_if_url(file_trunk + weights_ext)
     model.load_weights(weights_filename)
 
     if compile:
         # Compile with random standard optimizer and loss so we can use the model for prediction
         # Just re-compile the model if you want a particular optimizer and loss.
-        model.compile(optimizer=keras.optimizers.Adam(amsgrad=True),
-                      loss="mean_squared_error")
+        model.compile(optimizer=keras.optimizers.Adam(amsgrad=True), loss="mean_squared_error")
     return model
 
 
-def save_params(params: Dict[str, Any], file_trunk: str, params_ext: str = '_params.yaml'):
+def save_params(params: Dict[str, Any], file_trunk: str, params_ext: str = "_params.yaml"):
     """Save model/training parameters to yaml.
 
     Args:
@@ -87,12 +95,11 @@ def save_params(params: Dict[str, Any], file_trunk: str, params_ext: str = '_par
         file_trunk (str): [description]
         params_ext (str, optional): [description]. Defaults to '_params.yaml'.
     """
-    with open(file_trunk + params_ext, 'w') as f:
+    with open(file_trunk + params_ext, "w") as f:
         yaml.dump(params, f)
 
 
-def load_params(file_trunk: str,
-                params_ext: str = '_params.yaml') -> Dict[str, Any]:
+def load_params(file_trunk: str, params_ext: str = "_params.yaml") -> Dict[str, Any]:
     """Load model/training parameters from yaml
 
     Args:
@@ -103,7 +110,7 @@ def load_params(file_trunk: str,
         Dict[str, Any]: Parameter dictionary
     """
     filename = _download_if_url(file_trunk + params_ext)
-    with open(filename, 'r') as f:
+    with open(filename, "r") as f:
         try:
             params = yaml.unsafe_load(f)
         except AttributeError:
@@ -111,7 +118,9 @@ def load_params(file_trunk: str,
     return params
 
 
-def load_model_and_params(model_save_name, model_dict=models.model_dict, custom_objects=None) -> Tuple[keras.Model, Dict[str, Any]]:
+def load_model_and_params(
+    model_save_name, model_dict=models.model_dict, custom_objects=None
+) -> Tuple[keras.Model, Dict[str, Any]]:
     """[summary]
 
     Args:
@@ -128,13 +137,14 @@ def load_model_and_params(model_save_name, model_dict=models.model_dict, custom_
 
 
 def _download_if_url(url: str):
-    if not url.startswith('http'):
+    if not url.startswith("http"):
         return url
     else:
         import urllib.request
         import tempfile
         from pathlib import Path
-        filename = url.split('/')[-1]  # get filename
+
+        filename = url.split("/")[-1]  # get filename
         tmpdir = tempfile.mkdtemp()
         local_path = Path(tmpdir) / filename
         urllib.request.urlretrieve(url, local_path)
@@ -152,13 +162,12 @@ def load_from(filename: str, datasets: List[str]):
         [type]: [description]
     """
     data = dict()
-    with h5py.File(filename, 'r') as f:
+    with h5py.File(filename, "r") as f:
         data = {dataset: f[dataset][:] for dataset in datasets}
     return data
 
 
 class Timer:
-
     def __init__(self, verbose=False):
         self.verbose = verbose
         self.start = None
@@ -181,14 +190,13 @@ class Timer:
         elif self.end is None:
             s = "Timer still running."
         elif self.elapsed is not None:
-            s = f'Time elapsed {self.elapsed:1.2f} seconds.'
+            s = f"Time elapsed {self.elapsed:1.2f} seconds."
         else:
             s = "Timer in unexpected state."
         return s
 
 
 class QtProgressCallback(keras.callbacks.Callback):
-
     def __init__(self, nb_epochs, comms):
         """Init the callback.
 

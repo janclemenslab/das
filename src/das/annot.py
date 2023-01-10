@@ -9,10 +9,12 @@ from typing import Optional, List, Dict, Any, Union
 class Events(UserDict):
     """Utility class for dealing with annotations."""
 
-    def __init__(self,
-                 data: Optional[Dict[str, List[float]]] = None,
-                 categories: Optional[Dict[str, str]] = None,
-                 add_names_from_categories: bool = True):
+    def __init__(
+        self,
+        data: Optional[Dict[str, List[float]]] = None,
+        categories: Optional[Dict[str, str]] = None,
+        add_names_from_categories: bool = True,
+    ):
         # """Initializes Events class. Do not use. Use `from_df` for `from_lists` instead.
 
         # Args:
@@ -39,7 +41,7 @@ class Events(UserDict):
         self._drop_nan()
 
         # preserve cats from input
-        if hasattr(data, 'categories'):
+        if hasattr(data, "categories"):
             for name, cat in data.categories.items():
                 if name in self:  # update only existing keys
                     self.categories[name] = cat
@@ -66,8 +68,9 @@ class Events(UserDict):
         if possible_event_names is None:
             possible_event_names = []
 
-        return cls.from_lists(df.name.values, df.start_seconds.values.astype(float), df.stop_seconds.values.astype(float),
-                              possible_event_names)
+        return cls.from_lists(
+            df.name.values, df.start_seconds.values.astype(float), df.stop_seconds.values.astype(float), possible_event_names
+        )
 
     @classmethod
     def from_lists(cls, names, start_seconds, stop_seconds, possible_event_names: Optional[List] = None):
@@ -103,18 +106,18 @@ class Events(UserDict):
         Returns:
             [type]: [description]
         """
-        start_seconds = np.array(ds.event_times.sel(event_time='start_seconds').data)
-        stop_seconds = np.array(ds.event_times.sel(event_time='stop_seconds').data)
+        start_seconds = np.array(ds.event_times.sel(event_time="start_seconds").data)
+        stop_seconds = np.array(ds.event_times.sel(event_time="stop_seconds").data)
         names = np.array(ds.event_names.data)
-        if 'possible_event_names' in ds.attrs:
-            possible_event_names = ds.attrs['possible_event_names']
-        elif 'possible_event_names' in ds.event_names.attrs:
-            possible_event_names = ds.event_names.attrs['possible_event_names']
+        if "possible_event_names" in ds.attrs:
+            possible_event_names = ds.attrs["possible_event_names"]
+        elif "possible_event_names" in ds.event_names.attrs:
+            possible_event_names = ds.event_names.attrs["possible_event_names"]
         else:
             possible_event_names = []
 
         out = cls.from_lists(names, start_seconds, stop_seconds, possible_event_names)
-        if 'event_categories' in ds:
+        if "event_categories" in ds:
             cats = {str(cat.event_types.data): str(cat.event_categories.data) for cat in ds.event_categories}
             out = cls(out, categories=cats)
         return out
@@ -127,25 +130,31 @@ class Events(UserDict):
         stop_seconds = []
         possible_names = []
 
-        if segments is not None and len(segments) and 'sequence' in segments and len(segments['sequence']) and 'names' in segments:
-            if type(segments['sequence'][0]) is not str and type(segments['sequence'][0]) is not np.str_:
-                segment_names = [segments['names'][ii] for ii in segments['sequence']]  # from ints to names
+        if (
+            segments is not None
+            and len(segments)
+            and "sequence" in segments
+            and len(segments["sequence"])
+            and "names" in segments
+        ):
+            if type(segments["sequence"][0]) is not str and type(segments["sequence"][0]) is not np.str_:
+                segment_names = [segments["names"][ii] for ii in segments["sequence"]]  # from ints to names
             else:
-                segment_names = segments['sequence']
+                segment_names = segments["sequence"]
             names.extend(segment_names)
-            start_seconds.extend(segments['onsets_seconds'])
-            stop_seconds.extend(segments['offsets_seconds'])
-            possible_names.extend(segments['names'])
+            start_seconds.extend(segments["onsets_seconds"])
+            stop_seconds.extend(segments["offsets_seconds"])
+            possible_names.extend(segments["names"])
 
-        if events is not None and len(events) and 'sequence' in events and len(events['sequence']) and 'names' in events:
-            if type(events['sequence'][0]) is not str and type(events['sequence'][0]) is not np.str_:
-                event_names = [events['names'][ii] for ii in events['sequence']]  # from ints to names
+        if events is not None and len(events) and "sequence" in events and len(events["sequence"]) and "names" in events:
+            if type(events["sequence"][0]) is not str and type(events["sequence"][0]) is not np.str_:
+                event_names = [events["names"][ii] for ii in events["sequence"]]  # from ints to names
             else:
-                event_names = events['sequence']
+                event_names = events["sequence"]
             names.extend(event_names)
-            start_seconds.extend(events['seconds'])
-            stop_seconds.extend(events['seconds'])
-            possible_names.extend(events['names'])
+            start_seconds.extend(events["seconds"])
+            stop_seconds.extend(events["seconds"])
+            possible_names.extend(events["names"])
 
         # only keep unique
         possible_names = list(set(possible_names))
@@ -154,7 +163,7 @@ class Events(UserDict):
         return out
 
     def _init_df(self) -> pd.DataFrame:
-        return pd.DataFrame(columns=['name', 'start_seconds', 'stop_seconds'])
+        return pd.DataFrame(columns=["name", "start_seconds", "stop_seconds"])
 
     def _append_row(self, df, name, start_seconds, stop_seconds=None) -> pd.DataFrame:
         if stop_seconds is None:
@@ -185,11 +194,13 @@ class Events(UserDict):
         if preserve_empty:  # ensure we keep events without annotations
             for name, cat in zip(self.names, self.categories.values()):
                 if name not in df.name.values:
-                    stop_seconds = np.nan if cat == 'event' else 0  # (np.nan, np.nan) -> empty events, (np.nan, some number) -> empty segments
+                    stop_seconds = (
+                        np.nan if cat == "event" else 0
+                    )  # (np.nan, np.nan) -> empty events, (np.nan, some number) -> empty segments
                     df = self._append_row(df, name, start_seconds=np.nan, stop_seconds=stop_seconds)
         # make sure start and stop seconds are numeric
-        df['start_seconds'] = pd.to_numeric(df['start_seconds'], errors='coerce')
-        df['stop_seconds'] = pd.to_numeric(df['stop_seconds'], errors='coerce')
+        df["start_seconds"] = pd.to_numeric(df["start_seconds"], errors="coerce")
+        df["stop_seconds"] = pd.to_numeric(df["stop_seconds"], errors="coerce")
         return df
 
     def to_dataset(self) -> xr.Dataset:
@@ -203,26 +214,34 @@ class Events(UserDict):
         start_seconds = df.start_seconds.values.astype(float)
         stop_seconds = df.stop_seconds.values.astype(float)
 
-        da_names = xr.DataArray(name='event_names', data=np.array(names, dtype='U128'), dims=[
-            'index',
-        ])
-        da_times = xr.DataArray(name='event_times',
-                                data=np.array([start_seconds, stop_seconds]).T,
-                                dims=['index', 'event_time'],
-                                coords={'event_time': ['start_seconds', 'stop_seconds']})
+        da_names = xr.DataArray(
+            name="event_names",
+            data=np.array(names, dtype="U128"),
+            dims=[
+                "index",
+            ],
+        )
+        da_times = xr.DataArray(
+            name="event_times",
+            data=np.array([start_seconds, stop_seconds]).T,
+            dims=["index", "event_time"],
+            coords={"event_time": ["start_seconds", "stop_seconds"]},
+        )
 
         ds = xr.Dataset({da.name: da for da in [da_names, da_times]})
-        ds.attrs['time_units'] = 'seconds'
-        ds.attrs['possible_event_names'] = self.names  # ensure that we preserve even names w/o events that get lost in to_df
+        ds.attrs["time_units"] = "seconds"
+        ds.attrs["possible_event_names"] = self.names  # ensure that we preserve even names w/o events that get lost in to_df
         return ds
 
-    def add_name(self,
-                 name,
-                 category='segment',
-                 times=None,
-                 overwrite: bool = False,
-                 append: bool = False,
-                 sort_after_append: bool = False):
+    def add_name(
+        self,
+        name,
+        category="segment",
+        times=None,
+        overwrite: bool = False,
+        append: bool = False,
+        sort_after_append: bool = False,
+    ):
         """[summary]
 
         Args:
@@ -285,10 +304,10 @@ class Events(UserDict):
         nearest_start = self._find_nearest(self.start_seconds(name), time)
         index = np.where(self.start_seconds(name) == nearest_start)[0][0]
 
-        if self.categories[name] == 'segment':
+        if self.categories[name] == "segment":
             matching_stop = self.stop_seconds(name)[index]
             event_at_time = matching_stop > time
-        elif self.categories[name] == 'event':
+        elif self.categories[name] == "event":
             event_at_time = np.abs(time - nearest_start) < tol
         else:
             event_at_time = False
@@ -374,18 +393,18 @@ class Events(UserDict):
         categories = dict()
         for name in self.names:
             if len(self[name]) == 0:
-                if not hasattr(self, 'categories') or name not in self.categories:
+                if not hasattr(self, "categories") or name not in self.categories:
                     categories[name] = None
-                elif hasattr(self, 'categories') and name in self.categories:
+                elif hasattr(self, "categories") and name in self.categories:
                     categories[name] = self.categories[name]
             else:
                 first_start = self.start_seconds(name)[0]
                 first_stop = self.stop_seconds(name)[0]
 
                 if (np.isnan(first_start) and np.isnan(first_stop)) or (first_start == first_stop):
-                    category = 'event'
+                    category = "event"
                 else:
-                    category = 'segment'
+                    category = "segment"
 
                 categories[name] = category
 

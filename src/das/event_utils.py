@@ -30,10 +30,9 @@ def find_nearest(array, values):
     return val, idx, dist
 
 
-def detect_events(event_probability: np.ndarray,
-                  thres: float = 0.5,
-                  min_dist: int = 100,
-                  index: int = 0) -> Tuple[np.ndarray, np.ndarray]:
+def detect_events(
+    event_probability: np.ndarray, thres: float = 0.5, min_dist: int = 100, index: int = 0
+) -> Tuple[np.ndarray, np.ndarray]:
     """Detect events as peaks in probabilitiy.
 
     Args:
@@ -138,27 +137,27 @@ def evaluate_eventtimes(eventtimes_true, eventtimes_pred, samplerate, tol=0.01):
 
     d = dict()
     # pred events that have no nearby true event (or there is another pred event nearer to the true event)
-    d['FP'] = np.sum(nearest_pred_event.mask)
-    d['TP'] = len(nearest_pred_event[np.isfinite(nearest_dist)].compressed())
-    d['FN'] = max(0, np.sum(nearest_true_event.mask))
+    d["FP"] = np.sum(nearest_pred_event.mask)
+    d["TP"] = len(nearest_pred_event[np.isfinite(nearest_dist)].compressed())
+    d["FN"] = max(0, np.sum(nearest_true_event.mask))
 
-    if d['FP'] == 0:  # if there are no false positives (even for no detections), then precision is 1.0
-        d['precision'] = 1.0
-    elif (d['TP'] + d['FP']) == 0:
-        d['precision'] = 0.0
+    if d["FP"] == 0:  # if there are no false positives (even for no detections), then precision is 1.0
+        d["precision"] = 1.0
+    elif (d["TP"] + d["FP"]) == 0:
+        d["precision"] = 0.0
     else:
-        d['precision'] = d['TP'] / (d['TP'] + d['FP'])
+        d["precision"] = d["TP"] / (d["TP"] + d["FP"])
 
-    if d['FN'] == 0:  # if there are no false negatives (even for no detections), the recall is 1.0 (?!)
-        d['recall'] = 1.0
-    elif d['TP'] + d['FN'] == 0:
-        d['recall'] = 0
+    if d["FN"] == 0:  # if there are no false negatives (even for no detections), the recall is 1.0 (?!)
+        d["recall"] = 1.0
+    elif d["TP"] + d["FN"] == 0:
+        d["recall"] = 0
     else:
-        d['recall'] = d['TP'] / (d['TP'] + d['FN'])
+        d["recall"] = d["TP"] / (d["TP"] + d["FN"])
 
-    if (d['precision'] + d['recall']) == 0:
-        d['f1_score'] = 0
+    if (d["precision"] + d["recall"]) == 0:
+        d["f1_score"] = 0
     else:
-        d['f1_score'] = 2 * (d['precision'] * d['recall']) / (d['precision'] + d['recall'])
+        d["f1_score"] = 2 * (d["precision"] * d["recall"]) / (d["precision"] + d["recall"])
 
     return d, nearest_pred_event, nearest_true_event, nearest_dist

@@ -8,7 +8,7 @@ from tensorflow.keras.layers import Layer
 class AdditiveNoise(Layer):
     """Adds Gaussian noise to the spectrogram."""
 
-    def __init__(self, power: float = 0.1, random_gain: True = False, noise_type: str = 'white', **kwargs):
+    def __init__(self, power: float = 0.1, random_gain: True = False, noise_type: str = "white", **kwargs):
         """Init.
 
         Args:
@@ -16,7 +16,7 @@ class AdditiveNoise(Layer):
             random_gain (True, optional): If `True`, gain is sampled from `uniform(low=0.0, high=power)` in every batch. Defaults to False.
             noise_type (str, optional): Only supports white. Defaults to 'white'.
         """
-        assert noise_type in ['white']
+        assert noise_type in ["white"]
         self.supports_masking = True
         self.power = power
         self.random_gain = random_gain
@@ -33,8 +33,6 @@ class AdditiveNoise(Layer):
         return K.in_train_phase(noise_x, x)
 
     def get_config(self):
-        config = {'power': self.power,
-                  'random_gain': self.random_gain,
-                  'noise_type': self.noise_type}
+        config = {"power": self.power, "random_gain": self.random_gain, "noise_type": self.noise_type}
         base_config = super(AdditiveNoise, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
