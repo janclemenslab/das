@@ -567,6 +567,8 @@ def cli_predict(
     segment_use_optimized: bool = True,
     segment_minlen: Optional[float] = None,
     segment_fillgap: Optional[float] = None,
+    bandpass_low_freq: float = None,
+    bandpass_up_freq: float = None,
     resample: bool = True,
 ):
     """Predict song labels for a wav file or a folder of wav files.
@@ -608,6 +610,10 @@ def cli_predict(
                                           Defaults to None (keep all segments).
         segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.
                                            Defaults to None (do not fill gaps).
+
+        bandpass_low_freq (float): Lower cutoff frequency in Hz for bandpass filtering audio data. Defaults to 1.0.
+        bandpass_up_freq (float): Upper cutoff frequency in Hz for bandpass filtering audio data. Defaults to samplingrate / 2.
+
         resample (bool): Resample audio data to the rate expected by the model. Defaults to True.
 
     Raises:
@@ -638,6 +644,9 @@ def cli_predict(
             x = x.T  # [channels, time] -> [time, channels]
             if x.ndim == 1:
                 x = x[:, np.newaxis]
+
+            if bandpass_low_freq is not None or bandpass_up_freq is not None:
+                x = utils.bandpass_filter_song(x, fs_audio, bandpass_low_freq, bandpass_up_freq)
 
             if resample and fs_audio != fs_model:
                 logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")

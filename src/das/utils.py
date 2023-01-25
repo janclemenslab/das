@@ -74,9 +74,8 @@ def load_model_from_params(
     """
     params = load_params(file_trunk, params_ext=params_ext)
 
-    model = model_dict[params["model_name"]](
-        **params
-    )  # get the model - calls the function that generates a model with parameters
+    # get the model - calls the function that generates a model with parameters
+    model = model_dict[params["model_name"]](**params)
     weights_filename = _download_if_url(file_trunk + weights_ext)
     model.load_weights(weights_filename)
 
@@ -254,4 +253,31 @@ def resample(x: np.array, fs_audio: float, fs_model: float):
     fs_model_even = int(fs_model // 2) * 2
     gcd = np.gcd(fs_audio_even, fs_model_even)
     x = scipy.signal.resample_poly(x, fs_audio_even // gcd, fs_model_even // gcd, axis=0)
+    return x
+
+
+def bandpass_filter_song(
+    x: np.ndarray, sampling_rate_hz: float, f_low: Optional[float] = None, f_high: Optional[float] = None
+) -> np.ndarray:
+    """Band-pass filter channel data
+
+    Args:
+        x (np.ndarray): Audio data[T,] or [T, nb_channels]
+        sampling_rate_hz (float): Sampling rate in Hz
+        f_low (Optional[float], optional): Lower cutoff in Hz. Defaults to 1.0 (None).
+        f_high (Optional[float], optional): Upper cutoff in Hz. Defaults to sampling_rate_hz/2 (None).
+
+    Returns:
+        np.ndarray: Sampled data
+    """
+    if f_low is None:
+        f_low = 1.0
+
+    if f_high is None:
+        f_high = sampling_rate_hz / 2 - 1
+
+    f_high = min(f_high, sampling_rate_hz / 2 - 1)
+
+    sos_bp = scipy.signal.butter(5, [f_low, f_high], "bandpass", output="sos", fs=sampling_rate_hz)
+    x = scipy.signal.sosfiltfilt(sos_bp, x, axis=0)
     return x
