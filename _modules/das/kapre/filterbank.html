@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -277,6 +277,7 @@
 <span class="c1"># Todo: Filterbank(); init with mel, log, linear, etc.</span>
 <span class="c1"># not parameterised, just a matrix multiplication</span>
 
+
 <div class="viewcode-block" id="Filterbank"><a class="viewcode-back" href="../../../api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank">[docs]</a><span class="k">class</span> <span class="nc">Filterbank</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ### `Filterbank`</span>
@@ -314,17 +315,27 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_fbs</span><span class="p">,</span> <span class="n">trainable_fb</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">bins_per_octave</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">image_data_format</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; TODO: is sr necessary? is fmax necessary? init with None?  &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">n_fbs</span><span class="p">,</span>
+        <span class="n">trainable_fb</span><span class="p">,</span>
+        <span class="n">sr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">init</span><span class="o">=</span><span class="s2">&quot;mel&quot;</span><span class="p">,</span>
+        <span class="n">fmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">fmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">bins_per_octave</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+        <span class="n">image_data_format</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;TODO: is sr necessary? is fmax necessary? init with None?&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supports_masking</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span> <span class="o">=</span> <span class="n">n_fbs</span>
-        <span class="k">assert</span> <span class="n">init</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="s1">&#39;uni_random&#39;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">init</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;mel&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">,</span> <span class="s2">&quot;linear&quot;</span><span class="p">,</span> <span class="s2">&quot;uni_random&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">fmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fmax</span> <span class="o">=</span> <span class="n">sr</span> <span class="o">/</span> <span class="mf">2.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fmax</span> <span class="o">=</span> <span class="n">sr</span> <span class="o">/</span> <span class="mf">2.0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fmax</span> <span class="o">=</span> <span class="n">fmax</span>
-        <span class="k">if</span> <span class="n">init</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;mel&#39;</span><span class="p">,</span> <span class="s1">&#39;log&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">init</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;mel&quot;</span><span class="p">,</span> <span class="s2">&quot;log&quot;</span><span class="p">):</span>
             <span class="k">assert</span> <span class="n">sr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fmin</span> <span class="o">=</span> <span class="n">fmin</span>
@@ -332,15 +343,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bins_per_octave</span> <span class="o">=</span> <span class="n">bins_per_octave</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sr</span> <span class="o">=</span> <span class="n">sr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trainable_fb</span> <span class="o">=</span> <span class="n">trainable_fb</span>
-        <span class="k">assert</span> <span class="n">image_data_format</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;channels_first&#39;</span><span class="p">,</span> <span class="s1">&#39;channels_last&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">image_data_format</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">image_data_format</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">,</span> <span class="s2">&quot;channels_last&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">image_data_format</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">=</span> <span class="n">image_data_format</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Filterbank</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Filterbank.build"><a class="viewcode-back" href="../../../api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s1">&#39;channels_first&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_ch</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_time</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
@@ -349,20 +360,20 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">n_time</span> <span class="o">=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">==</span> <span class="s1">&#39;mel&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">filterbank_mel</span><span class="p">(</span><span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span>
-                                                                <span class="n">n_freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span><span class="p">,</span>
-                                                                <span class="n">n_mels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span>
-                                                                <span class="n">fmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">,</span>
-                                                                <span class="n">fmax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmax</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
-                                         <span class="n">dtype</span><span class="o">=</span><span class="n">K</span><span class="o">.</span><span class="n">floatx</span><span class="p">())</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">filterbank_log</span><span class="p">(</span><span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span>
-                                                                <span class="n">n_freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span><span class="p">,</span>
-                                                                <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span>
-                                                                <span class="n">bins_per_octave</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bins_per_octave</span><span class="p">,</span>
-                                                                <span class="n">fmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
-                                         <span class="n">dtype</span><span class="o">=</span><span class="n">K</span><span class="o">.</span><span class="n">floatx</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">==</span> <span class="s2">&quot;mel&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span>
+                <span class="n">backend</span><span class="o">.</span><span class="n">filterbank_mel</span><span class="p">(</span>
+                    <span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmax</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">K</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span> <span class="o">==</span> <span class="s2">&quot;log&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">variable</span><span class="p">(</span>
+                <span class="n">backend</span><span class="o">.</span><span class="n">filterbank_log</span><span class="p">(</span>
+                    <span class="n">sr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_freq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_freq</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span> <span class="n">bins_per_octave</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bins_per_octave</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fmin</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">K</span><span class="o">.</span><span class="n">floatx</span><span class="p">(),</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable_fb</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trainable_weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span><span class="p">)</span>
@@ -372,32 +383,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">built</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="Filterbank.compute_output_shape"><a class="viewcode-back" href="../../../api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.compute_output_shape">[docs]</a>    <span class="k">def</span> <span class="nf">compute_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s1">&#39;channels_first&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_time</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ch</span></div>
 
 <div class="viewcode-block" id="Filterbank.call"><a class="viewcode-back" href="../../../api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="c1"># reshape so that the last axis is freq axis</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s1">&#39;channels_first&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">permute_dimensions</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">permute_dimensions</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filterbank</span><span class="p">)</span>
         <span class="c1"># reshape back</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s1">&#39;channels_first&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">permute_dimensions</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">permute_dimensions</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="Filterbank.get_config"><a class="viewcode-back" href="../../../api/das.kapre.filterbank.html#das.kapre.filterbank.Filterbank.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_fbs&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span>
-                  <span class="s1">&#39;sr&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span>
-                  <span class="s1">&#39;init&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">,</span>
-                  <span class="s1">&#39;fmin&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">,</span>
-                  <span class="s1">&#39;fmax&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmax</span><span class="p">,</span>
-                  <span class="s1">&#39;bins_per_octave&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bins_per_octave</span><span class="p">,</span>
-                  <span class="s1">&#39;trainable_fb&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable_fb</span><span class="p">}</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;n_fbs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_fbs</span><span class="p">,</span>
+            <span class="s2">&quot;sr&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sr</span><span class="p">,</span>
+            <span class="s2">&quot;init&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">,</span>
+            <span class="s2">&quot;fmin&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmin</span><span class="p">,</span>
+            <span class="s2">&quot;fmax&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">fmax</span><span class="p">,</span>
+            <span class="s2">&quot;bins_per_octave&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bins_per_octave</span><span class="p">,</span>
+            <span class="s2">&quot;trainable_fb&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable_fb</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">base_config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">Filterbank</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">base_config</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span></div></div>
 </pre></div>

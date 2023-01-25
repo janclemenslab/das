@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -334,7 +334,7 @@
 
 
 <div class="viewcode-block" id="Param"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Param">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Param</span><span class="p">():</span>
+<span class="k">class</span> <span class="nc">Param</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Base class for all parameters.</span>
 
 <span class="sd">    Parameters are callables that return parameter values.</span>
@@ -412,7 +412,7 @@
 
 
 <div class="viewcode-block" id="Augmentation"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentation">[docs]</a><span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Augmentation</span><span class="p">():</span>
+<span class="k">class</span> <span class="nc">Augmentation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Base class for all augmentations.</span>
 
 <span class="sd">    Augmentations are callables that return the augmented input.</span>
@@ -535,8 +535,8 @@
 <span class="sd">        Raises:</span>
 <span class="sd">            ValueError: if &#39;lower&#39; attr of factor is &lt;1 (would correspond to downsampling).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;lower&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">factor</span><span class="o">.</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Factor is </span><span class="si">{</span><span class="n">factor</span><span class="si">}</span><span class="s1"> - at the moment only upsampling (factors &gt;= 1) is allowed.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">factor</span><span class="p">,</span> <span class="s2">&quot;lower&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">factor</span><span class="o">.</span><span class="n">lower</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Factor is </span><span class="si">{</span><span class="n">factor</span><span class="si">}</span><span class="s2"> - at the moment only upsampling (factors &gt;= 1) is allowed.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span>
 
     <span class="k">def</span> <span class="nf">_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
@@ -550,11 +550,9 @@
 <span class="k">class</span> <span class="nc">MaskNoise</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Add noise or replace signal by noise for the full duration or a part of it.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">std</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">duration</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            std (Optional[Param]): std of noise. Defaults to 1.</span>
@@ -583,9 +581,9 @@
             <span class="n">mask_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">len_x</span> <span class="o">-</span> <span class="n">duration</span><span class="p">)</span>
         <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">:</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">noise</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span> <span class="p">:</span> <span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+=</span> <span class="n">noise</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">noise</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span> <span class="p">:</span> <span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">noise</span>
         <span class="k">return</span> <span class="n">x</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -607,7 +605,7 @@
         <span class="n">len_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">())</span>
         <span class="n">mask_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">len_x</span> <span class="o">-</span> <span class="n">duration</span><span class="p">)</span>
-        <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask_start</span><span class="p">:</span><span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">[</span><span class="n">mask_start</span> <span class="p">:</span> <span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask_start</span> <span class="p">:</span> <span class="n">mask_start</span> <span class="o">+</span> <span class="n">duration</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span></div>
 
 
@@ -646,7 +644,7 @@
         <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="Augmentations"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentations">[docs]</a><span class="k">class</span> <span class="nc">Augmentations</span><span class="p">():</span>
+<div class="viewcode-block" id="Augmentations"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentations">[docs]</a><span class="k">class</span> <span class="nc">Augmentations</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Bundles several augmentations.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">augmentations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Augmentation</span><span class="p">]):</span>
@@ -669,14 +667,14 @@
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">aug_spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">))</span>
+        <span class="n">aug_spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">aug_spec</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">aug_spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
         <span class="n">augs</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="n">aug_spec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># split off &quot;-WHATEVER&quot; suffix</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># split off &quot;-WHATEVER&quot; suffix</span>
             <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># for augs without args</span>
                 <span class="k">for</span> <span class="n">a_name</span><span class="p">,</span> <span class="n">a_arg</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>

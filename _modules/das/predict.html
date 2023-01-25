@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -283,14 +283,16 @@
 <span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
 <span class="kn">from</span> <span class="nn">dask.diagnostics</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
 
-<span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s1">&#39;array.slicing.split_large_chunks&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+<span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;array.slicing.split_large_chunks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 
 
-<div class="viewcode-block" id="predict_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_probabilities">[docs]</a><span class="k">def</span> <span class="nf">predict_probabilities</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                          <span class="n">model</span><span class="p">:</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
-                          <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-                          <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                          <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="predict_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_probabilities">[docs]</a><span class="k">def</span> <span class="nf">predict_probabilities</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -311,9 +313,9 @@
     <span class="n">prepend_data_padding</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="n">temp_store</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">TempStore</span><span class="p">()</span>
-    <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_classes&#39;</span><span class="p">]),</span>
-                                     <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">100_000</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_classes&#39;</span><span class="p">]),</span>
-                                     <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">,</span>
+    <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_classes&quot;</span><span class="p">]),</span>
+                                     <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">100_000</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_classes&quot;</span><span class="p">]),</span>
+                                     <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">,</span>
                                      <span class="n">store</span><span class="o">=</span><span class="n">temp_store</span><span class="p">,</span>
                                      <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># predict and unpack batch by batch to memmaped np or zarr array</span>
@@ -326,17 +328,17 @@
         <span class="k">if</span> <span class="n">prepend_data_padding</span><span class="p">:</span>
             <span class="n">pad_width</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">batch_number</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># to account for loss of samples at the first and last chunks</span>
-                <span class="n">pad_width</span> <span class="o">=</span> <span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_padding&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">pad_width</span> <span class="o">=</span> <span class="p">((</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;data_padding&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
             <span class="k">elif</span> <span class="n">batch_number</span> <span class="o">==</span> <span class="n">nb_batches</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">pad_width</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_padding&#39;</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="n">pad_width</span> <span class="o">=</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;data_padding&quot;</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">pad_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">y_pred_unpacked_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">y_pred_unpacked_batch</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">y_pred_unpacked_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">y_pred_unpacked_batch</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="n">pad_width</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">class_probabilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_pred_unpacked_batch</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">,</span> <span class="n">inline_array</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="o">.</span><span class="n">rechunk</span><span class="p">((</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_classes&#39;</span><span class="p">]))</span>
+    <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="o">.</span><span class="n">rechunk</span><span class="p">((</span><span class="mi">1_000_000</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_classes&quot;</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">class_probabilities</span></div>
 
 
@@ -371,21 +373,23 @@
             <span class="n">thresholded_probabilities</span><span class="p">[</span><span class="n">thresholded_probabilities</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">thresholded_probabilities</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Probabilities have to many dimensions (</span><span class="si">{</span><span class="n">probabilities</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s1">). Can only be 1D or 2D.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probabilities have to many dimensions (</span><span class="si">{</span><span class="n">probabilities</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2">). Can only be 1D or 2D.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">labels</span></div>
 
 
-<div class="viewcode-block" id="predict_segments"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_segments">[docs]</a><span class="k">def</span> <span class="nf">predict_segments</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                     <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-                     <span class="n">segment_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_ref_onsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_ref_offsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                     <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">segment_labels_by_majority</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<div class="viewcode-block" id="predict_segments"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_segments">[docs]</a><span class="k">def</span> <span class="nf">predict_segments</span><span class="p">(</span>
+    <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">segment_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_ref_onsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_ref_offsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_labels_by_majority</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    TODO: document different approaches for single-type vs. multi-type segment detection</span>
@@ -429,11 +433,11 @@
 
     <span class="n">segments</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">):</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;samplerate_Hz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplerate</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_dims</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_names</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;samplerate_Hz&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplerate</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_dims</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">segment_names</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">probs_are_labels</span><span class="p">:</span>
-            <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="p">[:,</span> <span class="n">segment_dims</span><span class="p">]</span>
+            <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="p">[:,</span> <span class="n">segment_dims</span><span class="p">]</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_blocks</span><span class="p">(</span><span class="n">labels_from_probabilities</span><span class="p">,</span>
                                    <span class="n">class_probabilities</span><span class="p">,</span>
                                    <span class="n">segment_thres</span><span class="p">,</span>
@@ -441,27 +445,31 @@
                                    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">intp</span><span class="p">,</span>
                                    <span class="n">drop_axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="n">class_probabilities</span>
 
         <span class="c1"># turn into song (0), no song (1) sequence to detect onsets (0-&gt;1) and offsets (1-&gt;0)</span>
         <span class="n">song_binary</span> <span class="o">=</span> <span class="p">(</span><span class="n">labels</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">segment_fillgap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">song_binary</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span><span class="n">segment_utils</span><span class="o">.</span><span class="n">fill_gaps</span><span class="p">,</span>
-                                         <span class="n">song_binary</span><span class="p">,</span>
-                                         <span class="n">gap_dur</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_fillgap</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">),</span>
-                                         <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_fillgap</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-                                         <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-                                         <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                         <span class="n">align_arrays</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">song_binary</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span>
+                <span class="n">segment_utils</span><span class="o">.</span><span class="n">fill_gaps</span><span class="p">,</span>
+                <span class="n">song_binary</span><span class="p">,</span>
+                <span class="n">gap_dur</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_fillgap</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">),</span>
+                <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_fillgap</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+                <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">align_arrays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="n">segment_minlen</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">song_binary</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span><span class="n">segment_utils</span><span class="o">.</span><span class="n">remove_short</span><span class="p">,</span>
-                                         <span class="n">song_binary</span><span class="p">,</span>
-                                         <span class="n">min_len</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_minlen</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">),</span>
-                                         <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_minlen</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-                                         <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-                                         <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                         <span class="n">align_arrays</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">song_binary</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span>
+                <span class="n">segment_utils</span><span class="o">.</span><span class="n">remove_short</span><span class="p">,</span>
+                <span class="n">song_binary</span><span class="p">,</span>
+                <span class="n">min_len</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_minlen</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">),</span>
+                <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">segment_minlen</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+                <span class="n">trim</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">align_arrays</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="c1"># detect syllable on- and offsets</span>
         <span class="c1"># pre- and post-pend 0 so we detect on and offsets at boundaries</span>
@@ -470,29 +478,29 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   Detecting syllable on and offsets:&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
             <span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">onsets</span><span class="p">,</span> <span class="n">offsets</span><span class="p">)</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;onsets_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onsets</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;offsets_seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offsets</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;onsets_seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">onsets</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;offsets_seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">offsets</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
 
         <span class="c1"># there is just a single segment type plus noise - in that case we use the gap-filled, short-deleted pred</span>
         <span class="n">sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># default to empty list</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">labels</span> <span class="o">=</span> <span class="n">song_binary</span>
             <span class="c1"># syllable-type for each syllable as int</span>
-            <span class="n">sequence</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">segment_names</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">&#39;offsets_seconds&#39;</span><span class="p">])</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">segment_names</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s2">&quot;offsets_seconds&quot;</span><span class="p">])</span>
         <span class="c1"># if &gt;1 segment type (plus noise) label sylls by majority vote on un-smoothed labels</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">segment_labels_by_majority</span><span class="p">:</span>
             <span class="c1"># if no refs provided, use use on/offsets from smoothed labels</span>
             <span class="k">if</span> <span class="n">segment_ref_onsets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">segment_ref_onsets</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;onsets_seconds&#39;</span><span class="p">]</span>
+                <span class="n">segment_ref_onsets</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;onsets_seconds&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">segment_ref_offsets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">segment_ref_offsets</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;offsets_seconds&#39;</span><span class="p">]</span>
+                <span class="n">segment_ref_offsets</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;offsets_seconds&quot;</span><span class="p">]</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   Labeling by majority:&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s2">&quot;uint8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
                 <span class="n">cast_to</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s1">&#39;uint16&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s2">&quot;uint16&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
                 <span class="n">cast_to</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span>
-            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s1">&#39;uint32&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">segment_dims</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="s2">&quot;uint32&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">:</span>
                 <span class="n">cast_to</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint32</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">cast_to</span> <span class="o">=</span> <span class="kc">None</span>
@@ -507,8 +515,8 @@
             <span class="c1"># syllable-type for each syllable as int</span>
             <span class="n">sequence</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">segment_utils</span><span class="o">.</span><span class="n">label_syllables_by_majority</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">segment_ref_onsets</span><span class="p">,</span> <span class="n">segment_ref_offsets</span><span class="p">,</span>
                                                                          <span class="n">samplerate</span><span class="p">)</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence</span>
     <span class="k">return</span> <span class="n">segments</span></div>
 
 
@@ -523,8 +531,8 @@
 
     <span class="k">if</span> <span class="n">block_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># add offset from position of chunk in</span>
-        <span class="n">chunk_start_index</span> <span class="o">=</span> <span class="n">block_info</span><span class="p">[</span><span class="kc">None</span><span class="p">][</span><span class="s1">&#39;array-location&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">chunk_end_index</span> <span class="o">=</span> <span class="n">block_info</span><span class="p">[</span><span class="kc">None</span><span class="p">][</span><span class="s1">&#39;array-location&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">chunk_start_index</span> <span class="o">=</span> <span class="n">block_info</span><span class="p">[</span><span class="kc">None</span><span class="p">][</span><span class="s2">&quot;array-location&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">chunk_end_index</span> <span class="o">=</span> <span class="n">block_info</span><span class="p">[</span><span class="kc">None</span><span class="p">][</span><span class="s2">&quot;array-location&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="n">event_indices</span> <span class="o">+=</span> <span class="n">chunk_start_index</span>
         <span class="c1"># correct for overlap in all but the first chunk</span>
@@ -542,15 +550,17 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">event_indices</span><span class="p">,</span> <span class="n">event_confidence</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="predict_events"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_events">[docs]</a><span class="k">def</span> <span class="nf">predict_events</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                   <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-                   <span class="n">event_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                   <span class="n">event_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                   <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                   <span class="n">events_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                   <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-                   <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                   <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="predict_events"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_events">[docs]</a><span class="k">def</span> <span class="nf">predict_events</span><span class="p">(</span>
+    <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">event_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">event_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">events_offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    Args:</span>
@@ -584,28 +594,30 @@
 
     <span class="n">events</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_dims</span><span class="p">):</span>
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;samplerate_Hz&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplerate</span>
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_dims</span>
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_names</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;samplerate_Hz&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplerate</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_dims</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">event_names</span>
 
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">events</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;seconds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">events</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">pad</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">event_dist</span> <span class="o">*</span> <span class="n">samplerate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">event_dim</span><span class="p">,</span> <span class="n">event_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">event_dims</span><span class="p">,</span> <span class="n">event_names</span><span class="p">):</span>
 
-            <span class="n">event_indices_and_probs</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span><span class="n">_detect_events_oom</span><span class="p">,</span>
-                                                     <span class="n">class_probabilities</span><span class="p">,</span>
-                                                     <span class="n">thres</span><span class="o">=</span><span class="n">event_thres</span><span class="p">,</span>
-                                                     <span class="n">min_dist</span><span class="o">=</span><span class="n">event_dist</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">,</span>
-                                                     <span class="n">index</span><span class="o">=</span><span class="n">event_dim</span><span class="p">,</span>
-                                                     <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
-                                                     <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                                                     <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
-                                                     <span class="n">trim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                                                     <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-                                                     <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(()))</span>
+            <span class="n">event_indices_and_probs</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">map_overlap</span><span class="p">(</span>
+                <span class="n">_detect_events_oom</span><span class="p">,</span>
+                <span class="n">class_probabilities</span><span class="p">,</span>
+                <span class="n">thres</span><span class="o">=</span><span class="n">event_thres</span><span class="p">,</span>
+                <span class="n">min_dist</span><span class="o">=</span><span class="n">event_dist</span> <span class="o">*</span> <span class="n">samplerate</span><span class="p">,</span>
+                <span class="n">index</span><span class="o">=</span><span class="n">event_dim</span><span class="p">,</span>
+                <span class="n">pad</span><span class="o">=</span><span class="n">pad</span><span class="p">,</span>
+                <span class="n">depth</span><span class="o">=</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span>
+                <span class="n">trim</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                <span class="n">meta</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(()),</span>
+            <span class="p">)</span>
             <span class="k">with</span> <span class="n">ProgressBar</span><span class="p">(</span><span class="n">minimum</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
                 <span class="n">event_indices_and_probs</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">event_indices_and_probs</span><span class="p">)</span>
             <span class="n">event_indices</span><span class="p">,</span> <span class="n">event_probabilities</span> <span class="o">=</span> <span class="n">event_indices_and_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">event_indices_and_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">1</span><span class="p">]</span>
@@ -614,57 +626,79 @@
             <span class="n">events_seconds</span> <span class="o">+=</span> <span class="n">events_offset</span>
 
             <span class="n">good_event_indices</span> <span class="o">=</span> <span class="n">event_utils</span><span class="o">.</span><span class="n">event_interval_filter</span><span class="p">(</span><span class="n">events_seconds</span><span class="p">,</span> <span class="n">event_dist_min</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">)</span>
-            <span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events_seconds</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">])</span>
-            <span class="n">events</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_probabilities</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">])</span>
-            <span class="n">events</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">event_name</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">events_seconds</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">]])</span>
+            <span class="n">events</span><span class="p">[</span><span class="s2">&quot;seconds&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">events_seconds</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">])</span>
+            <span class="n">events</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">event_probabilities</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">])</span>
+            <span class="n">events</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">event_name</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">events_seconds</span><span class="p">[</span><span class="n">good_event_indices</span><span class="p">]])</span>
 
     <span class="k">return</span> <span class="n">events</span></div>
 
 
-<span class="k">def</span> <span class="nf">predict_song</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-                 <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-                 <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                 <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-                 <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                 <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
-                 <span class="n">segment_ref_onsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">segment_ref_offsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                 <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">predict_song</span><span class="p">(</span>
+    <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+    <span class="n">segment_ref_onsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_ref_offsets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
 
-    <span class="n">samplerate</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;samplerate_x_Hz&#39;</span><span class="p">]</span>
+    <span class="n">samplerate</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;samplerate_x_Hz&quot;</span><span class="p">]</span>
     <span class="n">events_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">segment_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;segment&#39;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_types&#39;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">segment_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_names&#39;</span><span class="p">][</span><span class="n">segment_dim</span><span class="p">])</span> <span class="k">for</span> <span class="n">segment_dim</span> <span class="ow">in</span> <span class="n">segment_dims</span><span class="p">]</span>
-    <span class="n">segments</span> <span class="o">=</span> <span class="n">predict_segments</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">segment_dims</span><span class="p">,</span> <span class="n">segment_names</span><span class="p">,</span> <span class="n">segment_ref_onsets</span><span class="p">,</span>
-                                <span class="n">segment_ref_offsets</span><span class="p">,</span> <span class="n">segment_thres</span><span class="p">,</span> <span class="n">segment_minlen</span><span class="p">,</span> <span class="n">segment_fillgap</span><span class="p">)</span>
+    <span class="n">segment_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;segment&quot;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">segment_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">][</span><span class="n">segment_dim</span><span class="p">])</span> <span class="k">for</span> <span class="n">segment_dim</span> <span class="ow">in</span> <span class="n">segment_dims</span><span class="p">]</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">predict_segments</span><span class="p">(</span>
+        <span class="n">class_probabilities</span><span class="p">,</span>
+        <span class="n">samplerate</span><span class="p">,</span>
+        <span class="n">segment_dims</span><span class="p">,</span>
+        <span class="n">segment_names</span><span class="p">,</span>
+        <span class="n">segment_ref_onsets</span><span class="p">,</span>
+        <span class="n">segment_ref_offsets</span><span class="p">,</span>
+        <span class="n">segment_thres</span><span class="p">,</span>
+        <span class="n">segment_minlen</span><span class="p">,</span>
+        <span class="n">segment_fillgap</span><span class="p">,</span>
+    <span class="p">)</span>
 
-    <span class="n">event_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">val</span> <span class="o">==</span> <span class="s1">&#39;event&#39;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_types&#39;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">event_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_names&#39;</span><span class="p">][</span><span class="n">event_dim</span><span class="p">])</span> <span class="k">for</span> <span class="n">event_dim</span> <span class="ow">in</span> <span class="n">event_dims</span><span class="p">]</span>
-    <span class="n">events</span> <span class="o">=</span> <span class="n">predict_events</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_dims</span><span class="p">,</span> <span class="n">event_names</span><span class="p">,</span> <span class="n">event_thres</span><span class="p">,</span> <span class="n">events_offset</span><span class="p">,</span> <span class="n">event_dist</span><span class="p">,</span>
-                            <span class="n">event_dist_min</span><span class="p">,</span> <span class="n">event_dist_max</span><span class="p">)</span>
+    <span class="n">event_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;event&quot;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">event_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">][</span><span class="n">event_dim</span><span class="p">])</span> <span class="k">for</span> <span class="n">event_dim</span> <span class="ow">in</span> <span class="n">event_dims</span><span class="p">]</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">predict_events</span><span class="p">(</span>
+        <span class="n">class_probabilities</span><span class="p">,</span>
+        <span class="n">samplerate</span><span class="p">,</span>
+        <span class="n">event_dims</span><span class="p">,</span>
+        <span class="n">event_names</span><span class="p">,</span>
+        <span class="n">event_thres</span><span class="p">,</span>
+        <span class="n">events_offset</span><span class="p">,</span>
+        <span class="n">event_dist</span><span class="p">,</span>
+        <span class="n">event_dist_min</span><span class="p">,</span>
+        <span class="n">event_dist_max</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span>
 
 
-<div class="viewcode-block" id="predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict">[docs]</a><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">model</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-            <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
-            <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-            <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">pad</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="n">save_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict">[docs]</a><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+    <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">pad</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">prepend_data_padding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">save_memory</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    Usage:</span>
@@ -737,25 +771,25 @@
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
 
     <span class="c1"># use postprocessing values from params and/or args</span>
-    <span class="k">if</span> <span class="n">segment_use_optimized</span> <span class="ow">and</span> <span class="s1">&#39;post_opt&#39;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;post_opt&#39;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">segment_use_optimized</span> <span class="ow">and</span> <span class="s2">&quot;post_opt&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;post_opt&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">segment_minlen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">segment_minlen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;post_opt&#39;</span><span class="p">][</span><span class="s1">&#39;min_len&#39;</span><span class="p">]</span>
+            <span class="n">segment_minlen</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;post_opt&quot;</span><span class="p">][</span><span class="s2">&quot;min_len&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">segment_fillgap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">segment_fillgap</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;post_opt&#39;</span><span class="p">][</span><span class="s1">&#39;gap_dur&#39;</span><span class="p">]</span>
+            <span class="n">segment_fillgap</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;post_opt&quot;</span><span class="p">][</span><span class="s2">&quot;gap_dur&quot;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_size</span>
 
     <span class="k">if</span> <span class="n">pad</span><span class="p">:</span>
         <span class="c1"># figure out length in multiples of batches</span>
 
-        <span class="n">batch_len</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;batch_size&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_hist&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_hist&#39;</span><span class="p">]</span>
+        <span class="n">batch_len</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]</span>
         <span class="n">x_len_original</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">pad_len</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">remainder</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_len</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">pad_len</span> <span class="o">=</span> <span class="n">batch_len</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">remainder</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">batch_len</span><span class="p">)</span>
         <span class="c1"># pad with end val to fill</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">pad_len</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;edge&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">pad_len</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">)</span>
 
     <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">predict_probabilities</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">prepend_data_padding</span><span class="p">)</span>
 
@@ -767,22 +801,24 @@
         <span class="c1"># trim probs to original len of x</span>
         <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">class_probabilities</span><span class="p">[:</span><span class="n">x_len_original</span><span class="p">,</span> <span class="p">:]</span>
 
-    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span> <span class="o">=</span> <span class="n">predict_song</span><span class="p">(</span><span class="n">class_probabilities</span><span class="o">=</span><span class="n">class_probabilities</span><span class="p">,</span>
-                                    <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
-                                    <span class="n">event_thres</span><span class="o">=</span><span class="n">event_thres</span><span class="p">,</span>
-                                    <span class="n">event_dist</span><span class="o">=</span><span class="n">event_dist</span><span class="p">,</span>
-                                    <span class="n">event_dist_min</span><span class="o">=</span><span class="n">event_dist_min</span><span class="p">,</span>
-                                    <span class="n">event_dist_max</span><span class="o">=</span><span class="n">event_dist_max</span><span class="p">,</span>
-                                    <span class="n">segment_ref_onsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">segment_ref_offsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">segment_thres</span><span class="o">=</span><span class="n">segment_thres</span><span class="p">,</span>
-                                    <span class="n">segment_minlen</span><span class="o">=</span><span class="n">segment_minlen</span><span class="p">,</span>
-                                    <span class="n">segment_fillgap</span><span class="o">=</span><span class="n">segment_fillgap</span><span class="p">)</span>
+    <span class="n">events</span><span class="p">,</span> <span class="n">segments</span> <span class="o">=</span> <span class="n">predict_song</span><span class="p">(</span>
+        <span class="n">class_probabilities</span><span class="o">=</span><span class="n">class_probabilities</span><span class="p">,</span>
+        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
+        <span class="n">event_thres</span><span class="o">=</span><span class="n">event_thres</span><span class="p">,</span>
+        <span class="n">event_dist</span><span class="o">=</span><span class="n">event_dist</span><span class="p">,</span>
+        <span class="n">event_dist_min</span><span class="o">=</span><span class="n">event_dist_min</span><span class="p">,</span>
+        <span class="n">event_dist_max</span><span class="o">=</span><span class="n">event_dist_max</span><span class="p">,</span>
+        <span class="n">segment_ref_onsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">segment_ref_offsets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">segment_thres</span><span class="o">=</span><span class="n">segment_thres</span><span class="p">,</span>
+        <span class="n">segment_minlen</span><span class="o">=</span><span class="n">segment_minlen</span><span class="p">,</span>
+        <span class="n">segment_fillgap</span><span class="o">=</span><span class="n">segment_fillgap</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">save_memory</span><span class="p">:</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_to_np</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">&#39;probabilities&#39;</span><span class="p">])</span>
-        <span class="n">segments</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_to_np</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">&#39;samples&#39;</span><span class="p">])</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_to_np</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s2">&quot;probabilities&quot;</span><span class="p">])</span>
+        <span class="n">segments</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_to_np</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s2">&quot;samples&quot;</span><span class="p">])</span>
         <span class="n">class_probabilities</span> <span class="o">=</span> <span class="n">_to_np</span><span class="p">(</span><span class="n">class_probabilities</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_names&#39;</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">]</span></div>
 
 
 <span class="k">def</span> <span class="nf">_to_np</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
@@ -791,22 +827,26 @@
     <span class="k">return</span> <span class="n">array</span>
 
 
-<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span> <span class="nf">cli_predict</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                <span class="o">*</span><span class="p">,</span>
-                <span class="n">save_filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">save_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;csv&#39;</span><span class="p">,</span>
-                <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
-                <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
-                <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-                <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">resample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span> <span class="nf">cli_predict</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">save_filename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">save_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;csv&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">event_dist_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_dist_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+    <span class="n">segment_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">segment_use_optimized</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">segment_minlen</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">segment_fillgap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bandpass_low_freq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">bandpass_up_freq</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">resample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Predict song labels for a wav file or a folder of wav files.</span>
 
 <span class="sd">    Saves hdf5 files with keys: events, segments, class_probabilities</span>
@@ -846,27 +886,31 @@
 <span class="sd">                                          Defaults to None (keep all segments).</span>
 <span class="sd">        segment_fillgap (Optional[float]): Gap between adjacent segments to be filled. Useful for correcting brief lapses.</span>
 <span class="sd">                                           Defaults to None (do not fill gaps).</span>
+
+<span class="sd">        bandpass_low_freq (float): Lower cutoff frequency in Hz for bandpass filtering audio data. Defaults to 1.0.</span>
+<span class="sd">        bandpass_up_freq (float): Upper cutoff frequency in Hz for bandpass filtering audio data. Defaults to samplingrate / 2.</span>
+
 <span class="sd">        resample (bool): Resample audio data to the rate expected by the model. Defaults to True.</span>
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError on unknown save_format</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">save_format</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span> <span class="ow">or</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">&#39;h5&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span> <span class="ow">or</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;h5&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown save_format &#39;</span><span class="si">{</span><span class="n">save_format</span><span class="si">}</span><span class="s2">&#39;. Should be either &#39;csv&#39; or &#39;h5&#39;.&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1"> is a folder. Will ignore save_filename argument </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2"> is a folder. Will ignore save_filename argument </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
     <span class="c1"># if path is folder: glob contents - all files</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-        <span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/*.wav&#39;</span><span class="p">)</span>
+        <span class="n">filenames</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/*.wav&quot;</span><span class="p">)</span>
         <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">filename</span><span class="p">)]</span>
     <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
         <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading model from </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">)</span>
-    <span class="n">fs_model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;samplerate_x_Hz&#39;</span><span class="p">]</span>
+    <span class="n">fs_model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;samplerate_x_Hz&quot;</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">recording_filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Loading data from </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -877,51 +921,57 @@
             <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
+            <span class="k">if</span> <span class="n">bandpass_low_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">bandpass_up_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Filtering audio between </span><span class="si">{</span><span class="n">bandpass_low_freq</span><span class="si">}</span><span class="s2">Hz and </span><span class="si">{</span><span class="n">bandpass_up_freq</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">bandpass_filter_song</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">bandpass_low_freq</span><span class="p">,</span> <span class="n">bandpass_up_freq</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">resample</span> <span class="ow">and</span> <span class="n">fs_audio</span> <span class="o">!=</span> <span class="n">fs_model</span><span class="p">:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Resampling. Audio rate is </span><span class="si">{</span><span class="n">fs_audio</span><span class="si">}</span><span class="s2">Hz but model was trained on data with </span><span class="si">{</span><span class="n">fs_model</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">fs_model</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Annotating using model at </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
             <span class="c1"># TODO: load model once, provide as direct arg</span>
-            <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>
-                                                                         <span class="kc">None</span><span class="p">,</span>
-                                                                         <span class="n">verbose</span><span class="p">,</span>
-                                                                         <span class="n">batch_size</span><span class="p">,</span>
-                                                                         <span class="n">model</span><span class="p">,</span>
-                                                                         <span class="n">params</span><span class="p">,</span>
-                                                                         <span class="n">event_thres</span><span class="p">,</span>
-                                                                         <span class="n">event_dist</span><span class="p">,</span>
-                                                                         <span class="n">event_dist_min</span><span class="p">,</span>
-                                                                         <span class="n">event_dist_max</span><span class="p">,</span>
-                                                                         <span class="n">segment_thres</span><span class="p">,</span>
-                                                                         <span class="n">segment_use_optimized</span><span class="p">,</span>
-                                                                         <span class="n">segment_minlen</span><span class="p">,</span>
-                                                                         <span class="n">segment_fillgap</span><span class="p">,</span>
-                                                                         <span class="n">save_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">verbose</span><span class="p">,</span>
+                <span class="n">batch_size</span><span class="p">,</span>
+                <span class="n">model</span><span class="p">,</span>
+                <span class="n">params</span><span class="p">,</span>
+                <span class="n">event_thres</span><span class="p">,</span>
+                <span class="n">event_dist</span><span class="p">,</span>
+                <span class="n">event_dist_min</span><span class="p">,</span>
+                <span class="n">event_dist_max</span><span class="p">,</span>
+                <span class="n">segment_thres</span><span class="p">,</span>
+                <span class="n">segment_use_optimized</span><span class="p">,</span>
+                <span class="n">segment_minlen</span><span class="p">,</span>
+                <span class="n">segment_fillgap</span><span class="p">,</span>
+                <span class="n">save_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;event&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;seconds&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> instances of events &#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]))</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;segment&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;segment&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]:</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;   found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">&#39;onsets_seconds&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> instances of segments &#39;</span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="s1">&#39;sequence&#39;</span><span class="p">]))</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">&#39;h5&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;h5&quot;</span><span class="p">:</span>
                 <span class="c1"># turn events and segments into df!</span>
                 <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="s1">&#39;events&#39;</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
-                    <span class="s1">&#39;segments&#39;</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
-                    <span class="s1">&#39;class_probabilities&#39;</span><span class="p">:</span> <span class="n">class_probabilities</span><span class="p">,</span>
-                    <span class="s1">&#39;class_names&#39;</span><span class="p">:</span> <span class="n">class_names</span>
+                    <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">events</span><span class="p">,</span>
+                    <span class="s2">&quot;segments&quot;</span><span class="p">:</span> <span class="n">segments</span><span class="p">,</span>
+                    <span class="s2">&quot;class_probabilities&quot;</span><span class="p">:</span> <span class="n">class_probabilities</span><span class="p">,</span>
+                    <span class="s2">&quot;class_names&quot;</span><span class="p">:</span> <span class="n">class_names</span><span class="p">,</span>
                 <span class="p">}</span>
                 <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_das.h5&#39;</span>
+                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_das.h5&quot;</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
                 <span class="n">flammkuchen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s1">&#39;csv&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
                 <span class="n">evt</span> <span class="o">=</span> <span class="n">annot</span><span class="o">.</span><span class="n">Events</span><span class="o">.</span><span class="n">from_predict</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">save_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;_annotations.csv&#39;</span>
+                    <span class="n">save_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">recording_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_annotations.csv&quot;</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Saving results to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
                 <span class="n">evt</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_filename</span><span class="p">)</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done.&quot;</span><span class="p">)</span>
@@ -930,7 +980,7 @@
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
                 <span class="n">save_filename</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error processing file </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span></div>
+            <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error processing file </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>

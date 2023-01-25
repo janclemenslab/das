@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -277,12 +277,9 @@
 
 
 <span class="c1"># to segment_utils</span>
-<div class="viewcode-block" id="evaluate_segments"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segments">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span>
-                      <span class="n">labels_pred</span><span class="p">,</span>
-                      <span class="n">class_names</span><span class="p">,</span>
-                      <span class="n">confmat_as_pandas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                      <span class="n">report_as_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                      <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="evaluate_segments"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segments">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segments</span><span class="p">(</span>
+    <span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">confmat_as_pandas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">report_as_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Args:</span>
@@ -305,17 +302,14 @@
 
     <span class="n">conf_mat</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">confmat_as_pandas</span><span class="p">:</span>
-        <span class="n">conf_mat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">conf_mat</span><span class="p">,</span>
-                                <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;true &#39;</span> <span class="o">+</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">],</span>
-                                <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pred &#39;</span> <span class="o">+</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">])</span>
+        <span class="n">conf_mat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">conf_mat</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;true &quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;pred &quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">]</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">))</span>
-    <span class="n">report</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span>
-                                                   <span class="n">labels_pred</span><span class="p">,</span>
-                                                   <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-                                                   <span class="n">target_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span>
-                                                   <span class="n">output_dict</span><span class="o">=</span><span class="n">report_as_dict</span><span class="p">,</span>
-                                                   <span class="n">digits</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">classification_report</span><span class="p">(</span>
+        <span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">output_dict</span><span class="o">=</span><span class="n">report_as_dict</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span></div>
 
 
@@ -336,10 +330,12 @@
 
     <span class="c1"># ensure evaluate_eventtimes returns nearest_predicted_onsets (nearest true event for each predicted event),</span>
     <span class="c1"># if not, rename var</span>
-    <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">segment_onsets_true</span><span class="p">,</span> <span class="n">segment_onsets_pred</span><span class="p">,</span>
-                                                                                <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
-    <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span><span class="n">segment_offsets_true</span><span class="p">,</span> <span class="n">segment_offsets_pred</span><span class="p">,</span>
-                                                                                  <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">)</span>
+    <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span>
+        <span class="n">segment_onsets_true</span><span class="p">,</span> <span class="n">segment_onsets_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span>
+    <span class="p">)</span>
+    <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span> <span class="o">=</span> <span class="n">evaluate_eventtimes</span><span class="p">(</span>
+        <span class="n">segment_offsets_true</span><span class="p">,</span> <span class="n">segment_offsets_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">,</span> <span class="n">event_tol</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">segment_onsets_report</span><span class="p">,</span> <span class="n">segment_offsets_report</span><span class="p">,</span> <span class="n">nearest_predicted_onsets</span><span class="p">,</span> <span class="n">nearest_predicted_offsets</span></div>
 
 
@@ -351,12 +347,14 @@
     <span class="k">return</span> <span class="n">segment_onset_times</span><span class="p">,</span> <span class="n">segment_offset_times</span></div>
 
 
-<div class="viewcode-block" id="evaluate_probabilities"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_probabilities">[docs]</a><span class="k">def</span> <span class="nf">evaluate_probabilities</span><span class="p">(</span><span class="n">x</span><span class="p">,</span>
-                           <span class="n">y</span><span class="p">,</span>
-                           <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                           <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                           <span class="n">model_savename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                           <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="evaluate_probabilities"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_probabilities">[docs]</a><span class="k">def</span> <span class="nf">evaluate_probabilities</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">model_savename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    evaluate_probabilities(x, y, model=keras_model, params=params_dict)</span>
@@ -379,7 +377,7 @@
             <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_savename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;Required: Either a model and params OR a model_savename so we can load model and params. But model=</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s1">, params=</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s1">, model_savename=</span><span class="si">{</span><span class="n">model_savename</span><span class="si">}</span><span class="s1">.&#39;</span>
+                <span class="sa">f</span><span class="s2">&quot;Required: Either a model and params OR a model_savename so we can load model and params. But model=</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">, params=</span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">, model_savename=</span><span class="si">{</span><span class="n">model_savename</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
     <span class="c1"># do not prepend padding since we create y from the generator</span>
@@ -392,40 +390,38 @@
 
 
 <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">savename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">custom_objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">full_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Loading last best model.&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading last best model.&quot;</span><span class="p">)</span>
     <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">savename</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="n">custom_objects</span><span class="p">)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading data from </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">],</span> <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;x_suffix&#39;</span><span class="p">],</span> <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;y_suffix&#39;</span><span class="p">])</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">],</span> <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;x_suffix&quot;</span><span class="p">],</span> <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;y_suffix&quot;</span><span class="p">])</span>
 
     <span class="n">output</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;nb_hist&#39;</span><span class="p">]:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;No test data - skipping final evaluation step.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No test data - skipping final evaluation step.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">full_output</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;predicting&#39;</span><span class="p">)</span>
-        <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">evaluate_probabilities</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">],</span>
-                                                        <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span>
-                                                        <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
-                                                        <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
-                                                        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;predicting&quot;</span><span class="p">)</span>
+        <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">evaluate_probabilities</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="p">)</span>
 
         <span class="n">labels_test</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
         <span class="n">labels_pred</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
 
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;evaluating&#39;</span><span class="p">)</span>
-        <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_names&#39;</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;evaluating&quot;</span><span class="p">)</span>
+        <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;x_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;y_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;y_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;labels_test&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s1">&#39;labels_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_pred</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;x_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_test</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;y_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;y_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;labels_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_test</span>
+        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;labels_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_pred</span>
         <span class="k">if</span> <span class="n">full_output</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">output</span>
         <span class="k">else</span><span class="p">:</span>

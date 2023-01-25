@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -292,17 +292,15 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="n">top_db</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">80.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Args:</span>
-<span class="sd">            amin (float, optional): Noise floor. Defaults to 1e-10 (dB).</span>
-<span class="sd">            top_db (float, optional): Dynamic range of output. Defaults to 80.0 (dB).</span>
+<span class="sd">        amin (float, optional): Noise floor. Defaults to 1e-10 (dB).</span>
+<span class="sd">        top_db (float, optional): Dynamic range of output. Defaults to 80.0 (dB).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">amin</span> <span class="o">=</span> <span class="n">amin</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">top_db</span> <span class="o">=</span> <span class="n">top_db</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AmplitudeToDB</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AmplitudeToDB.call"><a class="viewcode-back" href="../../../api/das.kapre.utils.html#das.kapre.utils.AmplitudeToDB.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">backend_keras</span><span class="o">.</span><span class="n">amplitude_to_decibel</span><span class="p">(</span>
-            <span class="n">x</span><span class="p">,</span> <span class="n">amin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amin</span><span class="p">,</span> <span class="n">dynamic_range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_db</span>
-        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">backend_keras</span><span class="o">.</span><span class="n">amplitude_to_decibel</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">amin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amin</span><span class="p">,</span> <span class="n">dynamic_range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_db</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AmplitudeToDB.get_config"><a class="viewcode-back" href="../../../api/das.kapre.utils.html#das.kapre.utils.AmplitudeToDB.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;amin&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">amin</span><span class="p">,</span> <span class="s2">&quot;top_db&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_db</span><span class="p">}</span>
@@ -321,8 +319,14 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">int_axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">image_data_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">str_axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">int_axis</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">image_data_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-10</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
@@ -338,9 +342,7 @@
 <span class="sd">            image_data_format (str, optional): &#39;channels_first&#39; (c,x,y,) or &#39;channels_last&#39; (x,y,c) or TF &#39;default&#39;. Defaults to &#39;default&#39;.</span>
 <span class="sd">            eps (float, optional): Small numerical value added to avoid divide by zero. Defaults to 1e-10.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span>
-            <span class="n">int_axis</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">str_axis</span> <span class="ow">is</span> <span class="kc">None</span>
-        <span class="p">),</span> <span class="s2">&quot;In Normalization2D, int_axis or str_axis should be specified.&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">int_axis</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">str_axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">),</span> <span class="s2">&quot;In Normalization2D, int_axis or str_axis should be specified.&quot;</span>
 
         <span class="k">assert</span> <span class="n">image_data_format</span> <span class="ow">in</span> <span class="p">(</span>
             <span class="s2">&quot;channels_first&quot;</span><span class="p">,</span>
@@ -359,11 +361,7 @@
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># use str_axis</span>
             <span class="c1"># warning</span>
             <span class="k">if</span> <span class="n">int_axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span>
-                    <span class="s2">&quot;int_axis=</span><span class="si">{}</span><span class="s2"> passed but is ignored, str_axis is used instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">int_axis</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;int_axis=</span><span class="si">{}</span><span class="s2"> passed but is ignored, str_axis is used instead.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">int_axis</span><span class="p">))</span>
             <span class="c1"># do the work</span>
             <span class="k">assert</span> <span class="n">str_axis</span> <span class="ow">in</span> <span class="p">(</span>
                 <span class="s2">&quot;batch&quot;</span><span class="p">,</span>
@@ -376,13 +374,9 @@
                 <span class="n">int_axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_data_format</span> <span class="o">==</span> <span class="s2">&quot;channels_first&quot;</span><span class="p">:</span>
-                    <span class="n">int_axis</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;channel&quot;</span><span class="p">,</span> <span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
-                        <span class="n">str_axis</span>
-                    <span class="p">)</span>
+                    <span class="n">int_axis</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;channel&quot;</span><span class="p">,</span> <span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">str_axis</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">int_axis</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;channel&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span>
-                        <span class="n">str_axis</span>
-                    <span class="p">)</span>
+                    <span class="n">int_axis</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;data_sample&quot;</span><span class="p">,</span> <span class="s2">&quot;freq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;channel&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">str_axis</span><span class="p">)</span>
 
         <span class="k">assert</span> <span class="n">int_axis</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;invalid int_axis: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">int_axis</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">axis</span> <span class="o">=</span> <span class="n">int_axis</span>

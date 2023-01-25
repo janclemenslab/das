@@ -223,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.utils.html">das.kapre.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -271,6 +271,7 @@
 <span class="kn">import</span> <span class="nn">tensorflow.keras.layers</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">optimizers</span>
+
 <span class="c1"># from tensorflow.keras.engine.topology import Layer  #only used for type annotations</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">Lambda</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Conv1D</span><span class="p">,</span> <span class="n">SpatialDropout1D</span><span class="p">,</span> <span class="n">SeparableConv1D</span>
@@ -282,7 +283,7 @@
 
 <div class="viewcode-block" id="channel_normalization"><a class="viewcode-back" href="../../../api/das.tcn.tcn.html#das.tcn.tcn.channel_normalization">[docs]</a><span class="k">def</span> <span class="nf">channel_normalization</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="c1"># type: (Layer) -&gt; Layer</span>
-    <span class="sd">&quot;&quot;&quot; Normalize a layer to the maximum activation</span>
+    <span class="sd">&quot;&quot;&quot;Normalize a layer to the maximum activation</span>
 
 <span class="sd">    This keeps a layers values between zero and one.</span>
 <span class="sd">    It helps with relu&#39;s unbounded activation</span>
@@ -309,21 +310,23 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        A new layer with the wavenet activation applied</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tanh_out</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">sigm_out</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">tanh_out</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s2">&quot;tanh&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">sigm_out</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">multiply</span><span class="p">([</span><span class="n">tanh_out</span><span class="p">,</span> <span class="n">sigm_out</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="residual_block"><a class="viewcode-back" href="../../../api/das.tcn.tcn.html#das.tcn.tcn.residual_block">[docs]</a><span class="k">def</span> <span class="nf">residual_block</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Layer</span><span class="p">,</span>
-                   <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                   <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                   <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                   <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                   <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                   <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;causal&#39;</span><span class="p">,</span>
-                   <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                   <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                   <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="n">Layer</span><span class="p">]:</span>
+<div class="viewcode-block" id="residual_block"><a class="viewcode-back" href="../../../api/das.tcn.tcn.html#das.tcn.tcn.residual_block">[docs]</a><span class="k">def</span> <span class="nf">residual_block</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Layer</span><span class="p">,</span>
+    <span class="n">s</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;causal&quot;</span><span class="p">,</span>
+    <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Layer</span><span class="p">,</span> <span class="n">Layer</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Defines the residual block for the WaveNet TCN</span>
 
 <span class="sd">    Args:</span>
@@ -346,18 +349,16 @@
     <span class="n">original_x</span> <span class="o">=</span> <span class="n">x</span>
 
     <span class="k">if</span> <span class="n">use_separable</span><span class="p">:</span>
-        <span class="n">conv</span> <span class="o">=</span> <span class="n">SeparableConv1D</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span>
-                               <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
-                               <span class="n">dilation_rate</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
-                               <span class="n">depth_multiplier</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                               <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">conv</span> <span class="o">=</span> <span class="n">SeparableConv1D</span><span class="p">(</span>
+            <span class="n">filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">dilation_rate</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">depth_multiplier</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding</span>
+        <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">conv</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">dilation_rate</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">&#39;norm_relu&#39;</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">conv</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;norm_relu&quot;</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">conv</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Lambda</span><span class="p">(</span><span class="n">channel_normalization</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s1">&#39;wavenet&#39;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">activation</span> <span class="o">==</span> <span class="s2">&quot;wavenet&quot;</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">wave_net_activation</span><span class="p">(</span><span class="n">conv</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="n">activation</span><span class="p">)(</span><span class="n">conv</span><span class="p">)</span>
@@ -365,13 +366,12 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">SpatialDropout1D</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
     <span class="c1"># 1x1 conv.</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="n">nb_filters</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Conv1D</span><span class="p">(</span><span class="n">nb_filters</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">res_x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">add</span><span class="p">([</span><span class="n">original_x</span><span class="p">,</span> <span class="n">x</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">res_x</span><span class="p">,</span> <span class="n">x</span></div>
 
 
 <span class="k">def</span> <span class="nf">process_dilations</span><span class="p">(</span><span class="n">dilations</span><span class="p">):</span>
-
     <span class="k">def</span> <span class="nf">is_power_of_two</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">num</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">((</span><span class="n">num</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
 
@@ -379,43 +379,45 @@
         <span class="k">return</span> <span class="n">dilations</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">new_dilations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dilations</span><span class="p">]</span>
+        <span class="n">new_dilations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span> <span class="o">**</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">dilations</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">new_dilations</span>
 
 
 <div class="viewcode-block" id="TCN"><a class="viewcode-back" href="../../../api/das.tcn.tcn.html#das.tcn.tcn.TCN">[docs]</a><span class="k">class</span> <span class="nc">TCN</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Creates a TCN layer.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            input_layer: A tensor of shape (batch_size, timesteps, input_dim).</span>
-<span class="sd">            nb_filters: The number of filters to use in the convolutional layers.</span>
-<span class="sd">            kernel_size: The size of the kernel to use in each convolutional layer.</span>
-<span class="sd">            dilations: The list of the dilations. Example is: [1, 2, 4, 8, 16, 32, 64].</span>
-<span class="sd">            nb_stacks : The number of stacks of residual blocks to use.</span>
-<span class="sd">            activation: The activations to use (norm_relu, wavenet, relu...).</span>
-<span class="sd">            use_skip_connections: Boolean. If we want to add skip connections from input to each residual block.</span>
-<span class="sd">            use_separable: Boolean. Use separable convolutions in each residual block.</span>
-<span class="sd">            return_sequences: Boolean. Whether to return the last output in the output sequence, or the full sequence.</span>
-<span class="sd">            padding: The padding to use in the convolutional layers, &#39;causal&#39; or &#39;same&#39;.</span>
-<span class="sd">            dropout_rate: Float between 0 and 1. Fraction of the input units to drop.</span>
-<span class="sd">            name: Name of the model. Useful when having multiple TCN.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        input_layer: A tensor of shape (batch_size, timesteps, input_dim).</span>
+<span class="sd">        nb_filters: The number of filters to use in the convolutional layers.</span>
+<span class="sd">        kernel_size: The size of the kernel to use in each convolutional layer.</span>
+<span class="sd">        dilations: The list of the dilations. Example is: [1, 2, 4, 8, 16, 32, 64].</span>
+<span class="sd">        nb_stacks : The number of stacks of residual blocks to use.</span>
+<span class="sd">        activation: The activations to use (norm_relu, wavenet, relu...).</span>
+<span class="sd">        use_skip_connections: Boolean. If we want to add skip connections from input to each residual block.</span>
+<span class="sd">        use_separable: Boolean. Use separable convolutions in each residual block.</span>
+<span class="sd">        return_sequences: Boolean. Whether to return the last output in the output sequence, or the full sequence.</span>
+<span class="sd">        padding: The padding to use in the convolutional layers, &#39;causal&#39; or &#39;same&#39;.</span>
+<span class="sd">        dropout_rate: Float between 0 and 1. Fraction of the input units to drop.</span>
+<span class="sd">        name: Name of the model. Useful when having multiple TCN.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            A TCN layer.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        A TCN layer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">nb_filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-                 <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                 <span class="n">nb_stacks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">dilations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;norm_relu&#39;</span><span class="p">,</span>
-                 <span class="n">use_skip_connections</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">use_separable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;causal&#39;</span><span class="p">,</span>
-                 <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                 <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tcn&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">nb_filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">nb_stacks</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">dilations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;norm_relu&quot;</span><span class="p">,</span>
+        <span class="n">use_skip_connections</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_separable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;causal&quot;</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tcn&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span> <span class="o">=</span> <span class="n">return_sequences</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span> <span class="o">=</span> <span class="n">dropout_rate</span>
@@ -445,12 +447,21 @@
         <span class="n">skip_connections</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_stacks</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dilations</span><span class="p">:</span>
-                <span class="n">x</span><span class="p">,</span> <span class="n">skip_out</span> <span class="o">=</span> <span class="n">residual_block</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_filters</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">use_separable</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">)</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">skip_out</span> <span class="o">=</span> <span class="n">residual_block</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span>
+                    <span class="n">s</span><span class="p">,</span>
+                    <span class="n">i</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nb_filters</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">kernel_size</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">use_separable</span><span class="p">[</span><span class="n">s</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dropout_rate</span><span class="p">,</span>
+                <span class="p">)</span>
                 <span class="n">skip_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">skip_out</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_skip_connections</span><span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">skip_connections</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span><span class="p">:</span>
             <span class="n">output_slice_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
