@@ -646,6 +646,7 @@ def cli_predict(
                 x = x[:, np.newaxis]
 
             if bandpass_low_freq is not None or bandpass_up_freq is not None:
+                logging.info(f"   Filtering audio between {bandpass_low_freq}Hz and {bandpass_up_freq}Hz.")
                 x = utils.bandpass_filter_song(x, fs_audio, bandpass_low_freq, bandpass_up_freq)
 
             if resample and fs_audio != fs_model:
