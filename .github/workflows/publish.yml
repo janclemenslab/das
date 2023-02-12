@@ -1,0 +1,47 @@
+name: Publish to Anaconda.org
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'manual run'
+
+jobs:
+  publish:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: False
+      matrix:
+        python-version: [3.9 , '3.10']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+      run:
+        shell: bash -l {0}
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
+      uses: conda-incubator/setup-miniconda@v2.2.0
+      with:
+        auto-update-conda: true
+        miniforge-variant: Mambaforge
+        channels: conda-forge,ncb,anaconda,defaults
+        python-version: 3.9
+        mamba-version: "*"
+        auto-activate-base: false
+        activate-environment: anaconda-client-env
+        environment-file: build_env.yml
+        condarc-file: condarc.yml
+        use-mamba: true
+        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+    - name: Build and upload to anaconda
+      run: |
+        conda mambabuild conda/das -c conda-forge -c ncb -c anaconda --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+      env:
+        ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
