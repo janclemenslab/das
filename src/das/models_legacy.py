@@ -62,7 +62,7 @@ def cnn(
     out = inp
     for conv in range(nb_conv):
         for _ in range(nb_stacks):
-            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
+            out = kl.Conv1D(nb_filters * (2**conv), kernel_size, padding="same", activation="relu")(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
@@ -124,7 +124,7 @@ def cnn2D(
     for conv in range(nb_conv):
         for stack in range(nb_stacks):
             out = kl.Conv2D(
-                nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
+                nb_filters * (2**conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
             )(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
 
@@ -186,13 +186,13 @@ def fcn(
     out = inp
     for conv in range(nb_conv):
         for _ in range(nb_stacks):
-            out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
+            out = kl.Conv1D(nb_filters * (2**conv), kernel_size, padding="same", activation="relu")(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
     for conv in range(nb_conv, 0, -1):
         out = kl.UpSampling1D(size=2)(out)
-        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
+        out = kl.Conv1D(nb_filters * (2**conv), kernel_size, padding="same", activation="relu")(out)
 
     if not return_sequences:
         out = kl.Flatten()(out)
@@ -248,7 +248,7 @@ def fcn2D(
     for conv in range(nb_conv):
         for stack in range(nb_stacks):
             out = kl.Conv2D(
-                nb_filters * (2 ** conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
+                nb_filters * (2**conv), (max(1, int(out.shape[1])), kernel_size), padding="same", activation="relu"
             )(out)
             out = kl.BatchNormalization()(out) if batch_norm else out
         out = kl.MaxPooling2D((min(int(out.shape[1]), 2), 2))(out)
@@ -320,7 +320,7 @@ def tcn_seq(
     input_layer = kl.Input(shape=(nb_hist, nb_freq))
     out = input_layer
     for conv in range(nb_pre_conv):
-        out = kl.Conv1D(nb_filters * (2 ** conv), kernel_size, padding="same", activation="relu")(out)
+        out = kl.Conv1D(nb_filters * (2**conv), kernel_size, padding="same", activation="relu")(out)
         out = kl.BatchNormalization()(out)
         out = kl.MaxPooling1D(min(int(out.shape[1]), 2))(out)
 
@@ -339,7 +339,7 @@ def tcn_seq(
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation(out_activation)(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
@@ -425,7 +425,7 @@ def tcn_tcn(
             use_separable=use_separable,
             name="frontend",
         )(out)
-        out = kl.MaxPooling1D(pool_size=2 ** nb_pre_conv, strides=2 ** nb_pre_conv)(out)  # or avg pooling?
+        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
     x = tcn_layer.TCN(
         nb_filters=nb_filters,
@@ -442,7 +442,7 @@ def tcn_tcn(
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation("softmax")(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
     model = keras.models.Model(input_layer, output_layer, name="TCN")
 
@@ -522,7 +522,7 @@ def tcn_small(
             use_separable=use_separable,
             name="frontend",
         )(out)
-        out = kl.MaxPooling1D(pool_size=2 ** nb_pre_conv, strides=2 ** nb_pre_conv)(out)  # or avg pooling?
+        out = kl.MaxPooling1D(pool_size=2**nb_pre_conv, strides=2**nb_pre_conv)(out)  # or avg pooling?
 
     x = tcn_layer.TCN(
         nb_filters=nb_filters,
@@ -539,7 +539,7 @@ def tcn_small(
     x = kl.Dense(nb_classes)(x)
     x = kl.Activation("softmax")(x)
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
     output_layer = x
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
@@ -616,7 +616,7 @@ def tcn_stft(
     if nb_pre_conv > 0:
         out = Spectrogram(
             n_dft=pre_nb_dft,
-            n_hop=2 ** nb_pre_conv,
+            n_hop=2**nb_pre_conv,
             return_decibel_spectrogram=True,
             power_spectrogram=1.0,
             trainable_kernel=True,
@@ -646,7 +646,7 @@ def tcn_stft(
     x = kl.Activation("softmax")(x)
 
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
 
     output_layer = x
 

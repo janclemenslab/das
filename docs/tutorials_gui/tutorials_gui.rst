@@ -4,7 +4,7 @@
 GUI documentation
 =================
 
-Start with the `quick start tutorial <../quickstart.html>`__.
+Start with the `quick start tutorial <../quickstart_fly.html>`__.
 
 This part of the documentation contains a comprehensive description of all menus
 and options to:

@@ -25,7 +25,7 @@ def normalize_pulse(pulse: np.ndarray, smooth_win: int = 15, flip_win: int = 10)
     pulse_len_half = int(pulse_len / 2)
     # center
     gwin = ss.windows.boxcar(int(smooth_win))
-    pulse_env = np.convolve(pulse ** 2, gwin, mode="valid")
+    pulse_env = np.convolve(pulse**2, gwin, mode="valid")
     offset = np.argmax(pulse_env) + int(np.ceil(smooth_win / 2)) + 1
     pulse = np.pad(pulse, (len(pulse) - offset, offset), mode="constant", constant_values=0)
     # flip

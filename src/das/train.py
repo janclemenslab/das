@@ -245,7 +245,7 @@ def train(
         )
 
     if not upsample:
-        output_stride = int(2 ** nb_pre_conv)
+        output_stride = int(2**nb_pre_conv)
     else:
         output_stride = 1  # since we upsample output to original sampling rate. w/o upsampling: `output_stride = int(2**nb_pre_conv)` since each pre-conv layer does 2x max pooling
 

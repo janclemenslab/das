@@ -93,7 +93,7 @@ def tcn_stft(
     if nb_pre_conv > 0:
         out = Spectrogram(
             n_dft=pre_nb_dft,
-            n_hop=2 ** nb_pre_conv,
+            n_hop=2**nb_pre_conv,
             return_decibel_spectrogram=True,
             power_spectrogram=1.0,
             trainable_kernel=True,
@@ -129,7 +129,7 @@ def tcn_stft(
     x = kl.Dense(nb_classes, activation="softmax")(x)
 
     if nb_pre_conv > 0 and upsample:
-        x = kl.UpSampling1D(size=2 ** nb_pre_conv)(x)
+        x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
 
     output_layer = x
 

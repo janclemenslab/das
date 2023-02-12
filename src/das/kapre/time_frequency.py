@@ -139,7 +139,7 @@ class Spectrogram(Layer):
         subsample = (self.n_hop, 1)
         output_real = K.conv2d(x, self.dft_real_kernels, strides=subsample, padding=self.padding, data_format="channels_last")
         output_imag = K.conv2d(x, self.dft_imag_kernels, strides=subsample, padding=self.padding, data_format="channels_last")
-        output = output_real ** 2 + output_imag ** 2
+        output = output_real**2 + output_imag**2
         # now shape is (batch_sample, n_frame, 1, freq)
         if self.image_data_format == "channels_last":
             output = K.permute_dimensions(output, [0, 1, 3, 2])

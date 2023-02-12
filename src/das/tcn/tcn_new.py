@@ -15,7 +15,7 @@ def adjust_dilations(dilations: list):
     if all([is_power_of_two(i) for i in dilations]):
         return dilations
     else:
-        new_dilations = [2 ** i for i in dilations]
+        new_dilations = [2**i for i in dilations]
         return new_dilations
 
 

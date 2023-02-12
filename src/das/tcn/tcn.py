@@ -110,7 +110,7 @@ def process_dilations(dilations):
         return dilations
 
     else:
-        new_dilations = [2 ** i for i in dilations]
+        new_dilations = [2**i for i in dilations]
         return new_dilations
 
 
