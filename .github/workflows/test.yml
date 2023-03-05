@@ -40,9 +40,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           mamba-version: "*"
           auto-activate-base: false
-          activate-environment: anaconda-client-env
-          environment-file: build_env.yml
-          condarc-file: condarc.yml
+          # activate-environment: anaconda-client-env
+          # environment-file: build_env.yml
+          # condarc-file: condarc.yml
           use-mamba: true
           use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
       - name: 'Workaround for mamba-org/mamba#488 (Linux)'
@@ -59,12 +59,10 @@ jobs:
           mamba install pytest gcc=12.1.0 -n das -y
       - name: Run tests
         run: |
-          conda activate anaconda-client-env
           conda activate das
           pytest
       - name: Test cli
         run: |
-          conda activate anaconda-client-env
           conda activate das
           das version
           das train --help
