@@ -51,7 +51,7 @@ jobs:
         run: rm /usr/share/miniconda/pkgs/cache/*.json
       - name: Install DAS
         run: |
-          mamba create das python=${{ matrix.python-version }} -n das -c -c conda-forge -c ncb -c anaconda -c nvidia -y
+          mamba create das python=${{ matrix.python-version }} -n das -c conda-forge -c ncb -c anaconda -c nvidia -y
           mamba install pytest gcc=12.1.0 -n das -y
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
