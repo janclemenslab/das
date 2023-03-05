@@ -59,11 +59,13 @@ jobs:
           mamba install pytest gcc=12.1.0 -n das -y
       - name: Run tests
         run: |
-          conda activate /usr/share/miniconda3/envs/anaconda-client-env/envs/das
+          conda activate anaconda-client-env
+          conda activate das
           pytest
       - name: Test cli
         run: |
-          conda activate /usr/share/miniconda3/envs/anaconda-client-env/envs/das
+          conda activate anaconda-client-env
+          conda activate das
           das version
           das train --help
           das tune --help
