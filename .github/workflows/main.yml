@@ -1,8 +1,6 @@
 name: Test install
 
 on:
-#   push:
-#     paths-ignore: docs/**
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
@@ -15,9 +13,10 @@ on:
         description: 'manual run'
 
 jobs:
-  build:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: [3.7, 3.8, 3.9]
@@ -26,62 +25,46 @@ jobs:
             python-version: 3.7
           - os: windows-latest
             python-version: 3.7
-      fail-fast: false
+    defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+      run:
+        shell: bash -l {0}
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup conda
-        uses: s-weigand/setup-conda@v1
+      - uses: actions/checkout@v3
+      - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
+        uses: conda-incubator/setup-miniconda@v2.2.0
         with:
-          update-conda: true
+          auto-update-conda: true
+          miniforge-variant: Mambaforge
+          channels: conda-forge,ncb,anaconda,defaults
           python-version: ${{ matrix.python-version }}
-      - run: conda --version
-      - run: which python
-      - run: conda list
-      - name: Conda utils installation
-        run: |
-          conda install anaconda-client -q -n base
-          conda install mamba -c conda-forge -n base -y
+          mamba-version: "*"
+          auto-activate-base: false
+          activate-environment: anaconda-client-env
+          environment-file: build_env.yml
+          condarc-file: condarc.yml
+          use-mamba: true
+          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
       - name: 'Workaround for mamba-org/mamba#488 (Linux)'
         shell: bash -l {0}
         if: runner.os == 'Linux'
         run: rm /usr/share/miniconda/pkgs/cache/*.json
-      - name: Conda environment creation
+      - name: Install DAS
         run: |
-          conda create python=${{ matrix.python-version }} -n das
-          mamba install das pytest -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+          mamba create das python=${{ matrix.python-version }} -n das -c -c conda-forge -c ncb -c anaconda -c nvidia -y
+          mamba install pytest gcc=12.1.0 -n das -y
       - name: Install libsndfile (Linux only)
         if: runner.os == 'Linux'
         run: sudo apt-get install libsndfile1
-      - name: Test with pytest (Linux, Macos)
-        shell: bash -l {0}
-        if: runner.os != 'Windows'
-        run: |
-          source activate das
-          printenv | sort
-          $CONDA_PREFIX/bin/python -m pytest
-      - name: Test cli (Linux, Macos)
-        shell: bash -l {0}
-        if: runner.os != 'Windows'
-        run: |
-          source activate das
-          $CONDA_PREFIX/bin/python -m das.cli train --help
-          das train --help
-          das predict --help
-          das gui --help
-      - name: Test with pytest (Windows)
-        shell: cmd /C CALL {0}
-        if: runner.os == 'Windows'
+      - name: Run tests
         run: |
           conda activate das
-          python -m pytest
-      - name: Test cli (Windows)
-        shell: cmd /C CALL {0}
-        if: runner.os == 'Windows'
+          pytest
+      - name: Test cli
         run: |
-          C:\Miniconda\condabin\conda.bat activate das
-          C:\Miniconda\envs\das\python -m das.cli train --help
+          conda activate das
+          das version
           das train --help
+          das tune --help
           das predict --help
           das gui --help
-          das version
