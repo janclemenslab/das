@@ -58,11 +58,11 @@ jobs:
         run: sudo apt-get install libsndfile1
       - name: Run tests
         run: |
-          conda activate das
+          conda activate /usr/share/miniconda3/envs/anaconda-client-env/envs/das
           pytest
       - name: Test cli
         run: |
-          conda activate das
+          conda activate /usr/share/miniconda3/envs/anaconda-client-env/envs/das
           das version
           das train --help
           das tune --help
