@@ -1,11 +1,13 @@
 import sklearn.metrics
 import numpy as np
 import pandas as pd
+import flammkuchen
 from typing import Optional, Dict, Callable, Any
 import logging
 from . import predict, data, utils, models, io
 from .event_utils import evaluate_eventtimes
 
+logger = logging.getLogger(__name__)
 
 # to segment_utils
 def evaluate_segments(
@@ -120,23 +122,40 @@ def evaluate_probabilities(
     return x, y, y_pred
 
 
-def evaluate(savename: str, custom_objects: Optional[Dict[str, Callable]] = None, full_output: bool = True, verbose: int = 1):
-    logging.info("Loading last best model.")
-    model, params = utils.load_model_and_params(savename, custom_objects=custom_objects)
-    logging.info(model.summary())
+def evaluate(
+    mode_save_name: str,
+    custom_objects: Optional[Dict[str, Callable]] = None,
+    full_output: bool = True,
+    verbose: int = 1,
+):
+    """_summary_
 
-    logging.info(f"Loading data from {params['data_dir']}.")
+    Args:
+        model_save_name (str): Stem of the path for the model (and parameters).
+                               File to load will be MODEL_SAVE_NAME + _model.h5.
+        custom_objects (Dict[str, Callable], optional): Unused.
+        full_output (bool, optional): If True, function will return
+        verbose (int, optional): Display progress bar during prediction. Defaults to 1.
+
+    Returns:
+        _type_: _description_
+    """
+    logger.info("Loading last best model.")
+    model, params = utils.load_model_and_params(mode_save_name, custom_objects=custom_objects)
+    logger.info(model.summary())
+
+    logger.info(f"Loading data from {params['data_dir']}.")
     d = io.load(params["data_dir"], x_suffix=params["x_suffix"], y_suffix=params["y_suffix"])
 
     output: Dict[str, Any] = dict()
     if len(d["test"]["x"]) < params["nb_hist"]:
-        logging.info("No test data - skipping final evaluation step.")
+        logger.info("No test data - skipping final evaluation step.")
         if full_output:
             return None, None, output
         else:
             return None, None
     else:
-        logging.info("predicting")
+        logger.info("predicting")
         x_test, y_test, y_pred = evaluate_probabilities(
             x=d["test"]["x"], y=d["test"]["y"], model=model, params=params, verbose=verbose
         )
@@ -144,16 +163,40 @@ def evaluate(savename: str, custom_objects: Optional[Dict[str, Callable]] = None
         labels_test = predict.labels_from_probabilities(y_test)
         labels_pred = predict.labels_from_probabilities(y_pred)
 
-        logging.info("evaluating")
+        logger.info("   Evaluating.")
         conf_mat, report = evaluate_segments(labels_test, labels_pred, params["class_names"], report_as_dict=True)
-        logging.info(conf_mat)
-        logging.info(report)
-        output["x_test"] = x_test
-        output["y_test"] = y_test
-        output["y_pred"] = y_pred
-        output["labels_test"] = labels_test
-        output["labels_pred"] = labels_pred
+        logger.info(conf_mat)
+        logger.info(report)
+
         if full_output:
-            return conf_mat, report, output
+            if "data_splits" in params:
+                del params["data_splits"]  # paths with '/' break flammkuchen/pytables
+            results_dict = {
+                "fit_hist": {},
+                "confusion_matrix": conf_mat,
+                "classification_report": report,
+                "x_test": x_test,
+                "y_test": y_test,
+                # 'y_pred': np.array(y_pred),
+                "labels_test": labels_test,
+                # 'labels_pred': np.array(labels_pred),
+                "params": params,
+            }
+            return conf_mat, report, results_dict
         else:
             return conf_mat, report
+
+
+def cli_evaluate(mode_save_name: str, verbose: int = 1):
+    """Evaluate model.
+
+    Args:
+        model_save_name (str): Stem of the path for the model (and parameters).
+                               File to load will be MODEL_SAVE_NAME + _model.h5.
+        verbose (int): Display progress bar during prediction. Defaults to 1.
+    """
+    conf_mat, report, results_dict = evaluate(mode_save_name, full_output=True, verbose=verbose, custom_objects=None)
+
+    save_filename = "{0}_results.h5".format(mode_save_name)
+    logger.info(f"   Saving to {save_filename}.")
+    flammkuchen.save(save_filename, results_dict)

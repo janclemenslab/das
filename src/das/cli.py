@@ -1,7 +1,7 @@
 import defopt
 import logging
 import platform
-from . import train, predict, train_tune
+from . import train, predict, train_tune, evaluate
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,13 @@ def no_xb_gui():
 
 def main():
     """Command line interface for DAS."""
-    subcommands = {"train": train.train, "tune": train_tune.train, "predict": predict.cli_predict, "version": version}
+    subcommands = {
+        "train": train.train,
+        "tune": train_tune.train,
+        "predict": predict.cli_predict,
+        "evaluate": evaluate.cli_evaluate,
+        "version": version,
+    }
 
     try:
         import xarray_behave.gui.app
