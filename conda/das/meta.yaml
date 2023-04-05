@@ -24,7 +24,7 @@ requirements:
     - pip
     - h5py
     - numpy>=1.20  # [linux]
-#    - numpy<1.24  # [not linux]
+#     - numpy<1.24  # [not linux]
     - numpy>=1.20  # [not linux]
 
   run:
@@ -45,10 +45,7 @@ requirements:
     - xarray-behave>=0.33.11
     - conda-forge::cudatoolkit # [linux or win]
     - conda-forge::cudnn # [linux or win]
-#     - conda-forge::tensorflow<2.10=*cuda* # [linux]
-#     - conda-forge::tensorflow<2.10 # [linux]
     - conda-forge::tensorflow # [linux]
-#     - tensorflow-gpu>2.3 # [win]
     - tensorflow>=2.10 # [win]
     - anaconda::tensorflow==2.9.1 # [osx]
     - apple::tensorflow-deps # [not osx and arm64]
