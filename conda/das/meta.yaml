@@ -24,7 +24,8 @@ requirements:
     - pip
     - h5py
     - numpy>=1.20  # [linux]
-    - numpy<1.24  # [not linux]
+#    - numpy<1.24  # [not linux]
+    - numpy  # [not linux]
 
   run:
     - python {{ python }}
@@ -34,7 +35,8 @@ requirements:
     - matplotlib
     - pandas
     - numpy>=1.20  # [linux]
-    - numpy<1.24 # [not linux]
+#    - numpy<1.24 # [not linux]
+    - numpy # [not linux]
     - peakutils
     - pyyaml 
     - scikit-learn
@@ -47,7 +49,7 @@ requirements:
 #     - conda-forge::tensorflow<2.10 # [linux]
     - conda-forge::tensorflow # [linux]
 #     - tensorflow-gpu>2.3 # [win]
-    - anaconda::tensorflow # [win]
+    - anaconda::tensorflow>=2.10 # [win]
     - anaconda::tensorflow==2.9.1 # [osx]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
