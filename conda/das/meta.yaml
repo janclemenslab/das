@@ -50,8 +50,7 @@ requirements:
     - anaconda::tensorflow==2.9.1 # [osx]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
-    - keras-tuner  # [not arm64]
-    - keras-tuner=1.3.3  # [win]
+    - keras-tuner  # [not arm64 or not win]
 
 test:
   imports:
