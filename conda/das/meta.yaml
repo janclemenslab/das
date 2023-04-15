@@ -51,7 +51,7 @@ requirements:
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
     - keras-tuner  # [not arm64]
-    - keras-tuner=1.3.1  # [win]
+    - keras-tuner=1.3.3  # [win]
 
 test:
   imports:
