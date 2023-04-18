@@ -38,7 +38,7 @@ mamba create python=3.9 das=0.30.0 -c conda-forge -c ncb -c anaconda -c nvidia -
 
 For linux, the last line needs to be:
 ```shell
-CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das=0.30.0 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
 ## Usage
