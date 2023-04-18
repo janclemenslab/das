@@ -53,7 +53,6 @@ def group_blocks(nb_blocks: int, group_sizes: List[str], group_names: List[Group
 
 
 def score_grouping(block_stats, groups: List[Group]):
-
     # compute global probs
     # we want the individual groups to have stats as close as possible to the global stats
     global_stats = np.mean(block_stats, axis=0)
@@ -75,7 +74,6 @@ def score_grouping(block_stats, groups: List[Group]):
 def opt_grouping(
     block_stats: np.ndarray, group_sizes: List[Group], group_names: List[Group], nb_perms: int = 100
 ) -> List[Group]:
-
     nb_blocks = len(block_stats)
     grouping = group_blocks(nb_blocks, group_sizes, group_names)
     grouping = np.array(grouping)
@@ -186,7 +184,6 @@ def block(
     shuffle: bool = True,
     seed: Optional[float] = None,
 ) -> Dict[Group, List[Block]]:
-
     if seed is not None:
         np.random.seed(seed)
 

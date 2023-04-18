@@ -328,7 +328,6 @@ def predict_events(
 
         pad = int(event_dist * samplerate + 1)
         for event_dim, event_name in zip(event_dims, event_names):
-
             event_indices_and_probs = da.map_overlap(
                 _detect_events_oom,
                 class_probabilities,
@@ -370,7 +369,6 @@ def predict_song(
     segment_minlen: float = None,
     segment_fillgap: float = None,
 ):
-
     samplerate = params["samplerate_x_Hz"]
     events_offset = 0
 

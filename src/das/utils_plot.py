@@ -76,7 +76,6 @@ def remove_axes(axis=None, all=False, which="tblr"):
 
 
 def despine(which="tr", axis=None):
-
     sides = {"t": "top", "b": "bottom", "l": "left", "r": "right"}
 
     if axis is None:

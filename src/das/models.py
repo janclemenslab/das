@@ -190,6 +190,7 @@ def stft_res_dense(
         out = tf.stack((out, out, out), axis=-1)
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights="imagenet", include_top=False)
         out = vision_model(out, training=False)
+        out = kl.BatchNormalization()(out)
         out = kl.TimeDistributed(
             kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))
         )(out)
@@ -197,7 +198,7 @@ def stft_res_dense(
     if len(out.shape) > 1:
         out = kl.Flatten()(out)
 
-    out = kl.BatchNormalization()(out)
+    # out = kl.BatchNormalization()(out)
     # out = kl.Dropout(0.1)(out)
     out = kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))(out)
     # out = kl.Dropout(0.1)(out)

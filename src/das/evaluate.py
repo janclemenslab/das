@@ -9,6 +9,7 @@ from .event_utils import evaluate_eventtimes
 
 logger = logging.getLogger(__name__)
 
+
 # to segment_utils
 def evaluate_segments(
     labels_test, labels_pred, class_names, confmat_as_pandas: bool = False, report_as_dict: bool = False, labels=None

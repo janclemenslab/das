@@ -236,7 +236,6 @@ class Melspectrogram(Spectrogram):
         norm=1,
         **kwargs,
     ):
-
         super(Melspectrogram, self).__init__(**kwargs)
         assert sr > 0
         assert fmin >= 0.0

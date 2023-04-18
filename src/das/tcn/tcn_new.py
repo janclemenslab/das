@@ -101,7 +101,6 @@ class ResidualBlock(Layer):
         self.res_output_shape = self.layers[-1].compute_output_shape(self.res_output_shape)
 
     def build(self, input_shape):
-
         with K.name_scope(self.name):  # name scope used to make sure weights get unique names
             self.layers = []
             self.res_output_shape = input_shape
@@ -236,7 +235,6 @@ class TCN(Layer):
         use_separable=False,
         **kwargs
     ):
-
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
         self.use_skip_connections = use_skip_connections
@@ -274,7 +272,6 @@ class TCN(Layer):
         return self.kernel_size * self.nb_stacks * self.dilations[-1]
 
     def build(self, input_shape):
-
         # member to hold current output shape of the layer for building purposes
         self.build_output_shape = input_shape
 
