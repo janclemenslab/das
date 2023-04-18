@@ -4,12 +4,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.kapre.backend - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +156,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -223,14 +222,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -297,7 +296,7 @@
 
 
 <div class="viewcode-block" id="mel"><a class="viewcode-back" href="../../../api/das.kapre.backend.html#das.kapre.backend.mel">[docs]</a><span class="k">def</span> <span class="nf">mel</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_dft</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">htk</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;[np] create a filterbank matrix to combine stft bins into mel-frequency bins</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[np] create a filterbank matrix to combine stft bins into mel-frequency bins</span>
 <span class="sd">    use Slaney (said Librosa)</span>
 
 <span class="sd">    n_mels: numbre of mel bands</span>
@@ -309,7 +308,7 @@
 
 
 <div class="viewcode-block" id="get_stft_kernels"><a class="viewcode-back" href="../../../api/das.kapre.backend.html#das.kapre.backend.get_stft_kernels">[docs]</a><span class="k">def</span> <span class="nf">get_stft_kernels</span><span class="p">(</span><span class="n">n_dft</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;[np] Return dft kernels for real/imagnary parts assuming</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[np] Return dft kernels for real/imagnary parts assuming</span>
 <span class="sd">        the input . is real.</span>
 <span class="sd">    An asymmetric hann window is used (scipy.signal.hann).</span>
 
@@ -353,12 +352,12 @@
 
 
 <div class="viewcode-block" id="filterbank_mel"><a class="viewcode-back" href="../../../api/das.kapre.backend.html#das.kapre.backend.filterbank_mel">[docs]</a><span class="k">def</span> <span class="nf">filterbank_mel</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_freq</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">htk</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;[np]&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[np]&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">mel</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="p">(</span><span class="n">n_freq</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="n">n_mels</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="n">fmin</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="n">fmax</span><span class="p">,</span> <span class="n">htk</span><span class="o">=</span><span class="n">htk</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">floatx</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="filterbank_log"><a class="viewcode-back" href="../../../api/das.kapre.backend.html#das.kapre.backend.filterbank_log">[docs]</a><span class="k">def</span> <span class="nf">filterbank_log</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_freq</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">84</span><span class="p">,</span> <span class="n">bins_per_octave</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spread</span><span class="o">=</span><span class="mf">0.125</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;[np] Approximate a constant-Q filter bank for a fixed-window STFT.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[np] Approximate a constant-Q filter bank for a fixed-window STFT.</span>
 
 <span class="sd">    Each filter is a log-normal window centered at the corresponding frequency.</span>
 
@@ -434,9 +433,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -454,11 +451,6 @@
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/scripts/furo.js"></script>
     <script src="../../../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -4,12 +4,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.pulse_utils - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +156,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -223,14 +222,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -274,7 +273,7 @@
 
 
 <div class="viewcode-block" id="normalize_pulse"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.normalize_pulse">[docs]</a><span class="k">def</span> <span class="nf">normalize_pulse</span><span class="p">(</span><span class="n">pulse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">smooth_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span> <span class="n">flip_win</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Normalize pulses.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize pulses.</span>
 
 <span class="sd">    1. scales to unit-norm,</span>
 <span class="sd">    2. aligns to energy maximum,</span>
@@ -294,7 +293,7 @@
     <span class="n">pulse_len_half</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pulse_len</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="c1"># center</span>
     <span class="n">gwin</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">boxcar</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">smooth_win</span><span class="p">))</span>
-    <span class="n">pulse_env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">pulse</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">gwin</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;valid&quot;</span><span class="p">)</span>
+    <span class="n">pulse_env</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">pulse</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">gwin</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;valid&quot;</span><span class="p">)</span>
     <span class="n">offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pulse_env</span><span class="p">)</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">smooth_win</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">pulse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">pulse</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pulse</span><span class="p">)</span> <span class="o">-</span> <span class="n">offset</span><span class="p">,</span> <span class="n">offset</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="c1"># flip</span>
@@ -304,7 +303,7 @@
 
 
 <div class="viewcode-block" id="center_of_mass"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.center_of_mass">[docs]</a><span class="k">def</span> <span class="nf">center_of_mass</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Calculate center of mass of y.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate center of mass of y.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x (np.ndarray):</span>
@@ -325,7 +324,7 @@
 <div class="viewcode-block" id="pulse_freq"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.pulse_freq">[docs]</a><span class="k">def</span> <span class="nf">pulse_freq</span><span class="p">(</span>
     <span class="n">pulse</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fftlen</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">sampling_rate</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">mean_subtract</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-    <span class="sd">&quot;&quot;&quot;Calculate pulse frequency as center of mass of the pulse&#39;s amplitude spectrum.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate pulse frequency as center of mass of the pulse&#39;s amplitude spectrum.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pulse (np.ndarray): Waveform (shape [T,]).</span>
@@ -347,7 +346,7 @@
 
 
 <div class="viewcode-block" id="get_pulseshapes"><a class="viewcode-back" href="../../api/das.pulse_utils.html#das.pulse_utils.get_pulseshapes">[docs]</a><span class="k">def</span> <span class="nf">get_pulseshapes</span><span class="p">(</span><span class="n">pulsecenters</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">song</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">win_hw</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Extract waveforms around `pulsecenters` from `song`.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract waveforms around `pulsecenters` from `song`.</span>
 
 <span class="sd">    In case of multi-channel recordings, will return the waveform on the channel</span>
 <span class="sd">    with the maximum absolute value within +/-`win_hw` around the each pulsecenter.</span>
@@ -393,9 +392,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -413,11 +410,6 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

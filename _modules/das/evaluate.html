@@ -4,12 +4,11 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.evaluate - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +156,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -223,14 +222,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -270,17 +269,20 @@
 <span></span><span class="kn">import</span> <span class="nn">sklearn.metrics</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">flammkuchen</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">predict</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">io</span>
 <span class="kn">from</span> <span class="nn">.event_utils</span> <span class="kn">import</span> <span class="n">evaluate_eventtimes</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="c1"># to segment_utils</span>
 <div class="viewcode-block" id="evaluate_segments"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segments">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segments</span><span class="p">(</span>
     <span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">class_names</span><span class="p">,</span> <span class="n">confmat_as_pandas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">report_as_dict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        labels_test (List): [nb_samples,]</span>
@@ -314,7 +316,7 @@
 
 
 <div class="viewcode-block" id="evaluate_segment_timing"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate_segment_timing">[docs]</a><span class="k">def</span> <span class="nf">evaluate_segment_timing</span><span class="p">(</span><span class="n">segment_labels_true</span><span class="p">,</span> <span class="n">segment_labels_pred</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">event_tol</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;[summary]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        segment_labels_true ([type]): [description]</span>
@@ -341,7 +343,7 @@
 
 <span class="c1"># TODO: move to das.segment_utils</span>
 <div class="viewcode-block" id="segment_timing"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.segment_timing">[docs]</a><span class="k">def</span> <span class="nf">segment_timing</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get onset and offset time (in seconds) for each segment.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get onset and offset time (in seconds) for each segment.&quot;&quot;&quot;</span>
     <span class="n">segment_onset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>  <span class="c1"># explicit cast required?</span>
     <span class="n">segment_offset_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span> <span class="o">/</span> <span class="n">samplerate</span>
     <span class="k">return</span> <span class="n">segment_onset_times</span><span class="p">,</span> <span class="n">segment_offset_times</span></div>
@@ -355,7 +357,7 @@
     <span class="n">model_savename</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;[summary]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">    evaluate_probabilities(x, y, model=keras_model, params=params_dict)</span>
 <span class="sd">    evaluate_probabilities(x, y, model_savename=save_string) -&gt; will load model and params</span>
@@ -389,23 +391,40 @@
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span></div>
 
 
-<span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">savename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">custom_objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">full_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading last best model.&quot;</span><span class="p">)</span>
-    <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">savename</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="n">custom_objects</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+<div class="viewcode-block" id="evaluate"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.evaluate">[docs]</a><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span>
+    <span class="n">mode_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">custom_objects</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">full_output</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading data from </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        model_save_name (str): Stem of the path for the model (and parameters).</span>
+<span class="sd">                               File to load will be MODEL_SAVE_NAME + _model.h5.</span>
+<span class="sd">        custom_objects (Dict[str, Callable], optional): Unused.</span>
+<span class="sd">        full_output (bool, optional): If True, function will return</span>
+<span class="sd">        verbose (int, optional): Display progress bar during prediction. Defaults to 1.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading last best model.&quot;</span><span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">mode_save_name</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="n">custom_objects</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading data from </span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;data_dir&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">],</span> <span class="n">x_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;x_suffix&quot;</span><span class="p">],</span> <span class="n">y_suffix</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;y_suffix&quot;</span><span class="p">])</span>
 
     <span class="n">output</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No test data - skipping final evaluation step.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No test data - skipping final evaluation step.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">full_output</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">output</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;predicting&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;predicting&quot;</span><span class="p">)</span>
         <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">evaluate_probabilities</span><span class="p">(</span>
             <span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">][</span><span class="s2">&quot;y&quot;</span><span class="p">],</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
         <span class="p">)</span>
@@ -413,19 +432,43 @@
         <span class="n">labels_test</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
         <span class="n">labels_pred</span> <span class="o">=</span> <span class="n">predict</span><span class="o">.</span><span class="n">labels_from_probabilities</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
 
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;evaluating&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;   Evaluating.&quot;</span><span class="p">)</span>
         <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">evaluate_segments</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">labels_pred</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">],</span> <span class="n">report_as_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;x_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;y_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;y_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_pred</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;labels_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_test</span>
-        <span class="n">output</span><span class="p">[</span><span class="s2">&quot;labels_pred&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels_pred</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">conf_mat</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">full_output</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">output</span>
+            <span class="k">if</span> <span class="s2">&quot;data_splits&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;data_splits&quot;</span><span class="p">]</span>  <span class="c1"># paths with &#39;/&#39; break flammkuchen/pytables</span>
+            <span class="n">results_dict</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;fit_hist&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                <span class="s2">&quot;confusion_matrix&quot;</span><span class="p">:</span> <span class="n">conf_mat</span><span class="p">,</span>
+                <span class="s2">&quot;classification_report&quot;</span><span class="p">:</span> <span class="n">report</span><span class="p">,</span>
+                <span class="s2">&quot;x_test&quot;</span><span class="p">:</span> <span class="n">x_test</span><span class="p">,</span>
+                <span class="s2">&quot;y_test&quot;</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
+                <span class="c1"># &#39;y_pred&#39;: np.array(y_pred),</span>
+                <span class="s2">&quot;labels_test&quot;</span><span class="p">:</span> <span class="n">labels_test</span><span class="p">,</span>
+                <span class="c1"># &#39;labels_pred&#39;: np.array(labels_pred),</span>
+                <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">results_dict</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span>
+            <span class="k">return</span> <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span></div>
+
+
+<div class="viewcode-block" id="cli_evaluate"><a class="viewcode-back" href="../../api/das.evaluate.html#das.evaluate.cli_evaluate">[docs]</a><span class="k">def</span> <span class="nf">cli_evaluate</span><span class="p">(</span><span class="n">mode_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model_save_name (str): Stem of the path for the model (and parameters).</span>
+<span class="sd">                               File to load will be MODEL_SAVE_NAME + _model.h5.</span>
+<span class="sd">        verbose (int): Display progress bar during prediction. Defaults to 1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">conf_mat</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">results_dict</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">mode_save_name</span><span class="p">,</span> <span class="n">full_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">save_filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">_results.h5&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode_save_name</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Saving to </span><span class="si">{</span><span class="n">save_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="n">flammkuchen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_filename</span><span class="p">,</span> <span class="n">results_dict</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>
@@ -446,9 +489,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -466,11 +507,6 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

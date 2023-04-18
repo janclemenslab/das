@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developer API" href="../api.html" /><link rel="prev" title="Command line interfaces" href="cli.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>Data formats - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -224,14 +223,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.filterbank.html">das.kapre.filterbank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.time_frequency.html">das.kapre.time_frequency</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.utils.html">das.kapre.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 </ul>
 </li>
 </ul>
@@ -253,7 +252,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -359,7 +359,7 @@ tick,event
 </li>
 </ul>
 <p>Data is accessed via <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> and the metadata via <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a standard attribute for storing metadata in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">zarr</span></code> files and can be easily attached to a standard dictionary: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">dict();</span> <span class="pre">a.attrs</span> <span class="pre">=</span> <span class="pre">{'samplerate_x_Hz':</span> <span class="pre">10_000}</span></code>.</p>
-<p>This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org%27">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
+<p>This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org'">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
 <p>We provide a alternative storage backend, <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code>, that mirrors the data structure in directory hierarchy with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html">numpy’s npy</a> files (inspired by Cyrille Rossant’s series of blog posts (<a class="reference external" href="https://cyrille.rossant.net/moving-away-hdf5/">1</a>, <a class="reference external" href="https://cyrille.rossant.net/should-you-use-hdf5/">2</a>), <a class="reference external" href="https://github.com/bastibe/jbof">jbof</a> and <a class="reference external" href="https://exdir.readthedocs.io/">exdir</a>). Keys map to directories; values and <code class="docutils literal notranslate"><span class="pre">attrs</span></code> map to <code class="docutils literal notranslate"><span class="pre">npy</span></code> files (see <code class="docutils literal notranslate"><span class="pre">das.npy_dir</span></code>). For instance, <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> is stored in <code class="docutils literal notranslate"><span class="pre">dirname.npy/train/x.npy</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is stored in the top-level directory. Storing data as <code class="docutils literal notranslate"><span class="pre">npy</span></code> files provides a fast memory-mapping mechanism for out-of-memory access if your data set does not fit in memory. While zarr, h5py, and xarray provide mechanisms for out-of-memory access, they tend to be slower in our experience or require fine tuning to reach the performance reached with memmapped npy files.</p>
 <p>During training, data is loaded (see <code class="docutils literal notranslate"><span class="pre">das.io</span></code>) with the correct backend given by the extension of the file or directory. Currently supported files types are:</p>
 <ul class="simple">
@@ -383,10 +383,10 @@ tick,event
                 </div>
                 <div class="title">Developer API</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="cli.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -408,9 +408,7 @@ tick,event
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -422,7 +420,7 @@ tick,event
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -450,11 +448,6 @@ tick,event
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
