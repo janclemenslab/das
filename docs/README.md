@@ -11,4 +11,4 @@ Requires:
 Build the docs via `make clean html`. A fully-rendered HTML version will be built in `docs/_build/html/`.
 
 ### Publish
-Publish the book by running `make clean html push`. This will build the book and push the build static html files to the [https://github.com/janclemenslab/das/tree/gh-pages]() and make it accessible via [https://janclemenslab.org/das]().
+Publish the book by running `make clean html push`. This will build the docs and push the built html files to [https://github.com/janclemenslab/das/tree/gh-pages]() and make it accessible via [https://janclemenslab.org/das]().

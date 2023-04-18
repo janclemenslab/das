@@ -13,12 +13,13 @@ logger = logging.getLogger(__name__)
 def init_store(
     nb_channels: int,
     nb_classes: int,
+    store,  # zarr store
     samplerate: Optional[float] = None,
     make_single_class_datasets: bool = False,
     class_names: List[str] = None,
     class_types: List[str] = None,
-    store_type=zarr.TempStore,
-    store_name: str = "store.zarr",
+    # store_type=zarr.TempStore,
+    # store_name: str = "store.zarr",
     chunk_len: int = 1_000_000,
 ):
     """[summary]
@@ -26,12 +27,11 @@ def init_store(
     Args:
         nb_channels (int): [description]
         nb_classes (int): [description]  <- should infer from class_names!
+        store: zarr store
         samplerate (float, optional): [description]. Defaults to None.
         make_single_class_datasets (bool, optional): make y_suffix and attrs['class_names/types_suffix']. Defaults to None.
         class_names (List[str], optional): [description]. Defaults to None.
         class_types (List[str], optional): 'event' or 'segment'. Defaults to None.
-        store_type ([type], optional): [description]. Defaults to zarr.TemporaryStore.
-        store_name (str, optional): [description]. Defaults to 'store.zarr'.
         chunk_len (int, optional): [description]. Defaults to 1_000_000.
 
     Raises:
@@ -48,7 +48,6 @@ def init_store(
         raise ValueError(f"Number of classes ({nb_classes}) needs to match len(class_names) ({len(class_types)}).")
 
     # initialize the store
-    store = store_type(store_name)
     root = zarr.group(store=store, overwrite=True)  # need to def the root
     for target in ["train", "val", "test"]:
         root.empty(name=f"{target}/x", shape=(0, nb_channels), chunks=(chunk_len, nb_channels), dtype=np.float16)
