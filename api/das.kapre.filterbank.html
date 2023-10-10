@@ -272,76 +272,76 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.kapre.filterbank.</span></span><span class="sig-name descname"><span class="pre">Filterbank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank" title="Permalink to this definition">#</a></dt>
-<dd><p>### <a class="reference internal" href="#das.kapre.filterbank.Filterbank" title="das.kapre.filterbank.Filterbank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Filterbank</span></code></a></p>
+<dd><p class="linemarker linemarker-1">### <a class="reference internal" href="#das.kapre.filterbank.Filterbank" title="das.kapre.filterbank.Filterbank"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Filterbank</span></code></a></p>
 <dl>
-<dt><a href="#id1"><span class="problematic" id="id2">`</span></a>kapre.filterbank.Filterbank(n_fbs, trainable_fb, sr=None, init=’mel’, fmin=0., fmax=None,</dt><dd><p>bins_per_octave=12, image_data_format=’default’, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)`</p>
+<dt><a href="#id1"><span class="problematic" id="id2">`</span></a>kapre.filterbank.Filterbank(n_fbs, trainable_fb, sr=None, init=’mel’, fmin=0., fmax=None,</dt><dd><p class="linemarker linemarker-4">bins_per_octave=12, image_data_format=’default’, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)`</p>
 </dd>
-<dt>#### Notes</dt><dd><p>Input/output are 2D image format.
+<dt>#### Notes</dt><dd><p class="linemarker linemarker-7">Input/output are 2D image format.
 E.g., if channel_first,</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>input_shape: <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_ch,</span> <span class="pre">n_freqs,</span> <span class="pre">n_time)</span></code></p></li>
-<li><p>output_shape: <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_ch,</span> <span class="pre">n_mels,</span> <span class="pre">n_time)</span></code></p></li>
+<li><p class="linemarker linemarker-9">input_shape: <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_ch,</span> <span class="pre">n_freqs,</span> <span class="pre">n_time)</span></code></p></li>
+<li><p class="linemarker linemarker-10">output_shape: <code class="docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_ch,</span> <span class="pre">n_mels,</span> <span class="pre">n_time)</span></code></p></li>
 </ul>
 </div></blockquote>
 </dd>
 </dl>
-<p>#### Parameters
+<p class="linemarker linemarker-13">#### Parameters
 * n_fbs: int</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Number of filterbanks</p></li>
+<li><p class="linemarker linemarker-15">Number of filterbanks</p></li>
 </ul>
 </div></blockquote>
 <ul class="simple">
 <li><dl class="simple">
 <dt>sr: int</dt><dd><ul>
-<li><p>sampling rate. It is used to initialize <code class="docutils literal notranslate"><span class="pre">freq_to_mel</span></code>.</p></li>
+<li><p class="linemarker linemarker-18">sampling rate. It is used to initialize <code class="docutils literal notranslate"><span class="pre">freq_to_mel</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>init: str</dt><dd><ul>
-<li><p>if <code class="docutils literal notranslate"><span class="pre">'mel'</span></code>, init with mel center frequencies and stds.</p></li>
+<li><p class="linemarker linemarker-21">if <code class="docutils literal notranslate"><span class="pre">'mel'</span></code>, init with mel center frequencies and stds.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>fmin: float</dt><dd><ul>
-<li><p>min frequency of filterbanks.</p></li>
-<li><p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">init</span> <span class="pre">==</span> <span class="pre">'log'</span></code>, fmin should be &gt; 0. Use <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code> if you got no idea.</p></li>
+<li><p class="linemarker linemarker-24">min frequency of filterbanks.</p></li>
+<li><p class="linemarker linemarker-25">If <code class="xref py py-obj docutils literal notranslate"><span class="pre">init</span> <span class="pre">==</span> <span class="pre">'log'</span></code>, fmin should be &gt; 0. Use <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code> if you got no idea.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>fmax: float</dt><dd><ul>
-<li><p>max frequency of filterbanks.</p></li>
-<li><p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">init</span> <span class="pre">==</span> <span class="pre">'log'</span></code>, fmax is ignored.</p></li>
+<li><p class="linemarker linemarker-28">max frequency of filterbanks.</p></li>
+<li><p class="linemarker linemarker-29">If <code class="xref py py-obj docutils literal notranslate"><span class="pre">init</span> <span class="pre">==</span> <span class="pre">'log'</span></code>, fmax is ignored.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
 <dt>trainable_fb: bool,</dt><dd><ul>
-<li><p>Whether the filterbanks are trainable or not.</p></li>
+<li><p class="linemarker linemarker-32">Whether the filterbanks are trainable or not.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-<p>TODO: is sr necessary? is fmax necessary? init with None?</p>
+<p class="linemarker linemarker-35">TODO: is sr necessary? is fmax necessary? init with None?</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.build" title="Permalink to this definition">#</a></dt>
-<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
-<p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
+<dd><p class="linemarker linemarker-1">Creates the variables of the layer (optional, for subclass implementers).</p>
+<p class="linemarker linemarker-3">This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
 layer instantiation and layer call. It is invoked automatically before
 the first execution of <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
-<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+<p class="linemarker linemarker-8">This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
 (at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -355,47 +355,47 @@ the first execution of <a class="reference internal" href="#das.kapre.filterbank
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.call" title="Permalink to this definition">#</a></dt>
-<dd><p>This is where the layer’s logic lives.</p>
-<p>The <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+<dd><p class="linemarker linemarker-1">This is where the layer’s logic lives.</p>
+<p class="linemarker linemarker-3">The <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
 wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
 It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <a class="reference internal" href="#das.kapre.filterbank.Filterbank.build" title="das.kapre.filterbank.Filterbank.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code></a> method
 that is called automatically before <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – <p>Input tensor, or dict/list/tuple of input tensors.
+<li><p><strong>inputs</strong> – <p class="linemarker linemarker-8">Input tensor, or dict/list/tuple of input tensors.
 The first positional <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> argument is subject to special rules:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> must be explicitly passed. A layer cannot have zero</p>
 <blockquote>
-<div><p>arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
+<div><p class="linemarker linemarker-11">arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
 of a keyword argument.</p>
 </div></blockquote>
 <ul>
-<li><p>NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
-<li><p>Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
+<li><p class="linemarker linemarker-13">NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
+<li><p class="linemarker linemarker-14">Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-15">Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
 using shape info from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
+<li><p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-18">Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
 If a layer has tensor arguments in <code class="xref py py-obj docutils literal notranslate"><span class="pre">*args</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">**kwargs</span></code>, their
 casting behavior in mixed precision should be handled manually.</p></li>
-<li><p>The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+<li><p class="linemarker linemarker-21">The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
+<li><p class="linemarker linemarker-22">Integration with various ecosystem packages like TFMOT, TFLite,
 TF.js, etc is only supported for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and not for tensors in
 positional and keyword arguments.</p></li>
 </ul>
 </p></li>
 <li><p><strong>*args</strong> – Additional positional arguments. May contain tensors, although
 this is not recommended, for the reasons above.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional keyword arguments. May contain tensors, although
+<li><p><strong>**kwargs</strong> – <p class="linemarker linemarker-27">Additional keyword arguments. May contain tensors, although
 this is not recommended, for the reasons above.
 The following optional keyword arguments are reserved:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code>: Boolean scalar tensor of Python boolean indicating</p>
 <blockquote>
-<div><p>whether the <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
+<div><p class="linemarker linemarker-31">whether the <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
 </div></blockquote>
 <ul>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
+<li><p class="linemarker linemarker-32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.filterbank.Filterbank.call" title="das.kapre.filterbank.Filterbank.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code> argument, its default value will be set to the mask generated
 for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> by the previous layer (if <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code> did come from a layer
 that generated a corresponding mask, i.e. if it came from a Keras
@@ -413,8 +413,8 @@ layer with masking support).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.compute_output_shape" title="Permalink to this definition">#</a></dt>
-<dd><p>Computes the output shape of the layer.</p>
-<p>This method will cause the layer’s state to be built, if that has not
+<dd><p class="linemarker linemarker-1">Computes the output shape of the layer.</p>
+<p class="linemarker linemarker-3">This method will cause the layer’s state to be built, if that has not
 happened before. This requires that the layer will later be used with
 inputs that match the input shape provided here.</p>
 <dl class="field-list simple">
@@ -433,15 +433,15 @@ instead of an integer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.filterbank.Filterbank.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/filterbank.html#Filterbank.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.filterbank.Filterbank.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the config of the layer.</p>
-<p>A layer config is a Python dictionary (serializable)
+<dd><p class="linemarker linemarker-1">Returns the config of the layer.</p>
+<p class="linemarker linemarker-3">A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
 The same layer can be reinstantiated later
 (without its trained weights) from this configuration.</p>
-<p>The config of a layer does not include connectivity
+<p class="linemarker linemarker-8">The config of a layer does not include connectivity
 information, nor the layer class name. These are handled
 by <code class="xref py py-obj docutils literal notranslate"><span class="pre">Network</span></code> (one layer of abstraction above).</p>
-<p>Note that <a class="reference internal" href="#das.kapre.filterbank.Filterbank.get_config" title="das.kapre.filterbank.Filterbank.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
+<p class="linemarker linemarker-12">Note that <a class="reference internal" href="#das.kapre.filterbank.Filterbank.get_config" title="das.kapre.filterbank.Filterbank.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
 every time it is called. The callers should make a copy of the returned dict
 if they want to modify it.</p>
 <dl class="field-list simple">

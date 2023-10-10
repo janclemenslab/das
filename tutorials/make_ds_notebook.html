@@ -269,11 +269,11 @@
         <article role="main">
           <section id="make-a-dataset-from-custom-data-formats">
 <h1>Make a dataset from custom data formats<a class="headerlink" href="#make-a-dataset-from-custom-data-formats" title="Permalink to this headline">#</a></h1>
-<p>If your data is readable by the GUI, you only need to convert annotations. You can then load both into the GUI and export to data and annotations for DAS.</p>
-<p>Three alternatives:</p>
+<p class="linemarker linemarker-10003">If your data is readable by the GUI, you only need to convert annotations. You can then load both into the GUI and export to data and annotations for DAS.</p>
+<p class="linemarker linemarker-10005">Three alternatives:</p>
 <section id="export-your-data-as-wav-npz-and-csv-to-a-folder-and-make-a-dataset-with-the-gui">
 <h2>1. Export your data as wav/npz and csv to a folder and make a dataset with the GUI<a class="headerlink" href="#export-your-data-as-wav-npz-and-csv-to-a-folder-and-make-a-dataset-with-the-gui" title="Permalink to this headline">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">data</span></code> folder with <code class="docutils literal notranslate"><span class="pre">*.wav</span></code> or <code class="docutils literal notranslate"><span class="pre">npz</span></code> files files with the recording and matching <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code> files with the annotations (see format details [here]](/technical/data_formats))- recordings and annotations will be matched according to the file base name:</p>
+<p class="linemarker linemarker-10008"><code class="docutils literal notranslate"><span class="pre">data</span></code> folder with <code class="docutils literal notranslate"><span class="pre">*.wav</span></code> or <code class="docutils literal notranslate"><span class="pre">npz</span></code> files files with the recording and matching <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code> files with the annotations (see format details [here]](/technical/data_formats))- recordings and annotations will be matched according to the file base name:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>data<span class="se">\</span>
 <span class="w">    </span>file01.wav
 <span class="w">    </span>file01_annotations.csv
@@ -283,33 +283,33 @@
 <span class="w">    </span>yaf_annotations.csv
 </pre></div>
 </div>
-<p>Simplest way - no need of having to deal with specific of the data structure required by DAS for training - simply hit <em>DAS/Make dataset for training</em> and select the folder.</p>
+<p class="linemarker linemarker-10019">Simplest way - no need of having to deal with specific of the data structure required by DAS for training - simply hit <em>DAS/Make dataset for training</em> and select the folder.</p>
 </section>
 <section id="use-notebook-with-custom-loaders-to-directly-read-recordings-and-annotations">
 <h2>2. Use notebook with custom loaders to directly read recordings and annotations<a class="headerlink" href="#use-notebook-with-custom-loaders-to-directly-read-recordings-and-annotations" title="Permalink to this headline">#</a></h2>
-<p>Intermediate simplicity and flexibility) Folder with the data and annotations in a custom format - provide custom functions for loading audio data and annotations. This is illustrated in the next section.</p>
+<p class="linemarker linemarker-10022">Intermediate simplicity and flexibility) Folder with the data and annotations in a custom format - provide custom functions for loading audio data and annotations. This is illustrated in the next section.</p>
 </section>
 <section id="diy-dataset">
 <h2>3. DIY dataset<a class="headerlink" href="#diy-dataset" title="Permalink to this headline">#</a></h2>
-<p>Complex, maximally flexible) Bring your own mappable (for experts): Generate the data structure yourself. The description of the <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">dataset structure</span></a> has information on how to do that.</p>
+<p class="linemarker linemarker-10025">Complex, maximally flexible) Bring your own mappable (for experts): Generate the data structure yourself. The description of the <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">dataset structure</span></a> has information on how to do that.</p>
 </section>
 <section id="id1">
 <h2>Use notebook with custom loaders to directly read recordings and annotations<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
-<p>This notebook creates an annotated data set for training das from lists of filenames for the song recordings and associated annotations.</p>
-<p>This may look a bit complicated at first sight but only requires you to change two things in the next two cells:</p>
+<p class="linemarker linemarker-20003">This notebook creates an annotated data set for training das from lists of filenames for the song recordings and associated annotations.</p>
+<p class="linemarker linemarker-20005">This may look a bit complicated at first sight but only requires you to change two things in the next two cells:</p>
 <ol class="arabic simple">
-<li><p>The functions for loading the data (song recordings) and the annotations need to be adapted to work with your data.</p></li>
-<li><p>Two lists with the names of data files (consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code>) and the associated annotation files (consumed by <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>) need to be created.</p></li>
+<li><p class="linemarker linemarker-20007">The functions for loading the data (song recordings) and the annotations need to be adapted to work with your data.</p></li>
+<li><p class="linemarker linemarker-20008">Two lists with the names of data files (consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code>) and the associated annotation files (consumed by <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>) need to be created.</p></li>
 </ol>
-<p>The notebook works with a small toy data set (with song recordings from the data provided with <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">Stern (2014)</a>) and with annotations produced by <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a>.</p>
-<p><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
+<p class="linemarker linemarker-20010">The notebook works with a small toy data set (with song recordings from the data provided with <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">Stern (2014)</a>) and with annotations produced by <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a>.</p>
+<p class="linemarker linemarker-20012"><strong>Note:</strong> For this tutorial to work, you first need to download some data and example models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
 </section>
 <section id="internals">
 <h2>Internals<a class="headerlink" href="#internals" title="Permalink to this headline">#</a></h2>
-<p>The dataset is created in two steps.</p>
-<p>First, the data and annotations for different recordings are combined in a large matrix. This works even with large datasets that don’t fit in memory thanks to <a class="reference external" href="https://zarr.readthedocs.io/en/stable/tutorial.html#storage-alternatives">zarr</a>, which provides an interface for on-disk arrays. The annotations are converted from lists of event times to one-hot-encoded probability vectors, (0 for no event, 1 for a specified short duration (default is $\pm$30 samples) surrounding the event).</p>
-<p>Second, the zarr dataset is converted to a directory hierarchy of numpy files (npy) using <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. Numpy files allow extremely fast memory mapping, providing faster out-of-memory access than zarr during training.</p>
-<p>Code below closely follows the code used in the GUI - see the <a class="reference external" href="https://github.com/janclemenslab/xarray-behave/blob/master/src/xarray_behave/gui/DAS.py">source</a> code.</p>
+<p class="linemarker linemarker-20015">The dataset is created in two steps.</p>
+<p class="linemarker linemarker-20017">First, the data and annotations for different recordings are combined in a large matrix. This works even with large datasets that don’t fit in memory thanks to <a class="reference external" href="https://zarr.readthedocs.io/en/stable/tutorial.html#storage-alternatives">zarr</a>, which provides an interface for on-disk arrays. The annotations are converted from lists of event times to one-hot-encoded probability vectors, (0 for no event, 1 for a specified short duration (default is $\pm$30 samples) surrounding the event).</p>
+<p class="linemarker linemarker-20019">Second, the zarr dataset is converted to a directory hierarchy of numpy files (npy) using <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. Numpy files allow extremely fast memory mapping, providing faster out-of-memory access than zarr during training.</p>
+<p class="linemarker linemarker-20021">Code below closely follows the code used in the GUI - see the <a class="reference external" href="https://github.com/janclemenslab/xarray-behave/blob/master/src/xarray_behave/gui/DAS.py">source</a> code.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -332,12 +332,12 @@
 </section>
 <section id="define-custom-audio-and-annotation-loaders">
 <h2>Define custom audio and annotation loaders<a class="headerlink" href="#define-custom-audio-and-annotation-loaders" title="Permalink to this headline">#</a></h2>
-<p>If your recordings and annotations are not in the format expected by the standard loaders used above (<code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> for the recordings, <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> with name/start_seconds/stop_seconds for annotations), or if it’s hard to convert your data into these standard formats, you can provide your own loaders as long as they conform to the following interface:</p>
+<p class="linemarker linemarker-40004">If your recordings and annotations are not in the format expected by the standard loaders used above (<code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> for the recordings, <code class="docutils literal notranslate"><span class="pre">pd.read_csv</span></code> with name/start_seconds/stop_seconds for annotations), or if it’s hard to convert your data into these standard formats, you can provide your own loaders as long as they conform to the following interface:</p>
 <ul class="simple">
-<li><p><em>data loaders</em>: <code class="docutils literal notranslate"><span class="pre">samplerate,</span> <span class="pre">data</span> <span class="pre">=</span> <span class="pre">data_loader(filename)</span></code>, accepts a single string argument - the path to the data file and returns two things: the samplerate of the data and a numpy array with the recording data [time, channels]. Note: <code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> returns <code class="docutils literal notranslate"><span class="pre">[time,]</span></code> arrays - you need to add a new axis to make it 2d!</p></li>
-<li><p><em>annotation loaders</em>: <code class="docutils literal notranslate"><span class="pre">df</span> <span class="pre">=</span> <span class="pre">annotation_loader(filename)</span></code>, accepts a single string argument with the file path and returns a pandas DataFrame with these three columns: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> (see 1).</p></li>
+<li><p class="linemarker linemarker-40006"><em>data loaders</em>: <code class="docutils literal notranslate"><span class="pre">samplerate,</span> <span class="pre">data</span> <span class="pre">=</span> <span class="pre">data_loader(filename)</span></code>, accepts a single string argument - the path to the data file and returns two things: the samplerate of the data and a numpy array with the recording data [time, channels]. Note: <code class="docutils literal notranslate"><span class="pre">scipy.io.wavefile.read</span></code> returns <code class="docutils literal notranslate"><span class="pre">[time,]</span></code> arrays - you need to add a new axis to make it 2d!</p></li>
+<li><p class="linemarker linemarker-40007"><em>annotation loaders</em>: <code class="docutils literal notranslate"><span class="pre">df</span> <span class="pre">=</span> <span class="pre">annotation_loader(filename)</span></code>, accepts a single string argument with the file path and returns a pandas DataFrame with these three columns: <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> (see 1).</p></li>
 </ul>
-<p>Below, we read example data produced in matlab (D. Stern). The recording was exported and saved as a matlab struct - the audio data is found in <code class="docutils literal notranslate"><span class="pre">data</span></code>, the samplerate is not saved with the data. The annotations were produced by the <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a> and the pulse times (in samples) and a mask indicating for each sample in the recording whether it was occupied by noise (0), a pulse train (1), or sine song (2) were exported saved as a struct - <code class="docutils literal notranslate"><span class="pre">annotations.mask</span></code>, <code class="docutils literal notranslate"><span class="pre">annotations.pulsesamples</span></code>.</p>
+<p class="linemarker linemarker-40009">Below, we read example data produced in matlab (D. Stern). The recording was exported and saved as a matlab struct - the audio data is found in <code class="docutils literal notranslate"><span class="pre">data</span></code>, the samplerate is not saved with the data. The annotations were produced by the <a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">Murthylab_FlySongSegmenter</a> and the pulse times (in samples) and a mask indicating for each sample in the recording whether it was occupied by noise (0), a pulse train (1), or sine song (2) were exported saved as a struct - <code class="docutils literal notranslate"><span class="pre">annotations.mask</span></code>, <code class="docutils literal notranslate"><span class="pre">annotations.pulsesamples</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">data_loader</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dataset</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
@@ -382,7 +382,7 @@
 </section>
 <section id="lists-the-names-of-data-and-annotation-files">
 <h2>Lists the names of data and annotation files<a class="headerlink" href="#lists-the-names-of-data-and-annotation-files" title="Permalink to this headline">#</a></h2>
-<p>Lists of <code class="docutils literal notranslate"><span class="pre">data_files</span></code> and associated <code class="docutils literal notranslate"><span class="pre">annotation_files</span></code> are consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code> and <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>, respectively.</p>
+<p class="linemarker linemarker-60003">Lists of <code class="docutils literal notranslate"><span class="pre">data_files</span></code> and associated <code class="docutils literal notranslate"><span class="pre">annotation_files</span></code> are consumed by <code class="docutils literal notranslate"><span class="pre">load_data</span></code> and <code class="docutils literal notranslate"><span class="pre">load_annotation</span></code>, respectively.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># data_dir = &#39;/Users/clemens10/Dropbox/code.py/DAS/tutorials/dat.mat/&#39;</span>
@@ -527,7 +527,7 @@ Annotations
 </section>
 <section id="parse-annotation-files-to-identify-song-types">
 <h3>Parse annotation files to identify song types<a class="headerlink" href="#parse-annotation-files-to-identify-song-types" title="Permalink to this headline">#</a></h3>
-<p>This will collect all unique values in <code class="docutils literal notranslate"><span class="pre">names</span></code> of the annotation files and infer their categories based on the equality of start_seconds and stop_seconds. Skip this step and define <code class="docutils literal notranslate"><span class="pre">class_names</span></code> and <code class="docutils literal notranslate"><span class="pre">class_categories</span></code> manually if you know the song types and their categories.</p>
+<p class="linemarker linemarker-110003">This will collect all unique values in <code class="docutils literal notranslate"><span class="pre">names</span></code> of the annotation files and infer their categories based on the equality of start_seconds and stop_seconds. Skip this step and define <code class="docutils literal notranslate"><span class="pre">class_names</span></code> and <code class="docutils literal notranslate"><span class="pre">class_categories</span></code> manually if you know the song types and their categories.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># go through all annotation files and collect info on classes</span>
@@ -568,11 +568,11 @@ found sine of type segment
 </section>
 <section id="split-files-into-train-val-test-sets">
 <h2>Split files into train/val/test sets<a class="headerlink" href="#split-files-into-train-val-test-sets" title="Permalink to this headline">#</a></h2>
-<p>Split the list of recordings into train/val/test files:</p>
+<p class="linemarker linemarker-130003">Split the list of recordings into train/val/test files:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">train</span></code> is used for optimizing the parameters during model fitting</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">val</span></code> is used during training to track model performance and save the current best model based on the performance on the validation data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">test</span></code> is used to evaluate the best model after training is done and fine tune inference</p></li>
+<li><p class="linemarker linemarker-130004"><code class="docutils literal notranslate"><span class="pre">train</span></code> is used for optimizing the parameters during model fitting</p></li>
+<li><p class="linemarker linemarker-130005"><code class="docutils literal notranslate"><span class="pre">val</span></code> is used during training to track model performance and save the current best model based on the performance on the validation data</p></li>
+<li><p class="linemarker linemarker-130006"><code class="docutils literal notranslate"><span class="pre">test</span></code> is used to evaluate the best model after training is done and fine tune inference</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -593,16 +593,16 @@ indices of train files: [0 1]
 </section>
 <section id="initialize-the-data-structure-store">
 <h2>Initialize the data structure (store)<a class="headerlink" href="#initialize-the-data-structure-store" title="Permalink to this headline">#</a></h2>
-<p>The store will hold the audio data and the annotations in a format ready for training (see <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a> for details). The store also contains metadata which is important for training and inference:</p>
+<p class="linemarker linemarker-150003">The store will hold the audio data and the annotations in a format ready for training (see <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">here</span></a> for details). The store also contains metadata which is important for training and inference:</p>
 <ul class="simple">
-<li><p>samplerates of the data in Hz</p></li>
-<li><p>description of the different classes (names, types (segment or events)) - largely used to post-process the output of the network after inference (e.g. detect event times from the probabilities produced by the network).</p></li>
+<li><p class="linemarker linemarker-150004">samplerates of the data in Hz</p></li>
+<li><p class="linemarker linemarker-150005">description of the different classes (names, types (segment or events)) - largely used to post-process the output of the network after inference (e.g. detect event times from the probabilities produced by the network).</p></li>
 </ul>
-<p>We use zarr as a data structure because it provides in-memory as well as out-of-memory arrays with the same, dict-like interface (similar to h5py).</p>
-<p>Choose the zarr <code class="docutils literal notranslate"><span class="pre">store_type</span></code> based on the total size of your dataset:</p>
+<p class="linemarker linemarker-150007">We use zarr as a data structure because it provides in-memory as well as out-of-memory arrays with the same, dict-like interface (similar to h5py).</p>
+<p class="linemarker linemarker-150009">Choose the zarr <code class="docutils literal notranslate"><span class="pre">store_type</span></code> based on the total size of your dataset:</p>
 <ul class="simple">
-<li><p>If it fits in memory, use a <code class="docutils literal notranslate"><span class="pre">DictStore</span></code>, which will place the data and annotation arrays in memory.</p></li>
-<li><p>For “big data”, use a <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code>, this will place the arrays in chunked files in a directory.</p></li>
+<li><p class="linemarker linemarker-150010">If it fits in memory, use a <code class="docutils literal notranslate"><span class="pre">DictStore</span></code>, which will place the data and annotation arrays in memory.</p></li>
+<li><p class="linemarker linemarker-150011">For “big data”, use a <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code>, this will place the arrays in chunked files in a directory.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -681,7 +681,7 @@ Got (8090002, 1), (4150001, 1), (4000001, 1) train/test/val samples.
 </section>
 <section id="inspect-the-dataset">
 <h3>Inspect the dataset<a class="headerlink" href="#inspect-the-dataset" title="Permalink to this headline">#</a></h3>
-<p>Plot x/y values from the dataset to make sure everything is well aligned.</p>
+<p class="linemarker linemarker-190003">Plot x/y values from the dataset to make sure everything is well aligned.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">class_names</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;class_names&#39;</span><span class="p">]</span>
@@ -716,7 +716,7 @@ Got (8090002, 1), (4150001, 1), (4000001, 1) train/test/val samples.
 </section>
 <section id="save-as-npy-dir">
 <h3>Save as npy_dir<a class="headerlink" href="#save-as-npy-dir" title="Permalink to this headline">#</a></h3>
-<p>Once all data and annotation files have been appended to the store, save the data as an <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code> store - a directory hierarchy that replicates the nested dictionary structure of the zarr store. For instance, the data set at <code class="docutils literal notranslate"><span class="pre">root['train']['x']</span></code> (the audio data for training) will be stored as <code class="docutils literal notranslate"><span class="pre">store_name/train/x.npy</span></code>. We use these npy files rather than the zarr store because access is faster. Saving is done by <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. The directory structure is mapped back to a nested dictionary via <code class="docutils literal notranslate"><span class="pre">das.npy_dir.load</span></code>. If you used the <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code> during assembly, you can delete the <code class="docutils literal notranslate"><span class="pre">*.zarr</span></code> directory after that final step.</p>
+<p class="linemarker linemarker-210003">Once all data and annotation files have been appended to the store, save the data as an <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code> store - a directory hierarchy that replicates the nested dictionary structure of the zarr store. For instance, the data set at <code class="docutils literal notranslate"><span class="pre">root['train']['x']</span></code> (the audio data for training) will be stored as <code class="docutils literal notranslate"><span class="pre">store_name/train/x.npy</span></code>. We use these npy files rather than the zarr store because access is faster. Saving is done by <code class="docutils literal notranslate"><span class="pre">das.npy_dir_save</span></code>. The directory structure is mapped back to a nested dictionary via <code class="docutils literal notranslate"><span class="pre">das.npy_dir.load</span></code>. If you used the <code class="docutils literal notranslate"><span class="pre">DirectoryStore</span></code> during assembly, you can delete the <code class="docutils literal notranslate"><span class="pre">*.zarr</span></code> directory after that final step.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the zarr store as a hierarchy of npy files</span>
@@ -727,7 +727,7 @@ Got (8090002, 1), (4150001, 1), (4000001, 1) train/test/val samples.
 </div>
 </div>
 </div>
-<p>You can now train using the <a class="reference internal" href="../tutorials_gui/train.html"><span class="doc std std-doc">GUI</span></a>, or a <a class="reference internal" href="train.html"><span class="doc std std-doc">script</span></a>, or the <a class="reference internal" href="train.html"><span class="doc std std-doc">command line</span></a>.</p>
+<p class="linemarker linemarker-230002">You can now train using the <a class="reference internal" href="../tutorials_gui/train.html"><span class="doc std std-doc">GUI</span></a>, or a <a class="reference internal" href="train.html"><span class="doc std std-doc">script</span></a>, or the <a class="reference internal" href="train.html"><span class="doc std std-doc">command line</span></a>.</p>
 </section>
 </section>
 </section>

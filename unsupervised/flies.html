@@ -269,13 +269,13 @@
         <article role="main">
           <section id="courtship-song-of-flies">
 <h1>Courtship song of flies<a class="headerlink" href="#courtship-song-of-flies" title="Permalink to this headline">#</a></h1>
-<p>Clustering annotations of sine and pulse song should yield three clear clusters:</p>
+<p class="linemarker linemarker-10004">Clustering annotations of sine and pulse song should yield three clear clusters:</p>
 <ol class="arabic simple">
-<li><p><em>Sine</em>: relatively slow (150Hz), sustained oscillations</p></li>
-<li><p><em>Pslow</em>: relatively broad and symmetrical pulses with a central positive lobe flanked by two negative lobes</p></li>
-<li><p><em>Pfast</em>: shorter, asymmetrical (biphasic) pulses</p></li>
+<li><p class="linemarker linemarker-10006"><em>Sine</em>: relatively slow (150Hz), sustained oscillations</p></li>
+<li><p class="linemarker linemarker-10007"><em>Pslow</em>: relatively broad and symmetrical pulses with a central positive lobe flanked by two negative lobes</p></li>
+<li><p class="linemarker linemarker-10008"><em>Pfast</em>: shorter, asymmetrical (biphasic) pulses</p></li>
 </ol>
-<p>We closely follow the approach in Clemens et al. (2018): Discovery of a new song mode in Drosophila reveals hidden structure in the sensory and neural drivers of behavior.</p>
+<p class="linemarker linemarker-10010">We closely follow the approach in Clemens et al. (2018): Discovery of a new song mode in Drosophila reveals hidden structure in the sensory and neural drivers of behavior.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -292,7 +292,7 @@
 </div>
 </div>
 </div>
-<p>Download annotated recordings of fly song. Recording from: D Stern (2014). Reported Drosophila courtship song rhythms are artifacts of data analysis. BMC Biology. <span class="xref myst">https://www.janelia.org/lab/stern-lab/tools-reagents-data</span></p>
+<p class="linemarker linemarker-30002">Download annotated recordings of fly song. Recording from: D Stern (2014). Reported Drosophila courtship song rhythms are artifacts of data analysis. BMC Biology. <span class="xref myst">https://www.janelia.org/lab/stern-lab/tools-reagents-data</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/janclemenslab/das_unsupervised/releases/download/v0.4/flies.npz&#39;</span>
@@ -308,7 +308,7 @@
 </div>
 </div>
 </div>
-<p>Cutout and normalize short waveforms from the annotations. Normalization aligns all waveforms to their peak energy, normalizes the energy and flips the sign (the microphones used for recording the fly song are directional). The normalized pulsee waveforms should already reveal the two pulse types Pfast and Pslow.</p>
+<p class="linemarker linemarker-50002">Cutout and normalize short waveforms from the annotations. Normalization aligns all waveforms to their peak energy, normalizes the energy and flips the sign (the microphones used for recording the fly song are directional). The normalized pulsee waveforms should already reveal the two pulse types Pfast and Pslow.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">win_hw</span> <span class="o">=</span> <span class="mi">100</span>
@@ -348,7 +348,7 @@
 <img alt="../_images/51ad2dee4a168546bfaf845facb661b5f4436899bd96e179ff9ea85aca33ae9c.png" src="../_images/51ad2dee4a168546bfaf845facb661b5f4436899bd96e179ff9ea85aca33ae9c.png" />
 </div>
 </div>
-<p>Embed all pulse and sine waveforms into a two-dimensional spaces using the umap method and cluster the resulting points clouds using density-based clustering (hdbscan).</p>
+<p class="linemarker linemarker-70002">Embed all pulse and sine waveforms into a two-dimensional spaces using the umap method and cluster the resulting points clouds using density-based clustering (hdbscan).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">allshapes</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
@@ -357,7 +357,7 @@
 </div>
 </div>
 </div>
-<p>This results in three distinct point clouds (each point corresponds to a waveform in the UMAP space). The three cluster centroids contain a slow sustained, a broad symmetrical, and a short asymmetrical waveform.</p>
+<p class="linemarker linemarker-90002">This results in three distinct point clouds (each point corresponds to a waveform in the UMAP space). The three cluster centroids contain a slow sustained, a broad symmetrical, and a short asymmetrical waveform.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="s1">&#39;rgb&#39;</span>

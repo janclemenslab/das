@@ -269,12 +269,12 @@
         <article role="main">
           <section id="evaluate-a-sine-and-pulse-network">
 <h1>Evaluate a sine and pulse network<a class="headerlink" href="#evaluate-a-sine-and-pulse-network" title="Permalink to this headline">#</a></h1>
-<p>Shows how to:</p>
+<p class="linemarker linemarker-10004">Shows how to:</p>
 <ul class="simple">
-<li><p>load the outputs of training or generate predictions anew.</p></li>
-<li><p>generate diagnostic plots to evaluate network performance and detect and troubleshoot any issues.</p></li>
+<li><p class="linemarker linemarker-10005">load the outputs of training or generate predictions anew.</p></li>
+<li><p class="linemarker linemarker-10006">generate diagnostic plots to evaluate network performance and detect and troubleshoot any issues.</p></li>
 </ul>
-<p><strong>Note:</strong> For this tutorial to work, you first need to download example data and models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
+<p class="linemarker linemarker-10008"><strong>Note:</strong> For this tutorial to work, you first need to download example data and models (266MB) from <a class="reference external" href="https://www.dropbox.com/sh/wnj3389k8ei8i1c/AACy7apWxW87IS_fBjI8-7WDa?dl=0">here</a> and put the four folders in the <code class="docutils literal notranslate"><span class="pre">tutorials</span></code> folder.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;jpg&#39;  # smaller mem footprint for page
@@ -300,12 +300,12 @@
 </div>
 </div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">save_name</span></code> should be the stem common to all files produced during training.
+<p class="linemarker linemarker-30002"><code class="docutils literal notranslate"><span class="pre">save_name</span></code> should be the stem common to all files produced during training.
 For instance, if the parameter file for the model is <code class="docutils literal notranslate"><span class="pre">res/20191121_094529_params.yaml</span></code>, then <code class="docutils literal notranslate"><span class="pre">save_name</span></code> should be <code class="docutils literal notranslate"><span class="pre">res/20191121_094529</span></code>.</p>
-<p>The tutorials come with two networks for Dmel pulse song:</p>
+<p class="linemarker linemarker-30005">The tutorials come with two networks for Dmel pulse song:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">models/dmel_pulse_tcn_single_channel/</span></code> is an optimal model for dmel single-channel pulse song</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">res/20191128_170521</span></code> is a smaller TCN model  trained for 20 epochs on the toy data set produced by <span class="xref myst">1_prepare_data.ipynb</span> and trained with the parameters in <span class="xref myst">2_training.ipynb</span>.</p></li>
+<li><p class="linemarker linemarker-30006"><code class="docutils literal notranslate"><span class="pre">models/dmel_pulse_tcn_single_channel/</span></code> is an optimal model for dmel single-channel pulse song</p></li>
+<li><p class="linemarker linemarker-30007"><code class="docutils literal notranslate"><span class="pre">res/20191128_170521</span></code> is a smaller TCN model  trained for 20 epochs on the toy data set produced by <span class="xref myst">1_prepare_data.ipynb</span> and trained with the parameters in <span class="xref myst">2_training.ipynb</span>.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -397,8 +397,8 @@ model predicts pulses at index 2
 </div>
 <section id="predict-song">
 <h2>Predict song<a class="headerlink" href="#predict-song" title="Permalink to this headline">#</a></h2>
-<p>Either load audio (<code class="docutils literal notranslate"><span class="pre">x_test</span></code>), ground truth labels (<code class="docutils literal notranslate"><span class="pre">y_test</span></code>), and confidence scores (<code class="docutils literal notranslate"><span class="pre">y_pred</span></code>) from <code class="docutils literal notranslate"><span class="pre">_results.h5</span></code> generated after training or load the data set and run the model.</p>
-<p>The confidence scores are post-processed to detect events and label segments. During postprocessing events can be filtered by interval (<code class="docutils literal notranslate"><span class="pre">event_dist_min</span></code>, <code class="docutils literal notranslate"><span class="pre">event_dist_max</span></code>, not used here),
+<p class="linemarker linemarker-50003">Either load audio (<code class="docutils literal notranslate"><span class="pre">x_test</span></code>), ground truth labels (<code class="docutils literal notranslate"><span class="pre">y_test</span></code>), and confidence scores (<code class="docutils literal notranslate"><span class="pre">y_pred</span></code>) from <code class="docutils literal notranslate"><span class="pre">_results.h5</span></code> generated after training or load the data set and run the model.</p>
+<p class="linemarker linemarker-50005">The confidence scores are post-processed to detect events and label segments. During postprocessing events can be filtered by interval (<code class="docutils literal notranslate"><span class="pre">event_dist_min</span></code>, <code class="docutils literal notranslate"><span class="pre">event_dist_max</span></code>, not used here),
 and short segments can be removed (<code class="docutils literal notranslate"><span class="pre">segment_minlen=0.02</span></code>) or brief gaps filled (<code class="docutils literal notranslate"><span class="pre">segment_fillgap=0.02</span></code>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -440,7 +440,7 @@ maxCacheSize: 10.67 GB
 </section>
 <section id="inspect-the-raw-confidence-scores">
 <h2>Inspect the raw confidence scores<a class="headerlink" href="#inspect-the-raw-confidence-scores" title="Permalink to this headline">#</a></h2>
-<p>The DAS network produces a confidence score for each sample, which correspond to the probability of finding a specific song type at that sample. The confidence score is post-processed to create annotations - detect the times of events  and label segments.</p>
+<p class="linemarker linemarker-70003">The DAS network produces a confidence score for each sample, which correspond to the probability of finding a specific song type at that sample. The confidence score is post-processed to create annotations - detect the times of events  and label segments.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">t0</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">160_000</span><span class="p">,</span> <span class="mi">270_000</span><span class="p">]:</span>
@@ -480,7 +480,7 @@ maxCacheSize: 10.67 GB
 </section>
 <section id="evaluate-events">
 <h2>Evaluate events<a class="headerlink" href="#evaluate-events" title="Permalink to this headline">#</a></h2>
-<p>Evaluate event timing and compute performance metrics.</p>
+<p class="linemarker linemarker-90003">Evaluate event timing and compute performance metrics.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prc_pulse</span><span class="p">(</span><span class="n">pred_pulse</span><span class="p">,</span> <span class="n">pulsetimes_true</span><span class="p">,</span> <span class="n">fs</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -530,7 +530,7 @@ precision 0.93, recall 0.99, f1-score 0.96
 </div>
 <section id="event-sequences">
 <h3>Event sequences<a class="headerlink" href="#event-sequences" title="Permalink to this headline">#</a></h3>
-<p>First, inspect the sequences of true and the predicted event times. They should track each other closely.</p>
+<p class="linemarker linemarker-110003">First, inspect the sequences of true and the predicted event times. They should track each other closely.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -551,8 +551,8 @@ precision 0.93, recall 0.99, f1-score 0.96
 <section id="performance-metrics">
 <h3>Performance metrics<a class="headerlink" href="#performance-metrics" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
-<li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
-<li><p>F1-score for different decision thresholds. The higher the better.</p></li>
+<li><p class="linemarker linemarker-130003">precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
+<li><p class="linemarker linemarker-130004">F1-score for different decision thresholds. The higher the better.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -584,7 +584,7 @@ precision 0.93, recall 0.99, f1-score 0.96
 </section>
 <section id="event-timing">
 <h3>Event timing<a class="headerlink" href="#event-timing" title="Permalink to this headline">#</a></h3>
-<p>The sequence (left) and the distribution (right) of temporal errors (dist to nearest event). Black lines indicate the distance threshold within which true and predicted events are matched. This will reveal drifts in event timing.</p>
+<p class="linemarker linemarker-150003">The sequence (left) and the distribution (right) of temporal errors (dist to nearest event). Black lines indicate the distance threshold within which true and predicted events are matched. This will reveal drifts in event timing.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">pulse_pred_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -611,7 +611,7 @@ precision 0.93, recall 0.99, f1-score 0.96
 </section>
 <section id="event-shapes">
 <h3>Event shapes<a class="headerlink" href="#event-shapes" title="Permalink to this headline">#</a></h3>
-<p>Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from annotations errors.</p>
+<p class="linemarker linemarker-170003">Plot the shapes of false/true positive/negative pulses - if you use the network trained on the toy data set, most false positives arise from annotations errors.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.pulse_utils</span>
@@ -663,17 +663,17 @@ precision 0.93, recall 0.99, f1-score 0.96
 </section>
 <section id="troubleshooting">
 <h3>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">#</a></h3>
-<p>Things to do when the predictions look weird:</p>
+<p class="linemarker linemarker-190003">Things to do when the predictions look weird:</p>
 <ul class="simple">
-<li><p>Plot the raw predictions alongside the input song recording, the labels used for training, and the raw event times. This will reveal whether there is an offset or even a mismatch in sampling frequencies.</p></li>
-<li><p>Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the manual annotations.</p></li>
-<li><p>Inspect the amplitude and frequency of false negative and false positive pulses and look for patterns. Maybe the network fails for soft pulses</p></li>
+<li><p class="linemarker linemarker-190004">Plot the raw predictions alongside the input song recording, the labels used for training, and the raw event times. This will reveal whether there is an offset or even a mismatch in sampling frequencies.</p></li>
+<li><p class="linemarker linemarker-190005">Plot at the shape of false negative and false positive pulses and look for patterns. Maybe there are weird shapes in the false negatives or many “good looking” pulses in the false negatives, indicating problems with the manual annotations.</p></li>
+<li><p class="linemarker linemarker-190006">Inspect the amplitude and frequency of false negative and false positive pulses and look for patterns. Maybe the network fails for soft pulses</p></li>
 </ul>
 </section>
 </section>
 <section id="evaluate-segments">
 <h2>Evaluate segments<a class="headerlink" href="#evaluate-segments" title="Permalink to this headline">#</a></h2>
-<p>Inspect the post-processed segment labels</p>
+<p class="linemarker linemarker-200003">Inspect the post-processed segment labels</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="mi">55_000</span>
@@ -738,8 +738,8 @@ Deprecated in NumPy 1.20; for more details and guidance: https://numpy.org/devdo
 <section id="sample-wise-performance-metrics">
 <h3>Sample-wise performance metrics<a class="headerlink" href="#sample-wise-performance-metrics" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
-<li><p>precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
-<li><p>F1-score for different decision thresholds. The higher the better.</p></li>
+<li><p class="linemarker linemarker-220003">precision vs recall for different decision thresholds (color-coded). The closer to the upper right corner the better.</p></li>
+<li><p class="linemarker linemarker-220004">F1-score for different decision thresholds. The higher the better.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

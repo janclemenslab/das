@@ -267,18 +267,18 @@
           </label>
         </div>
         <article role="main">
-          <p>Let’s make sure we are using tensorflow v2+</p>
+          <p class="linemarker linemarker-10002">Let’s make sure we are using tensorflow v2+</p>
 <section id="training-and-inference-with-colab">
 <h1>Training and inference with colab<a class="headerlink" href="#training-and-inference-with-colab" title="Permalink to this headline">#</a></h1>
-<p><a class="reference external" href="https://colab.research.google.com">Google colab</a> is a free server for running notebooks with GPU/TPU support - this is a great way to use <em>DAS</em> if you do not have a computer with a GPU.</p>
-<p>This notebook demonstrates</p>
+<p class="linemarker linemarker-20003"><a class="reference external" href="https://colab.research.google.com">Google colab</a> is a free server for running notebooks with GPU/TPU support - this is a great way to use <em>DAS</em> if you do not have a computer with a GPU.</p>
+<p class="linemarker linemarker-20005">This notebook demonstrates</p>
 <ul class="simple">
-<li><p>how to setup <em>DAS</em></p></li>
-<li><p>how to load your own datasets</p></li>
-<li><p>how to train a network and then use that network to label a new audio recording.</p></li>
+<li><p class="linemarker linemarker-20006">how to setup <em>DAS</em></p></li>
+<li><p class="linemarker linemarker-20007">how to load your own datasets</p></li>
+<li><p class="linemarker linemarker-20008">how to train a network and then use that network to label a new audio recording.</p></li>
 </ul>
-<p>Open and edit this notebook in colab by clicking this badge:</p>
-<p><a class="reference external" href="https://colab.research.google.com/github/janclemenslab/das/blob/master/colab/colab.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p class="linemarker linemarker-20010">Open and edit this notebook in colab by clicking this badge:</p>
+<p class="linemarker linemarker-20012"><a class="reference external" href="https://colab.research.google.com/github/janclemenslab/das/blob/master/colab/colab.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">tensorflow_version</span> 2.x
@@ -286,7 +286,7 @@
 </div>
 </div>
 </div>
-<p>Install <em>DAS</em>:</p>
+<p class="linemarker linemarker-40002">Install <em>DAS</em>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>das
@@ -374,7 +374,7 @@ Successfully installed asciitree-0.3.3 das-0.22.1 defopt-6.1.0 fasteners-0.16.3 
 </div>
 </div>
 </div>
-<p>Import all the things:</p>
+<p class="linemarker linemarker-60002">Import all the things:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train</span><span class="o">,</span> <span class="nn">das.predict</span><span class="o">,</span> <span class="nn">das.utils</span><span class="o">,</span> <span class="nn">das.npy_dir</span>
@@ -386,7 +386,7 @@ Successfully installed asciitree-0.3.3 das-0.22.1 defopt-6.1.0 fasteners-0.16.3 
 </div>
 </div>
 </div>
-<p>Mount your google drive so you can access your own datasets - this will ask for authentication.</p>
+<p class="linemarker linemarker-80002">Mount your google drive so you can access your own datasets - this will ask for authentication.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">google.colab</span> <span class="kn">import</span> <span class="n">drive</span>
@@ -402,7 +402,7 @@ Successfully installed asciitree-0.3.3 das-0.22.1 defopt-6.1.0 fasteners-0.16.3 
 </div>
 <section id="train-the-model">
 <h2>Train the model<a class="headerlink" href="#train-the-model" title="Permalink to this headline">#</a></h2>
-<p>Adjust the variable <code class="docutils literal notranslate"><span class="pre">path_to_data</span></code> to point to the dataset on your own google drive.</p>
+<p class="linemarker linemarker-100003">Adjust the variable <code class="docutils literal notranslate"><span class="pre">path_to_data</span></code> to point to the dataset on your own google drive.</p>
 <div class="cell tag_outputPrepend docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">path_to_data</span> <span class="o">=</span> <span class="s1">&#39;/content/drive/MyDrive/Dmoj.wrigleyi.npy&#39;</span>
@@ -961,7 +961,7 @@ INFO:root:DONE.
 </div>
 </div>
 </div>
-<p>Adjust the name to point to the results:</p>
+<p class="linemarker linemarker-120002">Adjust the name to point to the results:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res_name</span> <span class="o">=</span> <span class="s1">&#39;/content/res/20210925_132436&#39;</span>
@@ -970,7 +970,7 @@ INFO:root:DONE.
 </div>
 </div>
 </div>
-<p>Inspect the history of the training and validation loss</p>
+<p class="linemarker linemarker-140002">Inspect the history of the training and validation loss</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;fit_hist&#39;</span><span class="p">][</span><span class="s1">&#39;loss&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;train&#39;</span><span class="p">)</span>
@@ -986,7 +986,7 @@ INFO:root:DONE.
 <img alt="../_images/05bb23a35be292dacca29115895aa30b477b3702733812dc88eedec9108561fd.png" src="../_images/05bb23a35be292dacca29115895aa30b477b3702733812dc88eedec9108561fd.png" />
 </div>
 </div>
-<p>Plot the test results:</p>
+<p class="linemarker linemarker-160002">Plot the test results:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># t0, t1 = 1_020_000, 1_040_000  # dmel tutorial dataset</span>
@@ -1013,11 +1013,11 @@ INFO:root:DONE.
 <img alt="../_images/59e6ffa2a5eeba3ca1f8907236c54231658e8f1b0a9a792d95781be7d5b8c1fd.png" src="../_images/59e6ffa2a5eeba3ca1f8907236c54231658e8f1b0a9a792d95781be7d5b8c1fd.png" />
 </div>
 </div>
-<p>You can download the model results via the file tab on the left, from <code class="docutils literal notranslate"><span class="pre">/contest/res</span></code></p>
+<p class="linemarker linemarker-180002">You can download the model results via the file tab on the left, from <code class="docutils literal notranslate"><span class="pre">/contest/res</span></code></p>
 </section>
 <section id="predict-on-new-data">
 <h2>Predict on new data<a class="headerlink" href="#predict-on-new-data" title="Permalink to this headline">#</a></h2>
-<p>Load a new recording for prediction</p>
+<p class="linemarker linemarker-190003">Load a new recording for prediction</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">res_name</span><span class="p">)</span>  <span class="c1"># load the model and runtime parameters</span>
@@ -1057,7 +1057,7 @@ Attributes:
 </div>
 </div>
 </div>
-<p>Run inference - this will calculate the confidence score and extract segment boundaries and event times.</p>
+<p class="linemarker linemarker-210002">Run inference - this will calculate the confidence score and extract segment boundaries and event times.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">predict</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>

@@ -14,6 +14,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -272,7 +273,6 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">scipy.signal</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">sklearn.model_selection</span>
 
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -281,12 +281,13 @@
 <div class="viewcode-block" id="init_store"><a class="viewcode-back" href="../../api/das.make_dataset.html#das.make_dataset.init_store">[docs]</a><span class="k">def</span> <span class="nf">init_store</span><span class="p">(</span>
     <span class="n">nb_channels</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">store</span><span class="p">,</span>  <span class="c1"># zarr store</span>
     <span class="n">samplerate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">make_single_class_datasets</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">class_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">class_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">store_type</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">TempStore</span><span class="p">,</span>
-    <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;store.zarr&quot;</span><span class="p">,</span>
+    <span class="c1"># store_type=zarr.TempStore,</span>
+    <span class="c1"># store_name: str = &quot;store.zarr&quot;,</span>
     <span class="n">chunk_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1_000_000</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;[summary]</span>
@@ -294,12 +295,11 @@
 <span class="sd">    Args:</span>
 <span class="sd">        nb_channels (int): [description]</span>
 <span class="sd">        nb_classes (int): [description]  &lt;- should infer from class_names!</span>
+<span class="sd">        store: zarr store</span>
 <span class="sd">        samplerate (float, optional): [description]. Defaults to None.</span>
 <span class="sd">        make_single_class_datasets (bool, optional): make y_suffix and attrs[&#39;class_names/types_suffix&#39;]. Defaults to None.</span>
 <span class="sd">        class_names (List[str], optional): [description]. Defaults to None.</span>
 <span class="sd">        class_types (List[str], optional): &#39;event&#39; or &#39;segment&#39;. Defaults to None.</span>
-<span class="sd">        store_type ([type], optional): [description]. Defaults to zarr.TemporaryStore.</span>
-<span class="sd">        store_name (str, optional): [description]. Defaults to &#39;store.zarr&#39;.</span>
 <span class="sd">        chunk_len (int, optional): [description]. Defaults to 1_000_000.</span>
 
 <span class="sd">    Raises:</span>
@@ -316,7 +316,6 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of classes (</span><span class="si">{</span><span class="n">nb_classes</span><span class="si">}</span><span class="s2">) needs to match len(class_names) (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">class_types</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
 
     <span class="c1"># initialize the store</span>
-    <span class="n">store</span> <span class="o">=</span> <span class="n">store_type</span><span class="p">(</span><span class="n">store_name</span><span class="p">)</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">store</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># need to def the root</span>
     <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">]:</span>
         <span class="n">root</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">/x&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">chunk_len</span><span class="p">,</span> <span class="n">nb_channels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
@@ -591,6 +590,8 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

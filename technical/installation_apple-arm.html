@@ -269,7 +269,7 @@
         <article role="main">
           <section id="apple-arm-m1-m1-pro-m1-max">
 <h1>Apple ARM (M1/M1 pro/M1 max)<a class="headerlink" href="#apple-arm-m1-m1-pro-m1-max" title="Permalink to this headline">#</a></h1>
-<p>Due to dependency conflicts, the GUI and the deep learning cannot be installed at the same time. But you can install each component into different conda environments:</p>
+<p class="linemarker linemarker-2">Due to dependency conflicts, the GUI and the deep learning cannot be installed at the same time. But you can install each component into different conda environments:</p>
 <section id="gui">
 <h2>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">#</a></h2>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">CONDA_SUBDIR</span><span class="o">=</span>osx-64<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>das_gui<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w">   </span><span class="c1"># create a new environment called rosetta with intel packages.</span>
@@ -280,7 +280,7 @@ conda<span class="w"> </span>install<span class="w"> </span>xarray-behave<span c
 xb<span class="w"> </span>gui
 </pre></div>
 </div>
-<p>Note that the GUI is started with <code class="docutils literal notranslate"><span class="pre">xb</span> <span class="pre">gui</span></code>, <em>not</em> <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>.</p>
+<p class="linemarker linemarker-14">Note that the GUI is started with <code class="docutils literal notranslate"><span class="pre">xb</span> <span class="pre">gui</span></code>, <em>not</em> <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>.</p>
 </section>
 <section id="training">
 <h2>Training<a class="headerlink" href="#training" title="Permalink to this headline">#</a></h2>

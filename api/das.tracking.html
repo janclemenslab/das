@@ -269,14 +269,14 @@
         <article role="main">
           <section id="module-das.tracking">
 <span id="das-tracking"></span><h1>das.tracking<a class="headerlink" href="#module-das.tracking" title="Permalink to this headline">#</a></h1>
-<p>Utilities for logging training runs.</p>
-<p>We currenlty have integrations for <a class="reference external" href="https://www.tensorflow.org/tensorboard">tensorboard</a>, and <a class="reference external" href="https://wandb.ai">wandb.ai</a>.
+<p class="linemarker linemarker-1">Utilities for logging training runs.</p>
+<p class="linemarker linemarker-3">We currenlty have integrations for <a class="reference external" href="https://www.tensorflow.org/tensorboard">tensorboard</a>, and <a class="reference external" href="https://wandb.ai">wandb.ai</a>.
 While tensorboard is integrated with tensorflow. To use wandb you’ll have to install the wandb API:
 “pip install wandb” or “conda install wandb -c conda-forge”.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.tracking.Wandb">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.tracking.</span></span><span class="sig-name descname"><span class="pre">Wandb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infer_from_env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb" title="Permalink to this definition">#</a></dt>
-<dd><p>Utility class for logging to wandb.ai during training.</p>
+<dd><p class="linemarker linemarker-1">Utility class for logging to wandb.ai during training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -293,13 +293,13 @@ Defaults to False.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tracking.Wandb.callback">
 <span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb.callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb.callback" title="Permalink to this definition">#</a></dt>
-<dd><p>Get callback for auto-logging from tensorfow/keras.</p>
+<dd><p class="linemarker linemarker-1">Get callback for auto-logging from tensorfow/keras.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tracking.Wandb.log_test_results">
 <span class="sig-name descname"><span class="pre">log_test_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tracking.html#Wandb.log_test_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tracking.Wandb.log_test_results" title="Permalink to this definition">#</a></dt>
-<dd><p>Log final classification result from test data.</p>
+<dd><p class="linemarker linemarker-1">Log final classification result from test data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>report</strong> (<em>Dict</em>) – dictionary containing the classification report.</p>

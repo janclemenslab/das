@@ -277,21 +277,21 @@
 </div>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>Don’t forget to use <code class="docutils literal notranslate"><span class="pre">K.float()</span></code>! Otherwise numpy uses float64.</p></li>
+<li><p class="linemarker linemarker-8">Don’t forget to use <code class="docutils literal notranslate"><span class="pre">K.float()</span></code>! Otherwise numpy uses float64.</p></li>
 <li><dl class="simple">
-<dt>Some functions are copied-and-pasted from librosa (to reduce dependency), but</dt><dd><p>later I realised it’d be better to just use it.</p>
+<dt>Some functions are copied-and-pasted from librosa (to reduce dependency), but</dt><dd><p class="linemarker linemarker-10">later I realised it’d be better to just use it.</p>
 </dd>
 </dl>
 </li>
-<li><p>TODO: remove copied code and use librosa.</p></li>
+<li><p class="linemarker linemarker-11">TODO: remove copied code and use librosa.</p></li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.backend.filterbank_log">
 <span class="sig-prename descclassname"><span class="pre">das.kapre.backend.</span></span><span class="sig-name descname"><span class="pre">filterbank_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">84</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins_per_octave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend.html#filterbank_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend.filterbank_log" title="Permalink to this definition">#</a></dt>
-<dd><p>[np] Approximate a constant-Q filter bank for a fixed-window STFT.</p>
-<p>Each filter is a log-normal window centered at the corresponding frequency.</p>
+<dd><p class="linemarker linemarker-1">[np] Approximate a constant-Q filter bank for a fixed-window STFT.</p>
+<p class="linemarker linemarker-3">Each filter is a log-normal window centered at the corresponding frequency.</p>
 <dl class="simple">
-<dt>Note: <code class="xref py py-obj docutils literal notranslate"><span class="pre">logfrequency</span></code> in librosa 0.4 (deprecated), so copy-and-pasted,</dt><dd><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuning</span></code> was removed, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_freq</span></code> instead of <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_fft</span></code>.</p>
+<dt>Note: <code class="xref py py-obj docutils literal notranslate"><span class="pre">logfrequency</span></code> in librosa 0.4 (deprecated), so copy-and-pasted,</dt><dd><p class="linemarker linemarker-6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuning</span></code> was removed, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_freq</span></code> instead of <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_fft</span></code>.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -317,45 +317,45 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.backend.filterbank_mel">
 <span class="sig-prename descclassname"><span class="pre">das.kapre.backend.</span></span><span class="sig-name descname"><span class="pre">filterbank_mel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_freq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">htk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend.html#filterbank_mel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend.filterbank_mel" title="Permalink to this definition">#</a></dt>
-<dd><p>[np]</p>
+<dd><p class="linemarker linemarker-1">[np]</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.backend.get_stft_kernels">
 <span class="sig-prename descclassname"><span class="pre">das.kapre.backend.</span></span><span class="sig-name descname"><span class="pre">get_stft_kernels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_dft</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend.html#get_stft_kernels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend.get_stft_kernels" title="Permalink to this definition">#</a></dt>
 <dd><dl class="simple">
-<dt>[np] Return dft kernels for real/imagnary parts assuming</dt><dd><p>the input . is real.</p>
+<dt>[np] Return dft kernels for real/imagnary parts assuming</dt><dd><p class="linemarker linemarker-2">the input . is real.</p>
 </dd>
 </dl>
-<p>An asymmetric hann window is used (scipy.signal.hann).</p>
+<p class="linemarker linemarker-3">An asymmetric hann window is used (scipy.signal.hann).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>n_dft</strong> (<em>int &gt; 0 and power of 2</em><em> [</em><em>scalar</em><em>]</em>) – Number of dft components.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><strong>|  dft_real_kernels</strong> (<em>np.ndarray [shape=(nb_filter, 1, 1, n_win)]</em>)</p></li>
-<li><p><strong>|  dft_imag_kernels</strong> (<em>np.ndarray [shape=(nb_filter, 1, 1, n_win)]</em>)</p></li>
+<li><p class="linemarker linemarker-8"><strong>|  dft_real_kernels</strong> (<em>np.ndarray [shape=(nb_filter, 1, 1, n_win)]</em>)</p></li>
+<li><p class="linemarker linemarker-9"><strong>|  dft_imag_kernels</strong> (<em>np.ndarray [shape=(nb_filter, 1, 1, n_win)]</em>)</p></li>
 </ul>
 </p>
 </dd>
 </dl>
 <ul class="simple">
-<li><p>nb_filter = n_dft/2 + 1</p></li>
-<li><p>n_win = n_dft</p></li>
+<li><p class="linemarker linemarker-11">nb_filter = n_dft/2 + 1</p></li>
+<li><p class="linemarker linemarker-12">n_win = n_dft</p></li>
 </ul>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.backend.mel">
 <span class="sig-prename descclassname"><span class="pre">das.kapre.backend.</span></span><span class="sig-name descname"><span class="pre">mel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_dft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_mels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">htk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/backend.html#mel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.backend.mel" title="Permalink to this definition">#</a></dt>
-<dd><p>[np] create a filterbank matrix to combine stft bins into mel-frequency bins
+<dd><p class="linemarker linemarker-1">[np] create a filterbank matrix to combine stft bins into mel-frequency bins
 use Slaney (said Librosa)</p>
-<p>n_mels: numbre of mel bands
+<p class="linemarker linemarker-4">n_mels: numbre of mel bands
 fmin : lowest frequency [Hz]
 fmax : highest frequency [Hz]</p>
 <blockquote>
-<div><p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, use <code class="xref py py-obj docutils literal notranslate"><span class="pre">sr</span> <span class="pre">/</span> <span class="pre">2.0</span></code></p>
+<div><p class="linemarker linemarker-7">If <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, use <code class="xref py py-obj docutils literal notranslate"><span class="pre">sr</span> <span class="pre">/</span> <span class="pre">2.0</span></code></p>
 </div></blockquote>
 </dd></dl>
 

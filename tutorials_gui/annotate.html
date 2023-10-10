@@ -271,12 +271,12 @@
 <h1>Annotate song<a class="headerlink" href="#annotate-song" title="Permalink to this headline">#</a></h1>
 <section id="initialize-or-edit-song-types">
 <h2>Initialize or edit song types<a class="headerlink" href="#initialize-or-edit-song-types" title="Permalink to this headline">#</a></h2>
-<p>Song types need to be “registered” for annotation. <em>DAS</em> discriminates two categories of song types:</p>
+<p class="linemarker linemarker-4">Song types need to be “registered” for annotation. <em>DAS</em> discriminates two categories of song types:</p>
 <ul class="simple">
-<li><p><em>Events</em> are defined by a single time of occurrence. <em>Drosophila</em> pulse song is a song type of the event category.</p></li>
-<li><p><em>Segments</em> are song types that extend over time and are defined by a start and a stop time. <em>Drosophila</em>  sine song and the syllables of mouse and bird vocalizations fall into the segment category.</p></li>
+<li><p class="linemarker linemarker-5"><em>Events</em> are defined by a single time of occurrence. <em>Drosophila</em> pulse song is a song type of the event category.</p></li>
+<li><p class="linemarker linemarker-6"><em>Segments</em> are song types that extend over time and are defined by a start and a stop time. <em>Drosophila</em>  sine song and the syllables of mouse and bird vocalizations fall into the segment category.</p></li>
 </ul>
-<p>If you load audio that has been annotated before, the annotations will be loaded with the audio. Song types can be added, renamed, and deleted via <em>Annotations/Add or edit song types</em>.</p>
+<p class="linemarker linemarker-8">If you load audio that has been annotated before, the annotations will be loaded with the audio. Song types can be added, renamed, and deleted via <em>Annotations/Add or edit song types</em>.</p>
 <figure class="align-default" id="xb-make-fig">
 <a class="reference internal image-reference" href="../_images/xb_make.png"><img alt="edit annotation types" src="../_images/xb_make.png" style="height: 500px;" /></a>
 <figcaption>
@@ -286,73 +286,73 @@
 </section>
 <section id="create-annotations-manually">
 <h2>Create annotations manually<a class="headerlink" href="#create-annotations-manually" title="Permalink to this headline">#</a></h2>
-<p>The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.</p>
+<p class="linemarker linemarker-18">The registered song types can now be activated for annotation using the dropdown menu on the top left of the main window, or via the number keys indicated in the dropdown menu.</p>
 <figure class="align-default" id="xb-create-fig">
 <a class="reference internal image-reference" href="../_images/xb_create.gif"><img alt="annotate song" src="../_images/xb_create.gif" style="width: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text">Left clicks in waveform or spectrogram few create annotations.</span><a class="headerlink" href="#xb-create-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
+<p class="linemarker linemarker-26">Song is annotated by left-clicking the waveform or spectrogram view. If an event-like song type is active, a single left click marks the time of an event. A segment-like song type requires two clicks—one for each boundary of the segment.</p>
 </section>
 <section id="annotate-by-thresholding-the-waveform">
 <h2>Annotate by thresholding the waveform<a class="headerlink" href="#annotate-by-thresholding-the-waveform" title="Permalink to this headline">#</a></h2>
-<p>Annotation of events can be sped up with the “Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the <em>Annotations/Toggle thresholding mode</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
+<p class="linemarker linemarker-29">Annotation of events can be sped up with the “Thresholding mode”, which detects events as peaks in the sound energy that exceed a threshold. Activate thresholding mode via the <em>Annotations/Toggle thresholding mode</em> menu. This will display a draggable horizontal line - the detection threshold - and a smooth pink waveform - the energy envelope of the waveform. Adjust the threshold so that only “correct” peaks in the envelope cross the threshold and then press <code class="docutils literal notranslate"><span class="pre">I</span></code> to annotate these peaks as events.</p>
 <figure class="align-default" id="xb-thres-fig">
 <a class="reference internal image-reference" href="../_images/xb_thres.gif"><img alt="annotate song" src="../_images/xb_thres.gif" style="width: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text">Annotations assisted by thresholding and peak detection.</span><a class="headerlink" href="#xb-thres-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The detection of events can be adjusted via <em>Annotations/Adjust thresholding mode</em>:</p>
+<p class="linemarker linemarker-37">The detection of events can be adjusted via <em>Annotations/Adjust thresholding mode</em>:</p>
 <ul class="simple">
-<li><p><em>Smoothing factor for envelope (seconds)</em>: Sets the width of the Gaussian used for smoothing the envelope. Too short and the envelope will contain many noise peaks, too long and individual events will become less distinct.</p></li>
-<li><p><em>Minimal distance between events (seconds)</em>: If the events typically arrive at a minimal rate, this can be used to reduce spurious detections.</p></li>
+<li><p class="linemarker linemarker-38"><em>Smoothing factor for envelope (seconds)</em>: Sets the width of the Gaussian used for smoothing the envelope. Too short and the envelope will contain many noise peaks, too long and individual events will become less distinct.</p></li>
+<li><p class="linemarker linemarker-39"><em>Minimal distance between events (seconds)</em>: If the events typically arrive at a minimal rate, this can be used to reduce spurious detections.</p></li>
 </ul>
 </section>
 <section id="edit-annotations">
 <h2>Edit annotations<a class="headerlink" href="#edit-annotations" title="Permalink to this headline">#</a></h2>
-<p>Adjust event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type in the <em>Annotations</em> menu.</p>
-<p>Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
+<p class="linemarker linemarker-42">Adjust event times and segment bounds by dragging the lines or the boundaries of segments. Drag the shaded area itself to move a segment without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type in the <em>Annotations</em> menu.</p>
+<p class="linemarker linemarker-44">Delete annotations of the active song type by right-clicking on the annotation. Annotations of all song types or only the active one in the view can be deleted with <code class="docutils literal notranslate"><span class="pre">U</span></code> and <code class="docutils literal notranslate"><span class="pre">Y</span></code>, respectively, or via the <em>Annotations</em> menu.</p>
 <figure class="align-default" id="xb-edit-fig">
 <a class="reference internal image-reference" href="../_images/xb_edit.gif"><img alt="annotate song" src="../_images/xb_edit.gif" style="width: 700px;" /></a>
 <figcaption>
 <p><span class="caption-text">Dragging moves, right click deletes annotations.</span><a class="headerlink" href="#xb-edit-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>Change the label of an annotation via CMD/CTRL+Left click on an existing annotation. The type of the annotation will change to the currently active one.</p>
+<p class="linemarker linemarker-52">Change the label of an annotation via CMD/CTRL+Left click on an existing annotation. The type of the annotation will change to the currently active one.</p>
 </section>
 <section id="export-and-save-annotations">
 <h2>Export and save annotations<a class="headerlink" href="#export-and-save-annotations" title="Permalink to this headline">#</a></h2>
-<p>Export audio data and annotations for integration into a training dataset via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>. This will first ask you to select a folder. When making a training dataset, all exported data in the folder will be used, so make sure you do not save data from different projects to the same folder:</p>
+<p class="linemarker linemarker-56">Export audio data and annotations for integration into a training dataset via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>. This will first ask you to select a folder. When making a training dataset, all exported data in the folder will be used, so make sure you do not save data from different projects to the same folder:</p>
 <figure class="align-default" id="xb-assemble-fig">
 <a class="reference internal image-reference" href="../_images/xb_export.png"><img alt="export audio and annotations" src="../_images/xb_export.png" style="width: 500px;" /></a>
 <figcaption>
 <p><span class="caption-text">Export audio data and annotations</span><a class="headerlink" href="#xb-assemble-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>After a folder has been selected, a dialog will open with options to customize the data export:</p>
+<p class="linemarker linemarker-64">After a folder has been selected, a dialog will open with options to customize the data export:</p>
 <ul class="simple">
-<li><p><em>Song types to export</em>: Select a specific song type to export annotations for. Predicting song in proof-read mode will produce song types ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> - exclude these from the export. Annotations will be saved as a file ending in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> (see a <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">description</span></a> of the format).</p></li>
-<li><p><em>Audio file format</em>: The file format of the exported audio data:</p>
+<li><p class="linemarker linemarker-65"><em>Song types to export</em>: Select a specific song type to export annotations for. Predicting song in proof-read mode will produce song types ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> - exclude these from the export. Annotations will be saved as a file ending in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> (see a <a class="reference internal" href="../technical/data_formats.html"><span class="doc std std-doc">description</span></a> of the format).</p></li>
+<li><p class="linemarker linemarker-66"><em>Audio file format</em>: The file format of the exported audio data:</p>
 <ul>
-<li><p><em>NPZ</em>: Zipped numpy variables. Will store a <code class="docutils literal notranslate"><span class="pre">data</span></code> variable with the audio and a <code class="docutils literal notranslate"><span class="pre">samplerate</span></code> variable.</p></li>
-<li><p><em>WAV</em>: Wave audio file. More general but also less flexible format. For instance, floating point data is restricted to the range [-1, 1] (see <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy docs</a>). Audio may need to be scaled before saving to prevent data loss from clipping.</p></li>
-<li><p><em>Recommendation</em>: Use NPZ—it is robust and portable.</p></li>
+<li><p class="linemarker linemarker-67"><em>NPZ</em>: Zipped numpy variables. Will store a <code class="docutils literal notranslate"><span class="pre">data</span></code> variable with the audio and a <code class="docutils literal notranslate"><span class="pre">samplerate</span></code> variable.</p></li>
+<li><p class="linemarker linemarker-68"><em>WAV</em>: Wave audio file. More general but also less flexible format. For instance, floating point data is restricted to the range [-1, 1] (see <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy docs</a>). Audio may need to be scaled before saving to prevent data loss from clipping.</p></li>
+<li><p class="linemarker linemarker-69"><em>Recommendation</em>: Use NPZ—it is robust and portable.</p></li>
 </ul>
 </li>
-<li><p><em>Scale factor</em>: Scale the audio before export. May be required when exporting to WAV, since the WAV format has range restrictions.</p></li>
-<li><p><em>Start seconds</em> &amp; <em>end seconds</em>: Export audio and annotations between start and end seconds. Relevant when exporting partially annotated data. When training with small datasets, do not include too much silence before the first and after the last annotation to ensure that all parts of the exported audio contain annotated song.</p></li>
+<li><p class="linemarker linemarker-70"><em>Scale factor</em>: Scale the audio before export. May be required when exporting to WAV, since the WAV format has range restrictions.</p></li>
+<li><p class="linemarker linemarker-71"><em>Start seconds</em> &amp; <em>end seconds</em>: Export audio and annotations between start and end seconds. Relevant when exporting partially annotated data. When training with small datasets, do not include too much silence before the first and after the last annotation to ensure that all parts of the exported audio contain annotated song.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To generate a larger and more diverse dataset, annotate and export <em>multiple recordings into the same folder</em>. They can then be assembled in a single dataset for training (see next page).</p>
+<p class="linemarker linemarker-74">To generate a larger and more diverse dataset, annotate and export <em>multiple recordings into the same folder</em>. They can then be assembled in a single dataset for training (see next page).</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We also recommend you additionally save the full annotations next to the audio data via the <em>File/Save annotations</em>, since the exported annotations only contain the selected range. Saving will create a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file ending in ‘_annotations.csv’, that will be loaded automatically the next time you load the recording.</p>
+<p class="linemarker linemarker-78">We also recommend you additionally save the full annotations next to the audio data via the <em>File/Save annotations</em>, since the exported annotations only contain the selected range. Saving will create a <code class="docutils literal notranslate"><span class="pre">csv</span></code> file ending in ‘_annotations.csv’, that will be loaded automatically the next time you load the recording.</p>
 </div>
-<p>Once data is exported, the next step is to <a class="reference internal" href="train.html"><span class="doc std std-doc">train the network</span></a>.</p>
+<p class="linemarker linemarker-81">Once data is exported, the next step is to <a class="reference internal" href="train.html"><span class="doc std std-doc">train the network</span></a>.</p>
 </section>
 </section>
 
