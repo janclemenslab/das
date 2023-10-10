@@ -33,12 +33,12 @@ __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data u
 Create an anaconda environment called `das` that contains all the required packages:
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.30.0 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+mamba create python=3.9 das=0.30.1 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
 For linux, the last line needs to be:
 ```shell
-CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das=0.30.0 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das=0.30.1 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
 ## Usage
