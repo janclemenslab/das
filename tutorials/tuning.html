@@ -15,6 +15,16 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -267,311 +277,11 @@
           </label>
         </div>
         <article role="main">
-          <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train_tune</span>
-</pre></div>
-</div>
-</div>
-</div>
+          <p class="linemarker linemarker-10002">You may need to install keras-tuner for this to work.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tuner</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s1">&#39;tutorial_dataset.npy&#39;</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;res&#39;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">tune_config</span><span class="o">=</span><span class="s1">&#39;tuning.yml&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-09-19 14:19:02.406030: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Search space summary
-Default search space size: 3
-nb_conv (Choice)
-{&#39;default&#39;: 2, &#39;conditions&#39;: [], &#39;values&#39;: [2, 3], &#39;ordered&#39;: True}
-nb_hist (Choice)
-{&#39;default&#39;: 64, &#39;conditions&#39;: [], &#39;values&#39;: [64, 128, 256], &#39;ordered&#39;: True}
-learning_rate (Choice)
-{&#39;default&#39;: 0.001, &#39;conditions&#39;: [], &#39;values&#39;: [0.001, 0.0001], &#39;ordered&#39;: True}
-
-Search: Running Trial #1
-
-Hyperparameter    |Value             |Best Value So Far 
-nb_conv           |3                 |?                 
-nb_hist           |256               |?                 
-learning_rate     |0.001             |?                 
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras_tuner/engine/metrics_tracking.py:105: RuntimeWarning: All-NaN axis encountered
-  return np.nanmin(values)
-2022-09-19 14:19:03.179490: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:185] None of the MLIR Optimization Passes are enabled (registered 2)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/400
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Interrupted
-Traceback (most recent call last):
-  File &quot;/Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py&quot;, line 190, in run_trial
-    model.fit(data_gen,
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/wandb/integration/keras/keras.py&quot;, line 168, in new_v2
-    return old_v2(*args, **kwargs)
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras/engine/training.py&quot;, line 1215, in fit
-    val_logs = self.evaluate(
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/keras/engine/training.py&quot;, line 1501, in evaluate
-    tmp_logs = self.test_function(iterator)
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py&quot;, line 885, in __call__
-    result = self._call(*args, **kwds)
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py&quot;, line 924, in _call
-    results = self._stateful_fn(*args, **kwds)
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py&quot;, line 3039, in __call__
-    return graph_function._call_flat(
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py&quot;, line 1963, in _call_flat
-    return self._build_call_outputs(self._inference_function.call(
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py&quot;, line 591, in call
-    outputs = execute.execute(
-  File &quot;/Users/clemens10/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/execute.py&quot;, line 59, in quick_execute
-    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
-KeyboardInterrupt
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">File /Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:190,</span> in <span class="ni">DasTuner.run_trial</span><span class="nt">(self, trial, train_x, train_y, val_x, val_y, epochs, steps_per_epoch, verbose, class_weight, callbacks)</span>
-<span class="g g-Whitespace">    </span><span class="mi">189</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span>  <span class="c1"># attach params to model so we can save them in ModelParamsCheckpoint</span>
-<span class="ne">--&gt; </span><span class="mi">190</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_gen</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">191</span>           <span class="n">validation_data</span><span class="o">=</span><span class="n">val_gen</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">192</span>           <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">193</span>           <span class="n">steps_per_epoch</span><span class="o">=</span><span class="n">steps_per_epoch</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">194</span>           <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">195</span>           <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">196</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/wandb/integration/keras/keras.py:168,</span> in <span class="ni">patch_tf_keras.&lt;locals&gt;.new_v2</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">167</span>         <span class="n">set_wandb_attrs</span><span class="p">(</span><span class="n">cbk</span><span class="p">,</span> <span class="n">val_data</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">168</span> <span class="k">return</span> <span class="n">old_v2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/keras/engine/training.py:1215,</span> in <span class="ni">Model.fit</span><span class="nt">(self, x, y, batch_size, epochs, verbose, callbacks, validation_split, validation_data, shuffle, class_weight, sample_weight, initial_epoch, steps_per_epoch, validation_steps, validation_batch_size, validation_freq, max_queue_size, workers, use_multiprocessing)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1202</span>   <span class="bp">self</span><span class="o">.</span><span class="n">_eval_data_handler</span> <span class="o">=</span> <span class="n">data_adapter</span><span class="o">.</span><span class="n">get_data_handler</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1203</span>       <span class="n">x</span><span class="o">=</span><span class="n">val_x</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1204</span>       <span class="n">y</span><span class="o">=</span><span class="n">val_y</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1213</span>       <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1214</span>       <span class="n">steps_per_execution</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_steps_per_execution</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1215</span> <span class="n">val_logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1216</span>     <span class="n">x</span><span class="o">=</span><span class="n">val_x</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1217</span>     <span class="n">y</span><span class="o">=</span><span class="n">val_y</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1218</span>     <span class="n">sample_weight</span><span class="o">=</span><span class="n">val_sample_weight</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1219</span>     <span class="n">batch_size</span><span class="o">=</span><span class="n">validation_batch_size</span> <span class="ow">or</span> <span class="n">batch_size</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1220</span>     <span class="n">steps</span><span class="o">=</span><span class="n">validation_steps</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1221</span>     <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1222</span>     <span class="n">max_queue_size</span><span class="o">=</span><span class="n">max_queue_size</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1223</span>     <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1224</span>     <span class="n">use_multiprocessing</span><span class="o">=</span><span class="n">use_multiprocessing</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1225</span>     <span class="n">return_dict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1226</span>     <span class="n">_use_cached_eval_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1227</span> <span class="n">val_logs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;val_&#39;</span> <span class="o">+</span> <span class="n">name</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">val_logs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/keras/engine/training.py:1501,</span> in <span class="ni">Model.evaluate</span><span class="nt">(self, x, y, batch_size, verbose, sample_weight, steps, callbacks, max_queue_size, workers, use_multiprocessing, return_dict, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1500</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">on_test_batch_begin</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1501</span> <span class="n">tmp_logs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_function</span><span class="p">(</span><span class="n">iterator</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1502</span> <span class="k">if</span> <span class="n">data_handler</span><span class="o">.</span><span class="n">should_sync</span><span class="p">:</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py:885,</span> in <span class="ni">Function.__call__</span><span class="nt">(self, *args, **kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">884</span> <span class="k">with</span> <span class="n">OptionalXlaContext</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_jit_compile</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">885</span>   <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">887</span> <span class="n">new_tracing_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experimental_get_tracing_count</span><span class="p">()</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/def_function.py:924,</span> in <span class="ni">Function._call</span><span class="nt">(self, *args, **kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">922</span> <span class="c1"># In this case we have not created variables on the first call. So we can</span>
-<span class="g g-Whitespace">    </span><span class="mi">923</span> <span class="c1"># run the first trace but we should fail if variables are created.</span>
-<span class="ne">--&gt; </span><span class="mi">924</span> <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateful_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">925</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_created_variables</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ALLOW_DYNAMIC_VARIABLE_CREATION</span><span class="p">:</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:3039,</span> in <span class="ni">Function.__call__</span><span class="nt">(self, *args, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">3037</span>   <span class="p">(</span><span class="n">graph_function</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">3038</span>    <span class="n">filtered_flat_args</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_maybe_define_function</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">3039</span> <span class="k">return</span> <span class="n">graph_function</span><span class="o">.</span><span class="n">_call_flat</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">3040</span>     <span class="n">filtered_flat_args</span><span class="p">,</span> <span class="n">captured_inputs</span><span class="o">=</span><span class="n">graph_function</span><span class="o">.</span><span class="n">captured_inputs</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:1963,</span> in <span class="ni">ConcreteFunction._call_flat</span><span class="nt">(self, args, captured_inputs, cancellation_manager)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1960</span> <span class="k">if</span> <span class="p">(</span><span class="n">possible_gradient_type</span> <span class="o">==</span> <span class="n">gradients_util</span><span class="o">.</span><span class="n">POSSIBLE_GRADIENT_TYPES_NONE</span>
-<span class="g g-Whitespace">   </span><span class="mi">1961</span>     <span class="ow">and</span> <span class="n">executing_eagerly</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1962</span>   <span class="c1"># No tape is watching; skip to running the function.</span>
-<span class="ne">-&gt; </span><span class="mi">1963</span>   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_call_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inference_function</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1964</span>       <span class="n">ctx</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">cancellation_manager</span><span class="o">=</span><span class="n">cancellation_manager</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">1965</span> <span class="n">forward_backward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_select_forward_and_backward_functions</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1966</span>     <span class="n">args</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1967</span>     <span class="n">possible_gradient_type</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1968</span>     <span class="n">executing_eagerly</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/function.py:591,</span> in <span class="ni">_EagerDefinedFunction.call</span><span class="nt">(self, ctx, args, cancellation_manager)</span>
-<span class="g g-Whitespace">    </span><span class="mi">590</span> <span class="k">if</span> <span class="n">cancellation_manager</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">591</span>   <span class="n">outputs</span> <span class="o">=</span> <span class="n">execute</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">592</span>       <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">signature</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">593</span>       <span class="n">num_outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_num_outputs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">594</span>       <span class="n">inputs</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">595</span>       <span class="n">attrs</span><span class="o">=</span><span class="n">attrs</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">596</span>       <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">597</span> <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/tensorflow/python/eager/execute.py:59,</span> in <span class="ni">quick_execute</span><span class="nt">(op_name, num_outputs, inputs, attrs, ctx, name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>   <span class="n">ctx</span><span class="o">.</span><span class="n">ensure_initialized</span><span class="p">()</span>
-<span class="ne">---&gt; </span><span class="mi">59</span>   <span class="n">tensors</span> <span class="o">=</span> <span class="n">pywrap_tfe</span><span class="o">.</span><span class="n">TFE_Py_Execute</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">_handle</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>                                       <span class="n">inputs</span><span class="p">,</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span> <span class="k">except</span> <span class="n">core</span><span class="o">.</span><span class="n">_NotOkStatusException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
-
-<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
-
-<span class="ne">SystemExit</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-    <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
-
-<span class="o">/</span><span class="n">Volumes</span><span class="o">/</span><span class="n">shinkansen</span><span class="o">/</span><span class="n">Dropbox</span><span class="o">/</span><span class="n">code</span><span class="o">.</span><span class="n">py</span><span class="o">/</span><span class="n">das</span><span class="o">/</span><span class="n">docs</span><span class="o">/</span><span class="n">tutorials</span><span class="o">/</span><span class="n">tuning</span><span class="o">.</span><span class="n">ipynb</span> <span class="n">Cell</span> <span class="mi">2</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="o">----&gt;</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s1">&#39;vscode-notebook-cell:/Volumes/shinkansen/Dropbox/code.py/das/docs/tutorials/tuning.ipynb#W2sZmlsZQ%3D%3D?line=0&#39;</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span> <span class="n">tuner</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s1">&#39;tutorial_dataset.npy&#39;</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;res&#39;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">tune_config</span><span class="o">=</span><span class="s1">&#39;tuning.yml&#39;</span><span class="p">)</span>
-
-<span class="nn">File /Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:527,</span> in <span class="ni">train</span><span class="nt">(data_dir, x_suffix, y_suffix, save_dir, save_prefix, save_name, model_name, nb_filters, kernel_size, nb_conv, use_separable, nb_hist, ignore_boundaries, batch_norm, nb_pre_conv, pre_nb_dft, pre_kernel_size, pre_nb_filters, pre_nb_conv, upsample, dilations, nb_lstm_units, verbose, batch_size, nb_epoch, learning_rate, reduce_lr, reduce_lr_patience, fraction_data, seed, batch_level_subsampling, augmentations, tensorboard, wandb_api_token, wandb_project, wandb_entity, log_messages, nb_stacks, with_y_hist, balance, version_data, tune_config, nb_tune_trials, _qt_progress)</span>
-<span class="g g-Whitespace">    </span><span class="mi">526</span> <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Start hyperparameter tuning&#39;</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">527</span> <span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">528</span>     <span class="n">train_x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">529</span>     <span class="n">train_y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">530</span>     <span class="n">val_x</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">531</span>     <span class="n">val_y</span><span class="o">=</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">532</span>     <span class="n">epochs</span><span class="o">=</span><span class="n">nb_epoch</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">533</span>     <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">534</span>     <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">535</span>     <span class="n">class_weight</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_weights&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">536</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">537</span> <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">())</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/keras_tuner/engine/base_tuner.py:179,</span> in <span class="ni">BaseTuner.search</span><span class="nt">(self, *fit_args, **fit_kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">178</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_trial_begin</span><span class="p">(</span><span class="n">trial</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">179</span> <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_trial</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span> <span class="o">*</span><span class="n">fit_args</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">180</span> <span class="c1"># `results` is None indicates user updated oracle in `run_trial()`.</span>
-
-<span class="nn">File /Volumes/shinkansen/Dropbox/code.py/das/src/das/train_tune.py:201,</span> in <span class="ni">DasTuner.run_trial</span><span class="nt">(self, trial, train_x, train_y, val_x, val_y, epochs, steps_per_epoch, verbose, class_weight, callbacks)</span>
-<span class="g g-Whitespace">    </span><span class="mi">200</span>     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s1">&#39;Interrupted&#39;</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">201</span>     <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">202</span> <span class="k">except</span><span class="p">:</span>
-
-<span class="ne">SystemExit</span>: 0
-
-<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
-
-<span class="ne">AssertionError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-    <span class="p">[</span><span class="o">...</span> <span class="n">skipping</span> <span class="n">hidden</span> <span class="mi">1</span> <span class="n">frame</span><span class="p">]</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/interactiveshell.py:1927,</span> in <span class="ni">InteractiveShell.showtraceback</span><span class="nt">(self, exc_tuple, filename, tb_offset, exception_only, running_compiled_code)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1924</span> <span class="k">if</span> <span class="n">exception_only</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1925</span>     <span class="n">stb</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;An exception has occurred, use %tb to see &#39;</span>
-<span class="g g-Whitespace">   </span><span class="mi">1926</span>            <span class="s1">&#39;the full traceback.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">]</span>
-<span class="ne">-&gt; </span><span class="mi">1927</span>     <span class="n">stb</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">InteractiveTB</span><span class="o">.</span><span class="n">get_exception_only</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1928</span>                                                      <span class="n">value</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">1929</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1930</span>     <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1931</span>         <span class="c1"># Exception classes can customise their traceback - we</span>
-<span class="g g-Whitespace">   </span><span class="mi">1932</span>         <span class="c1"># use this in IPython.parallel for exceptions occurring</span>
-<span class="g g-Whitespace">   </span><span class="mi">1933</span>         <span class="c1"># in the engines. This should return a list of strings.</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:578,</span> in <span class="ni">ListTB.get_exception_only</span><span class="nt">(self, etype, value)</span>
-<span class="g g-Whitespace">    </span><span class="mi">570</span> <span class="k">def</span> <span class="nf">get_exception_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">571</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;Only print the exception type and message, without a traceback.</span>
-<span class="g g-Whitespace">    </span><span class="mi">572</span><span class="sd"> </span>
-<span class="g g-Whitespace">    </span><span class="mi">573</span><span class="sd">     Parameters</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">576</span><span class="sd">     value : exception value</span>
-<span class="g g-Whitespace">    </span><span class="mi">577</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">578</span>     <span class="k">return</span> <span class="n">ListTB</span><span class="o">.</span><span class="n">structured_traceback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:436,</span> in <span class="ni">ListTB.structured_traceback</span><span class="nt">(self, etype, evalue, etb, tb_offset, context)</span>
-<span class="g g-Whitespace">    </span><span class="mi">433</span>     <span class="n">chained_exc_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">exception</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-<span class="g g-Whitespace">    </span><span class="mi">434</span>     <span class="n">chained_exceptions_tb_offset</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="g g-Whitespace">    </span><span class="mi">435</span>     <span class="n">out_list</span> <span class="o">=</span> <span class="p">(</span>
-<span class="ne">--&gt; </span><span class="mi">436</span>         <span class="bp">self</span><span class="o">.</span><span class="n">structured_traceback</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">437</span>             <span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="p">(</span><span class="n">etb</span><span class="p">,</span> <span class="n">chained_exc_ids</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">438</span>             <span class="n">chained_exceptions_tb_offset</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">439</span>         <span class="o">+</span> <span class="n">chained_exception_message</span>
-<span class="g g-Whitespace">    </span><span class="mi">440</span>         <span class="o">+</span> <span class="n">out_list</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">442</span> <span class="k">return</span> <span class="n">out_list</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:1105,</span> in <span class="ni">AutoFormattedTB.structured_traceback</span><span class="nt">(self, etype, value, tb, tb_offset, number_of_lines_of_context)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1103</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1104</span>     <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="o">=</span> <span class="n">tb</span>
-<span class="ne">-&gt; </span><span class="mi">1105</span> <span class="k">return</span> <span class="n">FormattedTB</span><span class="o">.</span><span class="n">structured_traceback</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1106</span>     <span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">,</span> <span class="n">tb_offset</span><span class="p">,</span> <span class="n">number_of_lines_of_context</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:999,</span> in <span class="ni">FormattedTB.structured_traceback</span><span class="nt">(self, etype, value, tb, tb_offset, number_of_lines_of_context)</span>
-<span class="g g-Whitespace">    </span><span class="mi">996</span> <span class="n">mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span>
-<span class="g g-Whitespace">    </span><span class="mi">997</span> <span class="k">if</span> <span class="n">mode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose_modes</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">998</span>     <span class="c1"># Verbose modes need a full traceback</span>
-<span class="ne">--&gt; </span><span class="mi">999</span>     <span class="k">return</span> <span class="n">VerboseTB</span><span class="o">.</span><span class="n">structured_traceback</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1000</span>         <span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">tb</span><span class="p">,</span> <span class="n">tb_offset</span><span class="p">,</span> <span class="n">number_of_lines_of_context</span>
-<span class="g g-Whitespace">   </span><span class="mi">1001</span>     <span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1002</span> <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;Minimal&#39;</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1003</span>     <span class="k">return</span> <span class="n">ListTB</span><span class="o">.</span><span class="n">get_exception_only</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:852,</span> in <span class="ni">VerboseTB.structured_traceback</span><span class="nt">(self, etype, evalue, etb, tb_offset, number_of_lines_of_context)</span>
-<span class="g g-Whitespace">    </span><span class="mi">850</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;Return a nice text document describing the traceback.&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">851</span> <span class="k">assert</span> <span class="n">etb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="ne">--&gt; </span><span class="mi">852</span> <span class="n">formatted_exception</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_exception_as_a_whole</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">etb</span><span class="p">,</span> <span class="n">number_of_lines_of_context</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">853</span>                                                        <span class="n">tb_offset</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">855</span> <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Colors</span>  <span class="c1"># just a shorthand + quicker name lookup</span>
-<span class="g g-Whitespace">    </span><span class="mi">856</span> <span class="n">colorsnormal</span> <span class="o">=</span> <span class="n">colors</span><span class="o">.</span><span class="n">Normal</span>  <span class="c1"># used a lot</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:786,</span> in <span class="ni">VerboseTB.format_exception_as_a_whole</span><span class="nt">(self, etype, evalue, etb, number_of_lines_of_context, tb_offset)</span>
-<span class="g g-Whitespace">    </span><span class="mi">784</span> <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tb_offset</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">785</span> <span class="n">head</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_header</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">long_header</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">786</span> <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_records</span><span class="p">(</span><span class="n">etb</span><span class="p">,</span> <span class="n">number_of_lines_of_context</span><span class="p">,</span> <span class="n">tb_offset</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">788</span> <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="g g-Whitespace">    </span><span class="mi">789</span> <span class="n">skipped</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/IPython/core/ultratb.py:840,</span> in <span class="ni">VerboseTB.get_records</span><span class="nt">(self, etb, number_of_lines_of_context, tb_offset)</span>
-<span class="g g-Whitespace">    </span><span class="mi">834</span> <span class="n">options</span> <span class="o">=</span> <span class="n">stack_data</span><span class="o">.</span><span class="n">Options</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">835</span>     <span class="n">before</span><span class="o">=</span><span class="n">before</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">836</span>     <span class="n">after</span><span class="o">=</span><span class="n">after</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">837</span>     <span class="n">pygments_formatter</span><span class="o">=</span><span class="n">formatter</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">838</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">839</span> <span class="k">assert</span> <span class="n">etb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="ne">--&gt; </span><span class="mi">840</span> <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">stack_data</span><span class="o">.</span><span class="n">FrameInfo</span><span class="o">.</span><span class="n">stack_data</span><span class="p">(</span><span class="n">etb</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">))[</span><span class="n">tb_offset</span><span class="p">:]</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/stack_data/core.py:546,</span> in <span class="ni">FrameInfo.stack_data</span><span class="nt">(cls, frame_or_tb, options, collapse_repeated_frames)</span>
-<span class="g g-Whitespace">    </span><span class="mi">530</span> <span class="nd">@classmethod</span>
-<span class="g g-Whitespace">    </span><span class="mi">531</span> <span class="k">def</span> <span class="nf">stack_data</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">532</span>         <span class="bp">cls</span><span class="p">,</span>
-   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">536</span>         <span class="n">collapse_repeated_frames</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="g g-Whitespace">    </span><span class="mi">537</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s1">&#39;FrameInfo&#39;</span><span class="p">,</span> <span class="n">RepeatedFrames</span><span class="p">]]:</span>
-<span class="g g-Whitespace">    </span><span class="mi">538</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">539</span><span class="sd">     An iterator of FrameInfo and RepeatedFrames objects representing</span>
-<span class="g g-Whitespace">    </span><span class="mi">540</span><span class="sd">     a full traceback or stack. Similar consecutive frames are collapsed into RepeatedFrames</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">544</span><span class="sd">     and optionally an Options object to configure.</span>
-<span class="g g-Whitespace">    </span><span class="mi">545</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">546</span>     <span class="n">stack</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_stack</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">548</span>     <span class="c1"># Reverse the stack from a frame so that it&#39;s in the same order</span>
-<span class="g g-Whitespace">    </span><span class="mi">549</span>     <span class="c1"># as the order from a traceback, which is the order of a printed</span>
-<span class="g g-Whitespace">    </span><span class="mi">550</span>     <span class="c1"># traceback when read top to bottom (most recent call last)</span>
-<span class="g g-Whitespace">    </span><span class="mi">551</span>     <span class="k">if</span> <span class="n">is_frame</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">):</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:98,</span> in <span class="ni">iter_stack</span><span class="nt">(frame_or_tb)</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span> <span class="k">while</span> <span class="n">frame_or_tb</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span>     <span class="k">yield</span> <span class="n">frame_or_tb</span>
-<span class="ne">---&gt; </span><span class="mi">98</span>     <span class="k">if</span> <span class="n">is_frame</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">99</span>         <span class="n">frame_or_tb</span> <span class="o">=</span> <span class="n">frame_or_tb</span><span class="o">.</span><span class="n">f_back</span>
-<span class="g g-Whitespace">    </span><span class="mi">100</span>     <span class="k">else</span><span class="p">:</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:91,</span> in <span class="ni">is_frame</span><span class="nt">(frame_or_tb)</span>
-<span class="g g-Whitespace">     </span><span class="mi">90</span> <span class="k">def</span> <span class="nf">is_frame</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">FrameType</span><span class="p">,</span> <span class="n">TracebackType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">91</span>     <span class="n">assert_</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">,</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">FrameType</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">TracebackType</span><span class="p">)))</span>
-<span class="g g-Whitespace">     </span><span class="mi">92</span>     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame_or_tb</span><span class="p">,</span> <span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">FrameType</span><span class="p">,))</span>
-
-<span class="nn">File ~/miniconda3/lib/python3.9/site-packages/stack_data/utils.py:172,</span> in <span class="ni">assert_</span><span class="nt">(condition, error)</span>
-<span class="g g-Whitespace">    </span><span class="mi">170</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">171</span>     <span class="n">error</span> <span class="o">=</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">172</span> <span class="k">raise</span> <span class="n">error</span>
-
-<span class="ne">AssertionError</span>: 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train_tune</span>
+<span class="n">tuner</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s1">&#39;tutorial_dataset.npy&#39;</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;res&#39;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">tune_config</span><span class="o">=</span><span class="s1">&#39;tuning.yml&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -614,6 +324,26 @@ KeyboardInterrupt
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
