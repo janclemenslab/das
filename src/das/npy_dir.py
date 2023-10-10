@@ -31,12 +31,12 @@ class DictClass(dict):
         self.attrs: Dict = {}
 
     def __str__(self):
-        out = f"Data:\n"
+        out = "Data:\n"
         for top_key in self.keys():
             out = out + f"   {top_key}:\n"
             for key, val in self[top_key].items():
                 out = out + f"      {key}: {val.shape}\n"
-        out = out + f"\nAttributes:\n"
+        out = out + "\nAttributes:\n"
         for key, val in self.attrs.items():
             out = out + f"    {key}: {val}\n"
         return out
@@ -74,7 +74,7 @@ def load(location: str, memmap_dirs: Optional[Union[List[str], str]] = None) -> 
         for npy_file in npy_files:
             npy_key = path_to_key(npy_file)
             if memmap_dirs == "all" or dir_key in memmap_dirs:
-                data[dir_key][npy_key] = np.lib.format.open_memmap(npy_file, "r")
+                data[dir_key][npy_key] = np.lib.format.open_memmap(npy_file, mode="r")
             else:
                 data[dir_key][npy_key] = np.load(npy_file)
     return data
@@ -95,3 +95,12 @@ def save(location: str, data: DictClass) -> None:
         os.makedirs(os.path.join(location, key_top), exist_ok=True)
         for key, val in data[key_top].items():
             np.save(os.path.join(location, key_top, key + ".npy"), val)
+            # filename = os.path.join(location, key_top, key + ".npy")
+            # mmap = np.lib.format.open_memmap(filename, mode="w+", dtype=val.dtype, shape=val.shape)
+            # # chunked write
+            # chunk_size = 8_000_000_000 // val.shape[1]
+            # for chunk_start in range(0, val.shape[0] - chunk_size, chunk_size):
+            #     chunk_end = min(val.shape[0], chunk_start + chunk_size)
+            #     mmap[chunk_start:chunk_end] = val[chunk_start:chunk_end]
+            # mmap.flush()
+            # del mmap

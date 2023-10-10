@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 import codecs
 import re
 import os
@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 
 def read(*parts):
-    with codecs.open(os.path.join(here, *parts), 'r') as fp:
+    with codecs.open(os.path.join(here, *parts), "r") as fp:
         return fp.read()
 
 
@@ -20,6 +20,6 @@ def find_version(*file_paths):
 
 
 setup(
-    name='das',
+    name="das",
     version=find_version("src/das/__init__.py"),
 )

@@ -4,7 +4,6 @@ from typing import List, Dict, Mapping, Optional
 import pandas as pd
 import scipy.signal
 import logging
-import sklearn.model_selection
 
 
 logger = logging.getLogger(__name__)

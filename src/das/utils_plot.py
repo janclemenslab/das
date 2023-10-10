@@ -59,7 +59,6 @@ def remove_axes(axis=None, all=False, which="tblr"):
         axis = plt.gca()
 
     # Hide the right and top spines
-
     axis.spines["right"].set_visible(False)
     axis.spines["top"].set_visible(False)
     # Only show ticks on the left and bottom spines

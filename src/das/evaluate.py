@@ -124,7 +124,7 @@ def evaluate_probabilities(
 
 
 def evaluate(
-    mode_save_name: str,
+    model_save_name: str,
     custom_objects: Optional[Dict[str, Callable]] = None,
     full_output: bool = True,
     verbose: int = 1,
@@ -142,7 +142,7 @@ def evaluate(
         _type_: _description_
     """
     logger.info("Loading last best model.")
-    model, params = utils.load_model_and_params(mode_save_name, custom_objects=custom_objects)
+    model, params = utils.load_model_and_params(model_save_name, custom_objects=custom_objects)
     logger.info(model.summary())
 
     logger.info(f"Loading data from {params['data_dir']}.")
@@ -188,7 +188,7 @@ def evaluate(
             return conf_mat, report
 
 
-def cli_evaluate(mode_save_name: str, verbose: int = 1):
+def cli_evaluate(model_save_name: str, verbose: int = 1):
     """Evaluate model.
 
     Args:
@@ -196,8 +196,8 @@ def cli_evaluate(mode_save_name: str, verbose: int = 1):
                                File to load will be MODEL_SAVE_NAME + _model.h5.
         verbose (int): Display progress bar during prediction. Defaults to 1.
     """
-    conf_mat, report, results_dict = evaluate(mode_save_name, full_output=True, verbose=verbose, custom_objects=None)
+    conf_mat, report, results_dict = evaluate(model_save_name, full_output=True, verbose=verbose, custom_objects=None)
 
-    save_filename = "{0}_results.h5".format(mode_save_name)
+    save_filename = "{0}_results.h5".format(model_save_name)
     logger.info(f"   Saving to {save_filename}.")
     flammkuchen.save(save_filename, results_dict)

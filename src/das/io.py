@@ -4,6 +4,15 @@ See doc/data.md for a description of the data schema.
 """
 import os.path
 from . import npy_dir
+import zarr
+import h5py
+import numpy as np
+
+
+class MemoryMappedDirectoryStore(zarr.storage.DirectoryStore):
+    # faster access to zarr files via memmaping: https://gist.github.com/ivirshup/5c7df5ed10517abf6567a6a9af6c7eaa
+    def _fromfile(self, fn):
+        return memoryview(np.memmap(fn, mode="r"))
 
 
 def _select(data, x_suffix, y_suffix):
@@ -50,12 +59,9 @@ def load(location, x_suffix="", y_suffix=""):
 
     location = os.path.normpath(location)  # remove trailing path separators
     if location.endswith(".zarr"):
-        import zarr
-
-        data = zarr.open(location, mode="r")
+        store = zarr.LRUStoreCache(MemoryMappedDirectoryStore(location), max_size=8e9)
+        data = zarr.group(store=store, overwrite=False)
     elif location.endswith(".h5"):
-        import h5py
-
         data = h5py.File.open(location, mode="r")
     elif location.endswith(".npy"):
         data = npy_dir.load(location)
