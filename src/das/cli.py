@@ -1,7 +1,10 @@
 import defopt
 import logging
 import platform
-from . import train, predict, train_tune, evaluate
+from . import train, predict, evaluate
+
+# from . import train_tune
+
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +67,7 @@ def main():
     """Command line interface for DAS."""
     subcommands = {
         "train": train.train,
-        "tune": train_tune.train,
+        # "tune": train_tune.train,
         "predict": predict.cli_predict,
         "evaluate": evaluate.cli_evaluate,
         "version": version,

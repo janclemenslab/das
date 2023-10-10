@@ -21,7 +21,8 @@ def test_import():
     from das import pulse_utils
     from das import segment_utils
     from das import train
-    from das import train_tune
+
+    # from das import train_tune
     from das import utils
     from das import utils_plot
     import das.kapre
