@@ -3,6 +3,6 @@
 set PIP_NO_INDEX=False
 set PIP_NO_DEPENDENCIES=False
 set PIP_IGNORE_INSTALLED=False
-"%PYTHON%" -m pip install keras-tuner==1.3.3 kt-legacy -vv --no-dependencies
+"%PYTHON%" -m pip install keras-tuner kt-legacy -vv --no-dependencies
 "%PYTHON%" -m pip install das -vv --no-dependencies
 if errorlevel 1 exit 1

@@ -38,7 +38,7 @@ requirements:
 #     - numpy<1.24  # [not linux]
     - numpy=1.23  #<1.24
     - peakutils
-    - pyyaml 
+    - pyyaml
     - scikit-learn
     - scikit-image
     - tqdm
