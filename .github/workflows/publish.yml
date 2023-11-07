@@ -19,8 +19,10 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [3.9 , '3.10']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        # python-version: [3.9 , '3.10']
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
+        python-version: [3.9]
+        os: [windows-latest]
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
