@@ -42,7 +42,7 @@ requirements:
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave>=0.33.26
+    - xarray-behave>=0.33.29
     - conda-forge::cudatoolkit # [linux or win]
     - conda-forge::cudnn # [linux or win]
 #     - conda-forge::tensorflow # [linux]
@@ -52,7 +52,7 @@ requirements:
     - anaconda::tensorflow==2.9.1 # [osx]
     - apple::tensorflow-deps # [not osx and arm64]
     - keras
-    # - keras-tuner  # [not arm64]
+    - keras-tuner  # [not arm64]
 
 test:
   imports:
