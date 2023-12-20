@@ -4,15 +4,24 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.annot - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -156,7 +165,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -275,7 +284,7 @@
 
 
 <div class="viewcode-block" id="Events"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events">[docs]</a><span class="k">class</span> <span class="nc">Events</span><span class="p">(</span><span class="n">UserDict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Utility class for dealing with annotations.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Utility class for dealing with annotations.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -324,7 +333,7 @@
 
 <div class="viewcode-block" id="Events.from_df"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.from_df">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_df</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">possible_event_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            df (pd.DataFrame): with columns `name`, `start_seconds`, `end_seconds`.</span>
@@ -342,7 +351,7 @@
 
 <div class="viewcode-block" id="Events.from_lists"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.from_lists">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_lists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="p">,</span> <span class="n">possible_event_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            names ([type]): [description]</span>
@@ -366,7 +375,7 @@
 
 <div class="viewcode-block" id="Events.from_dataset"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.from_dataset">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_dataset</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ds ([type]): [description]</span>
@@ -440,7 +449,7 @@
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="p">,</span> <span class="n">new_row</span><span class="p">),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Events.to_df"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.to_df">[docs]</a>    <span class="k">def</span> <span class="nf">to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preserve_empty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert to pandas.DataFrame</span>
+        <span class="sd">&quot;&quot;&quot;Convert to pandas.DataFrame</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            preserve_empty (bool, optional):</span>
@@ -472,7 +481,7 @@
         <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="Events.to_dataset"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.to_dataset">[docs]</a>    <span class="k">def</span> <span class="nf">to_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an xarray dataset.</span>
+        <span class="sd">&quot;&quot;&quot;Returns an xarray dataset.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            xr.Dataset: with the data arrays `event_names` and `event_times`.</span>
@@ -510,7 +519,7 @@
         <span class="n">append</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">sort_after_append</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name ([type]): [description]</span>
@@ -532,7 +541,7 @@
                 <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Events.delete_name"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.delete_name">[docs]</a>    <span class="k">def</span> <span class="nf">delete_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name ([type]): [description]</span>
@@ -543,7 +552,7 @@
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Events.add_time"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.add_time">[docs]</a>    <span class="k">def</span> <span class="nf">add_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name ([type]): [description]</span>
@@ -559,7 +568,7 @@
         <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]),</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">start_seconds</span><span class="p">,</span> <span class="n">stop_seconds</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Events.move_time"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.move_time">[docs]</a>    <span class="k">def</span> <span class="nf">move_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old_time</span><span class="p">,</span> <span class="n">new_time</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;[summary]</span>
+        <span class="sd">&quot;&quot;&quot;[summary]</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name ([type]): [description]</span>
@@ -588,7 +597,7 @@
         <span class="k">return</span> <span class="n">deleted_time</span>
 
 <div class="viewcode-block" id="Events.select_range"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.select_range">[docs]</a>    <span class="k">def</span> <span class="nf">select_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t0</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">t1</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get indices of events within the range.</span>
+        <span class="sd">&quot;&quot;&quot;Get indices of events within the range.</span>
 
 <span class="sd">        Need to start and stop after t0 and before t1 (non-inclusive bounds).</span>
 
@@ -618,7 +627,7 @@
         <span class="k">return</span> <span class="n">within_range_indices</span></div>
 
 <div class="viewcode-block" id="Events.filter_range"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.filter_range">[docs]</a>    <span class="k">def</span> <span class="nf">filter_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns events within the range.</span>
+        <span class="sd">&quot;&quot;&quot;Returns events within the range.</span>
 
 <span class="sd">        Need to start and stop after t0 and before t1 (non-inclusive bounds).</span>
 
@@ -635,7 +644,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="n">indices</span><span class="p">,</span> <span class="p">:]</span></div>
 
 <div class="viewcode-block" id="Events.delete_range"><a class="viewcode-back" href="../../api/das.annot.html#das.annot.Events.delete_range">[docs]</a>    <span class="k">def</span> <span class="nf">delete_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">strict</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes events within the range.</span>
+        <span class="sd">&quot;&quot;&quot;Deletes events within the range.</span>
 
 <span class="sd">        Need to start and stop after t0 and before t1 (non-inclusive bounds).</span>
 
@@ -716,7 +725,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -734,6 +745,27 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

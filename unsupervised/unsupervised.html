@@ -5,15 +5,26 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Courtship song of flies" href="flies.html" /><link rel="prev" title="Annotate audio in realtime" href="../tutorials/realtime.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Unsupervised classification - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +168,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -252,8 +263,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -269,87 +279,87 @@
         <article role="main">
           <section id="unsupervised-classification">
 <span id="uns"></span><h1>Unsupervised classification<a class="headerlink" href="#unsupervised-classification" title="Permalink to this headline">#</a></h1>
-<p>Unsupervised classifications is an alternative to tedious manual
+<p class="linemarker linemarker-8">Unsupervised classifications is an alternative to tedious manual
 classification of song types: Use <em>DAS</em> via the GUI or the command line
 to detect anything that you think is song and then classify song into
 different types afterwards. The song types discovered with unsupervised
 methods can then be used to create a training dataset for training <em>DAS</em>
 to directly label the different song types.</p>
-<p><em>DAS-unsupervised</em> provides tools for applying this approach with a
+<p class="linemarker linemarker-15"><em>DAS-unsupervised</em> provides tools for applying this approach with a
 focus on pre-processing acoustic signals for unsupervised
 classification:</p>
 <ul class="simple">
-<li><p>extract waveforms or spectrograms of acoustic events from a recording</p></li>
-<li><p>normalize the duration, center frequency, amplitude, or sign of
+<li><p class="linemarker linemarker-19">extract waveforms or spectrograms of acoustic events from a recording</p></li>
+<li><p class="linemarker linemarker-20">normalize the duration, center frequency, amplitude, or sign of
 waveform/spectrograms</p></li>
 </ul>
-<p>Unsupervised classification itself is performed using existing
+<p class="linemarker linemarker-23">Unsupervised classification itself is performed using existing
 libraries:</p>
 <ul class="simple">
-<li><p>dimensionality reduction:
+<li><p class="linemarker linemarker-26">dimensionality reduction:
 <a class="reference external" href="https://umap-learn.readthedocs.io/">umap</a></p></li>
-<li><p>clustering: <a class="reference external" href="https://hdbscan.readthedocs.io/">hdbscan</a> or
+<li><p class="linemarker linemarker-28">clustering: <a class="reference external" href="https://hdbscan.readthedocs.io/">hdbscan</a> or
 <a class="reference external" href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn</a></p></li>
 </ul>
-<p>Code for the unsupervised classification can be found at
+<p class="linemarker linemarker-31">Code for the unsupervised classification can be found at
 <a class="reference external" href="https://github.com/janclemenslab/DAS_unsupervised">https://github.com/janclemenslab/DAS_unsupervised</a>.</p>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">#</a></h2>
-<p>We illustrate different pre-processing and classification strategies
+<p class="linemarker linemarker-37">We illustrate different pre-processing and classification strategies
 using three different examples</p>
 <ul class="simple">
-<li><p><a class="reference external" href="flies.html">Courtship song of flies</a> - normalize waveforms to
+<li><p class="linemarker linemarker-40"><a class="reference external" href="flies.html">Courtship song of flies</a> - normalize waveforms to
 automatically detect sine song and different pulse types.</p></li>
-<li><p><a class="reference external" href="birds.html">Song of Bengalese finches</a> - process syllable
+<li><p class="linemarker linemarker-42"><a class="reference external" href="birds.html">Song of Bengalese finches</a> - process syllable
 spectrograms to classify &gt;40 syllable types.</p></li>
-<li><p><a class="reference external" href="mice.html">Ultrasonic vocalizations from mice</a> - process
+<li><p class="linemarker linemarker-44"><a class="reference external" href="mice.html">Ultrasonic vocalizations from mice</a> - process
 syllable spectrograms to group syllables by the shape of their
 spectral contours.</p></li>
 </ul>
-<p><img alt="image1" src="../_images/banner.png" /></p>
+<p class="linemarker linemarker-48"><img alt="image1" src="../_images/banner.png" /></p>
 </section>
 <section id="acknowledgements">
 <h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">#</a></h2>
-<p>Code from the following open source packages was modified and integrated
+<p class="linemarker linemarker-53">Code from the following open source packages was modified and integrated
 into das-unsupervised:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/timsainb/avgn_paper">avgn</a> (Sainburg et
+<li><p class="linemarker linemarker-56"><a class="reference external" href="https://github.com/timsainb/avgn_paper">avgn</a> (Sainburg et
 al. 2020)</p></li>
-<li><p><a class="reference external" href="https://pypi.org/project/noisereduce">noisereduce</a></p></li>
-<li><p><a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">fly pulse
+<li><p class="linemarker linemarker-58"><a class="reference external" href="https://pypi.org/project/noisereduce">noisereduce</a></p></li>
+<li><p class="linemarker linemarker-59"><a class="reference external" href="https://github.com/murthylab/MurthyLab_FlySongSegmenter">fly pulse
 classifier</a>
 (Clemens et al. 2018)</p></li>
 </ul>
-<p>Data sources:</p>
+<p class="linemarker linemarker-63">Data sources:</p>
 <ul class="simple">
-<li><p>flies: <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">David
+<li><p class="linemarker linemarker-65">flies: <a class="reference external" href="https://www.janelia.org/lab/stern-lab/tools-reagents-data">David
 Stern</a>
 (Stern, 2014)</p></li>
-<li><p>birds: <a class="reference external" href="https://doi.org/10.6084/m9.figshare.4805749.v5">Bengalese finch song
+<li><p class="linemarker linemarker-68">birds: <a class="reference external" href="https://doi.org/10.6084/m9.figshare.4805749.v5">Bengalese finch song
 repository</a>
 (Nicholson et al. 2017)</p></li>
-<li><p>mice: <a class="reference external" href="https://public.data.donders.ru.nl/dcn/DSC_620840_0003_891_v1">Data from Ivanenko et al.
+<li><p class="linemarker linemarker-71">mice: <a class="reference external" href="https://public.data.donders.ru.nl/dcn/DSC_620840_0003_891_v1">Data from Ivanenko et al.
 (2020)</a></p></li>
 </ul>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
 <ol class="arabic simple">
-<li><p>T Sainburg, M Thielk, TQ Gentner (2020) Latent space visualization,
+<li><p class="linemarker linemarker-78">T Sainburg, M Thielk, TQ Gentner (2020) Latent space visualization,
 characterization, and generation of diverse vocal communication
 signals. Biorxiv . <a class="reference external" href="https://doi.org/10.1101/870311">https://doi.org/10.1101/870311</a></p></li>
-<li><p>J Clemens, P Coen, F Roemschied, T Perreira, D Mazumder, D Aldorando,
+<li><p class="linemarker linemarker-82">J Clemens, P Coen, F Roemschied, T Perreira, D Mazumder, D Aldorando,
 D Pacheco, M Murthy (2018) Discovery of a New Song Mode in Drosophila
 Reveals Hidden Structure in the Sensory and Neural Drivers of
 Behavior. Current Biology 28, 2400–2412.e6 (2018).
 <a class="reference external" href="https://doi.org/10.1016/j.cub.2018.06.011">https://doi.org/10.1016/j.cub.2018.06.011</a></p></li>
-<li><p>D Stern (2014). Reported Drosophila courtship song rhythms are
+<li><p class="linemarker linemarker-88">D Stern (2014). Reported Drosophila courtship song rhythms are
 artifacts of data analysis. BMC Biology</p></li>
-<li><p>A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz
+<li><p class="linemarker linemarker-91">A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz
 (2020) Classifying sex and strain from mouse ultrasonic vocalizations
 using deep learning. PLoS Comput Biol 16(6): e1007918.
 <a class="reference external" href="https://doi.org/10.1371/journal.pcbi.1007918">https://doi.org/10.1371/journal.pcbi.1007918</a></p></li>
-<li><p>D Nicholson, JE Queen, S Sober (2017). Bengalese finch song
+<li><p class="linemarker linemarker-96">D Nicholson, JE Queen, S Sober (2017). Bengalese finch song
 repository. <a class="reference external" href="https://doi.org/10.6084/m9.figshare.4805749.v5">https://doi.org/10.6084/m9.figshare.4805749.v5</a></p></li>
 </ol>
 <div class="toctree-wrapper compound">
@@ -369,10 +379,10 @@ repository. <a class="reference external" href="https://doi.org/10.6084/m9.figsh
                 </div>
                 <div class="title">Courtship song of flies</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="../tutorials/realtime.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -394,7 +404,9 @@ repository. <a class="reference external" href="https://doi.org/10.6084/m9.figsh
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -406,7 +418,7 @@ repository. <a class="reference external" href="https://doi.org/10.6084/m9.figsh
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
@@ -433,6 +445,31 @@ repository. <a class="reference external" href="https://doi.org/10.6084/m9.figsh
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

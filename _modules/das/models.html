@@ -4,15 +4,24 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.models - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -156,7 +165,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -276,19 +285,22 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span> <span class="k">as</span> <span class="n">tcn_layer</span>
 <span class="kn">from</span> <span class="nn">.kapre.time_frequency</span> <span class="kn">import</span> <span class="n">Spectrogram</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">spec_utils</span>
+<span class="kn">from</span> <span class="nn">.morph_layers</span> <span class="kn">import</span> <span class="n">Erosion2D</span><span class="p">,</span> <span class="n">Dilation2D</span>
+<span class="kn">from</span> <span class="nn">das.morpholayers.layers</span> <span class="kn">import</span> <span class="n">Closing2D</span><span class="p">,</span> <span class="n">Opening2D</span>
+<span class="kn">from</span> <span class="nn">das.morpholayers.regularizers</span> <span class="kn">import</span> <span class="n">l1lattice</span>
 
 <span class="n">model_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_register_as_model</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[modelname: modelfunc]. For selecting models by string.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[modelname: modelfunc]. For selecting models by string.&quot;&quot;&quot;</span>
     <span class="n">model_dict</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
     <span class="k">return</span> <span class="n">func</span>
 
 
 <div class="viewcode-block" id="tcn"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn">[docs]</a><span class="nd">@_register_as_model</span>
 <span class="k">def</span> <span class="nf">tcn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synonym for tcn_stft.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Synonym for tcn_stft.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tcn_stft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -316,9 +328,9 @@
     <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_resnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwignored</span>
+    <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
@@ -424,9 +436,9 @@
     <span class="n">resnet_compute</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">resnet_train</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="o">**</span><span class="n">kwignored</span>
+    <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
@@ -489,6 +501,134 @@
             <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span></div>
+
+
+<div class="viewcode-block" id="tcn_stft_morph"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn_stft_morph">[docs]</a><span class="nd">@_register_as_model</span>
+<span class="k">def</span> <span class="nf">tcn_stft_morph</span><span class="p">(</span>
+    <span class="n">nb_freq</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">nb_classes</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">nb_hist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">nb_filters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="n">kernel_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">nb_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">loss</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+    <span class="n">dilations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;norm_relu&quot;</span><span class="p">,</span>
+    <span class="n">use_skip_connections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_sequences</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">dropout_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.00</span><span class="p">,</span>
+    <span class="n">padding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+    <span class="n">sample_weight_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="n">nb_lstm_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span>
+    <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">use_resnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nb_freq (int): [description]</span>
+<span class="sd">        nb_classes (int): [description]</span>
+<span class="sd">        nb_hist (int, optional): [description]. Defaults to 1.</span>
+<span class="sd">        nb_filters (int, optional): [description]. Defaults to 16.</span>
+<span class="sd">        kernel_size (int, optional): [description]. Defaults to 3.</span>
+<span class="sd">        nb_conv (int, optional): [description]. Defaults to 1.</span>
+<span class="sd">        loss (str, optional): [description]. Defaults to &quot;categorical_crossentropy&quot;.</span>
+<span class="sd">        dilations (List[int], optional): [description]. Defaults to [1, 2, 4, 8, 16].</span>
+<span class="sd">        activation (str, optional): [description]. Defaults to &#39;norm_relu&#39;.</span>
+<span class="sd">        use_skip_connections (bool, optional): [description]. Defaults to True.</span>
+<span class="sd">        return_sequences (bool, optional): [description]. Defaults to True.</span>
+<span class="sd">        dropout_rate (float, optional): [description]. Defaults to 0.00.</span>
+<span class="sd">        padding (str, optional): [description]. Defaults to &#39;same&#39;.</span>
+<span class="sd">        nb_pre_conv (int, optional): If &gt;0 adds a single STFT layer with a hop size of 2**nb_pre_conv before the TCN.</span>
+<span class="sd">                                     Useful for speeding up training by reducing the sample rate early in the network.</span>
+<span class="sd">                                     Defaults to 0 (no downsampling)</span>
+<span class="sd">        pre_nb_dft (int, optional): Duration of filters (in samples) for the STFT frontend.</span>
+<span class="sd">                                    Number of filters is pre_nb_dft // 2 + 1.</span>
+<span class="sd">                                    Defaults to 64.</span>
+<span class="sd">        learning_rate (float, optional) Defaults to 0.0005</span>
+<span class="sd">        nb_lstm_units (int, optional): Defaults to 0.</span>
+<span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
+<span class="sd">                                   Should generally be True during training and evaluation but may speed up inference.</span>
+<span class="sd">                                   Defaults to True.</span>
+<span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
+<span class="sd">        use_resnet (bool, optional): Defaults to False.</span>
+<span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        [keras.models.Model]: Compiled TCN network model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">dilations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dilations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
+
+    <span class="n">input_layer</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nb_hist</span><span class="p">,</span> <span class="n">nb_freq</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">input_layer</span>
+
+    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">Spectrogram</span><span class="p">(</span>
+            <span class="n">n_dft</span><span class="o">=</span><span class="n">pre_nb_dft</span><span class="p">,</span>
+            <span class="n">n_hop</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">,</span>
+            <span class="n">return_decibel_spectrogram</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">power_spectrogram</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">trainable_kernel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;trainable_stft&quot;</span><span class="p">,</span>
+            <span class="n">image_data_format</span><span class="o">=</span><span class="s2">&quot;channels_last&quot;</span><span class="p">,</span>
+        <span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_resnet</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_resnet</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Concatenate</span><span class="p">(</span><span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)([</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">])</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ResNet50V2</span><span class="p">(</span><span class="n">input_shape</span><span class="o">=</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;imagenet&quot;</span><span class="p">,</span> <span class="n">include_top</span><span class="o">=</span><span class="kc">False</span><span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Reshape</span><span class="p">((</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]))(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">()(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tcn_layer</span><span class="o">.</span><span class="n">TCN</span><span class="p">(</span>
+        <span class="n">nb_filters</span><span class="o">=</span><span class="n">nb_filters</span><span class="p">,</span>
+        <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+        <span class="n">nb_stacks</span><span class="o">=</span><span class="n">nb_conv</span><span class="p">,</span>
+        <span class="n">dilations</span><span class="o">=</span><span class="n">dilations</span><span class="p">,</span>
+        <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+        <span class="n">use_skip_connections</span><span class="o">=</span><span class="n">use_skip_connections</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="n">padding</span><span class="p">,</span>
+        <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span>
+        <span class="n">return_sequences</span><span class="o">=</span><span class="n">return_sequences</span><span class="p">,</span>
+        <span class="n">use_separable</span><span class="o">=</span><span class="n">use_separable</span><span class="p">,</span>
+    <span class="p">)(</span><span class="n">out</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nb_lstm_units</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">kl</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="n">nb_lstm_units</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="n">morph_kernel_duration</span> <span class="o">=</span> <span class="mi">512</span>
+    <span class="k">if</span> <span class="n">morph_kernel_duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Closing2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Opening2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="n">output_layer</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">input_layer</span><span class="p">,</span> <span class="n">output_layer</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TCN&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_resnet</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;trainable_stft&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;resnet50v2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">compile</span><span class="p">:</span>
+        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">sample_weight_mode</span><span class="o">=</span><span class="n">sample_weight_mode</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span></div>
 </pre></div>
         </article>
       </div>
@@ -509,7 +649,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -527,6 +669,27 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

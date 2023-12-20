@@ -5,15 +5,24 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Quick start tutorial (fly)" href="quickstart_fly.html" /><link rel="prev" title="Welcome to DAS" href="index.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Installation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +166,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -252,8 +261,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -271,54 +279,50 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h1>
 <section id="pre-requisites">
 <h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">#</a></h2>
-<p><em>Anaconda python</em>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
+<p class="linemarker linemarker-5"><em>Anaconda python</em>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
 <!-- _CUDA libraries for using the GPU_: While _DAS_ works on a standard desktop CPU, a dedicated GPU will greatly improve annotation speed and is highly recommended for training. _DAS_ uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the CUDA and cuDNN libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details. -->
-<p><em>Libsoundfile (Linux only)</em>: If you are on Linux and want to load audio from a wide range of audio formats (other than <code class="docutils literal notranslate"><span class="pre">wav</span></code>), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you work with more exotic audio files.</p>
-<p><em>Visual C++ runtime (Windows only)</em>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
+<p class="linemarker linemarker-9"><em>Libsoundfile (Linux only)</em>: If you are on Linux and want to load audio from a wide range of audio formats (other than <code class="docutils literal notranslate"><span class="pre">wav</span></code>), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you work with more exotic audio files.</p>
+<p class="linemarker linemarker-11"><em>Visual C++ runtime (Windows only)</em>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
 </section>
 <section id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">#</a></h2>
-<p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>mamba<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-n<span class="w"> </span>base<span class="w"> </span>-y
-mamba<span class="w"> </span>create<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="nv">das</span><span class="o">=</span><span class="m">0</span>.31.0<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>ncb<span class="w"> </span>-c<span class="w"> </span>anaconda<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y
-</pre></div>
-</div>
-<p>For linux, the last line needs to be:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">CONDA_OVERRIDE_CUDA</span><span class="o">=</span><span class="m">11</span>.2<span class="w"> </span>mamba<span class="w"> </span>create<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="nv">das</span><span class="o">=</span><span class="m">0</span>.31.0<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>ncb<span class="w"> </span>-c<span class="w"> </span>anaconda<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y
+<p class="linemarker linemarker-14">Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install mamba -c conda-forge -n base -y
+mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="nv">das</span><span class="o">=</span><span class="m">0</span>.31.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 </pre></div>
 </div>
 </section>
 <section id="test-the-installation-optional">
 <h2>Test the installation (Optional)<a class="headerlink" href="#test-the-installation-optional" title="Permalink to this headline">#</a></h2>
-<p>To quickly test the installation, run these  commands in the terminal:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>das<span class="w">  </span><span class="c1"># activate the conda environment</span>
-das<span class="w"> </span>train<span class="w"> </span>--help<span class="w">  </span><span class="c1"># test DAS training</span>
-das<span class="w"> </span>gui<span class="w">  </span><span class="c1"># start the DAS GUI</span>
+<p class="linemarker linemarker-22">To quickly test the installation, run these  commands in the terminal:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda activate das  <span class="c1"># activate the conda environment</span>
+das train --help  <span class="c1"># test DAS training</span>
+das gui  <span class="c1"># start the DAS GUI</span>
 </pre></div>
 </div>
-<p>The second command will display the command line arguments for <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. The last command, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>, will start the GUI. This step will <em>not</em> work with the no-GUI install.</p>
+<p class="linemarker linemarker-28">The second command will display the command line arguments for <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. The last command, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>, will start the GUI. This step will <em>not</em> work with the no-GUI install.</p>
 </section>
 <section id="make-a-desktop-icon-optional">
 <h2>Make a desktop icon (Optional)<a class="headerlink" href="#make-a-desktop-icon-optional" title="Permalink to this headline">#</a></h2>
-<p>To start the <em>DAS</em> GUI without having to use a terminal, create a clickable startup script on the desktop.</p>
-<p>On macOS or Linux, place a text file called <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS) with the following content on your desktop:</p>
+<p class="linemarker linemarker-31">To start the <em>DAS</em> GUI without having to use a terminal, create a clickable startup script on the desktop.</p>
+<p class="linemarker linemarker-33">On macOS or Linux, place a text file called <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS) with the following content on your desktop:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># /bin/bash</span>
-<span class="nb">source</span><span class="w"> </span><span class="nv">$CONDA_PREFIX</span>/etc/profile.d/conda.sh
-conda<span class="w"> </span>activate<span class="w"> </span>das
-das<span class="w"> </span>gui
+<span class="nb">source</span> <span class="nv">$CONDA_PREFIX</span>/etc/profile.d/conda.sh
+conda activate das
+das gui
 </pre></div>
 </div>
-<p>Make the files executable with <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">FILENAME</span></code>, where FILENAME is <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS).</p>
-<p>For windows, place a text file called <code class="docutils literal notranslate"><span class="pre">das.bat</span></code> with the following content on the desktop:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>TITLE<span class="w"> </span>DAS
-CALL<span class="w"> </span>conda.bat<span class="w"> </span>activate<span class="w"> </span>das
-das<span class="w"> </span>gui
+<p class="linemarker linemarker-40">Make the files executable with <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">FILENAME</span></code>, where FILENAME is <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS).</p>
+<p class="linemarker linemarker-42">For windows, place a text file called <code class="docutils literal notranslate"><span class="pre">das.bat</span></code> with the following content on the desktop:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>TITLE DAS
+CALL conda.bat activate das
+das gui
 </pre></div>
 </div>
 </section>
 <section id="next-steps">
 <h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">#</a></h2>
-<p>If all is working, you can now use <em>DAS</em> to annotate song. To get started, you will first need to train a network on your own data. For that you need annotated audio - either create new annotations <a class="reference internal" href="tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">using the GUI</span></a> or convert existing annotations <a class="reference internal" href="tutorials/tutorials.html"><span class="doc std std-doc">using python scripts</span></a>.</p>
+<p class="linemarker linemarker-50">If all is working, you can now use <em>DAS</em> to annotate song. To get started, you will first need to train a network on your own data. For that you need annotated audio - either create new annotations <a class="reference internal" href="tutorials_gui/tutorials_gui.html"><span class="doc std std-doc">using the GUI</span></a> or convert existing annotations <a class="reference internal" href="tutorials/tutorials.html"><span class="doc std std-doc">using python scripts</span></a>.</p>
 </section>
 </section>
 
@@ -334,10 +338,10 @@ das<span class="w"> </span>gui
                 </div>
                 <div class="title">Quick start tutorial (fly)</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -359,7 +363,9 @@ das<span class="w"> </span>gui
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -371,7 +377,7 @@ das<span class="w"> </span>gui
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
@@ -400,6 +406,27 @@ das<span class="w"> </span>gui
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     <script src="_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

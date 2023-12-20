@@ -4,15 +4,24 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.augmentation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -156,7 +165,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -321,20 +330,20 @@
 
 
 <span class="k">def</span> <span class="nf">_register_augmentation</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[augname: augfunc]. For selecting augs by string.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[augname: augfunc]. For selecting augs by string.&quot;&quot;&quot;</span>
     <span class="n">aug_dict</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
     <span class="k">return</span> <span class="n">func</span>
 
 
 <span class="k">def</span> <span class="nf">_register_param</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[paramname: paramfunc]. For selecting params by string.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[paramname: paramfunc]. For selecting params by string.&quot;&quot;&quot;</span>
     <span class="n">params_dict</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
     <span class="k">return</span> <span class="n">func</span>
 
 
 <div class="viewcode-block" id="Param"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Param">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Param</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all parameters.</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all parameters.</span>
 
 <span class="sd">    Parameters are callables that return parameter values.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -345,10 +354,10 @@
 
 <div class="viewcode-block" id="Constant"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Constant">[docs]</a><span class="nd">@_register_param</span>
 <span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">Param</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constant parameter.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constant parameter.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            value (float, optional): Constant parameter value. Defaults to 0.0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -366,10 +375,10 @@
 
 <div class="viewcode-block" id="Normal"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Normal">[docs]</a><span class="nd">@_register_param</span>
 <span class="k">class</span> <span class="nc">Normal</span><span class="p">(</span><span class="n">Param</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normally distributed parameter.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Normally distributed parameter.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            mean (float, optional): Mean of the Normal pdf. Defaults to 0.0.</span>
 <span class="sd">            std (float, optional): Standerd deviation of the Normal pdf. Defaults to 1.0.</span>
@@ -389,10 +398,10 @@
 
 <div class="viewcode-block" id="Uniform"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Uniform">[docs]</a><span class="nd">@_register_param</span>
 <span class="k">class</span> <span class="nc">Uniform</span><span class="p">(</span><span class="n">Param</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Uniformly distributed parameter.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Uniformly distributed parameter.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">upper</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            lower (float, optional): Lower bound. Defaults to -1.0.</span>
 <span class="sd">            upper (float, optional): Upper bound. Defaults to 1.0.</span>
@@ -412,7 +421,7 @@
 
 <div class="viewcode-block" id="Augmentation"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentation">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">Augmentation</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all augmentations.</span>
+    <span class="sd">&quot;&quot;&quot;Base class for all augmentations.</span>
 
 <span class="sd">    Augmentations are callables that return the augmented input.</span>
 <span class="sd">    Can optionally pass through a second input.</span>
@@ -436,10 +445,10 @@
 
 <div class="viewcode-block" id="Gain"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Gain">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">Gain</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gain</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            gain (Param): Gain.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -455,7 +464,7 @@
 
 <div class="viewcode-block" id="NormalizeMax"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.NormalizeMax">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">NormalizeMax</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -467,7 +476,7 @@
 
 <div class="viewcode-block" id="NormalizePercentile"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.NormalizePercentile">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">NormalizePercentile</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentile</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">percentile</span> <span class="o">=</span> <span class="n">percentile</span>
@@ -479,7 +488,7 @@
 
 <div class="viewcode-block" id="NormalizeStd"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.NormalizeStd">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">NormalizeStd</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Multiply signal with gain factor.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -491,10 +500,10 @@
 
 <div class="viewcode-block" id="Offset"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Offset">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">Offset</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add horizontal offset.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Add horizontal offset.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            offset (Param): Offset.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -507,10 +516,10 @@
 
 <div class="viewcode-block" id="HorizontalFlip"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.HorizontalFlip">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">HorizontalFlip</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Horizontally flip signal.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Horizontally flip signal.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">flip</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            flip (Param): Signal is flipped if &gt;0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -524,10 +533,10 @@
 
 <div class="viewcode-block" id="Upsampling"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Upsampling">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">Upsampling</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upsample signal.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Upsample signal.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factor</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            factor (Param): Upsampling factor.</span>
 
@@ -547,12 +556,12 @@
 
 <div class="viewcode-block" id="MaskNoise"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.MaskNoise">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">MaskNoise</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add noise or replace signal by noise for the full duration or a part of it.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Add noise or replace signal by noise for the full duration or a part of it.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mean</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Param</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">add</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            std (Optional[Param]): std of noise. Defaults to 1.</span>
 <span class="sd">            mean (Optional[Param]): mean of noise. Defaults to 0.</span>
@@ -591,10 +600,10 @@
 
 <div class="viewcode-block" id="MaskMean"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.MaskMean">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">MaskMean</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces stretch of `duration` samples with mean over that stretch.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Replaces stretch of `duration` samples with mean over that stretch.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            duration (Param): Duration of the stretch, in samples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -610,10 +619,10 @@
 
 <div class="viewcode-block" id="CircShift"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.CircShift">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">CircShift</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Circularly shift input along the first axis.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Circularly shift input along the first axis.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="n">Param</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            shift (Param): Amount of shift, in samples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -626,10 +635,10 @@
 
 <div class="viewcode-block" id="NotchFilter"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.NotchFilter">[docs]</a><span class="nd">@_register_augmentation</span>
 <span class="k">class</span> <span class="nc">NotchFilter</span><span class="p">(</span><span class="n">Augmentation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Notch filter.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Notch filter.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq</span><span class="p">:</span> <span class="n">Param</span><span class="p">,</span> <span class="n">Q</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">samplerate_Hz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10_000</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            freq (Param): freq to remove, in Hz.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -644,10 +653,10 @@
 
 
 <div class="viewcode-block" id="Augmentations"><a class="viewcode-back" href="../../api/das.augmentation.html#das.augmentation.Augmentations">[docs]</a><span class="k">class</span> <span class="nc">Augmentations</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bundles several augmentations.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Bundles several augmentations.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">augmentations</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Augmentation</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            augmentations (List[Augmentation]): List of Augmentation instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -712,7 +721,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -730,6 +741,27 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
