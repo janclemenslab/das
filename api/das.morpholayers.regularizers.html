@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.augmentation" href="das.kapre.augmentation.html" /><link rel="prev" title="das.morpholayers.layers" href="das.morpholayers.layers.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.morpholayers.regularizers - DAS documentation</title>
@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -171,7 +163,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
@@ -208,7 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -280,32 +276,83 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.regularizers.L1L2Lattice">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.regularizers.</span></span><span class="sig-name descname"><span class="pre">L1L2Lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/regularizers.html#L1L2Lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.regularizers.L1L2Lattice" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Regularizer for L1 and L2 regularization in a lattice. Computing L1/L2 distance to MIN_LATT</p>
-<dl class="simple">
-<dt># Arguments</dt><dd><p class="linemarker linemarker-4">l1: Float; L1 regularization factor.
-l2: Float; L2 regularization factor.</p>
+<dd><p>Regularizer for L1 and L2 regularization in a lattice. Computes L1/L2 distance to MIN_LATT.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l1</strong> (<em>float</em>) – L1 regularization factor.</p></li>
+<li><p><strong>l2</strong> (<em>float</em>) – L2 regularization factor.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.regularizers.L1L2Lattice.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/regularizers.html#L1L2Lattice.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.regularizers.L1L2Lattice.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the config of the regularizer.</p>
-<p class="linemarker linemarker-3">An regularizer config is a Python dictionary (serializable)
-containing all configuration parameters of the regularizer.
-The same regularizer can be reinstantiated later
-(without any saved state) from this configuration.</p>
-<p class="linemarker linemarker-8">This method is optional if you are just training and executing models,
-exporting to and from SavedModels, or using weight checkpoints.</p>
-<p class="linemarker linemarker-11">This method is required for Keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">model_to_estimator</span></code>, saving and
-loading models to HDF5 formats, Keras model cloning, some visualization
-utilities, and exporting models to and from JSON.</p>
+<dd><p>Get configuration of the regularizer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Python dictionary.</p>
+<dd class="field-odd"><p>Regularizer configuration.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.regularizers.l1_l2lattice">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.regularizers.</span></span><span class="sig-name descname"><span class="pre">l1_l2lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/regularizers.html#l1_l2lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.regularizers.l1_l2lattice" title="Permalink to this definition">#</a></dt>
+<dd><p>Alias for L1L2Lattice with both L1 and L2 regularization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l1</strong> (<em>float</em>) – L1 regularization factor.</p></li>
+<li><p><strong>l2</strong> (<em>float</em>) – L2 regularization factor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>L1L2Lattice regularizer instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#das.morpholayers.regularizers.L1L2Lattice" title="das.morpholayers.regularizers.L1L2Lattice">L1L2Lattice</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.regularizers.l1lattice">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.regularizers.</span></span><span class="sig-name descname"><span class="pre">l1lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/regularizers.html#l1lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.regularizers.l1lattice" title="Permalink to this definition">#</a></dt>
+<dd><p>Alias for L1L2Lattice with L1 regularization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – L1 regularization factor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>L1L2Lattice regularizer instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#das.morpholayers.regularizers.L1L2Lattice" title="das.morpholayers.regularizers.L1L2Lattice">L1L2Lattice</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.regularizers.l2lattice">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.regularizers.</span></span><span class="sig-name descname"><span class="pre">l2lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/regularizers.html#l2lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.regularizers.l2lattice" title="Permalink to this definition">#</a></dt>
+<dd><p>Alias for L1L2Lattice with L2 regularization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>l</strong> (<em>float</em>) – L2 regularization factor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>L1L2Lattice regularizer instance.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#das.morpholayers.regularizers.L1L2Lattice" title="das.morpholayers.regularizers.L1L2Lattice">L1L2Lattice</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -315,8 +362,26 @@ utilities, and exporting models to and from JSON.</p>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="das.kapre.augmentation.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">das.kapre.augmentation</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="das.morpholayers.layers.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">das.morpholayers.layers</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -354,22 +419,6 @@ utilities, and exporting models to and from JSON.</p>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

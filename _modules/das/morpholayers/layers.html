@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -233,6 +225,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -276,10 +272,9 @@
         <article role="main">
           <h1>Source code for das.morpholayers.layers</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">==========</span>
 <span class="sd">References</span>
-<span class="sd">==========</span>
-<span class="sd">Implementation of Morphological Layers  [1]_, [2]_, [3]_, [4]_</span>
+<span class="sd">----------</span>
+<span class="sd">Implementation of Morphological Layers [1]_, [2]_, [3]_, [4]_</span>
 
 <span class="sd">.. [1] Serra, J. (1983) Image Analysis and Mathematical Morphology.</span>
 <span class="sd">       Academic Press, Inc. Orlando, FL, USA</span>
@@ -305,19 +300,33 @@
 <span class="kn">from</span> <span class="nn">skimage.draw</span> <span class="kn">import</span> <span class="n">line</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">===============</span>
-<span class="sd">GLOBAL VARIABLE</span>
-<span class="sd">===============</span>
+<span class="sd">Global Variables</span>
+<span class="sd">----------------</span>
+<span class="sd">MIN_LATT : float</span>
+<span class="sd">    Minimum lattice value.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">=========</span>
-<span class="sd">GET_LINES</span>
-<span class="sd">=========</span>
+<span class="sd">Get Lines</span>
+<span class="sd">---------</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="n">sw</span><span class="p">):</span>
+<div class="viewcode-block" id="get_lines"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.get_lines">[docs]</a><span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="n">sw</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get lines.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sw : int</span>
+<span class="sd">        Size of the lines.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Tensor containing lines.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">FilterLines</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sw</span><span class="p">):</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">sw</span><span class="p">,</span> <span class="n">sw</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -329,24 +338,38 @@
         <span class="n">rr</span><span class="p">,</span> <span class="n">cc</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">sw</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sw</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">img</span><span class="p">[</span><span class="n">rr</span><span class="p">,</span> <span class="n">cc</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">FilterLines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">FilterLines</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">FilterLines</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">===================</span>
 <span class="sd">Classical Operators</span>
-<span class="sd">===================</span>
+<span class="sd">-------------------</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="convolution2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.convolution2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">convolution2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Basic Convolution Operator (Depthwise)</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides as classical convolutional layers</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates as classical convolutional layers</span>
+<span class="sd">    Basic Convolution Operator (Depthwise).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides as classical convolutional layers.</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates as classical convolutional layers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the convolution.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">depthwise_conv2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">st_element</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="n">rates</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span></div>
@@ -355,11 +378,26 @@
 <div class="viewcode-block" id="dilation2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.dilation2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Basic Dilation Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides as classical convolutional layers</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates as classical convolutional layers</span>
+<span class="sd">    Basic Dilation Operator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides as classical convolutional layers.</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates as classical convolutional layers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the dilation.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">x</span></div>
@@ -368,8 +406,26 @@
 <div class="viewcode-block" id="erosion2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.erosion2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Basic Erosion Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
+<span class="sd">    Basic Erosion Operator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides as classical convolutional layers.</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates as classical convolutional layers.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the erosion.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">x</span></div>
@@ -378,11 +434,26 @@
 <div class="viewcode-block" id="opening2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.opening2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">opening2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Basic Opening Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (dilation)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (dilation)</span>
+<span class="sd">    Basic Opening Operator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides are only applied in the second operator (dilation).</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates are only applied in the second operator (dilation).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the opening operation.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
@@ -392,11 +463,26 @@
 <div class="viewcode-block" id="closing2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.closing2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">closing2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Basic Closing Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (erosion)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (erosion)</span>
+<span class="sd">    Basic Closing Operator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides are only applied in the second operator (erosion).</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates are only applied in the second operator (erosion).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the closing operation.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
@@ -406,11 +492,26 @@
 <div class="viewcode-block" id="gradient2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.gradient2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">gradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Gradient Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (erosion)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (erosion)</span>
+<span class="sd">    Gradient Operator.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    x : tf.Tensor</span>
+<span class="sd">        Input tensor.</span>
+<span class="sd">    st_element : tf.Tensor</span>
+<span class="sd">        Nonflat structuring element.</span>
+<span class="sd">    strides : tuple</span>
+<span class="sd">        Strides are only applied in the second operator (erosion).</span>
+<span class="sd">    padding : str</span>
+<span class="sd">        Padding as classical convolutional layers.</span>
+<span class="sd">    rates : tuple, optional</span>
+<span class="sd">        Rates are only applied in the second operator (erosion).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tf.Tensor</span>
+<span class="sd">        Result of the gradient operation.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
@@ -418,16 +519,24 @@
     <span class="k">return</span> <span class="n">x</span></div>
 
 
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+
 <div class="viewcode-block" id="internalgradient2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.internalgradient2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">internalgradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Internal Gradient Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (erosion)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (erosion)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor.</span>
+<span class="sd">        st_element: Nonflat structuring element.</span>
+<span class="sd">        strides: Strides applied in the second operator (erosion).</span>
+<span class="sd">        padding: Padding as classical convolutional layers.</span>
+<span class="sd">        rates: Rates applied in the second operator (erosion).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying the internal gradient operator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO CHECK STRIDES AND RATES</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
@@ -436,12 +545,17 @@
 <span class="k">def</span> <span class="nf">externalgradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    External Gradient Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (erosion)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (erosion)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor.</span>
+<span class="sd">        st_element: Nonflat structuring element.</span>
+<span class="sd">        strides: Strides applied in the second operator (erosion).</span>
+<span class="sd">        padding: Padding as classical convolutional layers.</span>
+<span class="sd">        rates: Rates applied in the second operator (erosion).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying the external gradient operator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO CHECK STRIDES AND RATES</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span> <span class="o">-</span> <span class="n">x</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
@@ -450,12 +564,18 @@
 <span class="k">def</span> <span class="nf">togglemapping2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Toggle Mapping Operator</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides are only applied in second operator (erosion)</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates are only applied in second operator (erosion)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor.</span>
+<span class="sd">        st_element: Nonflat structuring element.</span>
+<span class="sd">        strides: Strides applied in the second operator (erosion).</span>
+<span class="sd">        padding: Padding as classical convolutional layers.</span>
+<span class="sd">        rates: Rates applied in the second operator (erosion).</span>
+<span class="sd">        steps: Number of toggle mapping steps.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying the toggle mapping operator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># TODO CHECK STRIDES AND RATES</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
         <span class="n">e</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
@@ -469,10 +589,13 @@
 <span class="k">def</span> <span class="nf">togglemapping</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    K steps of toggle mapping operator</span>
-<span class="sd">    :X is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(reconstruction_dilation, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of toggle mapping steps.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying K steps of toggle mapping operator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">X</span><span class="p">)</span>
@@ -487,10 +610,16 @@
 <span class="k">def</span> <span class="nf">antidilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Basic Dilation Operator of the negative of the input image</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    :strides: strides as classical convolutional layers</span>
-<span class="sd">    :padding: padding as classical convolutional layers</span>
-<span class="sd">    :rates: rates as classical convolutional layers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor.</span>
+<span class="sd">        st_element: Nonflat structuring element.</span>
+<span class="sd">        strides: Strides as classical convolutional layers.</span>
+<span class="sd">        padding: Padding as classical convolutional layers.</span>
+<span class="sd">        rates: Rates as classical convolutional layers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying the basic dilation operator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dilation2d</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">x</span></div>
@@ -500,15 +629,19 @@
 <span class="k">def</span> <span class="nf">antierosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Basic Erosion Operator of the negative of the input image</span>
-<span class="sd">    :param st_element: Nonflat structuring element</span>
-<span class="sd">    c&quot;&quot;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x: Input tensor.</span>
+<span class="sd">        st_element: Nonflat structuring element.</span>
+<span class="sd">        strides: Strides as classical convolutional layers.</span>
+<span class="sd">        padding: Padding as classical convolutional layers.</span>
+<span class="sd">        rates: Rates as classical convolutional layers.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after applying the basic erosion operator.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">strides</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">padding</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="s2">&quot;NHWC&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">x</span></div>
-
-
-<span class="c1"># @tf.function</span>
-<span class="c1"># def tophatopening2D(x, st_element, strides, padding,rates=(1, 1)):</span>
-<span class="c1"># TODO RESIDUAL OPERATORS CONSIDERING STRIDES,PADDING and RATES</span>
 
 
 <div class="viewcode-block" id="BiasLayer"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.BiasLayer">[docs]</a><span class="k">class</span> <span class="nc">BiasLayer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
@@ -529,25 +662,48 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<div class="viewcode-block" id="condition_equal"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.condition_equal">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">condition_equal</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">)))</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if two tensors are not equal element-wise.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        last: Previous tensor.</span>
+<span class="sd">        new: Current tensor.</span>
+<span class="sd">        image: Image tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Boolean tensor indicating if the tensors are not equal element-wise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_all</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">)))</span></div>
 
 
-<span class="k">def</span> <span class="nf">update_dilation</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">new</span><span class="p">,</span> <span class="n">geodesic_dilation_step</span><span class="p">([</span><span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">]),</span> <span class="n">mask</span><span class="p">]</span>
+<div class="viewcode-block" id="update_dilation"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.update_dilation">[docs]</a><span class="k">def</span> <span class="nf">update_dilation</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the dilation step during reconstruction.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        last: Previous tensor.</span>
+<span class="sd">        new: Current tensor.</span>
+<span class="sd">        mask: Mask tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Updated tensors for the next dilation step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">new</span><span class="p">,</span> <span class="n">geodesic_dilation_step</span><span class="p">([</span><span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">]),</span> <span class="n">mask</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="geodesic_dilation_step"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_dilation_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_dilation_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    1 step of reconstruction by dilation</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(geodesic_dilation_step, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+<span class="sd">    1 step of reconstruction by dilation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after one step of geodesic dilation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># perform a geodesic dilation with X[0] as marker, and X[1] as mask</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Minimum</span><span class="p">()(</span>
         <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
     <span class="p">)</span></div>
@@ -557,14 +713,16 @@
 <span class="k">def</span> <span class="nf">geodesic_dilation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Full reconstruction by dilation if steps=None, else</span>
-<span class="sd">    K steps reconstruction by dilation</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(geodesic_dilation, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+<span class="sd">    K steps reconstruction by dilation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of steps (None for complete reconstruction).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after geodesic dilation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rec</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># Full reconstruction is steps==None by dilation, else: partial reconstruction</span>
     <span class="n">rec</span> <span class="o">=</span> <span class="n">geodesic_dilation_step</span><span class="p">([</span><span class="n">rec</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">rec</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span><span class="n">condition_equal</span><span class="p">,</span> <span class="n">update_dilation</span><span class="p">,</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rec</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">maximum_iterations</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">rec</span></div>
@@ -572,28 +730,43 @@
 
 <div class="viewcode-block" id="reconstruction_dilation"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.reconstruction_dilation">[docs]</a><span class="k">def</span> <span class="nf">reconstruction_dilation</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Full geodesic reconstruction by dilation, reaching idempotence</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(reconstruction_dilation, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+<span class="sd">    Full geodesic reconstruction by dilation, reaching idempotence.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after full geodesic reconstruction by dilation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">geodesic_dilation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">update_erosion</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">new</span><span class="p">,</span> <span class="n">geodesic_erosion_step</span><span class="p">([</span><span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">]),</span> <span class="n">mask</span><span class="p">]</span>
+<div class="viewcode-block" id="update_erosion"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.update_erosion">[docs]</a><span class="k">def</span> <span class="nf">update_erosion</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Update the erosion step during reconstruction.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        last: Previous tensor.</span>
+<span class="sd">        new: Current tensor.</span>
+<span class="sd">        mask: Mask tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Updated tensors for the next erosion step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">new</span><span class="p">,</span> <span class="n">geodesic_erosion_step</span><span class="p">([</span><span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">]),</span> <span class="n">mask</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="geodesic_erosion_step"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_erosion_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_erosion_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    1 step of reconstruction by erosion</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(geodesic_erosion_step, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+<span class="sd">    1 step of reconstruction by erosion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after one step of geodesic erosion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># geodesic erosion with X[0] as marker, and X[1] as mask</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Maximum</span><span class="p">()(</span>
         <span class="p">[</span><span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
     <span class="p">)</span></div>
@@ -603,15 +776,16 @@
 <span class="k">def</span> <span class="nf">geodesic_erosion</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Full reconstruction by erosion if steps=None, else</span>
-<span class="sd">    K steps reconstruction by erosion</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default None (Complete Reconstruction))</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(geodesic_erosion, name=&quot;geodesic_erosion&quot;)([Mask,Image])</span>
+<span class="sd">    K steps reconstruction by erosion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of steps (None for complete reconstruction).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after geodesic erosion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Use in Keras: Lambda(geodesic_erosion, name=&quot;reconstruction&quot;)([Mask,Image])</span>
     <span class="n">rec</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="c1"># Full reconstruction by erosion is steps==None, else :partial reconstruction</span>
     <span class="n">rec</span> <span class="o">=</span> <span class="n">geodesic_erosion_step</span><span class="p">([</span><span class="n">rec</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">rec</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span><span class="n">condition_equal</span><span class="p">,</span> <span class="n">update_erosion</span><span class="p">,</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rec</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">maximum_iterations</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
 
@@ -621,10 +795,13 @@
 <div class="viewcode-block" id="reconstruction_erosion"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.reconstruction_erosion">[docs]</a><span class="k">def</span> <span class="nf">reconstruction_erosion</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Full geodesic reconstruction by erosion, reaching idempotence</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default None)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(reconstruction_dilation, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of steps (by default None).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after full geodesic reconstruction by erosion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">geodesic_erosion</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
@@ -633,10 +810,12 @@
 <span class="k">def</span> <span class="nf">leveling_iteration</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    K steps of reconstruction by dilation</span>
-<span class="sd">    :X tensor: X[0] is the Mask and X[1] is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(reconstruction_dilation, name=&quot;reconstruction&quot;)([Mask,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after K steps of reconstruction by dilation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Maximum</span><span class="p">()(</span>
         <span class="p">[</span>
@@ -666,9 +845,13 @@
 <span class="k">def</span> <span class="nf">distance_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    One step of morphological distance by dilation</span>
-<span class="sd">    X tensor: X[0] is the object and X[1] is temporal distance</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after one step of morphological distance by dilation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># perform a geodesic dilation with X[0] as marker, and X[1] as mask</span>
     <span class="n">Z</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">)(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">Z</span><span class="p">,</span> <span class="n">Z</span> <span class="o">+</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span></div>
 
@@ -678,10 +861,13 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Morphological Distance Transform if steps=None, else</span>
 <span class="sd">    K steps morphological Distance</span>
-<span class="sd">    :X tensor: X[0] is a binary image (The method stops when there are no values equal to zero.)</span>
-<span class="sd">    :param steps: number of steps (None means iterate util non-zero values))</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(morphological_distance, name=&quot;distance transform&quot;)(Image)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of steps (None means iterate until non-zero values).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after morphological distance transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">count</span> <span class="o">=</span> <span class="n">X</span>
     <span class="n">new</span> <span class="o">=</span> <span class="n">X</span>
@@ -693,13 +879,13 @@
 <span class="k">def</span> <span class="nf">leveling</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform Leveling from Marker</span>
-<span class="sd">    Inputs:</span>
-<span class="sd">    Marker (4D np.array) : marker chosen</span>
-<span class="sd">    I (4D np.array) : input image with shape (1, width, height, channels)</span>
-<span class="sd">    Output:</span>
-<span class="sd">    4D np.array, (1, widht, height, 1) which is the leveling</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(leveling, name=&quot;leveling&quot;)([Mask,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+<span class="sd">        steps: Number of steps.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after performing leveling from marker.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">lev</span> <span class="o">=</span> <span class="n">leveling_iteration</span><span class="p">([</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">lev</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span><span class="n">condition_equal</span><span class="p">,</span> <span class="n">update_leveling</span><span class="p">,</span> <span class="p">[</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lev</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">maximum_iterations</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
@@ -717,11 +903,12 @@
 <span class="k">def</span> <span class="nf">h_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    h-maxima transform of image X[1] with h=X[0]</span>
-<span class="sd">    :X tensor: X[0] is h and X[1] is the Image</span>
-<span class="sd">               X[0] and X[1] are 4th order tensors of same shape</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(h_maxima_transform, name=&quot;h-maxima&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after h-maxima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">Mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -733,11 +920,12 @@
 <span class="k">def</span> <span class="nf">h_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    h-maxima transform of image X[1] with h=X[0]</span>
-<span class="sd">    :X tensor: X[0] is h and X[1] is the Image</span>
-<span class="sd">               X[0] and X[1] are 4th order tensors of same shape</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(h_minima_transform, name=&quot;h-minima&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after h-minima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">Mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -750,11 +938,12 @@
 <span class="k">def</span> <span class="nf">h_convex_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    h-convex transform of image X[1] with h=X[0]</span>
-<span class="sd">    :X tensor: X[0] is h and X[1] is the Image</span>
-<span class="sd">               X[0] and X[1] are 4th order tensors of same shape</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(h_convex_transform, name=&quot;h_convex_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after h-convex transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">Mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -766,11 +955,12 @@
 <span class="k">def</span> <span class="nf">h_concave_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    h-convex transform of image X[1] with h=X[0]</span>
-<span class="sd">    :X tensor: X[0] is h and X[1] is the Image</span>
-<span class="sd">               X[0] and X[1] are 4th order tensors of same shape</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(h_concave_transform, name=&quot;h_concave_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after h-concave transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">Mask</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -782,10 +972,12 @@
 <span class="k">def</span> <span class="nf">region_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    region maxima transform of image X</span>
-<span class="sd">    X range has to be [0, 1]</span>
-<span class="sd">    :X tensor: X is the Image</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(region_maxima_transform, name=&quot;region_maxima_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after region maxima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">h_convex_transform</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">([[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">]]),</span> <span class="n">X</span><span class="p">])</span></div>
 
@@ -794,11 +986,12 @@
 <span class="k">def</span> <span class="nf">region_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    region minima transform of image X</span>
-<span class="sd">    X range has to be [0, 1]</span>
-<span class="sd">    :X tensor: X is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(region_minima_transform, name=&quot;region_minima_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after region minima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span>
     <span class="k">return</span> <span class="n">h_concave_transform</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">([[</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">]]),</span> <span class="n">X</span><span class="p">])</span></div>
@@ -808,11 +1001,12 @@
 <span class="k">def</span> <span class="nf">extended_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    extended maxima transform of image X[1] with h=X[0]</span>
-<span class="sd">    X range has to be [0, 1]</span>
-<span class="sd">    :X tensor: X is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(extended_maxima_transform, name=&quot;extended_maxima_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after extended maxima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">region_maxima_transform</span><span class="p">(</span><span class="n">h_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
 
@@ -821,11 +1015,12 @@
 <span class="k">def</span> <span class="nf">extended_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    extended minima transform of image X[1] with h=X[0]</span>
-<span class="sd">    X range has to be [0, 1]</span>
-<span class="sd">    :X tensor: X is the Image</span>
-<span class="sd">    :param steps: number of steps (by default NUM_ITER_REC)</span>
-<span class="sd">    :Example:</span>
-<span class="sd">    &gt;&gt;&gt;Lambda(extended_minima_transform, name=&quot;extended_minima_transform&quot;)([h,Image])</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X: Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tensor after extended minima transform.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">region_minima_transform</span><span class="p">(</span><span class="n">h_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">))</span></div>
 
@@ -4741,22 +4936,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -277,15 +273,15 @@
         <article role="main">
           <section id="train">
 <h1>Train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-2">Training a network involves two steps:</p>
+<p>Training a network involves two steps:</p>
 <ol class="arabic simple">
-<li><p class="linemarker linemarker-3">Make a dataset from exported annotations.</p></li>
-<li><p class="linemarker linemarker-4">Configure and train a network.</p></li>
+<li><p>Make a dataset from exported annotations.</p></li>
+<li><p>Configure and train a network.</p></li>
 </ol>
 <section id="make-a-dataset-from-exported-annotations">
 <h2>Make a dataset from exported annotations<a class="headerlink" href="#make-a-dataset-from-exported-annotations" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-7">Training requires data in a specific format in which the audio is split into different parts for use during training to optimize the network and after training to evaluate network performance. The GUI automates the generation of these datasets from audio annotated using the GUI. Alternatively, you can also <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">use your existing annotations</span></a> or <a class="reference internal" href="../tutorials/make_ds_notebook.html"><span class="doc std std-doc">make a dataset yourself</span></a>. For details on the data format itself, see <span class="xref myst">here</span>.</p>
-<p class="linemarker linemarker-9">In the GUI, make a dataset via <em>DAS/Make dataset for training</em>. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:</p>
+<p>Training requires data in a specific format in which the audio is split into different parts for use during training to optimize the network and after training to evaluate network performance. The GUI automates the generation of these datasets from audio annotated using the GUI. Alternatively, you can also <a class="reference internal" href="../tutorials/convert.html"><span class="doc std std-doc">use your existing annotations</span></a> or <a class="reference internal" href="../tutorials/make_ds_notebook.html"><span class="doc std std-doc">make a dataset yourself</span></a>. For details on the data format itself, see <span class="xref myst">here</span>.</p>
+<p>In the GUI, make a dataset via <em>DAS/Make dataset for training</em>. This will first ask you to select the folder with the exported audio and annotations, and then present a dialog with options for customizing the dataset creation:</p>
 <figure class="align-default" id="xb-assemble-fig">
 <a class="reference internal image-reference" href="../_images/xb_assemble.png"><img alt="assemble dataset" src="../_images/xb_assemble.png" style="width: 650px;" /></a>
 <figcaption>
@@ -293,96 +289,96 @@
 </figcaption>
 </figure>
 <ul class="simple">
-<li><p class="linemarker linemarker-17"><em>Data folder</em> &amp; <em>Store folder</em>: The data folder contains your exported annotations (annotations as <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code>, audio as <code class="docutils literal notranslate"><span class="pre">*.npz</span></code> or <code class="docutils literal notranslate"><span class="pre">*.wav</span></code>). From these annotations, the dataset will be created and save in the store folder. By default, the store folder is the data folder with <code class="docutils literal notranslate"><span class="pre">.npy</span></code> appended. <em>Important: You can change the name of the store folder but the data folder must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> for DAS to recognize the dataset.</em></p></li>
-<li><p class="linemarker linemarker-18"><em>Make individual training targets</em>: By default, the dataset will contain targets for a single network that recognizes all annotated song types. To be able to train a network for specific song types, enable this option. Training specific networks for individual song types, instead of a single network for all song types, can sometimes improve performance.</p></li>
-<li><p class="linemarker linemarker-19"><em>Width of events (seconds)</em>: Events are defined by a single time point — to make training more robust, events should are represented by a Gaussian with specified width (standard deviation).</p></li>
-<li><p class="linemarker linemarker-20"><em>Gap between segments (seconds)</em>: To simplify post processing of segments, in particular for birdsong with its many syllable types, we found that introducing brief gaps between individual syllables (segments) simplifies post-processing the inferred annotations.</p></li>
-<li><p class="linemarker linemarker-21"><em>Train/validation/test splits</em>: Typically, the data is split into three parts, which are used during different phases of training:</p>
+<li><p><em>Data folder</em> &amp; <em>Store folder</em>: The data folder contains your exported annotations (annotations as <code class="docutils literal notranslate"><span class="pre">*_annotations.csv</span></code>, audio as <code class="docutils literal notranslate"><span class="pre">*.npz</span></code> or <code class="docutils literal notranslate"><span class="pre">*.wav</span></code>). From these annotations, the dataset will be created and save in the store folder. By default, the store folder is the data folder with <code class="docutils literal notranslate"><span class="pre">.npy</span></code> appended. <em>Important: You can change the name of the store folder but the data folder must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> for DAS to recognize the dataset.</em></p></li>
+<li><p><em>Make individual training targets</em>: By default, the dataset will contain targets for a single network that recognizes all annotated song types. To be able to train a network for specific song types, enable this option. Training specific networks for individual song types, instead of a single network for all song types, can sometimes improve performance.</p></li>
+<li><p><em>Width of events (seconds)</em>: Events are defined by a single time point — to make training more robust, events should are represented by a Gaussian with specified width (standard deviation).</p></li>
+<li><p><em>Gap between segments (seconds)</em>: To simplify post processing of segments, in particular for birdsong with its many syllable types, we found that introducing brief gaps between individual syllables (segments) simplifies post-processing the inferred annotations.</p></li>
+<li><p><em>Train/validation/test splits</em>: Typically, the data is split into three parts, which are used during different phases of training:</p>
 <ul>
-<li><p class="linemarker linemarker-22"><em>train</em>: optimize the network parameters during training</p></li>
-<li><p class="linemarker linemarker-23"><em>validation</em>: monitor network performance during training and steer training (stop early or adjust learning rate)</p></li>
-<li><p class="linemarker linemarker-24"><em>test</em>: independent data to assess network performance after training. This can be omitted when training on very little data.</p></li>
-<li><p class="linemarker linemarker-25">Splits can be generated using a mixture of two strategies:</p>
+<li><p><em>train</em>: optimize the network parameters during training</p></li>
+<li><p><em>validation</em>: monitor network performance during training and steer training (stop early or adjust learning rate)</p></li>
+<li><p><em>test</em>: independent data to assess network performance after training. This can be omitted when training on very little data.</p></li>
+<li><p>Splits can be generated using a mixture of two strategies:</p>
 <ul>
-<li><p class="linemarker linemarker-26"><em>Split by files</em>: Use a fraction of files in the data folder for the specific split. Full files will be used for the split. Only works if you have multiple annotated files.</p></li>
-<li><p class="linemarker linemarker-27"><em>Split by samples</em>: Select a fraction of data from every file in the data folder.</p></li>
+<li><p><em>Split by files</em>: Use a fraction of files in the data folder for the specific split. Full files will be used for the split. Only works if you have multiple annotated files.</p></li>
+<li><p><em>Split by samples</em>: Select a fraction of data from every file in the data folder.</p></li>
 </ul>
 </li>
-<li><p class="linemarker linemarker-28"><em>Recommendation</em>: If you have enough files, split <em>train</em> and <em>validation</em> by samples and split <em>test</em> by files that come from different individuals. That way your test set assesses how well the network generalizes to new individuals. If you have too few files or the specific song types do not appear in all files, split by samples.</p></li>
+<li><p><em>Recommendation</em>: If you have enough files, split <em>train</em> and <em>validation</em> by samples and split <em>test</em> by files that come from different individuals. That way your test set assesses how well the network generalizes to new individuals. If you have too few files or the specific song types do not appear in all files, split by samples.</p></li>
 </ul>
 </li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p class="linemarker linemarker-31">The dataset can be inspected using the <a class="reference internal" href="../tutorials/inspect_dataset.html"><span class="doc std std-doc">inspect_dataset notebook</span></a> if you are curious or if training fails.</p>
+<p>The dataset can be inspected using the <a class="reference internal" href="../tutorials/inspect_dataset.html"><span class="doc std std-doc">inspect_dataset notebook</span></a> if you are curious or if training fails.</p>
 </div>
 </section>
 <section id="train-das-using-the-gui">
 <h2>Train DAS using the GUI<a class="headerlink" href="#train-das-using-the-gui" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-35">Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> that you just created. Then, a dialog will allow you to customize the network to be trained.</p>
+<p>Configure a network and start training via <em>DAS/Train</em>. This will ask you select the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> that you just created. Then, a dialog will allow you to customize the network to be trained.</p>
 <figure class="align-default" id="xb-train-fig">
 <a class="reference internal image-reference" href="../_images/xb_train.png"><img alt="train" src="../_images/xb_train.png" style="width: 600px;" /></a>
 <figcaption>
 <p><span class="caption-text">Train options</span><a class="headerlink" href="#xb-train-fig" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p class="linemarker linemarker-43">Options are grouped into three sections:</p>
-<p class="linemarker linemarker-45"><strong>Data set</strong>:</p>
+<p>Options are grouped into three sections:</p>
+<p><strong>Data set</strong>:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-46"><em>Data folder</em>: Folder with the assembled annotations. Name must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code></p></li>
-<li><p class="linemarker linemarker-47"><em>Save folder</em>: Folder for saving the files generated during training (network model and parameters, test results). Defaults to the name of the data folder, with the suffix <code class="docutils literal notranslate"><span class="pre">.npy</span></code> replaced by <code class="docutils literal notranslate"><span class="pre">.res</span></code>.</p></li>
-<li><p class="linemarker linemarker-48"><em>Prefix for saved files</em>: Files generated during training are named based on the time the training started (<code class="docutils literal notranslate"><span class="pre">YYYYMMDD_hhmmss</span></code>). You can add an informative prefix, for instance <code class="docutils literal notranslate"><span class="pre">pulsesine</span></code>. An underscore will be interleaved between the prefix and the timestamp. The resulting files will then start with something like <code class="docutils literal notranslate"><span class="pre">pulsesine_20201012_125534_</span></code>.</p></li>
-<li><p class="linemarker linemarker-49"><em>Song type</em>: Select the song type you want the network to recognize. Defaults to blank (all annotated song types). Will be populated with training targets if you select <em>Make individual training targets</em> during dataset assembly.</p></li>
-<li><p class="linemarker linemarker-50"><em>Data fraction</em> &amp; <em>Seed</em>: Use a random subset of the data from the training and validation splits. The seed gives you reproducibility. This does not affect the test set. That way you can train a network on different subsets of your data and test on the same dataset.</p></li>
+<li><p><em>Data folder</em>: Folder with the assembled annotations. Name must end in <code class="docutils literal notranslate"><span class="pre">.npy</span></code></p></li>
+<li><p><em>Save folder</em>: Folder for saving the files generated during training (network model and parameters, test results). Defaults to the name of the data folder, with the suffix <code class="docutils literal notranslate"><span class="pre">.npy</span></code> replaced by <code class="docutils literal notranslate"><span class="pre">.res</span></code>.</p></li>
+<li><p><em>Prefix for saved files</em>: Files generated during training are named based on the time the training started (<code class="docutils literal notranslate"><span class="pre">YYYYMMDD_hhmmss</span></code>). You can add an informative prefix, for instance <code class="docutils literal notranslate"><span class="pre">pulsesine</span></code>. An underscore will be interleaved between the prefix and the timestamp. The resulting files will then start with something like <code class="docutils literal notranslate"><span class="pre">pulsesine_20201012_125534_</span></code>.</p></li>
+<li><p><em>Song type</em>: Select the song type you want the network to recognize. Defaults to blank (all annotated song types). Will be populated with training targets if you select <em>Make individual training targets</em> during dataset assembly.</p></li>
+<li><p><em>Data fraction</em> &amp; <em>Seed</em>: Use a random subset of the data from the training and validation splits. The seed gives you reproducibility. This does not affect the test set. That way you can train a network on different subsets of your data and test on the same dataset.</p></li>
 </ul>
-<p class="linemarker linemarker-52"><strong>Network parameters</strong>:</p>
+<p><strong>Network parameters</strong>:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-53"><em>Downsampling frontend</em>: Trainable frontend initialized with STFT filters. Improves performance and speeds up training and inference for signals with high carrier frequencies relative to the amplitude or frequency modulation spectra - for instance ultrasonic vocalizations or bird song. Only works with single-channel, not with multi-channel audio.</p>
+<li><p><em>Downsampling frontend</em>: Trainable frontend initialized with STFT filters. Improves performance and speeds up training and inference for signals with high carrier frequencies relative to the amplitude or frequency modulation spectra - for instance ultrasonic vocalizations or bird song. Only works with single-channel, not with multi-channel audio.</p>
 <ul>
-<li><p class="linemarker linemarker-54"><em>Number of filters</em>: Number of filters per layer in the frontend.</p></li>
-<li><p class="linemarker linemarker-55"><em>Filter duration (samples)</em>: Duration of the filters in the frontend.</p></li>
-<li><p class="linemarker linemarker-56"><em>Downsample factor</em>: The output of the STFT will be downsampled by that factor (only every Nth sample will be taken) before being fed into the main TCN.</p></li>
+<li><p><em>Number of filters</em>: Number of filters per layer in the frontend.</p></li>
+<li><p><em>Filter duration (samples)</em>: Duration of the filters in the frontend.</p></li>
+<li><p><em>Downsample factor</em>: The output of the STFT will be downsampled by that factor (only every Nth sample will be taken) before being fed into the main TCN.</p></li>
 </ul>
 </li>
-<li><p class="linemarker linemarker-57"><em>Chunk duration (samples)</em>: Number of samples processed at once. Defines an upper bound to the audio context available to the network.</p></li>
-<li><p class="linemarker linemarker-58"><em>Number of filters</em>: Number of filters in each layer of the network. Vary between 16 and 32. Fewer typically decrease performance, more rarely help.</p></li>
-<li><p class="linemarker linemarker-59"><em>Filter duration (samples)</em>: Duration of each filter in samples. Should correspond to the duration of the lowest level song feature (e.g. the carrier if training on raw audio without a downsampling frontend).</p></li>
-<li><p class="linemarker linemarker-60"><em>Number of TCN blocks</em>: Number of TCN blocks in the network. Deeper networks (more TCN blocks) allow extracting more derived sound features. We found values between 2 and 6 blocks to work well.</p></li>
-<li><p class="linemarker linemarker-61"><em>Separable TCN blocks</em>: Useful only for multi-channel audio. Whether the convolutions in individual TCN blocks should be separable by time and channel: In a separable convolution, each audio channel is first filtered with a set of filters and then the filtered channels are combined with a second set of filters. Allows sharing filters across channels - the idea is that some filtering operations should be applied to each channel equally. The first one or two TCN blocks can be set to use separable convolutions for multi-channel audio. Should be a space-separated sequence of <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> with the same length as the number of TCN blocks. For instance, a 5-block network with the first two blocks set to use separable convolutions would be: <code class="docutils literal notranslate"><span class="pre">True</span> <span class="pre">True</span> <span class="pre">False</span> <span class="pre">False</span> <span class="pre">False</span></code>.</p></li>
+<li><p><em>Chunk duration (samples)</em>: Number of samples processed at once. Defines an upper bound to the audio context available to the network.</p></li>
+<li><p><em>Number of filters</em>: Number of filters in each layer of the network. Vary between 16 and 32. Fewer typically decrease performance, more rarely help.</p></li>
+<li><p><em>Filter duration (samples)</em>: Duration of each filter in samples. Should correspond to the duration of the lowest level song feature (e.g. the carrier if training on raw audio without a downsampling frontend).</p></li>
+<li><p><em>Number of TCN blocks</em>: Number of TCN blocks in the network. Deeper networks (more TCN blocks) allow extracting more derived sound features. We found values between 2 and 6 blocks to work well.</p></li>
+<li><p><em>Separable TCN blocks</em>: Useful only for multi-channel audio. Whether the convolutions in individual TCN blocks should be separable by time and channel: In a separable convolution, each audio channel is first filtered with a set of filters and then the filtered channels are combined with a second set of filters. Allows sharing filters across channels - the idea is that some filtering operations should be applied to each channel equally. The first one or two TCN blocks can be set to use separable convolutions for multi-channel audio. Should be a space-separated sequence of <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> with the same length as the number of TCN blocks. For instance, a 5-block network with the first two blocks set to use separable convolutions would be: <code class="docutils literal notranslate"><span class="pre">True</span> <span class="pre">True</span> <span class="pre">False</span> <span class="pre">False</span> <span class="pre">False</span></code>.</p></li>
 </ul>
-<p class="linemarker linemarker-63"><strong>Training parameters</strong>:</p>
+<p><strong>Training parameters</strong>:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-64"><em>Learning rate</em>: Determines by how much the parameters are updated in every step. Too small, and performance will take very long to improve, too large and performance will diverge. The optimal value depends on the network and data size but performance is relatively robust to the specific choice of value. Values between 0.1 and 0.0001 typically work.</p></li>
-<li><p class="linemarker linemarker-65"><em>Reduce learning rate patience</em>: The learning rate can be reduced automatically if the performance on the validation set does not increase for the specified number of epochs. We did not find this to improve or speed up training much.</p></li>
-<li><p class="linemarker linemarker-66"><em>Number of epochs</em>: Maximum number of training epochs. For training with small data sets during fast training, 10 epochs are typically sufficient. For training on larger datasets leave as is. Training will stop early if the performance on the validation set did not increase in the last 20 epochs.</p></li>
-<li><p class="linemarker linemarker-67"><em>Create tensorboard logs</em>: Create tensorboard logs for monitoring training.</p></li>
+<li><p><em>Learning rate</em>: Determines by how much the parameters are updated in every step. Too small, and performance will take very long to improve, too large and performance will diverge. The optimal value depends on the network and data size but performance is relatively robust to the specific choice of value. Values between 0.1 and 0.0001 typically work.</p></li>
+<li><p><em>Reduce learning rate patience</em>: The learning rate can be reduced automatically if the performance on the validation set does not increase for the specified number of epochs. We did not find this to improve or speed up training much.</p></li>
+<li><p><em>Number of epochs</em>: Maximum number of training epochs. For training with small data sets during fast training, 10 epochs are typically sufficient. For training on larger datasets leave as is. Training will stop early if the performance on the validation set did not increase in the last 20 epochs.</p></li>
+<li><p><em>Create tensorboard logs</em>: Create tensorboard logs for monitoring training.</p></li>
 </ul>
-<p class="linemarker linemarker-69">Training can be started locally in a separate process or a script can be generated for training on the command line, for instance on a cluster.</p>
+<p>Training can be started locally in a separate process or a script can be generated for training on the command line, for instance on a cluster.</p>
 <section id="train-from-the-command-line">
 <h3>Train from the command line<a class="headerlink" href="#train-from-the-command-line" title="Permalink to this headline">#</a></h3>
-<p class="linemarker linemarker-72">The datasets are portable—you can copy the folder with the dataset to another computer with a GPU and run training from the GUI there. If that machine cannot be used with a GUI—for instance if it’s a linux server, the training and network configuration can be exported via the dialog as a command line script and executed via a terminal.</p>
-<p class="linemarker linemarker-74">The script uses the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for training <em>DAS</em> (see also <a class="reference internal" href="../tutorials/train.html"><span class="doc std std-doc">train using command-line scripts</span></a>) and its contents will look like this:</p>
+<p>The datasets are portable—you can copy the folder with the dataset to another computer with a GPU and run training from the GUI there. If that machine cannot be used with a GUI—for instance if it’s a linux server, the training and network configuration can be exported via the dialog as a command line script and executed via a terminal.</p>
+<p>The script uses the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for training <em>DAS</em> (see also <a class="reference internal" href="../tutorials/train.html"><span class="doc std std-doc">train using command-line scripts</span></a>) and its contents will look like this:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>das train --data-dir /Users/DAS/tutorial/gui_demo.npy --save-dir /Users/DAS/tutorial/gui_demo.res --nb-hist <span class="m">256</span> --ignore-boundaries True --nb-filters <span class="m">32</span> --kernel-size <span class="m">32</span> --nb-conv <span class="m">3</span> --use-separable False False False --learning-rate <span class="m">0</span>.0001 --nb-epoch <span class="m">400</span> --model-name tcn --no-reduce-lr  --no-tensorboard
 </pre></div>
 </div>
-<p class="linemarker linemarker-79">For the script to work on a different machine, it likely require some edits:</p>
+<p>For the script to work on a different machine, it likely require some edits:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-80"><code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> needs to point to the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> on the remote machine.</p></li>
-<li><p class="linemarker linemarker-81"><code class="docutils literal notranslate"><span class="pre">--save-dir</span></code> needs to point to a valid, writable path.</p></li>
-<li><p class="linemarker linemarker-82">Add a line to activate a specific conda environment before running <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. For instance, <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">das</span></code>.</p></li>
-<li><p class="linemarker linemarker-83">Activate linux modules, for instance to enable CUDA; or specify parameters for your job scheduler.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> needs to point to the dataset folder ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> on the remote machine.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--save-dir</span></code> needs to point to a valid, writable path.</p></li>
+<li><p>Add a line to activate a specific conda environment before running <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. For instance, <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">das</span></code>.</p></li>
+<li><p>Activate linux modules, for instance to enable CUDA; or specify parameters for your job scheduler.</p></li>
 </ul>
 </section>
 </section>
 <section id="files-generated-during-training">
 <h2>Files generated during training<a class="headerlink" href="#files-generated-during-training" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-86">The following files will be created in the <em>save folder</em>:</p>
+<p>The following files will be created in the <em>save folder</em>:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-87"><code class="docutils literal notranslate"><span class="pre">_model.h5</span></code>: trained network model.</p></li>
-<li><p class="linemarker linemarker-88"><code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code>: info on data formats etc.</p></li>
-<li><p class="linemarker linemarker-89"><code class="docutils literal notranslate"><span class="pre">_results.h5</span></code>: test results.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_model.h5</span></code>: trained network model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code>: info on data formats etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_results.h5</span></code>: test results.</p></li>
 </ul>
-<p class="linemarker linemarker-91">The <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> are required for using the network for predictions and need to be copied to your local machine if you train remotely.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> are required for using the network for predictions and need to be copied to your local machine if you train remotely.</p>
 </section>
 </section>
 
@@ -472,22 +468,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

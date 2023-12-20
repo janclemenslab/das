@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -233,6 +225,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -282,23 +278,18 @@
 <span class="kn">import</span> <span class="nn">skimage.morphology</span> <span class="k">as</span> <span class="nn">skm</span>
 <span class="kn">import</span> <span class="nn">scipy.ndimage.morphology</span> <span class="k">as</span> <span class="nn">snm</span>
 
-
 <span class="n">MIN_LATT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">MAX_LATT</span> <span class="o">=</span> <span class="mi">0</span>
 
 
 <div class="viewcode-block" id="MinusOnesZeroCenter"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.MinusOnesZeroCenter">[docs]</a><span class="k">class</span> <span class="nc">MinusOnesZeroCenter</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors initialized to -1 except for center value.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors initialized to -1 except for center value.</span>
 
-<span class="sd">    :Example:</span>
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
 
-<span class="sd">    &gt;&gt;&gt; from keras.models import Sequential,Model</span>
-<span class="sd">    &gt;&gt;&gt; from keras.layers import Input</span>
-<span class="sd">    &gt;&gt;&gt; xin=Input(shape=(28,28,3))</span>
-<span class="sd">    &gt;&gt;&gt; x=Erosion2D(7,kernel_size=(5,5)))(xin)</span>
-<span class="sd">    &gt;&gt;&gt;&gt;model = Model(xin,x)</span>
-
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -308,8 +299,13 @@
 
 
 <div class="viewcode-block" id="SparseZeros"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SparseZeros">[docs]</a><span class="k">class</span> <span class="nc">SparseZeros</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors initialized to MIN_LATT except for center value.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors initialized to MIN_LATT except for center value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        th (float): Threshold for generating sparse zeros.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">th</span><span class="o">=</span><span class="mf">0.85</span><span class="p">):</span>
@@ -319,18 +315,20 @@
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">MIN_LATT</span>
-        <span class="c1"># data[int(shape[0]/2),int(shape[1]/2),:,:]=0</span>
         <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-    <span class="c1"># TODO: Check dtype</span>
-
 <div class="viewcode-block" id="SparseZeros.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SparseZeros.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;th&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">thminval</span><span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;th&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="SparseNumZeros"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SparseNumZeros">[docs]</a><span class="k">class</span> <span class="nc">SparseNumZeros</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors initialized to MIN_LATT except for center value.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors initialized to MIN_LATT except for center value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        th (int): Number of zeros to generate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">th</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
@@ -341,18 +339,22 @@
         <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">&lt;=</span> <span class="n">v</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1.0</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">data</span> <span class="o">+</span> <span class="n">MIN_LATT</span>
-        <span class="c1"># data[int(shape[0]/2),int(shape[1]/2),:,:]=0</span>
         <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-    <span class="c1"># TODO: Check dtype</span>
-
 <div class="viewcode-block" id="SparseNumZeros.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SparseNumZeros.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;th&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">thminval</span><span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;th&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="SignedOnes"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SignedOnes">[docs]</a><span class="k">class</span> <span class="nc">SignedOnes</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors initialized to Random -1 or 1 values.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors initialized to random -1 or 1 values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        minval (float): Lower bound of the range of random values.</span>
+<span class="sd">        maxval (float): Upper bound of the range of random values.</span>
+<span class="sd">        seed (int): Seed for the random generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="n">MIN_LATT</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=-</span><span class="n">MIN_LATT</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -367,16 +369,17 @@
         <span class="k">return</span> <span class="n">data</span>
 
 <div class="viewcode-block" id="SignedOnes.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SignedOnes.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span>
-            <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span>
-            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-        <span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span> <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span> <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="MinusOnes"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.MinusOnes">[docs]</a><span class="k">class</span> <span class="nc">MinusOnes</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors initialized to Minus Ones.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors initialized to -1.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -384,11 +387,15 @@
 
 
 <div class="viewcode-block" id="RandomLattice"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.RandomLattice">[docs]</a><span class="k">class</span> <span class="nc">RandomLattice</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).</span>
-<span class="sd">    :param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.</span>
-<span class="sd">    :param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.</span>
-<span class="sd">    :param seed: A Python integer. Used to seed the random generator.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        minval (float): Lower bound of the range of random values.</span>
+<span class="sd">        maxval (float): Upper bound of the range of random values.</span>
+<span class="sd">        seed (int): Seed for the random generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="n">MIN_LATT</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="n">MAX_LATT</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -403,19 +410,18 @@
         <span class="k">return</span> <span class="n">data</span>
 
 <div class="viewcode-block" id="RandomLattice.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.RandomLattice.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span>
-            <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span>
-            <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
-        <span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span> <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span> <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="RandomLatticewithZero"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.RandomLatticewithZero">[docs]</a><span class="k">class</span> <span class="nc">RandomLatticewithZero</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).</span>
-<span class="sd">    :param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.</span>
-<span class="sd">    :param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.</span>
-<span class="sd">    :param seed: A Python integer. Used to seed the random generator.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        minval (float): Lower bound of the range of random values.</span>
+<span class="sd">        maxval (float): Upper bound of the range of random values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="n">MIN_LATT</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="n">MAX_LATT</span><span class="p">):</span>
@@ -423,20 +429,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span> <span class="o">=</span> <span class="n">maxval</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RandomLatticewithZero.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.RandomLatticewithZero.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span>
-            <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">,</span>
-        <span class="p">}</span></div></div>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;minval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">minval</span><span class="p">,</span> <span class="s2">&quot;maxval&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxval</span><span class="p">}</span></div></div>
 
 
 <div class="viewcode-block" id="Quadratic"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.Quadratic">[docs]</a><span class="k">class</span> <span class="nc">Quadratic</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer with Quadratic</span>
+    <span class="sd">&quot;&quot;&quot;Initializer with quadratic values.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        tvalue (float): T-value for distance transform.</span>
+<span class="sd">        cvalue (float): Constant multiplier.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvalue</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">cvalue</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
@@ -457,13 +466,19 @@
 
 
 <div class="viewcode-block" id="SEinitializer"><a class="viewcode-back" href="../../../api/das.morpholayers.initializers.html#das.morpholayers.initializers.SEinitializer">[docs]</a><span class="k">class</span> <span class="nc">SEinitializer</span><span class="p">(</span><span class="n">Initializer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Initializer to a SE.</span>
+    <span class="sd">&quot;&quot;&quot;Initializer to a Structured Element (SE).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        SE (np.ndarray): Structured Element.</span>
+<span class="sd">        minval (float): Minimum value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Initialized tensor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">SE</span> <span class="o">=</span> <span class="n">SE</span>
-        <span class="k">if</span> <span class="n">minval</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">minval</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">minval</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">minval</span> <span class="o">=</span> <span class="n">minval</span>
@@ -519,22 +534,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

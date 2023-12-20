@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -277,16 +273,16 @@
         <article role="main">
           <section id="architecture-tuning">
 <h1>Architecture tuning<a class="headerlink" href="#architecture-tuning" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-2">Often, the standard parameters are sufficient to get a performing model - see the <span class="xref myst">Advice on architecture tuning</span>.</p>
-<p class="linemarker linemarker-4">However, sometimes “you want more”…</p>
+<p>Often, the standard parameters are sufficient to get a performing model - see the <span class="xref myst">Advice on architecture tuning</span>.</p>
+<p>However, sometimes “you want more”…</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-6">Given that training is often fast, you can <strong>manually</strong> run an exhaustive search by fitting models with different architectures.</p></li>
-<li><p class="linemarker linemarker-7">We have also added experimental support for <strong>automatic</strong> architecture tuning via <a class="reference external" href="https://keras.io/keras_tuner">Keras Tuner</a> for when the search space is too big for an exhaustive search.
+<li><p>Given that training is often fast, you can <strong>manually</strong> run an exhaustive search by fitting models with different architectures.</p></li>
+<li><p>We have also added experimental support for <strong>automatic</strong> architecture tuning via <a class="reference external" href="https://keras.io/keras_tuner">Keras Tuner</a> for when the search space is too big for an exhaustive search.
 It is particularly useful to track the tuning on <a class="reference external" href="http://wandb.ai">Weights &amp; Biases</a> - see the examples below and <a class="reference internal" href="experiment_tracking.html"><span class="doc std std-doc">experiment tracking</span></a>.</p></li>
 </ul>
 <section id="manual-tuning">
 <h2>Manual tuning<a class="headerlink" href="#manual-tuning" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-12">If the search space is small and training fast, it is often best to do an exhaustive search by fitting models with all parameter combinations. It is advisable to run repeated fits with the same combination to be robust to random effects.</p>
+<p>If the search space is small and training fast, it is often best to do an exhaustive search by fitting models with all parameter combinations. It is advisable to run repeated fits with the same combination to be robust to random effects.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 <span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
@@ -312,26 +308,26 @@ It is particularly useful to track the tuning on <a class="reference external" h
 <span class="c1"># plot results</span>
 </pre></div>
 </div>
-<p class="linemarker linemarker-39">During the training, the results can be tracked on <span class="xref myst">https://wandb.ai</span>.</p>
-<p class="linemarker linemarker-41">A model with A TCN blocks, B filters, and a learning rate of C yields the lowest validation loss.</p>
+<p>During the training, the results can be tracked on <span class="xref myst">https://wandb.ai</span>.</p>
+<p>A model with A TCN blocks, B filters, and a learning rate of C yields the lowest validation loss.</p>
 </section>
 <section id="automatic-architecture-tuning">
 <h2>Automatic architecture tuning<a class="headerlink" href="#automatic-architecture-tuning" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-45">The interface is similar to das.train:
+<p>The interface is similar to das.train:
 <code class="docutils literal notranslate"><span class="pre">das.train_tune.train(data_dir='tutorial_data.npy',</span> <span class="pre">save_dir='res',</span> <span class="pre">kernel_size=3,</span> <span class="pre">tune_config='tune.yml')</span></code>. There is also a CLI that you can access via <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">tune</span></code> (see <a class="reference internal" href="../technical/cli.html"><span class="doc std std-doc">CLI documentation</span></a>).</p>
-<p class="linemarker linemarker-48">Crucially, it accepts a yaml file with the parameter names and a set of values you want the optimizer to try. For instance, if you want the optimizer to try models with</p>
+<p>Crucially, it accepts a yaml file with the parameter names and a set of values you want the optimizer to try. For instance, if you want the optimizer to try models with</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-50">2, 3, or 3 TCN blocks,</p></li>
-<li><p class="linemarker linemarker-51">32, 64, or 96 filters, and</p></li>
-<li><p class="linemarker linemarker-52">learning rates of 0.0001 or 0.00001</p></li>
+<li><p>2, 3, or 3 TCN blocks,</p></li>
+<li><p>32, 64, or 96 filters, and</p></li>
+<li><p>learning rates of 0.0001 or 0.00001</p></li>
 </ul>
-<p class="linemarker linemarker-54">then the <code class="docutils literal notranslate"><span class="pre">tune.yml</span></code> file should look like this:</p>
+<p>then the <code class="docutils literal notranslate"><span class="pre">tune.yml</span></code> file should look like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">nb_conv</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span><span class="w"></span>
 <span class="nt">nb_filters</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">32</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">64</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">96</span><span class="p p-Indicator">]</span><span class="w"></span>
 <span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.0001</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0.00001</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
-<p class="linemarker linemarker-61">The tuner will then run a bunch of fits to find an optimal parameter combination in the search space defined in the yaml file - see keras tuner for how this works.</p>
+<p>The tuner will then run a bunch of fits to find an optimal parameter combination in the search space defined in the yaml file - see keras tuner for how this works.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train_tune</span>
 
 <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tuner</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
@@ -343,7 +339,7 @@ It is particularly useful to track the tuning on <a class="reference external" h
 <span class="p">)</span>
 </pre></div>
 </div>
-<p class="linemarker linemarker-74">Will take N minutes, during which results will can be inspected at <span class="xref myst">Link to wandb site for this project</span>.</p>
+<p>Will take N minutes, during which results will can be inspected at <span class="xref myst">Link to wandb site for this project</span>.</p>
 </section>
 </section>
 
@@ -429,22 +425,6 @@ It is particularly useful to track the tuning on <a class="reference external" h
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

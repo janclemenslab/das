@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -348,20 +344,20 @@ Attributes:
 </section>
 <section id="plot-audio-and-annotations">
 <h2>Plot audio and annotations<a class="headerlink" href="#plot-audio-and-annotations" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-60003">Plot, for the train, validation, and test set:</p>
+<p>Plot, for the train, validation, and test set:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-60004">the audio</p></li>
-<li><p class="linemarker linemarker-60005">the training targets as line plots</p></li>
-<li><p class="linemarker linemarker-60006">the training targets as a pseudo-color plot (black - high probably, white - low probability).</p></li>
+<li><p>the audio</p></li>
+<li><p>the training targets as line plots</p></li>
+<li><p>the training targets as a pseudo-color plot (black - high probably, white - low probability).</p></li>
 </ul>
-<p class="linemarker linemarker-60008">Adjust the start and duration, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">duration_seconds</span></code>, to plot a part of the recording that should have annotated song.</p>
-<p class="linemarker linemarker-60010">Things to check:</p>
+<p>Adjust the start and duration, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">duration_seconds</span></code>, to plot a part of the recording that should have annotated song.</p>
+<p>Things to check:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-60011">alignment between audio <code class="docutils literal notranslate"><span class="pre">x</span></code> and training targets <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
-<li><p class="linemarker linemarker-60012">width of events is appropriate</p></li>
-<li><p class="linemarker linemarker-60013">completeness of annotations</p></li>
+<li><p>alignment between audio <code class="docutils literal notranslate"><span class="pre">x</span></code> and training targets <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
+<li><p>width of events is appropriate</p></li>
+<li><p>completeness of annotations</p></li>
 </ul>
-<p class="linemarker linemarker-60015">In the example below the <code class="docutils literal notranslate"><span class="pre">test</span></code> set is incompletely annotated around 3.5 seconds.</p>
+<p>In the example below the <code class="docutils literal notranslate"><span class="pre">test</span></code> set is incompletely annotated around 3.5 seconds.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_seconds</span> <span class="o">=</span> <span class="mi">2</span>
@@ -468,22 +464,6 @@ Attributes:
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

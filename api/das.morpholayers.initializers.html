@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.morpholayers.layers" href="das.morpholayers.layers.html" /><link rel="prev" title="das.morpholayers.constraints" href="das.morpholayers.constraints.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.morpholayers.initializers - DAS documentation</title>
@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -171,7 +163,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
@@ -208,7 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -280,34 +276,59 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.MinusOnes">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">MinusOnes</span></span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#MinusOnes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.MinusOnes" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors initialized to Minus Ones.</p>
+<dd><p>Initializer that generates tensors initialized to -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.MinusOnesZeroCenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">MinusOnesZeroCenter</span></span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#MinusOnesZeroCenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.MinusOnesZeroCenter" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors initialized to -1 except for center value.</p>
+<dd><p>Initializer that generates tensors initialized to -1 except for center value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Example</dt>
-<dd class="field-odd"><p></p></dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span><span class="n">Model</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Input</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">xin</span><span class="o">=</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">=</span><span class="n">Erosion2D</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)))(</span><span class="n">xin</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;&gt;model = Model(xin,x)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.Quadratic">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">Quadratic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#Quadratic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.Quadratic" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer with Quadratic</p>
+<dd><p>Initializer with quadratic values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tvalue</strong> (<em>float</em>) – T-value for distance transform.</p></li>
+<li><p><strong>cvalue</strong> (<em>float</em>) – Constant multiplier.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.Quadratic.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#Quadratic.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.Quadratic.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -320,14 +341,26 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.RandomLattice">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">RandomLattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#RandomLattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.RandomLattice" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).
-:param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.
-:param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.
-:param seed: A Python integer. Used to seed the random generator.</p>
+<dd><p>Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minval</strong> (<em>float</em>) – Lower bound of the range of random values.</p></li>
+<li><p><strong>maxval</strong> (<em>float</em>) – Upper bound of the range of random values.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for the random generator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.RandomLattice.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#RandomLattice.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.RandomLattice.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -340,14 +373,25 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.RandomLatticewithZero">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">RandomLatticewithZero</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#RandomLatticewithZero"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.RandomLatticewithZero" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).
-:param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.
-:param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.
-:param seed: A Python integer. Used to seed the random generator.</p>
+<dd><p>Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minval</strong> (<em>float</em>) – Lower bound of the range of random values.</p></li>
+<li><p><strong>maxval</strong> (<em>float</em>) – Upper bound of the range of random values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.RandomLatticewithZero.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#RandomLatticewithZero.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.RandomLatticewithZero.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -360,17 +404,46 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SEinitializer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">SEinitializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SEinitializer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SEinitializer" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer to a SE.</p>
+<dd><p>Initializer to a Structured Element (SE).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SE</strong> (<em>np.ndarray</em>) – Structured Element.</p></li>
+<li><p><strong>minval</strong> (<em>float</em>) – Minimum value.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SignedOnes">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">SignedOnes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SignedOnes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SignedOnes" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors initialized to Random -1 or 1 values.</p>
+<dd><p>Initializer that generates tensors initialized to random -1 or 1 values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minval</strong> (<em>float</em>) – Lower bound of the range of random values.</p></li>
+<li><p><strong>maxval</strong> (<em>float</em>) – Upper bound of the range of random values.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed for the random generator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SignedOnes.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SignedOnes.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SignedOnes.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -383,11 +456,22 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SparseNumZeros">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">SparseNumZeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SparseNumZeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SparseNumZeros" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors initialized to MIN_LATT except for center value.</p>
+<dd><p>Initializer that generates tensors initialized to MIN_LATT except for center value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>th</strong> (<em>int</em>) – Number of zeros to generate.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SparseNumZeros.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SparseNumZeros.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SparseNumZeros.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -400,11 +484,22 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SparseZeros">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.initializers.</span></span><span class="sig-name descname"><span class="pre">SparseZeros</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.85</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SparseZeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SparseZeros" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Initializer that generates tensors initialized to MIN_LATT except for center value.</p>
+<dd><p>Initializer that generates tensors initialized to MIN_LATT except for center value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>th</strong> (<em>float</em>) – Threshold for generating sparse zeros.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.initializers.SparseZeros.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/initializers.html#SparseZeros.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.initializers.SparseZeros.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the configuration of the initializer as a JSON-serializable dict.</p>
+<dd><p>Returns the configuration of the initializer as a JSON-serializable dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>A JSON-serializable Python dict.</p>
@@ -421,8 +516,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="das.morpholayers.layers.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">das.morpholayers.layers</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="das.morpholayers.constraints.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">das.morpholayers.constraints</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -460,22 +573,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

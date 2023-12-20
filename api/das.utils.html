@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -277,11 +273,11 @@
         <article role="main">
           <section id="module-das.utils">
 <span id="das-utils"></span><h1>das.utils<a class="headerlink" href="#module-das.utils" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-1">General utilities</p>
+<p>General utilities</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">QtProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comms</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Init the callback.</p>
+<dd><p>Init the callback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -295,18 +291,18 @@ the event is set in the GUI to stop training.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_epoch_end">
 <span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_epoch_end" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the end of an epoch.</p>
-<p class="linemarker linemarker-3">Subclasses should override for any actions to run. This function should only
+<dd><p>Called at the end of an epoch.</p>
+<p>Subclasses should override for any actions to run. This function should only
 be called during TRAIN mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>epoch</strong> – Integer, index of epoch.</p></li>
 <li><p><strong>logs</strong> – <dl>
-<dt>Dict, metric results for this training epoch, and for the</dt><dd><p class="linemarker linemarker-9">validation epoch if validation is performed. Validation result keys
+<dt>Dict, metric results for this training epoch, and for the</dt><dd><p>validation epoch if validation is performed. Validation result keys
 are prefixed with <code class="xref py py-obj docutils literal notranslate"><span class="pre">val_</span></code>. For training epoch, the values of the</p>
 </dd>
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>’s metrics are returned. Example<span class="classifier"><a href="#id1"><span class="problematic" id="id2">`</span></a>{‘loss’: 0.2, ‘accuracy’:</span></dt><dd><p class="linemarker linemarker-12">0.7}`.</p>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>’s metrics are returned. Example<span class="classifier"><a href="#id1"><span class="problematic" id="id2">`</span></a>{‘loss’: 0.2, ‘accuracy’:</span></dt><dd><p>0.7}`.</p>
 </dd>
 </dl>
 </p></li>
@@ -318,9 +314,9 @@ are prefixed with <code class="xref py py-obj docutils literal notranslate"><spa
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_predict_batch_end">
 <span class="sig-name descname"><span class="pre">on_predict_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_predict_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_predict_batch_end" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the end of a batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code> methods.</p>
-<p class="linemarker linemarker-3">Subclasses should override for any actions to run.</p>
-<p class="linemarker linemarker-5">Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
+<dd><p>Called at the end of a batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code> methods.</p>
+<p>Subclasses should override for any actions to run.</p>
+<p>Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras.Model</span></code> is set to <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>, this method will only be called every <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>
 batches.</p>
 <dl class="field-list simple">
@@ -336,11 +332,11 @@ batches.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_test_batch_end">
 <span class="sig-name descname"><span class="pre">on_test_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_test_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_test_batch_end" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the end of a batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code> methods.</p>
-<p class="linemarker linemarker-3">Also called at the end of a validation batch in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>
+<dd><p>Called at the end of a batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">evaluate</span></code> methods.</p>
+<p>Also called at the end of a validation batch in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>
 methods, if validation data is provided.</p>
-<p class="linemarker linemarker-6">Subclasses should override for any actions to run.</p>
-<p class="linemarker linemarker-8">Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
+<p>Subclasses should override for any actions to run.</p>
+<p>Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras.Model</span></code> is set to <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>, this method will only be called every <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>
 batches.</p>
 <dl class="field-list simple">
@@ -356,9 +352,9 @@ batches.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_train_batch_end">
 <span class="sig-name descname"><span class="pre">on_train_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_train_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_train_batch_end" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the end of a training batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code> methods.</p>
-<p class="linemarker linemarker-3">Subclasses should override for any actions to run.</p>
-<p class="linemarker linemarker-5">Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
+<dd><p>Called at the end of a training batch in <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code> methods.</p>
+<p>Subclasses should override for any actions to run.</p>
+<p>Note that if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">steps_per_execution</span></code> argument to <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> in
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras.Model</span></code> is set to <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>, this method will only be called every <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code>
 batches.</p>
 <dl class="field-list simple">
@@ -374,8 +370,8 @@ batches.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_train_begin">
 <span class="sig-name descname"><span class="pre">on_train_begin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_train_begin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_train_begin" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the beginning of training.</p>
-<p class="linemarker linemarker-3">Subclasses should override for any actions to run.</p>
+<dd><p>Called at the beginning of training.</p>
+<p>Subclasses should override for any actions to run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>logs</strong> – Dict. Currently no data is passed to this argument for this method
@@ -387,8 +383,8 @@ but that may change in the future.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.utils.QtProgressCallback.on_train_end">
 <span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#QtProgressCallback.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.QtProgressCallback.on_train_end" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Called at the end of training.</p>
-<p class="linemarker linemarker-3">Subclasses should override for any actions to run.</p>
+<dd><p>Called at the end of training.</p>
+<p>Subclasses should override for any actions to run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>logs</strong> – Dict. Currently the output of the last call to <a class="reference internal" href="#das.utils.QtProgressCallback.on_epoch_end" title="das.utils.QtProgressCallback.on_epoch_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_epoch_end()</span></code></a>
@@ -403,7 +399,7 @@ the future.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.bandpass_filter_song">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">bandpass_filter_song</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_rate_hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/utils.html#bandpass_filter_song"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.bandpass_filter_song" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Band-pass filter channel data</p>
+<dd><p>Band-pass filter channel data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -425,7 +421,7 @@ the future.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_from">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datasets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_from" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Load datasets from h5 file.</p>
+<dd><p>Load datasets from h5 file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -445,8 +441,8 @@ the future.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_model">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_objects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Load model with weights.</p>
-<p class="linemarker linemarker-3">First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
+<dd><p>Load model with weights.</p>
+<p>First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
 Second, try to init model from parameters and then add weights…</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -456,7 +452,7 @@ Second, try to init model from parameters and then add weights…</p>
 <li><p><strong>model_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_weights.h5’.</p></li>
 <li><p><strong>params_ext</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘_params.yaml’.</p></li>
 <li><p><strong>compile</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
-<li><p><strong>custom_objects</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p class="linemarker linemarker-16">…</p>
+<li><p><strong>custom_objects</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>…</p>
 </p></li>
 </ul>
 </dd>
@@ -469,7 +465,7 @@ Second, try to init model from parameters and then add weights…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_model_and_params">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_and_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_save_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict={'stft_res_dense':</span> <span class="pre">&lt;function</span> <span class="pre">stft_res_dense&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn':</span> <span class="pre">&lt;function</span> <span class="pre">tcn&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn_stft':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_stft&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">'tcn_stft_morph':</span> <span class="pre">&lt;function</span> <span class="pre">tcn_stft_morph&gt;}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_objects=None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">keras.engine.training.Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_model_and_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_and_params" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">[summary]</p>
+<dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -490,7 +486,7 @@ Second, try to init model from parameters and then add weights…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_model_from_params">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_model_from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_model.h5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#load_model_from_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_model_from_params" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.</p>
+<dd><p>Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -510,7 +506,7 @@ Second, try to init model from parameters and then add weights…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.load_params">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">load_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/utils.html#load_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.load_params" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Load model/training parameters from yaml</p>
+<dd><p>Load model/training parameters from yaml</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -530,8 +526,8 @@ Second, try to init model from parameters and then add weights…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.resample">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_audio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.resample" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Resample audio to model rate.</p>
-<p class="linemarker linemarker-3">Rounds rates to next even number for efficiency.</p>
+<dd><p>Resample audio to model rate.</p>
+<p>Rounds rates to next even number for efficiency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -552,7 +548,7 @@ Second, try to init model from parameters and then add weights…</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.save_params">
 <span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">save_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_trunk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_ext</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'_params.yaml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#save_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.save_params" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Save model/training parameters to yaml.</p>
+<dd><p>Save model/training parameters to yaml.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -628,22 +624,6 @@ Second, try to init model from parameters and then add weights…</p>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

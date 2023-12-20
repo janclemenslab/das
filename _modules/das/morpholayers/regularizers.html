@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -233,6 +225,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -278,7 +274,6 @@
 <span></span><span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.regularizers</span> <span class="kn">import</span> <span class="n">Regularizer</span>
 
-
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">===============</span>
 <span class="sd">GLOBAL VARIABLE</span>
@@ -288,11 +283,11 @@
 
 
 <div class="viewcode-block" id="L1L2Lattice"><a class="viewcode-back" href="../../../api/das.morpholayers.regularizers.html#das.morpholayers.regularizers.L1L2Lattice">[docs]</a><span class="k">class</span> <span class="nc">L1L2Lattice</span><span class="p">(</span><span class="n">Regularizer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Regularizer for L1 and L2 regularization in a lattice. Computing L1/L2 distance to MIN_LATT</span>
+    <span class="sd">&quot;&quot;&quot;Regularizer for L1 and L2 regularization in a lattice. Computes L1/L2 distance to MIN_LATT.</span>
 
-<span class="sd">    # Arguments</span>
-<span class="sd">        l1: Float; L1 regularization factor.</span>
-<span class="sd">        l2: Float; L2 regularization factor.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        l1 (float): L1 regularization factor.</span>
+<span class="sd">        l2 (float): L2 regularization factor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l1</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
@@ -300,6 +295,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">l2</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">cast_to_floatx</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute L1L2Lattice regularization.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x (tf.Tensor): Input tensor.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tf.Tensor: Regularization term.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">regularization</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span><span class="p">:</span>
             <span class="n">regularization</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l1</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">MIN_LATT</span><span class="p">))</span>
@@ -308,22 +311,52 @@
         <span class="k">return</span> <span class="n">regularization</span>
 
 <div class="viewcode-block" id="L1L2Lattice.get_config"><a class="viewcode-back" href="../../../api/das.morpholayers.regularizers.html#das.morpholayers.regularizers.L1L2Lattice.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get configuration of the regularizer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: Regularizer configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;l1&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l1</span><span class="p">),</span> <span class="s2">&quot;l2&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">l2</span><span class="p">)}</span></div></div>
 
 
 <span class="c1"># Aliases.</span>
 
 
-<span class="k">def</span> <span class="nf">l1lattice</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+<div class="viewcode-block" id="l1lattice"><a class="viewcode-back" href="../../../api/das.morpholayers.regularizers.html#das.morpholayers.regularizers.l1lattice">[docs]</a><span class="k">def</span> <span class="nf">l1lattice</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Alias for L1L2Lattice with L1 regularization.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l (float): L1 regularization factor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        L1L2Lattice: L1L2Lattice regularizer instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="n">l</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">l2lattice</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l2</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+<div class="viewcode-block" id="l2lattice"><a class="viewcode-back" href="../../../api/das.morpholayers.regularizers.html#das.morpholayers.regularizers.l2lattice">[docs]</a><span class="k">def</span> <span class="nf">l2lattice</span><span class="p">(</span><span class="n">l</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Alias for L1L2Lattice with L2 regularization.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l (float): L2 regularization factor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        L1L2Lattice: L1L2Lattice regularizer instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l2</span><span class="o">=</span><span class="n">l</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">l1_l2lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="n">l2</span><span class="p">)</span>
+<div class="viewcode-block" id="l1_l2lattice"><a class="viewcode-back" href="../../../api/das.morpholayers.regularizers.html#das.morpholayers.regularizers.l1_l2lattice">[docs]</a><span class="k">def</span> <span class="nf">l1_l2lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Alias for L1L2Lattice with both L1 and L2 regularization.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        l1 (float): L1 regularization factor.</span>
+<span class="sd">        l2 (float): L2 regularization factor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        L1L2Lattice: L1L2Lattice regularizer instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">L1L2Lattice</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="n">l2</span><span class="p">)</span></div>
 </pre></div>
         </article>
       </div>
@@ -369,22 +402,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

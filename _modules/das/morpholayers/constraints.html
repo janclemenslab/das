@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -233,6 +225,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -282,49 +278,85 @@
 <span class="kn">import</span> <span class="nn">skimage.morphology</span> <span class="k">as</span> <span class="nn">skm</span>
 <span class="kn">import</span> <span class="nn">scipy.ndimage.morphology</span> <span class="k">as</span> <span class="nn">snm</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">===============</span>
-<span class="sd">GLOBAL VARIABLE</span>
-<span class="sd">===============</span>
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="n">MIN_LATT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">MAX_LATT</span> <span class="o">=</span> <span class="mi">0</span>
 
 
-<span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
+<div class="viewcode-block" id="rounding_op1"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.rounding_op1">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
 <span class="k">def</span> <span class="nf">rounding_op1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Round the input tensor to the nearest tenth.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rounded tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">dy</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dy</span>
 
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="n">grad</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">,</span> <span class="n">grad</span></div>
 
 
-<span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
+<div class="viewcode-block" id="rounding_op2"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.rounding_op2">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
 <span class="k">def</span> <span class="nf">rounding_op2</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Round the input tensor to the nearest hundredth.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rounded tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">dy</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dy</span>
 
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="n">grad</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="n">grad</span></div>
 
 
-<span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
+<div class="viewcode-block" id="rounding_op3"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.rounding_op3">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
 <span class="k">def</span> <span class="nf">rounding_op3</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Round the input tensor to the nearest thousandth.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rounded tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">dy</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dy</span>
 
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">grad</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">grad</span></div>
 
 
-<span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
+<div class="viewcode-block" id="rounding_op4"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.rounding_op4">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
 <span class="k">def</span> <span class="nf">rounding_op4</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Round the input tensor to the nearest ten-thousandth.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        x (tf.Tensor): Input tensor.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tf.Tensor: Rounded tensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">dy</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">dy</span>
 
-    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">grad</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">grad</span></div>
 
 
 <div class="viewcode-block" id="Rounding"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.Rounding">[docs]</a><span class="k">class</span> <span class="nc">Rounding</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="c1"># Using Constraint to Round values</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights by rounding them to specified decimal places.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        c (int): Number of decimal places for rounding.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
 
@@ -344,9 +376,7 @@
 
 
 <div class="viewcode-block" id="NonPositive"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.NonPositive">[docs]</a><span class="k">class</span> <span class="nc">NonPositive</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constraint to NonPositive Values</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to be non-positive values.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
@@ -360,9 +390,7 @@
 
 
 <div class="viewcode-block" id="NonPositiveExtensive"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.NonPositiveExtensive">[docs]</a><span class="k">class</span> <span class="nc">NonPositiveExtensive</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constraint to NonPositive and Center equal to zero</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to be non-positive and centers equal to zero.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
@@ -372,7 +400,6 @@
         <span class="n">w</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># data_tf = tf.convert_to_tensor(data, np.float32)</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">w</span>
 
@@ -381,7 +408,8 @@
 
 
 <div class="viewcode-block" id="ZeroToOne"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.ZeroToOne">[docs]</a><span class="k">class</span> <span class="nc">ZeroToOne</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="c1"># Constraint between 0 to 1 Values</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to be between 0 and 1.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -394,9 +422,7 @@
 
 
 <div class="viewcode-block" id="Lattice"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.Lattice">[docs]</a><span class="k">class</span> <span class="nc">Lattice</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Contraint to Value Lattice Value</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to be within a lattice range.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
@@ -411,9 +437,7 @@
 
 
 <div class="viewcode-block" id="SEconstraint"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.SEconstraint">[docs]</a><span class="k">class</span> <span class="nc">SEconstraint</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constraint any SE Shape</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to any structured element (SE) shape.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">SE</span><span class="o">=</span><span class="n">skm</span><span class="o">.</span><span class="n">disk</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
@@ -433,17 +457,13 @@
 
 
 <div class="viewcode-block" id="Disk"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.Disk">[docs]</a><span class="k">class</span> <span class="nc">Disk</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constraint to Disk Shape</span>
-<span class="sd">    Only for square filters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to a disk shape (only for square filters).&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">MIN_LATT</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
-        <span class="c1"># print(&#39;DISK CONSTRAINT&#39;,w.shape)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">skm</span><span class="o">.</span><span class="n">disk</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -456,17 +476,13 @@
 
 
 <div class="viewcode-block" id="Diamond"><a class="viewcode-back" href="../../../api/das.morpholayers.constraints.html#das.morpholayers.constraints.Diamond">[docs]</a><span class="k">class</span> <span class="nc">Diamond</span><span class="p">(</span><span class="n">Constraint</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Constraint to Diamond Shape</span>
-<span class="sd">    Only for square filters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Constrains weights to a diamond shape (only for square filters).&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_value</span> <span class="o">=</span> <span class="n">MIN_LATT</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">MIN_LATT</span>
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
-        <span class="c1"># print(&#39;DIAMOND CONSTRAINT&#39;,w.shape)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">skm</span><span class="o">.</span><span class="n">diamond</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -521,22 +537,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

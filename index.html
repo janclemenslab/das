@@ -16,16 +16,6 @@
     <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -236,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -279,7 +273,7 @@
         <article role="main">
           <section id="welcome-to-das">
 <h1>Welcome to <em>DAS</em><a class="headerlink" href="#welcome-to-das" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-5"><em>DAS</em> — short for <em>Deep Audio Segmenter</em> — is a tool for annotating song
+<p><em>DAS</em> — short for <em>Deep Audio Segmenter</em> — is a tool for annotating song
 in audio recordings. At the core of <em>DAS</em> is a deep neural network,
 implemented in Tensorflow. The network takes single- and multi-channel
 audio as an input and returns the probability of finding a particular
@@ -288,8 +282,8 @@ interface for loading audio data, annotating song manually, training a
 network, and generating annotations on audio. Alternatively, <em>DAS</em> can
 be used programmatically from the command line, in python notebooks, or
 in your own python code via the <code class="docutils literal notranslate"><span class="pre">das</span></code> module.</p>
-<p class="linemarker linemarker-15">If you use <em>DAS</em>, please cite:</p>
-<p class="linemarker linemarker-17">Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan
+<p>If you use <em>DAS</em>, please cite:</p>
+<p>Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan
 Clemens (2021). <em>Fast and accurate annotation of acoustic signals with
 deep neural networks</em>, eLife,
 <a class="reference external" href="https://doi.org/10.7554/eLife.68837">https://doi.org/10.7554/eLife.68837</a></p>
@@ -314,7 +308,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="quickstart_fly.html"><span class="doc">Quick start tutorial (fly)</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-41">Annotate song, train a network, and predict on new samples.</p>
+<p class="card-text">Annotate song, train a network, and predict on new samples.</p>
 </div>
 </div>
 </div>
@@ -324,7 +318,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="tutorials_gui/tutorials_gui.html"><span class="doc">Using the GUI</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-52">Comprehensive description of all GUI dialogs and options.</p>
+<p class="card-text">Comprehensive description of all GUI dialogs and options.</p>
 </div>
 </div>
 </div>
@@ -334,7 +328,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="tutorials/tutorials.html"><span class="doc">Use in python and from the terminal</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-63">Convert your own data, train and evaluate a network, predict on new samples in realtime.</p>
+<p class="card-text">Convert your own data, train and evaluate a network, predict on new samples in realtime.</p>
 </div>
 </div>
 </div>
@@ -344,7 +338,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="unsupervised/unsupervised.html"><span class="doc">Classify</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-74">Discover song types in annotated syllables.</p>
+<p class="card-text">Discover song types in annotated syllables.</p>
 </div>
 </div>
 </div>
@@ -361,7 +355,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="technical/technical.html"><span class="doc">Technical details</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-88">Command-line interface and data structures.</p>
+<p class="card-text">Command-line interface and data structures.</p>
 </div>
 </div>
 </div>
@@ -371,7 +365,7 @@ deep neural networks</em>, eLife,
 <p class="card-text"><a class="sphinx-bs btn text-wrap stretched-link reference internal" href="api.html"><span class="doc">Developer API</span></a></p>
 </div>
 <div class="card-footer docutils">
-<p class="card-text linemarker linemarker-99">Comprehensive description of classes and functions.</p>
+<p class="card-text">Comprehensive description of classes and functions.</p>
 </div>
 </div>
 </div>
@@ -454,26 +448,6 @@ deep neural networks</em>, eLife,
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

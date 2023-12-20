@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -279,8 +275,8 @@
 <h1>Annotate audio in realtime<a class="headerlink" href="#annotate-audio-in-realtime" title="Permalink to this headline">#</a></h1>
 <section id="setup">
 <h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-10005">Test the latency of realtime annotations on a GPU (if you have one) or a CPU.</p>
-<p class="linemarker linemarker-10007">Disabling eager execution is crucial for low latency annotation - eager execution increases latencies 6-fold, from 5 ms to 30 ms.</p>
+<p>Test the latency of realtime annotations on a GPU (if you have one) or a CPU.</p>
+<p>Disabling eager execution is crucial for low latency annotation - eager execution increases latencies 6-fold, from 5 ms to 30 ms.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -360,7 +356,7 @@ CPUs: [PhysicalDevice(name=&#39;/physical_device:CPU:0&#39;, device_type=&#39;CP
 </section>
 <section id="load-a-recording">
 <h2>Load a recording<a class="headerlink" href="#load-a-recording" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-60003">Samplerates of the recording and of the data the model was trained with should match. Otherwise resample the recording to match the model using <code class="docutils literal notranslate"><span class="pre">scipy.signal.resample_poly(x=recording,</span> <span class="pre">up=int(recording_samplerate),</span> <span class="pre">down=int(samplerate),</span> <span class="pre">axis=0)</span></code></p>
+<p>Samplerates of the recording and of the data the model was trained with should match. Otherwise resample the recording to match the model using <code class="docutils literal notranslate"><span class="pre">scipy.signal.resample_poly(x=recording,</span> <span class="pre">up=int(recording_samplerate),</span> <span class="pre">down=int(samplerate),</span> <span class="pre">axis=0)</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">recording_samplerate</span><span class="p">,</span> <span class="n">recording</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;dat/dmel_song_rt.wav&#39;</span><span class="p">)</span>
@@ -384,7 +380,7 @@ CPUs: [PhysicalDevice(name=&#39;/physical_device:CPU:0&#39;, device_type=&#39;CP
 </section>
 <section id="define-a-virtual-microphone-for-testing">
 <h2>Define a virtual microphone for testing<a class="headerlink" href="#define-a-virtual-microphone-for-testing" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-80003">To demonstrate real-time inference, we create a virtual microphone that returns chunk of audio data in real time. The microphone takes a full recording and returns chunks of data at a rate determined by the chunk duration. In a real experimental setup, this would be a function that runs the data acquisition or a multi-processing queue that gets fed by the acquisition system.</p>
+<p>To demonstrate real-time inference, we create a virtual microphone that returns chunk of audio data in real time. The microphone takes a full recording and returns chunks of data at a rate determined by the chunk duration. In a real experimental setup, this would be a function that runs the data acquisition or a multi-processing queue that gets fed by the acquisition system.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">virtual_microphone</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
@@ -444,7 +440,7 @@ Consuming and plotting 100 chunks...
 </section>
 <section id="test-real-time-annotation">
 <h2>Test real-time annotation<a class="headerlink" href="#test-real-time-annotation" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-100003">Test the model and a simple song detection routine with a chunk that contains song. A specific song type is detect if the corresponding confidence exceeds 0.7 during a chunk.</p>
+<p>Test the model and a simple song detection routine with a chunk that contains song. A specific song type is detect if the corresponding confidence exceeds 0.7 during a chunk.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">report_song</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">pulse_index</span><span class="p">,</span> <span class="n">sine_index</span><span class="p">):</span>
@@ -484,7 +480,7 @@ Consuming and plotting 100 chunks...
 </section>
 <section id="run-annotation">
 <h2>Run annotation<a class="headerlink" href="#run-annotation" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-120003">Run the virtual microphone for 100 chunks to estimate annotation latencies.</p>
+<p>Run the virtual microphone for 100 chunks to estimate annotation latencies.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latencies</span> <span class="o">=</span> <span class="p">[]</span>
@@ -508,8 +504,8 @@ Consuming and plotting 100 chunks...
 </section>
 <section id="evaluate-latencies">
 <h2>Evaluate latencies<a class="headerlink" href="#evaluate-latencies" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-140003">Timing on GPUs can be more variable than on CPUs since a major contributor to latency is the transfer of data from/to the GPU.</p>
-<p class="linemarker linemarker-140005">Subtract the recording latency to get an estimate of the annotation latency.</p>
+<p>Timing on GPUs can be more variable than on CPUs since a major contributor to latency is the transfer of data from/to the GPU.</p>
+<p>Subtract the recording latency to get an estimate of the annotation latency.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">annotation_latencies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">latencies</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">recording_latencies</span><span class="p">)</span>
@@ -625,22 +621,6 @@ Consuming and plotting 100 chunks...
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

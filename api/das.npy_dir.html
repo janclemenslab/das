@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -277,11 +273,11 @@
         <article role="main">
           <section id="module-das.npy_dir">
 <span id="das-npy-dir"></span><h1>das.npy_dir<a class="headerlink" href="#module-das.npy_dir" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-1">Dict of dicts &lt;-&gt; hierarchy of npy files.</p>
-<p class="linemarker linemarker-3">Tools for working with dictionaries of dictionaries.
+<p>Dict of dicts &lt;-&gt; hierarchy of npy files.</p>
+<p>Tools for working with dictionaries of dictionaries.
 The keys of the first dictionary are mapped to directories.
 The values in the nested dictionary are saved as npy files with the key as the name.</p>
-<p class="linemarker linemarker-7">As an example, this code:
+<p>As an example, this code:
 <code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">data</span> <span class="pre">=</span> <span class="pre">{'first_level':</span> <span class="pre">{'song':</span> <span class="pre">some_data,</span> <span class="pre">'response':</span> <span class="pre">some_other_data}}</span>
 <span class="pre">data.attrs</span> <span class="pre">=</span> <span class="pre">{'song_name':</span> <span class="pre">'this</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">dream...',</span> <span class="pre">'response_name':</span> <span class="pre">'yeah'}</span>
@@ -290,17 +286,17 @@ The values in the nested dictionary are saved as npy files with the key as the n
 will result in a folder <code class="xref py py-obj docutils literal notranslate"><span class="pre">song_responses.npy</span></code> containing
 one subfolder <code class="xref py py-obj docutils literal notranslate"><span class="pre">first_level</span></code> with two npy files - <code class="xref py py-obj docutils literal notranslate"><span class="pre">song.npy</span></code> containing <code class="xref py py-obj docutils literal notranslate"><span class="pre">some_data</span></code> and
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">responses.npy</span></code> containing <code class="xref py py-obj docutils literal notranslate"><span class="pre">some_other_data</span></code>. The <code class="xref py py-obj docutils literal notranslate"><span class="pre">attrs</span></code> attribute can be used to store metadata and will be stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">song_responses.npy/attrs.npy</span></code>)</p>
-<p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">das.npy.load('song_responses.npy')</span></code> will restore the data with the metadata.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">das.npy.load('song_responses.npy')</span></code> will restore the data with the metadata.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.npy_dir.DictClass">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">DictClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/npy_dir.html#DictClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.DictClass" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Wrap dict in class so we can attach attrs to it.</p>
+<dd><p>Wrap dict in class so we can attach attrs to it.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.load">
 <span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memmap_dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#das.npy_dir.DictClass" title="das.npy_dir.DictClass"><span class="pre">das.npy_dir.DictClass</span></a></span></span><a class="reference internal" href="../_modules/das/npy_dir.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.load" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Load hierarchy of npy files into dict of dicts.</p>
+<dd><p>Load hierarchy of npy files into dict of dicts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -320,7 +316,7 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.save">
 <span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.npy_dir.DictClass" title="das.npy_dir.DictClass"><span class="pre">das.npy_dir.DictClass</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/das/npy_dir.html#save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.save" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Save nested dict in data to location as a directory with npy files dir.</p>
+<dd><p>Save nested dict in data to location as a directory with npy files dir.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -395,22 +391,6 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

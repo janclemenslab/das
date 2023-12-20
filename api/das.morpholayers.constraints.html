@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.morpholayers.initializers" href="das.morpholayers.initializers.html" /><link rel="prev" title="das.tcn.tcn_new" href="das.tcn.tcn_new.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.morpholayers.constraints - DAS documentation</title>
@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -171,7 +163,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
@@ -208,7 +200,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -280,13 +276,12 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Diamond">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">Diamond</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Diamond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Diamond" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Constraint to Diamond Shape
-Only for square filters.</p>
+<dd><p>Constrains weights to a diamond shape (only for square filters).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Diamond.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Diamond.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Diamond.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -300,13 +295,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Disk">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">Disk</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Disk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Disk" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Constraint to Disk Shape
-Only for square filters.</p>
+<dd><p>Constrains weights to a disk shape (only for square filters).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Disk.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Disk.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Disk.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -320,12 +314,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Lattice">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">Lattice</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Lattice" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Contraint to Value Lattice Value</p>
+<dd><p>Constrains weights to be within a lattice range.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Lattice.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Lattice.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Lattice.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -339,12 +333,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.NonPositive">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">NonPositive</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#NonPositive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.NonPositive" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Constraint to NonPositive Values</p>
+<dd><p>Constrains weights to be non-positive values.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.NonPositive.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#NonPositive.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.NonPositive.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -358,12 +352,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.NonPositiveExtensive">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">NonPositiveExtensive</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#NonPositiveExtensive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.NonPositiveExtensive" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Constraint to NonPositive and Center equal to zero</p>
+<dd><p>Constrains weights to be non-positive and centers equal to zero.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.NonPositiveExtensive.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#NonPositiveExtensive.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.NonPositiveExtensive.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -377,11 +371,17 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Rounding">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">Rounding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Rounding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Rounding" title="Permalink to this definition">#</a></dt>
-<dd><dl class="py method">
+<dd><p>Constrains weights by rounding them to specified decimal places.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>c</strong> (<em>int</em>) – Number of decimal places for rounding.</p>
+</dd>
+</dl>
+<dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.Rounding.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#Rounding.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.Rounding.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -395,12 +395,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.SEconstraint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">SEconstraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([[0,</span> <span class="pre">1,</span> <span class="pre">0],</span> <span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1],</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0]],</span> <span class="pre">dtype=uint8)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#SEconstraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.SEconstraint" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Constraint any SE Shape</p>
+<dd><p>Constrains weights to any structured element (SE) shape.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.SEconstraint.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#SEconstraint.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.SEconstraint.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -414,11 +414,12 @@ be used to reinstantiate the same object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.ZeroToOne">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">ZeroToOne</span></span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#ZeroToOne"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.ZeroToOne" title="Permalink to this definition">#</a></dt>
-<dd><dl class="py method">
+<dd><p>Constrains weights to be between 0 and 1.</p>
+<dl class="py method">
 <dt class="sig sig-object py" id="das.morpholayers.constraints.ZeroToOne.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#ZeroToOne.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.ZeroToOne.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns a Python dict of the object config.</p>
-<p class="linemarker linemarker-3">A constraint config is a Python dictionary (JSON-serializable) that can
+<dd><p>Returns a Python dict of the object config.</p>
+<p>A constraint config is a Python dictionary (JSON-serializable) that can
 be used to reinstantiate the same object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -429,6 +430,74 @@ be used to reinstantiate the same object.</p>
 
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.constraints.rounding_op1">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">rounding_op1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#rounding_op1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.rounding_op1" title="Permalink to this definition">#</a></dt>
+<dd><p>Round the input tensor to the nearest tenth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rounded tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.constraints.rounding_op2">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">rounding_op2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#rounding_op2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.rounding_op2" title="Permalink to this definition">#</a></dt>
+<dd><p>Round the input tensor to the nearest hundredth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rounded tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.constraints.rounding_op3">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">rounding_op3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#rounding_op3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.rounding_op3" title="Permalink to this definition">#</a></dt>
+<dd><p>Round the input tensor to the nearest thousandth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rounded tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.morpholayers.constraints.rounding_op4">
+<span class="sig-prename descclassname"><span class="pre">das.morpholayers.constraints.</span></span><span class="sig-name descname"><span class="pre">rounding_op4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/constraints.html#rounding_op4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.constraints.rounding_op4" title="Permalink to this definition">#</a></dt>
+<dd><p>Round the input tensor to the nearest ten-thousandth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rounded tensor.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tf.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -436,8 +505,26 @@ be used to reinstantiate the same object.</p>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="das.morpholayers.initializers.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">das.morpholayers.initializers</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="das.tcn.tcn_new.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">das.tcn.tcn_new</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -475,22 +562,6 @@ be used to reinstantiate the same object.</p>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

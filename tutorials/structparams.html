@@ -16,14 +16,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -277,15 +273,15 @@
         <article role="main">
           <section id="choice-of-structural-network-parameters">
 <h1>Choice of structural network parameters<a class="headerlink" href="#choice-of-structural-network-parameters" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-3"><em>DAS</em> performance is relatively robust to the choice of structural network parameters like filter duration and number, or network depth. The networks tested in (<a class="reference external" href="https://www.biorxiv.org/content/10.1101/2021.03.26.436927">Steinfath et al., 2021</a>) are good starting points for adapting <em>DAS</em> to your own data (see table below). In our experience, a network with 32 filters, filter duration 32 samples, 3 TCN blocks, and a chunk duration of 2048 samples will produce good results for most signals. An STFT-downsampling layer with 32 frequency band and 16x downsampling should be included for most signals except when the signals have a pulsatile character. Given that <em>DAS</em> trains quickly, network structure can be optimized by training <em>DAS</em> networks with different structural parameters, for instance to find the simplest network (in terms of number of filters and TCN blocks) that saturates performance but has the shortest latency. We here provide additional guidelines for choosing a network’s key structural parameters:</p>
-<p class="linemarker linemarker-5"><strong>The chunk duration</strong> corresponds to the length of audio the network processes in one step and constitutes an upper bound for the context information available to the network. Choose this sufficiently long so the network has access to key features of your signal. For instance, for fly song, we ensured that a single chunk encompasses several pulses in a train, so the network can learn to detect song pulses based on their regular occurrence in trains. Longer chunks relative to this timescale can reduce short false positive detections, for instance for fly sine song and for bird song. Given that increasing chunk duration does not increase the number of parameters for training, we recommend using long chunks unless low latency is of essence (see below). However, networks with longer chunks require more memory, which is often a limit on GPUs.</p>
-<p class="linemarker linemarker-7"><strong>Downsampling/STFT</strong> weakly affects performance but strongly accelerates convergence during training. This is because A) the initialization with STFT filters is a good prior that reduces the number of epochs it takes to learn the optimal filters, and B) the downsampling reduces the data bandwidth and thereby the time it takes to finish one training epoch. The overall increase in performance from adding the STFT layer is low because convolutional layers in the rest of the network can easily replicate the computations of the STFT layer. For short pulsatile signals or signals with low sampling rates, STFT and downsampling should be avoided since they can decrease performance due to the loss of temporal resolution.</p>
-<p class="linemarker linemarker-9"><strong>The number of TCN blocks</strong> controls the network’s depth. A deeper network can extract more high-level features, though we found that even for the spectro-temporally complex song of Bengalese finches, deeper networks only weakly improved performance.</p>
-<p class="linemarker linemarker-11"><strong>Multi-channel audio</strong> can be processed with multi-channel filters via full convolutions or with shared channel-wise filters via time-channel separable convolutions. This can be set on a per-TCN-block basis. We recommend to use separable convolutions in the first 1–2 layers, since basic feature extraction is typically the same for each channel. Later layers can then have full multi-channel filters to allow more complex combination of information across channels.</p>
-<p class="linemarker linemarker-13"><strong>Real-time performance</strong> can be optimized by the chunk duration and the network complexity (number and duration of filters, number of TCN blocks). We recommend starting with the default parameters suggested above and then benchmarking latency. If required, latency can be further reduced by reducing chunk duration, the number and duration of filters, and the number of TCN blocks.</p>
+<p><em>DAS</em> performance is relatively robust to the choice of structural network parameters like filter duration and number, or network depth. The networks tested in (<a class="reference external" href="https://www.biorxiv.org/content/10.1101/2021.03.26.436927">Steinfath et al., 2021</a>) are good starting points for adapting <em>DAS</em> to your own data (see table below). In our experience, a network with 32 filters, filter duration 32 samples, 3 TCN blocks, and a chunk duration of 2048 samples will produce good results for most signals. An STFT-downsampling layer with 32 frequency band and 16x downsampling should be included for most signals except when the signals have a pulsatile character. Given that <em>DAS</em> trains quickly, network structure can be optimized by training <em>DAS</em> networks with different structural parameters, for instance to find the simplest network (in terms of number of filters and TCN blocks) that saturates performance but has the shortest latency. We here provide additional guidelines for choosing a network’s key structural parameters:</p>
+<p><strong>The chunk duration</strong> corresponds to the length of audio the network processes in one step and constitutes an upper bound for the context information available to the network. Choose this sufficiently long so the network has access to key features of your signal. For instance, for fly song, we ensured that a single chunk encompasses several pulses in a train, so the network can learn to detect song pulses based on their regular occurrence in trains. Longer chunks relative to this timescale can reduce short false positive detections, for instance for fly sine song and for bird song. Given that increasing chunk duration does not increase the number of parameters for training, we recommend using long chunks unless low latency is of essence (see below). However, networks with longer chunks require more memory, which is often a limit on GPUs.</p>
+<p><strong>Downsampling/STFT</strong> weakly affects performance but strongly accelerates convergence during training. This is because A) the initialization with STFT filters is a good prior that reduces the number of epochs it takes to learn the optimal filters, and B) the downsampling reduces the data bandwidth and thereby the time it takes to finish one training epoch. The overall increase in performance from adding the STFT layer is low because convolutional layers in the rest of the network can easily replicate the computations of the STFT layer. For short pulsatile signals or signals with low sampling rates, STFT and downsampling should be avoided since they can decrease performance due to the loss of temporal resolution.</p>
+<p><strong>The number of TCN blocks</strong> controls the network’s depth. A deeper network can extract more high-level features, though we found that even for the spectro-temporally complex song of Bengalese finches, deeper networks only weakly improved performance.</p>
+<p><strong>Multi-channel audio</strong> can be processed with multi-channel filters via full convolutions or with shared channel-wise filters via time-channel separable convolutions. This can be set on a per-TCN-block basis. We recommend to use separable convolutions in the first 1–2 layers, since basic feature extraction is typically the same for each channel. Later layers can then have full multi-channel filters to allow more complex combination of information across channels.</p>
+<p><strong>Real-time performance</strong> can be optimized by the chunk duration and the network complexity (number and duration of filters, number of TCN blocks). We recommend starting with the default parameters suggested above and then benchmarking latency. If required, latency can be further reduced by reducing chunk duration, the number and duration of filters, and the number of TCN blocks.</p>
 <section id="structural-parameters-of-existing-networks">
 <h2>Structural parameters of existing networks<a class="headerlink" href="#structural-parameters-of-existing-networks" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-16">Use these parameter sets as starting points for designing your own networks. 16x STFT down sampling is achieved by setting  <code class="docutils literal notranslate"><span class="pre">pre_nb_conv=4</span></code>.</p>
+<p>Use these parameter sets as starting points for designing your own networks. 16x STFT down sampling is achieved by setting  <code class="docutils literal notranslate"><span class="pre">pre_nb_conv=4</span></code>.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="colwidths-auto docutils align-default">
 <thead>
@@ -462,22 +458,6 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

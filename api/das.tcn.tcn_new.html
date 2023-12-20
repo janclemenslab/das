@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.augmentation" href="das.kapre.augmentation.html" /><link rel="prev" title="das.tcn.tcn" href="das.tcn.tcn.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.morpholayers.constraints" href="das.morpholayers.constraints.html" /><link rel="prev" title="das.tcn.tcn" href="das.tcn.tcn.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.tcn.tcn_new - DAS documentation</title>
@@ -15,14 +15,6 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -234,6 +226,10 @@
 <li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.tcn.tcn_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.initializers.html">das.morpholayers.initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.layers.html">das.morpholayers.layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.morpholayers.regularizers.html">das.morpholayers.regularizers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.augmentation.html">das.kapre.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend.html">das.kapre.backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.kapre.backend_keras.html">das.kapre.backend_keras</a></li>
@@ -280,7 +276,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.tcn.tcn_new.</span></span><span class="sig-name descname"><span class="pre">ResidualBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Defines the residual block for the WaveNet TCN</p>
+<dd><p>Defines the residual block for the WaveNet TCN</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -303,12 +299,12 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock.build" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Creates the variables of the layer (optional, for subclass implementers).</p>
-<p class="linemarker linemarker-3">This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
+<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
+<p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
 layer instantiation and layer call. It is invoked automatically before
 the first execution of <a class="reference internal" href="#das.tcn.tcn_new.ResidualBlock.call" title="das.tcn.tcn_new.ResidualBlock.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
-<p class="linemarker linemarker-8">This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
 (at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -323,7 +319,7 @@ the first execution of <a class="reference internal" href="#das.tcn.tcn_new.Resi
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock.call" title="Permalink to this definition">#</a></dt>
 <dd><dl class="simple">
-<dt>Returns: A tuple where the first element is the residual model tensor, and the second</dt><dd><p class="linemarker linemarker-2">is the skip connection tensor.</p>
+<dt>Returns: A tuple where the first element is the residual model tensor, and the second</dt><dd><p>is the skip connection tensor.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -331,8 +327,8 @@ the first execution of <a class="reference internal" href="#das.tcn.tcn_new.Resi
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.ResidualBlock.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#ResidualBlock.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.ResidualBlock.compute_output_shape" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Computes the output shape of the layer.</p>
-<p class="linemarker linemarker-3">This method will cause the layer’s state to be built, if that has not
+<dd><p>Computes the output shape of the layer.</p>
+<p>This method will cause the layer’s state to be built, if that has not
 happened before. This requires that the layer will later be used with
 inputs that match the input shape provided here.</p>
 <dl class="field-list simple">
@@ -353,9 +349,9 @@ instead of an integer.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.TCN">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.tcn.tcn_new.</span></span><span class="sig-name descname"><span class="pre">TCN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#TCN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.TCN" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Creates a TCN layer.</p>
+<dd><p>Creates a TCN layer.</p>
 <dl class="simple">
-<dt>Input shape:</dt><dd><p class="linemarker linemarker-4">A tensor of shape (batch_size, timesteps, input_dim).</p>
+<dt>Input shape:</dt><dd><p>A tensor of shape (batch_size, timesteps, input_dim).</p>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -384,12 +380,12 @@ Use unique names when using multiple TCN.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.TCN.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#TCN.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.TCN.build" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Creates the variables of the layer (optional, for subclass implementers).</p>
-<p class="linemarker linemarker-3">This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
+<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
+<p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
 layer instantiation and layer call. It is invoked automatically before
 the first execution of <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
-<p class="linemarker linemarker-8">This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
 (at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -403,47 +399,47 @@ the first execution of <a class="reference internal" href="#das.tcn.tcn_new.TCN.
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.TCN.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#TCN.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.TCN.call" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">This is where the layer’s logic lives.</p>
-<p class="linemarker linemarker-3">The <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+<dd><p>This is where the layer’s logic lives.</p>
+<p>The <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
 wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
 It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <a class="reference internal" href="#das.tcn.tcn_new.TCN.build" title="das.tcn.tcn_new.TCN.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code></a> method
 that is called automatically before <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – <p class="linemarker linemarker-8">Input tensor, or dict/list/tuple of input tensors.
+<li><p><strong>inputs</strong> – <p>Input tensor, or dict/list/tuple of input tensors.
 The first positional <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> argument is subject to special rules:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> must be explicitly passed. A layer cannot have zero</p>
 <blockquote>
-<div><p class="linemarker linemarker-11">arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
+<div><p>arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
 of a keyword argument.</p>
 </div></blockquote>
 <ul>
-<li><p class="linemarker linemarker-13">NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
-<li><p class="linemarker linemarker-14">Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p class="linemarker linemarker-15">Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
+<li><p>NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
+<li><p>Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p>Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
 using shape info from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p class="linemarker linemarker-18">Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p>Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
 If a layer has tensor arguments in <code class="xref py py-obj docutils literal notranslate"><span class="pre">*args</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">**kwargs</span></code>, their
 casting behavior in mixed precision should be handled manually.</p></li>
-<li><p class="linemarker linemarker-21">The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p class="linemarker linemarker-22">Integration with various ecosystem packages like TFMOT, TFLite,
+<li><p>The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
+<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
 TF.js, etc is only supported for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and not for tensors in
 positional and keyword arguments.</p></li>
 </ul>
 </p></li>
 <li><p><strong>*args</strong> – Additional positional arguments. May contain tensors, although
 this is not recommended, for the reasons above.</p></li>
-<li><p><strong>**kwargs</strong> – <p class="linemarker linemarker-27">Additional keyword arguments. May contain tensors, although
+<li><p><strong>**kwargs</strong> – <p>Additional keyword arguments. May contain tensors, although
 this is not recommended, for the reasons above.
 The following optional keyword arguments are reserved:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code>: Boolean scalar tensor of Python boolean indicating</p>
 <blockquote>
-<div><p class="linemarker linemarker-31">whether the <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
+<div><p>whether the <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
 </div></blockquote>
 <ul>
-<li><p class="linemarker linemarker-32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.tcn.tcn_new.TCN.call" title="das.tcn.tcn_new.TCN.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code> argument, its default value will be set to the mask generated
 for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> by the previous layer (if <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code> did come from a layer
 that generated a corresponding mask, i.e. if it came from a Keras
@@ -461,13 +457,13 @@ layer with masking support).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.TCN.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#TCN.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.TCN.compute_output_shape" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Overridden in case keras uses it somewhere… no idea. Just trying to avoid future errors.</p>
+<dd><p>Overridden in case keras uses it somewhere… no idea. Just trying to avoid future errors.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.TCN.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#TCN.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.TCN.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Returns the config of a the layer. This is used for saving and loading from a model
+<dd><p>Returns the config of a the layer. This is used for saving and loading from a model
 :return: python dictionary with specs to rebuild layer</p>
 </dd></dl>
 
@@ -476,8 +472,8 @@ layer with masking support).</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.tcn.tcn_new.channel_normalization">
 <span class="sig-prename descclassname"><span class="pre">das.tcn.tcn_new.</span></span><span class="sig-name descname"><span class="pre">channel_normalization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">keras.engine.base_layer.Layer</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">keras.engine.base_layer.Layer</span></span></span><a class="reference internal" href="../_modules/das/tcn/tcn_new.html#channel_normalization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.tcn.tcn_new.channel_normalization" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Normalize a layer to the maximum activation</p>
-<p class="linemarker linemarker-3">This keeps a layers values between zero and one.
+<dd><p>Normalize a layer to the maximum activation</p>
+<p>This keeps a layers values between zero and one.
 It helps with relu’s unbounded activation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -496,12 +492,12 @@ It helps with relu’s unbounded activation</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.kapre.augmentation.html">
+          <a class="next-page" href="das.morpholayers.constraints.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.kapre.augmentation</div>
+                <div class="title">das.morpholayers.constraints</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -553,22 +549,6 @@ It helps with relu’s unbounded activation</p>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
