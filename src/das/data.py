@@ -106,7 +106,7 @@ class AudioSequence(keras.utils.Sequence):
         mask_input: Optional[int] = None,
         batch_processor: Optional[Callable[[np.ndarray], np.ndarray]] = None,
         class_weights: Optional[Sequence[float]] = None,
-        **kwargs
+        **kwargs,
     ):
         """[summary]
 

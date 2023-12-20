@@ -39,6 +39,10 @@ Developer API
    das.utils_plot
    das.tcn.tcn
    das.tcn.tcn_new
+   das.morpholayers.constraints
+   das.morpholayers.initializers
+   das.morpholayers.layers
+   das.morpholayers.regularizers
    das.kapre.augmentation
    das.kapre.backend
    das.kapre.backend_keras

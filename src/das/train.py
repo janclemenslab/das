@@ -41,7 +41,7 @@ def train(
     ignore_boundaries: bool = True,
     batch_norm: bool = True,
     nb_pre_conv: int = 0,
-    pre_nb_conv: int = 3,
+    # pre_nb_conv: int = 3,
     pre_nb_dft: int = 64,
     pre_kernel_size: int = 3,
     pre_nb_filters: int = 16,
@@ -492,7 +492,8 @@ def train(
 
         save_filename = "{0}_results.h5".format(save_name)
         logger.info(f"   Saving to {save_filename}.")
-        del params["data_splits"]  # paths with '/' break flammkuchen/pytables
+        if "data_splits" in params:
+            del params["data_splits"]  # paths with '/' break flammkuchen/pytables
         results_dict = {
             "fit_hist": dict(fit_hist.history),
             "confusion_matrix": conf_mat,

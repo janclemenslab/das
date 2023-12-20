@@ -19,16 +19,18 @@ requirements:
     - python {{ python }}
     - pip
     - h5py
-    - numpy<1.24
+    - numpy  # <1.24
   run:
     - python {{ python }}
     - rich
     - flammkuchen
     - matplotlib
     - pandas
-    - numpy<1.24
+    - numpy  # <1.24
     - peakutils
     - pyyaml
+    - defopt=6.3
+    - pyside2
     - scikit-learn
     - scikit-image
     - tqdm

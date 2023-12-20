@@ -150,7 +150,7 @@ def make_annotation_matrix(
         class_names, _ = infer_class_info(df)
     class_matrix = np.zeros((nb_samples, len(class_names)))
     for _, row in df.iterrows():
-        if not row["name"] in class_names:
+        if row["name"] not in class_names:
             continue
         if np.all(np.isnan(row["start_seconds"])):
             continue
