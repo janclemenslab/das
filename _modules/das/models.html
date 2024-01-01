@@ -277,7 +277,7 @@
 <span class="kn">import</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">as</span> <span class="nn">kl</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras</span> <span class="kn">import</span> <span class="n">regularizers</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.applications.resnet_v2</span> <span class="kn">import</span> <span class="n">ResNet50V2</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span> <span class="k">as</span> <span class="n">tcn_layer</span>
 <span class="kn">from</span> <span class="nn">.kapre.time_frequency</span> <span class="kn">import</span> <span class="n">Spectrogram</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">spec_utils</span>
@@ -602,11 +602,30 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="n">morph_kernel_duration</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="c1"># from .morpholayers.constraints import Disk</span>
+    <span class="c1"># import skimage.morphology as skm</span>
+    <span class="c1"># def ser(length):</span>
+    <span class="c1">#     return skm.rectangle(length, 1)</span>
+    <span class="c1"># skimage.morphology.remove_small_holes</span>
+    <span class="c1"># skimage.morphology.remove_small_objects</span>
+    <span class="n">morph_kernel_duration</span> <span class="o">=</span> <span class="mi">33</span>
     <span class="k">if</span> <span class="n">morph_kernel_duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">Closing2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">Opening2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Closing2D</span><span class="p">(</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
+            <span class="c1"># kernel_constraint=ser,</span>
+        <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Opening2D</span><span class="p">(</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
+            <span class="c1"># kernel_constraint=ser,</span>
+        <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>

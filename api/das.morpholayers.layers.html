@@ -4940,21 +4940,27 @@ if they want to modify it.</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.closing2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">closing2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#closing2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.closing2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Basic Closing Operator.</p>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
+</dd>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides are only applied in the second operator (erosion).</p>
+</dd>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates are only applied in the second operator (erosion).</p>
+</dd>
+</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides are only applied in the second operator (erosion).</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates are only applied in the second operator (erosion).</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of the closing operation.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the closing operation.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4981,21 +4987,21 @@ if they want to modify it.</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.convolution2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">convolution2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#convolution2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.convolution2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Basic Convolution Operator (Depthwise).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides as classical convolutional layers.</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates as classical convolutional layers.</p></li>
-</ul>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the convolution.</p>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides as classical convolutional layers.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates as classical convolutional layers.</p>
+</dd>
+<dt>Returns</dt><dd><p>tf.Tensor: Result of the convolution.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5004,21 +5010,27 @@ if they want to modify it.</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.dilation2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">dilation2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#dilation2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.dilation2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Basic Dilation Operator.</p>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
+</dd>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides as classical convolutional layers.</p>
+</dd>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates as classical convolutional layers.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides as classical convolutional layers.</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates as classical convolutional layers.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of the dilation.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the dilation.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5041,21 +5053,27 @@ if they want to modify it.</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.erosion2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">erosion2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#erosion2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.erosion2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Basic Erosion Operator.</p>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
+</dd>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides as classical convolutional layers.</p>
+</dd>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates as classical convolutional layers.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides as classical convolutional layers.</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates as classical convolutional layers.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of the erosion.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the erosion.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5063,7 +5081,7 @@ if they want to modify it.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.extended_maxima_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">extended_maxima_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#extended_maxima_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.extended_maxima_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>extended maxima transform of image X[1] with h=X[0]</p>
+<dd><p>Extended maxima transform of image X[1] with h=X[0]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5176,38 +5194,37 @@ K steps reconstruction by erosion.</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.get_lines">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">get_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#get_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.get_lines" title="Permalink to this definition">#</a></dt>
 <dd><p>Get lines.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sw</strong> (<em>int</em>) – Size of the lines.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tensor containing lines.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
-</dd>
-</dl>
+<p>Args:
+sw (int): Size of the lines.</p>
+<p>Returns:
+tf.Tensor: Tensor containing lines.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.gradient2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">gradient2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#gradient2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.gradient2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Gradient Operator.</p>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
+</dd>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides are only applied in the second operator (erosion).</p>
+</dd>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates are only applied in the second operator (erosion).</p>
+</dd>
+</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides are only applied in the second operator (erosion).</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates are only applied in the second operator (erosion).</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of the gradient operation.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the gradient operation.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5215,7 +5232,7 @@ K steps reconstruction by erosion.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.h_concave_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">h_concave_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#h_concave_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.h_concave_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>h-convex transform of image X[1] with h=X[0]</p>
+<dd><p>H-convex transform of image X[1] with h=X[0]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5229,7 +5246,7 @@ K steps reconstruction by erosion.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.h_convex_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">h_convex_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#h_convex_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.h_convex_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>h-convex transform of image X[1] with h=X[0]</p>
+<dd><p>H-convex transform of image X[1] with h=X[0]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5243,7 +5260,7 @@ K steps reconstruction by erosion.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.h_maxima_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">h_maxima_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#h_maxima_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.h_maxima_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>h-maxima transform of image X[1] with h=X[0]</p>
+<dd><p>H-maxima transform of image X[1] with h=X[0]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5257,7 +5274,7 @@ K steps reconstruction by erosion.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.h_minima_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">h_minima_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#h_minima_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.h_minima_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>h-maxima transform of image X[1] with h=X[0]</p>
+<dd><p>H-maxima transform of image X[1] with h=X[0]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5341,21 +5358,27 @@ K steps morphological Distance</p>
 <dt class="sig sig-object py" id="das.morpholayers.layers.opening2d">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">opening2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">st_element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">1)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#opening2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.opening2d" title="Permalink to this definition">#</a></dt>
 <dd><p>Basic Opening Operator.</p>
+<p>Args:
+x : tf.Tensor</p>
+<blockquote>
+<div><p>Input tensor.</p>
+</div></blockquote>
+<dl class="simple">
+<dt>st_element<span class="classifier">tf.Tensor</span></dt><dd><p>Nonflat structuring element.</p>
+</dd>
+<dt>strides<span class="classifier">tuple</span></dt><dd><p>Strides are only applied in the second operator (dilation).</p>
+</dd>
+<dt>padding<span class="classifier">str</span></dt><dd><p>Padding as classical convolutional layers.</p>
+</dd>
+<dt>rates<span class="classifier">tuple, optional</span></dt><dd><p>Rates are only applied in the second operator (dilation).</p>
+</dd>
+</dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>tf.Tensor</em>) – Input tensor.</p></li>
-<li><p><strong>st_element</strong> (<em>tf.Tensor</em>) – Nonflat structuring element.</p></li>
-<li><p><strong>strides</strong> (<em>tuple</em>) – Strides are only applied in the second operator (dilation).</p></li>
-<li><p><strong>padding</strong> (<em>str</em>) – Padding as classical convolutional layers.</p></li>
-<li><p><strong>rates</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Rates are only applied in the second operator (dilation).</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Result of the opening operation.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Result of the opening operation.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tf.Tensor</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tf.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
@@ -5394,7 +5417,7 @@ K steps morphological Distance</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.region_maxima_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">region_maxima_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#region_maxima_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.region_maxima_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>region maxima transform of image X</p>
+<dd><p>Region maxima transform of image X</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>
@@ -5408,7 +5431,7 @@ K steps morphological Distance</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.morpholayers.layers.region_minima_transform">
 <span class="sig-prename descclassname"><span class="pre">das.morpholayers.layers.</span></span><span class="sig-name descname"><span class="pre">region_minima_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/morpholayers/layers.html#region_minima_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.morpholayers.layers.region_minima_transform" title="Permalink to this definition">#</a></dt>
-<dd><p>region minima transform of image X</p>
+<dd><p>Region minima transform of image X</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>X</strong> – Input tensor.</p>

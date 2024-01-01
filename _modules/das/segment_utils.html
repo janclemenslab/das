@@ -390,7 +390,7 @@
     <span class="sd">&quot;&quot;&quot;Compute the Levenshtein edit distance normalized by length of `true`.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        true (str): Ground truth labels for a sequence of syllables.</span>
+<span class="sd">        true (str): Ground truth labels for a sequence of syllables. For instance, &#39;ABCDAAE&#39;.</span>
 <span class="sd">        pred (str): Predicted labels for a sequence of syllables.</span>
 
 <span class="sd">    Raises:</span>
@@ -400,7 +400,7 @@
 <span class="sd">        float: Levenshtein distance normalized by length of `true`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">true</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">true</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Both `true` and `pred` must be of type `str`&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">levenshtein</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">true</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">true</span><span class="p">)</span></div>
