@@ -35,7 +35,7 @@ requirements:
     - scikit-image
     - tqdm
     - xarray-behave>=0.34.0
-    - apple::tensorflow-deps=2.13
+    # - apple::tensorflow-deps=2.13
     - keras
     - keras-tuner
 
