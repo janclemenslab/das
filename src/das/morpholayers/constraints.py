@@ -5,17 +5,21 @@ from tensorflow.keras import backend as K
 import skimage.morphology as skm
 import scipy.ndimage.morphology as snm
 
-"""
-===============
-GLOBAL VARIABLE
-===============
-"""
 MIN_LATT = -1
 MAX_LATT = 0
 
 
 @tf.custom_gradient
 def rounding_op1(x):
+    """Round the input tensor to the nearest tenth.
+
+    Args:
+        x (tf.Tensor): Input tensor.
+
+    Returns:
+        tf.Tensor: Rounded tensor.
+    """
+
     def grad(dy):
         return dy
 
@@ -24,6 +28,15 @@ def rounding_op1(x):
 
 @tf.custom_gradient
 def rounding_op2(x):
+    """Round the input tensor to the nearest hundredth.
+
+    Args:
+        x (tf.Tensor): Input tensor.
+
+    Returns:
+        tf.Tensor: Rounded tensor.
+    """
+
     def grad(dy):
         return dy
 
@@ -32,6 +45,15 @@ def rounding_op2(x):
 
 @tf.custom_gradient
 def rounding_op3(x):
+    """Round the input tensor to the nearest thousandth.
+
+    Args:
+        x (tf.Tensor): Input tensor.
+
+    Returns:
+        tf.Tensor: Rounded tensor.
+    """
+
     def grad(dy):
         return dy
 
@@ -40,6 +62,15 @@ def rounding_op3(x):
 
 @tf.custom_gradient
 def rounding_op4(x):
+    """Round the input tensor to the nearest ten-thousandth.
+
+    Args:
+        x (tf.Tensor): Input tensor.
+
+    Returns:
+        tf.Tensor: Rounded tensor.
+    """
+
     def grad(dy):
         return dy
 
@@ -47,7 +78,12 @@ def rounding_op4(x):
 
 
 class Rounding(Constraint):
-    # Using Constraint to Round values
+    """Constrains weights by rounding them to specified decimal places.
+
+    Args:
+        c (int): Number of decimal places for rounding.
+    """
+
     def __init__(self, c=4):
         self.c = c
 
@@ -67,9 +103,7 @@ class Rounding(Constraint):
 
 
 class NonPositive(Constraint):
-    """
-    Constraint to NonPositive Values
-    """
+    """Constrains weights to be non-positive values."""
 
     def __init__(self):
         self.min_value = MIN_LATT
@@ -83,9 +117,7 @@ class NonPositive(Constraint):
 
 
 class NonPositiveExtensive(Constraint):
-    """
-    Constraint to NonPositive and Center equal to zero
-    """
+    """Constrains weights to be non-positive and centers equal to zero."""
 
     def __init__(self):
         self.min_value = MIN_LATT
@@ -95,7 +127,6 @@ class NonPositiveExtensive(Constraint):
         w = K.clip(w, self.min_value, 0)
         data = np.ones(w.shape)
         data[int(w.shape[0] / 2), int(w.shape[1] / 2), :, :] = 0
-        # data_tf = tf.convert_to_tensor(data, np.float32)
         w = tf.multiply(w, tf.convert_to_tensor(data, np.float32))
         return w
 
@@ -104,7 +135,8 @@ class NonPositiveExtensive(Constraint):
 
 
 class ZeroToOne(Constraint):
-    # Constraint between 0 to 1 Values
+    """Constrains weights to be between 0 and 1."""
+
     def __init__(self):
         self.min_value = 0.0
         self.max_value = 1.0
@@ -117,9 +149,7 @@ class ZeroToOne(Constraint):
 
 
 class Lattice(Constraint):
-    """
-    Contraint to Value Lattice Value
-    """
+    """Constrains weights to be within a lattice range."""
 
     def __init__(self):
         self.min_value = MIN_LATT
@@ -134,9 +164,7 @@ class Lattice(Constraint):
 
 
 class SEconstraint(Constraint):
-    """
-    Constraint any SE Shape
-    """
+    """Constrains weights to any structured element (SE) shape."""
 
     def __init__(self, SE=skm.disk(1)):
         self.min_value = MIN_LATT
@@ -156,17 +184,13 @@ class SEconstraint(Constraint):
 
 
 class Disk(Constraint):
-    """
-    Constraint to Disk Shape
-    Only for square filters.
-    """
+    """Constrains weights to a disk shape (only for square filters)."""
 
     def __init__(self):
         self.min_value = MIN_LATT
         self.max_value = -MIN_LATT
 
     def __call__(self, w):
-        # print('DISK CONSTRAINT',w.shape)
         data = skm.disk(int(w.shape[0] / 2))
         data = np.repeat(data[:, :, np.newaxis], w.shape[2], axis=2)
         data = np.repeat(data[:, :, :, np.newaxis], w.shape[3], axis=3)
@@ -179,17 +203,13 @@ class Disk(Constraint):
 
 
 class Diamond(Constraint):
-    """
-    Constraint to Diamond Shape
-    Only for square filters.
-    """
+    """Constrains weights to a diamond shape (only for square filters)."""
 
     def __init__(self):
         self.min_value = MIN_LATT
         self.max_value = -MIN_LATT
 
     def __call__(self, w):
-        # print('DIAMOND CONSTRAINT',w.shape)
         data = skm.diamond(int(w.shape[0] / 2))
         data = np.repeat(data[:, :, np.newaxis], w.shape[2], axis=2)
         data = np.repeat(data[:, :, :, np.newaxis], w.shape[3], axis=3)

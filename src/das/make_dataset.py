@@ -51,7 +51,7 @@ def init_store(
     for target in ["train", "val", "test"]:
         root.empty(name=f"{target}/x", shape=(0, nb_channels), chunks=(chunk_len, nb_channels), dtype=np.float16)
         root.empty(name=f"{target}/y", shape=(0, nb_classes), chunks=(chunk_len, nb_classes), dtype=np.float16)
-        # root.empty(name=f'{target}/eventtimes', shape=(0, nb_classes), chunks=(1_000,), dtype=np.float)
+        # root.empty(name=f'{target}/eventtimes', shape=(0, nb_classes), chunks=(1_000,), dtype=float)
         if make_single_class_datasets:
             for class_name in class_names[1:]:
                 root.empty(name=f"{target}/y_{class_name}", shape=(0, 2), chunks=(chunk_len, nb_classes), dtype=np.float16)
@@ -209,7 +209,7 @@ def make_gaps(
     gap_halfwidth = int(np.floor(gap_seconds * samplerate) / 2)
 
     # widen gaps between adjacent syllables of different types
-    a = y.copy().astype(np.float)
+    a = y.copy().astype(float)
     label_change = np.where(np.diff(a, axis=0) != 0)[0]
     # remove on and offsets (0->label or label->0)
     onset = a[label_change] == 0

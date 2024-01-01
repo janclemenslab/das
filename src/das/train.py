@@ -34,6 +34,7 @@ def train(
     save_name: Optional[str] = None,
     model_name: str = "tcn",
     nb_filters: int = 16,
+    nb_kernels: Optional[int] = None,
     kernel_size: int = 16,
     nb_conv: int = 3,
     use_separable: List[bool] = False,
@@ -41,10 +42,11 @@ def train(
     ignore_boundaries: bool = True,
     batch_norm: bool = True,
     nb_pre_conv: int = 0,
-    # pre_nb_conv: int = 3,
+    pre_nb_conv: Optional[int] = None,
     pre_nb_dft: int = 64,
     pre_kernel_size: int = 3,
     pre_nb_filters: int = 16,
+    pre_nb_kernels: Optional[int] = None,
     upsample: bool = True,
     dilations: Optional[List[int]] = None,
     nb_lstm_units: int = 0,
@@ -136,9 +138,9 @@ def train(
                           Number of filters is pre_nb_dft // 2 + 1.
                           Defaults to 64.
         pre_nb_filters (int): Number of filters per layer in the pre-processing TCN.
-                              Defaults to 16.
+                              Defaults to 16. Deprecated.
         pre_kernel_size (int): Duration of filters (=kernels) in samples in the pre-processing TCN.
-                               Defaults to 3.
+                               Defaults to 3. Deprecated.
         upsample (bool): whether or not to restore the model output to the input samplerate.
                          Should generally be True during training and evaluation but my speed up inference.
                          Defaults to True.
@@ -193,7 +195,6 @@ def train(
                         Defaults to False.
         version_data (bool): Save MD5 hash of the data_dir to log and params.yaml.
                              Defaults to True (set to False for large datasets since it can be slow).
-
         post_opt (bool): Optimize post processing (delete short detections, fill brief gaps).
                         Defaults to False.
         post_opt_nb_workers (int): Number of parallel processes during post_opt. Defaults to -1 (same number as cores).
@@ -243,6 +244,12 @@ def train(
         raise ValueError(
             "Stride <=0 - needs to be >0. Possible solutions: reduce kernel_size, increase nb_hist parameters, uncheck ignore_boundaries"
         )
+
+    # update deprected:
+    if pre_nb_conv is not None:
+        nb_pre_conv = pre_nb_conv
+    if nb_kernels is not None:
+        nb_filters = nb_kernels
 
     if not upsample:
         output_stride = int(2**nb_pre_conv)
@@ -414,6 +421,7 @@ def train(
         wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
         if wandb:
             callbacks.append(wandb.callback())
+            params["wandb_run_name"] = wandb.run.name
 
     utils.save_params(params, save_name)
 

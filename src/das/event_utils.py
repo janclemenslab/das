@@ -71,7 +71,7 @@ def match_events(eventindices_true, eventindices_pred, tol=100):
     nearest_event = np.zeros_like(eventindices_pred)
     # find nearest true event for each predicted event
     _, nearest_event, nearest_dist = find_nearest(eventindices_true, eventindices_pred)
-    nearest_event = nearest_event.astype(np.float)
+    nearest_event = nearest_event.astype(float)
 
     # flag those that have no nearby event
     nearest_event = np.ma.masked_array(nearest_event, mask=nearest_dist > tol)

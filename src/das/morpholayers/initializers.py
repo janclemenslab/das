@@ -5,23 +5,18 @@ from tensorflow.keras.initializers import Initializer
 import skimage.morphology as skm
 import scipy.ndimage.morphology as snm
 
-
 MIN_LATT = -1
 MAX_LATT = 0
 
 
 class MinusOnesZeroCenter(Initializer):
-    """
-    Initializer that generates tensors initialized to -1 except for center value.
+    """Initializer that generates tensors initialized to -1 except for center value.
 
-    :Example:
+    Args:
+        None
 
-    >>> from keras.models import Sequential,Model
-    >>> from keras.layers import Input
-    >>> xin=Input(shape=(28,28,3))
-    >>> x=Erosion2D(7,kernel_size=(5,5)))(xin)
-    >>>>model = Model(xin,x)
-
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __call__(self, shape, dtype=None):
@@ -31,8 +26,13 @@ class MinusOnesZeroCenter(Initializer):
 
 
 class SparseZeros(Initializer):
-    """
-    Initializer that generates tensors initialized to MIN_LATT except for center value.
+    """Initializer that generates tensors initialized to MIN_LATT except for center value.
+
+    Args:
+        th (float): Threshold for generating sparse zeros.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, th=0.85):
@@ -42,18 +42,20 @@ class SparseZeros(Initializer):
         data = np.random.random(shape)
         data = (data > self.th) * 1.0
         data = data + MIN_LATT
-        # data[int(shape[0]/2),int(shape[1]/2),:,:]=0
         return tf.convert_to_tensor(data, np.float32)
 
-    # TODO: Check dtype
-
     def get_config(self):
-        return {"th": self.thminval}
+        return {"th": self.th}
 
 
 class SparseNumZeros(Initializer):
-    """
-    Initializer that generates tensors initialized to MIN_LATT except for center value.
+    """Initializer that generates tensors initialized to MIN_LATT except for center value.
+
+    Args:
+        th (int): Number of zeros to generate.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, th=0):
@@ -64,18 +66,22 @@ class SparseNumZeros(Initializer):
         v = np.sort(data.flatten())
         data = (data <= v[self.th]) * 1.0
         data = data + MIN_LATT
-        # data[int(shape[0]/2),int(shape[1]/2),:,:]=0
         return tf.convert_to_tensor(data, np.float32)
 
-    # TODO: Check dtype
-
     def get_config(self):
-        return {"th": self.thminval}
+        return {"th": self.th}
 
 
 class SignedOnes(Initializer):
-    """
-    Initializer that generates tensors initialized to Random -1 or 1 values.
+    """Initializer that generates tensors initialized to random -1 or 1 values.
+
+    Args:
+        minval (float): Lower bound of the range of random values.
+        maxval (float): Upper bound of the range of random values.
+        seed (int): Seed for the random generator.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, minval=MIN_LATT, maxval=-MIN_LATT, seed=None):
@@ -90,16 +96,17 @@ class SignedOnes(Initializer):
         return data
 
     def get_config(self):
-        return {
-            "minval": self.minval,
-            "maxval": self.maxval,
-            "seed": self.seed,
-        }
+        return {"minval": self.minval, "maxval": self.maxval, "seed": self.seed}
 
 
 class MinusOnes(Initializer):
-    """
-    Initializer that generates tensors initialized to Minus Ones.
+    """Initializer that generates tensors initialized to -1.
+
+    Args:
+        None
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __call__(self, shape, dtype=None):
@@ -107,11 +114,15 @@ class MinusOnes(Initializer):
 
 
 class RandomLattice(Initializer):
-    """
-    Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).
-    :param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.
-    :param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.
-    :param seed: A Python integer. Used to seed the random generator.
+    """Initializer that generates tensors with a uniform distribution (MIN_LATT,MAX_LATT).
+
+    Args:
+        minval (float): Lower bound of the range of random values.
+        maxval (float): Upper bound of the range of random values.
+        seed (int): Seed for the random generator.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, minval=MIN_LATT, maxval=MAX_LATT, seed=None):
@@ -126,19 +137,18 @@ class RandomLattice(Initializer):
         return data
 
     def get_config(self):
-        return {
-            "minval": self.minval,
-            "maxval": self.maxval,
-            "seed": self.seed,
-        }
+        return {"minval": self.minval, "maxval": self.maxval, "seed": self.seed}
 
 
 class RandomLatticewithZero(Initializer):
-    """
-    Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).
-    :param minval: A python scalar or a scalar tensor. Lower bound of the range of random values to generate.
-    :param maxval: A python scalar or a scalar tensor. Upper bound of the range of random values to generate.  Defaults to 1 for float types.
-    :param seed: A Python integer. Used to seed the random generator.
+    """Initializer that generates tensors with a uniform distribution (MIN_LATT,-MIN_LATT).
+
+    Args:
+        minval (float): Lower bound of the range of random values.
+        maxval (float): Upper bound of the range of random values.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, minval=MIN_LATT, maxval=MAX_LATT):
@@ -146,20 +156,23 @@ class RandomLatticewithZero(Initializer):
         self.maxval = maxval
 
     def __call__(self, shape, dtype=None):
-        data = K.random_uniform(shape, self.minval, self.maxval, dtype=dtype, seed=self.seed)
+        data = K.random_uniform(shape, self.minval, self.maxval, dtype=dtype)
         data[int(shape[0] / 2), int(shape[1] / 2), :, :] = 0
         return tf.convert_to_tensor(data, np.float32)
 
     def get_config(self):
-        return {
-            "minval": self.minval,
-            "maxval": self.maxval,
-        }
+        return {"minval": self.minval, "maxval": self.maxval}
 
 
 class Quadratic(Initializer):
-    """
-    Initializer with Quadratic
+    """Initializer with quadratic values.
+
+    Args:
+        tvalue (float): T-value for distance transform.
+        cvalue (float): Constant multiplier.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, tvalue=2, cvalue=0.2):
@@ -180,13 +193,19 @@ class Quadratic(Initializer):
 
 
 class SEinitializer(Initializer):
-    """
-    Initializer to a SE.
+    """Initializer to a Structured Element (SE).
+
+    Args:
+        SE (np.ndarray): Structured Element.
+        minval (float): Minimum value.
+
+    Returns:
+        tf.Tensor: Initialized tensor.
     """
 
     def __init__(self, SE=None, minval=None):
         self.SE = SE
-        if minval == None:
+        if minval is None:
             self.minval = MIN_LATT
         else:
             self.minval = minval

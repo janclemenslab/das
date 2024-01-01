@@ -4,7 +4,7 @@ import tensorflow.keras as keras
 import tensorflow.keras.layers as kl
 from tensorflow.keras import regularizers
 from tensorflow.keras.applications.resnet_v2 import ResNet50V2
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
 from . import spec_utils
@@ -329,11 +329,30 @@ def tcn_stft_morph(
 
     x = kl.Dense(nb_classes, activation="softmax")(x)
 
-    morph_kernel_duration = 16
+    # from .morpholayers.constraints import Disk
+    # import skimage.morphology as skm
+    # def ser(length):
+    #     return skm.rectangle(length, 1)
+    # skimage.morphology.remove_small_holes
+    # skimage.morphology.remove_small_objects
+    morph_kernel_duration = 33
     if morph_kernel_duration is not None:
         x = x[:, :, tf.newaxis, :]
-        x = Closing2D(1, padding="same", kernel_size=(morph_kernel_duration, 1), kernel_regularization=l1lattice(0.002))(x)
-        x = Opening2D(1, padding="same", kernel_size=(morph_kernel_duration, 1), kernel_regularization=l1lattice(0.002))(x)
+        x = Closing2D(
+            num_filters=1,
+            padding="same",
+            kernel_size=(morph_kernel_duration, 1),
+            kernel_regularization=l1lattice(0.002),
+            # kernel_constraint=ser,
+        )(x)
+        x = Opening2D(
+            num_filters=1,
+            padding="same",
+            kernel_size=(morph_kernel_duration, 1),
+            kernel_regularization=l1lattice(0.002),
+            # kernel_constraint=ser,
+        )(x)
+
         x = x[..., 0, :]
 
     if nb_pre_conv > 0 and upsample:

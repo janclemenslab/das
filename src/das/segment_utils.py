@@ -117,7 +117,7 @@ def syllable_error_rate(true: str, pred: str) -> float:
     """Compute the Levenshtein edit distance normalized by length of `true`.
 
     Args:
-        true (str): Ground truth labels for a sequence of syllables.
+        true (str): Ground truth labels for a sequence of syllables. For instance, 'ABCDAAE'.
         pred (str): Predicted labels for a sequence of syllables.
 
     Raises:
@@ -127,7 +127,7 @@ def syllable_error_rate(true: str, pred: str) -> float:
         float: Levenshtein distance normalized by length of `true`.
     """
 
-    if type(true) != str or type(pred) != str:
+    if not isinstance(true, str) or not isinstance(pred, str):
         raise TypeError("Both `true` and `pred` must be of type `str`")
 
     return levenshtein(pred, true) / len(true)

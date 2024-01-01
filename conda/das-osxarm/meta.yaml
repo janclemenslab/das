@@ -18,15 +18,15 @@ requirements:
   host:
     - python {{ python }}
     - pip
-    - h5py
-    - numpy  # <1.24
+    # - h5py
+    # - numpy
   run:
     - python {{ python }}
     - rich
     - flammkuchen
     - matplotlib
     - pandas
-    - numpy  # <1.24
+    - numpy
     - peakutils
     - pyyaml
     - defopt=6.3
@@ -34,8 +34,8 @@ requirements:
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave
-    - apple::tensorflow-deps=2.9
+    - xarray-behave>=0.34.0
+    - apple::tensorflow-deps=2.13
     - keras
     - keras-tuner
 

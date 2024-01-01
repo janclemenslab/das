@@ -1,8 +1,7 @@
 """
-==========
 References
-==========
-Implementation of Morphological Layers  [1]_, [2]_, [3]_, [4]_
+----------
+Implementation of Morphological Layers [1]_, [2]_, [3]_, [4]_
 
 .. [1] Serra, J. (1983) Image Analysis and Mathematical Morphology.
        Academic Press, Inc. Orlando, FL, USA
@@ -28,19 +27,27 @@ import scipy.ndimage.morphology as snm
 from skimage.draw import line
 
 """
-===============
-GLOBAL VARIABLE
-===============
+Global Variables
+----------------
+MIN_LATT : float
+    Minimum lattice value.
 """
 
 """
-=========
-GET_LINES
-=========
+Get Lines
+---------
 """
 
 
 def get_lines(sw):
+    """Get lines.
+
+    Args:
+    sw (int): Size of the lines.
+
+    Returns:
+    tf.Tensor: Tensor containing lines.
+    """
     FilterLines = []
     for i in range(sw):
         img = np.zeros((sw, sw), dtype=np.float32)
@@ -55,21 +62,28 @@ def get_lines(sw):
     return K.stack(FilterLines, axis=-1)
 
 
-"""
-===================
-Classical Operators
-===================
-"""
+"""Classical Operators"""
 
 
 @tf.function
 def convolution2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Convolution Operator (Depthwise)
-    :param st_element: Nonflat structuring element
-    :strides: strides as classical convolutional layers
-    :padding: padding as classical convolutional layers
-    :rates: rates as classical convolutional layers
+    """Basic Convolution Operator (Depthwise).
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides as classical convolutional layers.
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates as classical convolutional layers.
+
+    Returns
+        tf.Tensor: Result of the convolution.
+
     """
     x = tf.nn.depthwise_conv2d(x, tf.expand_dims(st_element, 3), (1,) + strides + (1,), padding.upper(), "NHWC", rates)
     return x
@@ -77,12 +91,25 @@ def convolution2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def dilation2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Dilation Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides as classical convolutional layers
-    :padding: padding as classical convolutional layers
-    :rates: rates as classical convolutional layers
+    """Basic Dilation Operator.
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides as classical convolutional layers.
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates as classical convolutional layers.
+
+    Returns
+    -------
+    tf.Tensor
+        Result of the dilation.
+
     """
     x = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
     return x
@@ -90,9 +117,25 @@ def dilation2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def erosion2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Erosion Operator
-    :param st_element: Nonflat structuring element
+    """Basic Erosion Operator.
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides as classical convolutional layers.
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates as classical convolutional layers.
+
+    Returns
+    -------
+    tf.Tensor
+        Result of the erosion.
+
     """
     x = tf.nn.erosion2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
     return x
@@ -100,12 +143,25 @@ def erosion2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def opening2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Opening Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (dilation)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (dilation)
+    """Basic Opening Operator.
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides are only applied in the second operator (dilation).
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates are only applied in the second operator (dilation).
+
+    Returns
+    -------
+    tf.Tensor
+        Result of the opening operation.
+
     """
     x = tf.nn.erosion2d(x, st_element, (1,) + (1, 1) + (1,), padding.upper(), "NHWC", (1,) + (1, 1) + (1,))
     x = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
@@ -114,12 +170,25 @@ def opening2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def closing2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Closing Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (erosion)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (erosion)
+    """Basic Closing Operator.
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides are only applied in the second operator (erosion).
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates are only applied in the second operator (erosion).
+
+    Returns
+    -------
+    tf.Tensor
+        Result of the closing operation.
+
     """
     x = tf.nn.dilation2d(x, st_element, (1,) + (1, 1) + (1,), padding.upper(), "NHWC", (1,) + (1, 1) + (1,))
     x = tf.nn.erosion2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
@@ -128,12 +197,25 @@ def closing2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def gradient2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Gradient Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (erosion)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (erosion)
+    """Gradient Operator.
+
+    Args:
+    x : tf.Tensor
+        Input tensor.
+    st_element : tf.Tensor
+        Nonflat structuring element.
+    strides : tuple
+        Strides are only applied in the second operator (erosion).
+    padding : str
+        Padding as classical convolutional layers.
+    rates : tuple, optional
+        Rates are only applied in the second operator (erosion).
+
+    Returns
+    -------
+    tf.Tensor
+        Result of the gradient operation.
+
     """
     x = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,)) - tf.nn.erosion2d(
         x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,)
@@ -141,44 +223,60 @@ def gradient2d(x, st_element, strides, padding, rates=(1, 1)):
     return x
 
 
+import tensorflow as tf
+
+
 @tf.function
 def internalgradient2d(x, st_element, strides, padding, rates=(1, 1)):
+    """Internal Gradient Operator
+
+    Args:
+        x: Input tensor.
+        st_element: Nonflat structuring element.
+        strides: Strides applied in the second operator (erosion).
+        padding: Padding as classical convolutional layers.
+        rates: Rates applied in the second operator (erosion).
+
+    Returns:
+        Tensor after applying the internal gradient operator.
     """
-    Internal Gradient Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (erosion)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (erosion)
-    """
-    # TODO CHECK STRIDES AND RATES
     x = x - tf.nn.erosion2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
     return x
 
 
 @tf.function
 def externalgradient2d(x, st_element, strides, padding, rates=(1, 1)):
+    """External Gradient Operator
+
+    Args:
+        x: Input tensor.
+        st_element: Nonflat structuring element.
+        strides: Strides applied in the second operator (erosion).
+        padding: Padding as classical convolutional layers.
+        rates: Rates applied in the second operator (erosion).
+
+    Returns:
+        Tensor after applying the external gradient operator.
     """
-    External Gradient Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (erosion)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (erosion)
-    """
-    # TODO CHECK STRIDES AND RATES
     x = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,)) - x
     return x
 
 
 @tf.function
 def togglemapping2d(x, st_element, strides=(1, 1), padding="same", rates=(1, 1), steps=5):
+    """Toggle Mapping Operator
+
+    Args:
+        x: Input tensor.
+        st_element: Nonflat structuring element.
+        strides: Strides applied in the second operator (erosion).
+        padding: Padding as classical convolutional layers.
+        rates: Rates applied in the second operator (erosion).
+        steps: Number of toggle mapping steps.
+
+    Returns:
+        Tensor after applying the toggle mapping operator.
     """
-    Toggle Mapping Operator
-    :param st_element: Nonflat structuring element
-    :strides: strides are only applied in second operator (erosion)
-    :padding: padding as classical convolutional layers
-    :rates: rates are only applied in second operator (erosion)
-    """
-    # TODO CHECK STRIDES AND RATES
     for _ in range(steps):
         d = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
         e = tf.nn.erosion2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
@@ -190,12 +288,14 @@ def togglemapping2d(x, st_element, strides=(1, 1), padding="same", rates=(1, 1),
 
 @tf.function
 def togglemapping(X, steps=5):
-    """
-    K steps of toggle mapping operator
-    :X is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(reconstruction_dilation, name="reconstruction")([Mask,Image])
+    """K steps of toggle mapping operator
+
+    Args:
+        X: Input tensor.
+        steps: Number of toggle mapping steps.
+
+    Returns:
+        Tensor after applying K steps of toggle mapping operator.
     """
     for _ in range(steps):
         d = tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding="same")(X)
@@ -208,12 +308,17 @@ def togglemapping(X, steps=5):
 
 @tf.function
 def antidilation2d(x, st_element, strides, padding, rates=(1, 1)):
-    """
-    Basic Dilation Operator of the negative of the input image
-    :param st_element: Nonflat structuring element
-    :strides: strides as classical convolutional layers
-    :padding: padding as classical convolutional layers
-    :rates: rates as classical convolutional layers
+    """Basic Dilation Operator of the negative of the input image
+
+    Args:
+        x: Input tensor.
+        st_element: Nonflat structuring element.
+        strides: Strides as classical convolutional layers.
+        padding: Padding as classical convolutional layers.
+        rates: Rates as classical convolutional layers.
+
+    Returns:
+        Tensor after applying the basic dilation operator.
     """
     x = tf.nn.dilation2d(-x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
     return x
@@ -221,17 +326,20 @@ def antidilation2d(x, st_element, strides, padding, rates=(1, 1)):
 
 @tf.function
 def antierosion2d(x, st_element, strides, padding, rates=(1, 1)):
+    """Basic Erosion Operator of the negative of the input image
+
+    Args:
+        x: Input tensor.
+        st_element: Nonflat structuring element.
+        strides: Strides as classical convolutional layers.
+        padding: Padding as classical convolutional layers.
+        rates: Rates as classical convolutional layers.
+
+    Returns:
+        Tensor after applying the basic erosion operator.
     """
-    Basic Erosion Operator of the negative of the input image
-    :param st_element: Nonflat structuring element
-    c"""
     x = tf.nn.erosion2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,))
     return x
-
-
-# @tf.function
-# def tophatopening2D(x, st_element, strides, padding,rates=(1, 1)):
-# TODO RESIDUAL OPERATORS CONSIDERING STRIDES,PADDING and RATES
 
 
 class BiasLayer(tf.keras.layers.Layer):
@@ -245,32 +353,48 @@ class BiasLayer(tf.keras.layers.Layer):
         return x + self.bias
 
 
-"""
-==========================
-Operator by Reconstruction
-==========================
-"""
+"""Operator by Reconstruction"""
 
 
 @tf.function
 def condition_equal(last, new, image):
+    """Check if two tensors are not equal element-wise.
+
+    Args:
+        last: Previous tensor.
+        new: Current tensor.
+        image: Image tensor.
+
+    Returns:
+        Boolean tensor indicating if the tensors are not equal element-wise.
+    """
     return tf.math.logical_not(tf.reduce_all(tf.math.equal(last, new)))
 
 
 def update_dilation(last, new, mask):
+    """Update the dilation step during reconstruction.
+
+    Args:
+        last: Previous tensor.
+        new: Current tensor.
+        mask: Mask tensor.
+
+    Returns:
+        Updated tensors for the next dilation step.
+    """
     return [new, geodesic_dilation_step([new, mask]), mask]
 
 
 @tf.function
 def geodesic_dilation_step(X):
+    """1 step of reconstruction by dilation.
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after one step of geodesic dilation.
     """
-    1 step of reconstruction by dilation
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(geodesic_dilation_step, name="reconstruction")([Mask,Image])
-    """
-    # perform a geodesic dilation with X[0] as marker, and X[1] as mask
     return tf.keras.layers.Minimum()(
         [tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding="same")(X[0]), X[1]]
     )
@@ -278,45 +402,59 @@ def geodesic_dilation_step(X):
 
 @tf.function
 def geodesic_dilation(X, steps=None):
-    """
-    Full reconstruction by dilation if steps=None, else
-    K steps reconstruction by dilation
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(geodesic_dilation, name="reconstruction")([Mask,Image])
+    """Full reconstruction by dilation if steps=None, else
+    K steps reconstruction by dilation.
+
+    Args:
+        X: Input tensor.
+        steps: Number of steps (None for complete reconstruction).
+
+    Returns:
+        Tensor after geodesic dilation.
     """
     rec = X[0]
-    # Full reconstruction is steps==None by dilation, else: partial reconstruction
     rec = geodesic_dilation_step([rec, X[1]])
     _, rec, _ = tf.while_loop(condition_equal, update_dilation, [X[0], rec, X[1]], maximum_iterations=steps)
     return rec
 
 
 def reconstruction_dilation(X):
-    """
-    Full geodesic reconstruction by dilation, reaching idempotence
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(reconstruction_dilation, name="reconstruction")([Mask,Image])
+    """Full geodesic reconstruction by dilation, reaching idempotence.
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after full geodesic reconstruction by dilation.
     """
     return geodesic_dilation(X, steps=None)
 
 
 def update_erosion(last, new, mask):
+    """Update the erosion step during reconstruction.
+
+    Args:
+        last: Previous tensor.
+        new: Current tensor.
+        mask: Mask tensor.
+
+    Returns:
+        Updated tensors for the next erosion step.
+    """
     return [new, geodesic_erosion_step([new, mask]), mask]
 
 
 @tf.function
 def geodesic_erosion_step(X):
     """
-    1 step of reconstruction by erosion
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :Example:
-    >>>Lambda(geodesic_erosion_step, name="reconstruction")([Mask,Image])
+    1 step of reconstruction by erosion.
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after one step of geodesic erosion.
     """
-    # geodesic erosion with X[0] as marker, and X[1] as mask
     return tf.keras.layers.Maximum()(
         [-tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding="same")(-X[0]), X[1]]
     )
@@ -324,17 +462,17 @@ def geodesic_erosion_step(X):
 
 @tf.function
 def geodesic_erosion(X, steps=None):
+    """Full reconstruction by erosion if steps=None, else
+    K steps reconstruction by erosion.
+
+    Args:
+        X: Input tensor.
+        steps: Number of steps (None for complete reconstruction).
+
+    Returns:
+        Tensor after geodesic erosion.
     """
-    Full reconstruction by erosion if steps=None, else
-    K steps reconstruction by erosion
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default None (Complete Reconstruction))
-    :Example:
-    >>>Lambda(geodesic_erosion, name="geodesic_erosion")([Mask,Image])
-    """
-    # Use in Keras: Lambda(geodesic_erosion, name="reconstruction")([Mask,Image])
     rec = X[0]
-    # Full reconstruction by erosion is steps==None, else :partial reconstruction
     rec = geodesic_erosion_step([rec, X[1]])
     _, rec, _ = tf.while_loop(condition_equal, update_erosion, [X[0], rec, X[1]], maximum_iterations=steps)
 
@@ -342,24 +480,27 @@ def geodesic_erosion(X, steps=None):
 
 
 def reconstruction_erosion(X, steps=None):
-    """
-    Full geodesic reconstruction by erosion, reaching idempotence
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default None)
-    :Example:
-    >>>Lambda(reconstruction_dilation, name="reconstruction")([Mask,Image])
+    """Full geodesic reconstruction by erosion, reaching idempotence
+
+    Args:
+        X: Input tensor.
+        steps: Number of steps (by default None).
+
+    Returns:
+        Tensor after full geodesic reconstruction by erosion.
     """
     return geodesic_erosion(X, steps=None)
 
 
 @tf.function
 def leveling_iteration(X):
-    """
-    K steps of reconstruction by dilation
-    :X tensor: X[0] is the Mask and X[1] is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(reconstruction_dilation, name="reconstruction")([Mask,Image])
+    """K steps of reconstruction by dilation
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after K steps of reconstruction by dilation.
     """
     return tf.keras.layers.Maximum()(
         [
@@ -387,24 +528,29 @@ def update_distance(new, count):
 
 @tf.function
 def distance_step(X):
+    """One step of morphological distance by dilation
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after one step of morphological distance by dilation.
     """
-    One step of morphological distance by dilation
-    X tensor: X[0] is the object and X[1] is temporal distance
-    """
-    # perform a geodesic dilation with X[0] as marker, and X[1] as mask
     Z = tf.keras.layers.MaxPooling2D(pool_size=(3, 3), strides=(1, 1), padding="same")(X[0])
     return [Z, Z + X[1]]
 
 
 @tf.function
 def morphological_distance(X, steps=None):
-    """
-    Morphological Distance Transform if steps=None, else
+    """Morphological Distance Transform if steps=None, else
     K steps morphological Distance
-    :X tensor: X[0] is a binary image (The method stops when there are no values equal to zero.)
-    :param steps: number of steps (None means iterate util non-zero values))
-    :Example:
-    >>>Lambda(morphological_distance, name="distance transform")(Image)
+
+    Args:
+        X: Input tensor.
+        steps: Number of steps (None means iterate until non-zero values).
+
+    Returns:
+        Tensor after morphological distance transform.
     """
     count = X
     new = X
@@ -414,37 +560,32 @@ def morphological_distance(X, steps=None):
 
 @tf.function
 def leveling(X, steps=None):
-    """
-    Perform Leveling from Marker
-    Inputs:
-    Marker (4D np.array) : marker chosen
-    I (4D np.array) : input image with shape (1, width, height, channels)
-    Output:
-    4D np.array, (1, widht, height, 1) which is the leveling
-    :Example:
-    >>>Lambda(leveling, name="leveling")([Mask,Image])
+    """Perform Leveling from Marker
+
+    Args:
+        X: Input tensor.
+        steps: Number of steps.
+
+    Returns:
+        Tensor after performing leveling from marker.
     """
     lev = leveling_iteration([X[0], X[1]])
     _, lev, _ = tf.while_loop(condition_equal, update_leveling, [X[0], lev, X[1]], maximum_iterations=steps)
     return lev
 
 
-"""
-==============================
-Reconstruction based operators
-==============================
-"""
+"""Reconstruction based operators"""
 
 
 @tf.function
 def h_maxima_transform(X):
-    """
-    h-maxima transform of image X[1] with h=X[0]
-    :X tensor: X[0] is h and X[1] is the Image
-               X[0] and X[1] are 4th order tensors of same shape
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(h_maxima_transform, name="h-maxima")([h,Image])
+    """H-maxima transform of image X[1] with h=X[0]
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after h-maxima transform.
     """
     h = X[0]
     Mask = X[1]
@@ -454,13 +595,13 @@ def h_maxima_transform(X):
 
 @tf.function
 def h_minima_transform(X):
-    """
-    h-maxima transform of image X[1] with h=X[0]
-    :X tensor: X[0] is h and X[1] is the Image
-               X[0] and X[1] are 4th order tensors of same shape
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(h_minima_transform, name="h-minima")([h,Image])
+    """H-maxima transform of image X[1] with h=X[0]
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after h-minima transform.
     """
     h = X[0]
     Mask = X[1]
@@ -471,13 +612,13 @@ def h_minima_transform(X):
 
 @tf.function
 def h_convex_transform(X):
-    """
-    h-convex transform of image X[1] with h=X[0]
-    :X tensor: X[0] is h and X[1] is the Image
-               X[0] and X[1] are 4th order tensors of same shape
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(h_convex_transform, name="h_convex_transform")([h,Image])
+    """H-convex transform of image X[1] with h=X[0]
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after h-convex transform.
     """
     h = X[0]
     Mask = X[1]
@@ -487,13 +628,13 @@ def h_convex_transform(X):
 
 @tf.function
 def h_concave_transform(X):
-    """
-    h-convex transform of image X[1] with h=X[0]
-    :X tensor: X[0] is h and X[1] is the Image
-               X[0] and X[1] are 4th order tensors of same shape
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(h_concave_transform, name="h_concave_transform")([h,Image])
+    """H-convex transform of image X[1] with h=X[0]
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after h-concave transform.
     """
     h = X[0]
     Mask = X[1]
@@ -503,25 +644,26 @@ def h_concave_transform(X):
 
 @tf.function
 def region_maxima_transform(X):
-    """
-    region maxima transform of image X
-    X range has to be [0, 1]
-    :X tensor: X is the Image
-    :Example:
-    >>>Lambda(region_maxima_transform, name="region_maxima_transform")([h,Image])
+    """Region maxima transform of image X
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after region maxima transform.
     """
     return h_convex_transform([tf.convert_to_tensor([[1.0 / 255.0]]), X])
 
 
 @tf.function
 def region_minima_transform(X):
-    """
-    region minima transform of image X
-    X range has to be [0, 1]
-    :X tensor: X is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(region_minima_transform, name="region_minima_transform")([h,Image])
+    """Region minima transform of image X
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after region minima transform.
     """
     h = 1.0 / 255.0
     return h_concave_transform([tf.convert_to_tensor([[1.0 / 255.0]]), X])
@@ -529,13 +671,13 @@ def region_minima_transform(X):
 
 @tf.function
 def extended_maxima_transform(X):
-    """
-    extended maxima transform of image X[1] with h=X[0]
-    X range has to be [0, 1]
-    :X tensor: X is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(extended_maxima_transform, name="extended_maxima_transform")([h,Image])
+    """Extended maxima transform of image X[1] with h=X[0]
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after extended maxima transform.
     """
     return region_maxima_transform(h_maxima_transform(X))
 
@@ -544,11 +686,12 @@ def extended_maxima_transform(X):
 def extended_minima_transform(X):
     """
     extended minima transform of image X[1] with h=X[0]
-    X range has to be [0, 1]
-    :X tensor: X is the Image
-    :param steps: number of steps (by default NUM_ITER_REC)
-    :Example:
-    >>>Lambda(extended_minima_transform, name="extended_minima_transform")([h,Image])
+
+    Args:
+        X: Input tensor.
+
+    Returns:
+        Tensor after extended minima transform.
     """
     return region_minima_transform(h_minima_transform(X))
 
