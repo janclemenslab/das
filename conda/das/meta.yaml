@@ -22,8 +22,8 @@ requirements:
   host:
     - python {{ python }}
     - pip
-    - h5py
-    - numpy>=1.23
+    # - h5py
+    # - numpy>=1.23
   run:
     - python {{ python }}
     - rich
@@ -31,7 +31,7 @@ requirements:
     - h5py
     - matplotlib
     - pandas
-    - numpy>=1.23
+    # - numpy>=1.23
     - peakutils
     - pyyaml
     - scikit-learn
