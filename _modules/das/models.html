@@ -4,16 +4,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.models - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -288,14 +288,14 @@
 
 
 <span class="k">def</span> <span class="nf">_register_as_model</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[modelname: modelfunc]. For selecting models by string.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds func to model_dict Dict[modelname: modelfunc]. For selecting models by string.&quot;&quot;&quot;</span>
     <span class="n">model_dict</span><span class="p">[</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
     <span class="k">return</span> <span class="n">func</span>
 
 
 <div class="viewcode-block" id="tcn"><a class="viewcode-back" href="../../api/das.models.html#das.models.tcn">[docs]</a><span class="nd">@_register_as_model</span>
 <span class="k">def</span> <span class="nf">tcn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Synonym for tcn_stft.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Synonym for tcn_stft.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">tcn_stft</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -318,6 +318,8 @@
     <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
     <span class="n">nb_lstm_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">morph_nb_kernels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">morph_kernel_duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
     <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span>
     <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -325,7 +327,7 @@
     <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
@@ -349,6 +351,8 @@
 <span class="sd">                                    Defaults to 64.</span>
 <span class="sd">        learning_rate (float, optional) Defaults to 0.0005</span>
 <span class="sd">        nb_lstm_units (int, optional): Defaults to 0.</span>
+<span class="sd">        morph_nb_kernels (int): Defaults to 0 (no morphological kernels).</span>
+<span class="sd">        morph_kernel_duration (int): Defaults to 32.</span>
 <span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
 <span class="sd">                                   Should generally be True during training and evaluation but may speed up inference.</span>
 <span class="sd">                                   Defaults to True.</span>
@@ -403,6 +407,24 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">morph_nb_kernels</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Closing2D</span><span class="p">(</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="n">morph_nb_kernels</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
+            <span class="c1"># kernel_constraint=ser,</span>
+        <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">Opening2D</span><span class="p">(</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="n">morph_nb_kernels</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
+            <span class="c1"># kernel_constraint=ser,</span>
+        <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+
     <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">UpSampling1D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">**</span><span class="n">nb_pre_conv</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
@@ -433,7 +455,7 @@
     <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
@@ -517,6 +539,8 @@
     <span class="n">nb_pre_conv</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">pre_nb_dft</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
     <span class="n">nb_lstm_units</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">morph_nb_kernels</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">morph_kernel_duration</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
     <span class="n">learning_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0005</span><span class="p">,</span>
     <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -524,7 +548,7 @@
     <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        nb_freq (int): [description]</span>
@@ -547,7 +571,9 @@
 <span class="sd">                                    Number of filters is pre_nb_dft // 2 + 1.</span>
 <span class="sd">                                    Defaults to 64.</span>
 <span class="sd">        learning_rate (float, optional) Defaults to 0.0005</span>
-<span class="sd">        nb_lstm_units (int, optional): Defaults to 0.</span>
+<span class="sd">        nb_lstm_units (int, optional): Defaults to 0 (no lstm units).</span>
+<span class="sd">        morph_nb_kernels (int): Defaults to 1 (no morphological kernels).</span>
+<span class="sd">        morph_kernel_duration (int): Defaults to 33.</span>
 <span class="sd">        upsample (bool, optional): whether or not to restore the model output to the input samplerate.</span>
 <span class="sd">                                   Should generally be True during training and evaluation but may speed up inference.</span>
 <span class="sd">                                   Defaults to True.</span>
@@ -602,30 +628,22 @@
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">kl</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">nb_classes</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;softmax&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="c1"># from .morpholayers.constraints import Disk</span>
-    <span class="c1"># import skimage.morphology as skm</span>
-    <span class="c1"># def ser(length):</span>
-    <span class="c1">#     return skm.rectangle(length, 1)</span>
-    <span class="c1"># skimage.morphology.remove_small_holes</span>
-    <span class="c1"># skimage.morphology.remove_small_objects</span>
-    <span class="n">morph_kernel_duration</span> <span class="o">=</span> <span class="mi">33</span>
-    <span class="k">if</span> <span class="n">morph_kernel_duration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">morph_nb_kernels</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">tf</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Closing2D</span><span class="p">(</span>
-            <span class="n">num_filters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="n">morph_nb_kernels</span><span class="p">,</span>
             <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
             <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
             <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
             <span class="c1"># kernel_constraint=ser,</span>
         <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">Opening2D</span><span class="p">(</span>
-            <span class="n">num_filters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">num_filters</span><span class="o">=</span><span class="n">morph_nb_kernels</span><span class="p">,</span>
             <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span>
             <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="n">morph_kernel_duration</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
             <span class="n">kernel_regularization</span><span class="o">=</span><span class="n">l1lattice</span><span class="p">(</span><span class="mf">0.002</span><span class="p">),</span>
             <span class="c1"># kernel_constraint=ser,</span>
         <span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
 
     <span class="k">if</span> <span class="n">nb_pre_conv</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">upsample</span><span class="p">:</span>
@@ -663,9 +681,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -683,11 +699,8 @@
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
+    <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

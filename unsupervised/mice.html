@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Technical details" href="../technical/technical.html" /><link rel="prev" title="Song of Bengalese finches" href="birds.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>Ultrasonic vocalizations from mice - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,8 +273,8 @@
         <article role="main">
           <section id="ultrasonic-vocalizations-from-mice">
 <h1>Ultrasonic vocalizations from mice<a class="headerlink" href="#ultrasonic-vocalizations-from-mice" title="Permalink to this headline">#</a></h1>
-<p>Mouse USVs do not cluster into discrete types but lie on a continuous, low-dimensional manifold.</p>
-<p>We here closely follow the procedure described in Sainburg et al. (2020): Finding, visualizing, and quantifying latent structure across (see code on <a class="reference external" href="https://github.com/timsainb/avgn_paper">github</a>).</p>
+<p class="linemarker linemarker-10003">Mouse USVs do not cluster into discrete types but lie on a continuous, low-dimensional manifold.</p>
+<p class="linemarker linemarker-10005">We here closely follow the procedure described in Sainburg et al. (2020): Finding, visualizing, and quantifying latent structure across (see code on <a class="reference external" href="https://github.com/timsainb/avgn_paper">github</a>).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -296,7 +296,7 @@
 </div>
 <section id="download-audio-data">
 <h2>Download audio data<a class="headerlink" href="#download-audio-data" title="Permalink to this headline">#</a></h2>
-<p>Data kindly provided by Kurt Hammerschmidt and published in A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz (2020) Classifying sex and strain from mouse ultrasonic vocalizations using deep learning. PLoS Comput Biol 16(6): e1007918.</p>
+<p class="linemarker linemarker-30003">Data kindly provided by Kurt Hammerschmidt and published in A Ivanenko, P Watkins, MAJ van Gerven, K Hammerschmidt, B Englitz (2020) Classifying sex and strain from mouse ultrasonic vocalizations using deep learning. PLoS Comput Biol 16(6): e1007918.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/janclemenslab/das_unsupervised/releases/download/v0.4/mice.npz&#39;</span>
@@ -315,7 +315,7 @@
 </section>
 <section id="pre-processing">
 <h2>Pre-processing<a class="headerlink" href="#pre-processing" title="Permalink to this headline">#</a></h2>
-<p>Compute the spectrogram</p>
+<p class="linemarker linemarker-50003">Compute the spectrogram</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_fft</span> <span class="o">=</span> <span class="mi">2048</span>
@@ -342,7 +342,7 @@
 <img alt="../_images/00b86cf553e61db9b1d9039084ecb3de176c5128f74e1d9cbf226df4fd4b098c.jpg" src="../_images/00b86cf553e61db9b1d9039084ecb3de176c5128f74e1d9cbf226df4fd4b098c.jpg" />
 </div>
 </div>
-<p>Extract and threshold syllables from spectrogram</p>
+<p class="linemarker linemarker-70002">Extract and threshold syllables from spectrogram</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="o">=</span> <span class="p">[]</span> 
@@ -367,7 +367,7 @@
 <img alt="../_images/72cd6540b8d8c6b5fd1039cfe919928abc36b30a1f5e220e687cd807fe104fcc.jpg" src="../_images/72cd6540b8d8c6b5fd1039cfe919928abc36b30a1f5e220e687cd807fe104fcc.jpg" />
 </div>
 </div>
-<p>Log-scale the time axis to reduce differences in syllable duration and zero-pad all syllables to the same duration</p>
+<p class="linemarker linemarker-90002">Log-scale the time axis to reduce differences in syllable duration and zero-pad all syllables to the same duration</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec_rs</span> <span class="o">=</span> <span class="p">[</span><span class="n">das_unsupervised</span><span class="o">.</span><span class="n">spec_utils</span><span class="o">.</span><span class="n">log_resize_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">specs</span><span class="p">]</span>
@@ -390,7 +390,7 @@
 <img alt="../_images/a0597b24513779a6876e1003b3c0aee8bb6693276d5901190b86a2efa59e42de.jpg" src="../_images/a0597b24513779a6876e1003b3c0aee8bb6693276d5901190b86a2efa59e42de.jpg" />
 </div>
 </div>
-<p>Center spectra around their peak frequencies</p>
+<p class="linemarker linemarker-110002">Center spectra around their peak frequencies</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">offset</span> <span class="o">=</span> <span class="mi">20</span>
@@ -400,7 +400,7 @@
 </div>
 </div>
 </div>
-<p>Flatten 2D [time x freq] spectrograms to 1D feature vectors</p>
+<p class="linemarker linemarker-130002">Flatten 2D [time x freq] spectrograms to 1D feature vectors</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec_flat</span> <span class="o">=</span> <span class="p">[</span><span class="n">spec</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">spec_rs_c</span><span class="p">]</span>
@@ -412,7 +412,7 @@
 </section>
 <section id="dimensionality-reduction-and-clustering">
 <h2>Dimensionality reduction and clustering<a class="headerlink" href="#dimensionality-reduction-and-clustering" title="Permalink to this headline">#</a></h2>
-<p>Embed the feature vectors into a 2D space using <a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP</a> and group similar syllables usign <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html">kmeans</a>.</p>
+<p class="linemarker linemarker-150003">Embed the feature vectors into a 2D space using <a class="reference external" href="https://umap-learn.readthedocs.io/">UMAP</a> and group similar syllables usign <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html">kmeans</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">umap</span><span class="o">.</span><span class="n">UMAP</span><span class="p">(</span><span class="n">min_dist</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">spec_flat</span><span class="p">)</span>
@@ -430,7 +430,7 @@
 </section>
 <section id="plot-results">
 <h2>Plot results<a class="headerlink" href="#plot-results" title="Permalink to this headline">#</a></h2>
-<p>Syllable spectrograms embedded into a 2D space  (left) and colored by the unsupervised cluster labels (right). Syllables do not fall into separate groups, but can be grouped by similarity using clustering.</p>
+<p class="linemarker linemarker-170003">Syllable spectrograms embedded into a 2D space  (left) and colored by the unsupervised cluster labels (right). Syllables do not fall into separate groups, but can be grouped by similarity using clustering.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
@@ -457,7 +457,7 @@
 <img alt="../_images/1003c63cf4d33f7a19fa2966dbb8efaebbb8cded2d1f307be357976833342305.jpg" src="../_images/1003c63cf4d33f7a19fa2966dbb8efaebbb8cded2d1f307be357976833342305.jpg" />
 </div>
 </div>
-<p>Average spectrograms of the syllables in each cluster, plotted at the position of the respective cluster centroid in UMAP space. Spectrotemporal features vary smoothly within this space, suggesting that mouse USVs lie on a low-dimensional manifold.</p>
+<p class="linemarker linemarker-190002">Average spectrograms of the syllables in each cluster, plotted at the position of the respective cluster centroid in UMAP space. Spectrotemporal features vary smoothly within this space, suggesting that mouse USVs lie on a low-dimensional manifold.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
@@ -491,10 +491,10 @@
                 </div>
                 <div class="title">Technical details</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="birds.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -516,9 +516,7 @@
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -530,7 +528,7 @@
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -558,11 +556,6 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

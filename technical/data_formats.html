@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Developer API" href="../api.html" /><link rel="prev" title="Command line interfaces" href="cli.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>Data formats - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -275,43 +275,43 @@
 <h1>Data formats<a class="headerlink" href="#data-formats" title="Permalink to this headline">#</a></h1>
 <section id="audio">
 <h2>Audio<a class="headerlink" href="#audio" title="Permalink to this headline">#</a></h2>
-<p><em>DAS</em> can read many audio formats and even binary data. Audio is exported data to <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files) or <code class="docutils literal notranslate"><span class="pre">wav</span></code> (wave audio file):</p>
+<p class="linemarker linemarker-4"><em>DAS</em> can read many audio formats and even binary data. Audio is exported data to <code class="docutils literal notranslate"><span class="pre">npz</span></code> (zip compressed numpy files) or <code class="docutils literal notranslate"><span class="pre">wav</span></code> (wave audio file):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.npz</span></code> consist of two variables:</p>
+<li><p class="linemarker linemarker-5"><code class="docutils literal notranslate"><span class="pre">.npz</span></code> consist of two variables:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code> array with the audio data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">samplerate</span></code>: <code class="docutils literal notranslate"><span class="pre">[1,]</span></code> array with the sample rate in Hz</p></li>
+<li><p class="linemarker linemarker-6"><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code> array with the audio data</p></li>
+<li><p class="linemarker linemarker-7"><code class="docutils literal notranslate"><span class="pre">samplerate</span></code>: <code class="docutils literal notranslate"><span class="pre">[1,]</span></code> array with the sample rate in Hz</p></li>
 </ul>
 </li>
 </ul>
-<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
+<p class="linemarker linemarker-9">Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Clipping can occur when saving certain data types as wav files. see docs of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy.io.wavfile.write</a> for a list of the range of values available when saving audio of different types to wav.</p>
+<p class="linemarker linemarker-12">Clipping can occur when saving certain data types as wav files. see docs of <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.wavfile.write.html">scipy.io.wavfile.write</a> for a list of the range of values available when saving audio of different types to wav.</p>
 </div>
 </section>
 <section id="annotations">
 <h2>Annotations<a class="headerlink" href="#annotations" title="Permalink to this headline">#</a></h2>
-<p>File should end in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> contains three columns:
+<p class="linemarker linemarker-16">File should end in <code class="docutils literal notranslate"><span class="pre">_annotations.csv</span></code> contains three columns:
 + <code class="docutils literal notranslate"><span class="pre">name</span></code> - the name of the song or syllable type
 + <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> - the start time of the syllable.
 + <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> - the stop of the syllable. Start and stop are identical for song types of type event, like the pulses of fly song.
 + Each row in the file contains to a single annotation with <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code>. Special rows a reserved for song types without any annotations: For syllables or other segment types, the consist of the name, <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> is <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> and an arbitrary stop_seconds. For event-like types (song pulses), both <code class="docutils literal notranslate"><span class="pre">start_seconds</span></code> and <code class="docutils literal notranslate"><span class="pre">stop_seconds</span></code> are <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>.</p>
-<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
+<p class="linemarker linemarker-22">Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code> and <code class="docutils literal notranslate"><span class="pre">File/Export</span> <span class="pre">for</span> <span class="pre">DAS</span></code>.</p>
 </section>
 <section id="song-definitions">
 <h2>Song definitions<a class="headerlink" href="#song-definitions" title="Permalink to this headline">#</a></h2>
-<p>File should end in <code class="docutils literal notranslate"><span class="pre">_definitions.csv</span></code> . Text file with song definitions, one per row. Name of the song type and category (segment, event), separated by a comma. For instance, the following file defines three song types:</p>
+<p class="linemarker linemarker-25">File should end in <code class="docutils literal notranslate"><span class="pre">_definitions.csv</span></code> . Text file with song definitions, one per row. Name of the song type and category (segment, event), separated by a comma. For instance, the following file defines three song types:</p>
 <div class="highlight-csv notranslate"><div class="highlight"><pre><span></span>whip,segment
 whop,segment
 tick,event
 </pre></div>
 </div>
-<p>Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code>.</p>
+<p class="linemarker linemarker-32">Produced by the GUI via <code class="docutils literal notranslate"><span class="pre">File/Save</span> <span class="pre">annotations</span></code>.</p>
 </section>
 <section id="data-structure-used-for-training">
 <h2>Data structure used for training<a class="headerlink" href="#data-structure-used-for-training" title="Permalink to this headline">#</a></h2>
-<p>For training, <em>DAS</em> expects a simple dictionary-like data structure, sth like:</p>
+<p class="linemarker linemarker-35">For training, <em>DAS</em> expects a simple dictionary-like data structure, sth like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>data
   ├── [&#39;train&#39;]
   │      ├── [&#39;x&#39;]         (the audio data - samples x channels)
@@ -333,45 +333,45 @@ tick,event
              [&#39;class_types_suffix1&#39;] (event or segment)
 </pre></div>
 </div>
-<p>Top-level keys <code class="docutils literal notranslate"><span class="pre">train</span></code>, <code class="docutils literal notranslate"><span class="pre">val</span></code>, and <code class="docutils literal notranslate"><span class="pre">test</span></code> correspond to the data splits for training, validation, and test. Training and validation data are required. Validation is used during training to monitor progress and adjust the learning rate or stop training early. Test data is optional - it is used after training to assess the performance of the model.</p>
-<p>Each a top-level key contains a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the following keys:</p>
+<p class="linemarker linemarker-57">Top-level keys <code class="docutils literal notranslate"><span class="pre">train</span></code>, <code class="docutils literal notranslate"><span class="pre">val</span></code>, and <code class="docutils literal notranslate"><span class="pre">test</span></code> correspond to the data splits for training, validation, and test. Training and validation data are required. Validation is used during training to monitor progress and adjust the learning rate or stop training early. Test data is optional - it is used after training to assess the performance of the model.</p>
+<p class="linemarker linemarker-59">Each a top-level key contains a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the following keys:</p>
 <ul class="simple">
-<li><p>Inputs <code class="docutils literal notranslate"><span class="pre">x</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code></p>
+<li><p class="linemarker linemarker-61">Inputs <code class="docutils literal notranslate"><span class="pre">x</span></code>: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">channels]</span></code></p>
 <ul>
-<li><p>First dim is always samples, last is typically audio channels (&gt;=1).</p></li>
-<li><p>For spectrogram representations, could also be frequency channels <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">freqs]</span></code> for single-channel recordings. For multi-channel data time, the frequency channels from the spectrum of each audio channels can be stacked to <code class="docutils literal notranslate"><span class="pre">[time,</span> <span class="pre">channels*freqs]</span></code></p></li>
+<li><p class="linemarker linemarker-62">First dim is always samples, last is typically audio channels (&gt;=1).</p></li>
+<li><p class="linemarker linemarker-63">For spectrogram representations, could also be frequency channels <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">freqs]</span></code> for single-channel recordings. For multi-channel data time, the frequency channels from the spectrum of each audio channels can be stacked to <code class="docutils literal notranslate"><span class="pre">[time,</span> <span class="pre">channels*freqs]</span></code></p></li>
 </ul>
 </li>
-<li><p>Targets <code class="docutils literal notranslate"><span class="pre">y</span></code> for each sample in ‘x’: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">nb_classes]</span></code></p>
+<li><p class="linemarker linemarker-64">Targets <code class="docutils literal notranslate"><span class="pre">y</span></code> for each sample in ‘x’: <code class="docutils literal notranslate"><span class="pre">[samples,</span> <span class="pre">nb_classes]</span></code></p>
 <ul>
-<li><p>Binary (0/1) or a probability but should sum to 1.0 across classes for each sample</p></li>
-<li><p>Multiple targets can be specified by adding target variables with a suffix <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>. That allows you to train the a network with the same x but different y’s (e.g. pulse or sine-only). <em>Must</em> named like <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, where <code class="docutils literal notranslate"><span class="pre">somesuffix</span></code> can be an arbitrary string. The target can be specified during training with the <code class="docutils literal notranslate"><span class="pre">y_suffix=somesuffix</span></code> argument, which defaults to ‘’ (the standard target w/o suffix <code class="docutils literal notranslate"><span class="pre">y</span></code>). Training y-suffixes also requires suffix-specific attributes specifying the name and type of the target - <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classtype_somesuffix</span></code>.</p></li>
+<li><p class="linemarker linemarker-65">Binary (0/1) or a probability but should sum to 1.0 across classes for each sample</p></li>
+<li><p class="linemarker linemarker-66">Multiple targets can be specified by adding target variables with a suffix <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>. That allows you to train the a network with the same x but different y’s (e.g. pulse or sine-only). <em>Must</em> named like <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, where <code class="docutils literal notranslate"><span class="pre">somesuffix</span></code> can be an arbitrary string. The target can be specified during training with the <code class="docutils literal notranslate"><span class="pre">y_suffix=somesuffix</span></code> argument, which defaults to ‘’ (the standard target w/o suffix <code class="docutils literal notranslate"><span class="pre">y</span></code>). Training y-suffixes also requires suffix-specific attributes specifying the name and type of the target - <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classtype_somesuffix</span></code>.</p></li>
 </ul>
 </li>
-<li><p>Metadata in dict <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>:</p>
+<li><p class="linemarker linemarker-67">Metadata in dict <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_x_Hz</span></code>, <code class="docutils literal notranslate"><span class="pre">samplerate_y_Hz</span></code> - should be equal</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_song_Hz</span></code> (optional) - of <code class="docutils literal notranslate"><span class="pre">song</span></code>, the original recording in case <code class="docutils literal notranslate"><span class="pre">x</span></code> is the result of a wavelet or spectrogram transform</p></li>
-<li><p>class name and type information for each target:</p>
+<li><p class="linemarker linemarker-68"><code class="docutils literal notranslate"><span class="pre">samplerate_x_Hz</span></code>, <code class="docutils literal notranslate"><span class="pre">samplerate_y_Hz</span></code> - should be equal</p></li>
+<li><p class="linemarker linemarker-69"><code class="docutils literal notranslate"><span class="pre">samplerate_song_Hz</span></code> (optional) - of <code class="docutils literal notranslate"><span class="pre">song</span></code>, the original recording in case <code class="docutils literal notranslate"><span class="pre">x</span></code> is the result of a wavelet or spectrogram transform</p></li>
+<li><p class="linemarker linemarker-70">class name and type information for each target:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">classnames</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> - one for each 2nd dim in y</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">classtype</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> (optional for training) - <code class="docutils literal notranslate"><span class="pre">event</span></code> (e.g. pulse) or <code class="docutils literal notranslate"><span class="pre">segment</span></code> (sine or syllable)</p></li>
-<li><p>for each target specified via <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, create a <code class="docutils literal notranslate"><span class="pre">classnames_suffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> attribute</p></li>
-</ul>
-</li>
+<li><p class="linemarker linemarker-71"><code class="docutils literal notranslate"><span class="pre">classnames</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> - one for each 2nd dim in y</p></li>
+<li><p class="linemarker linemarker-72"><code class="docutils literal notranslate"><span class="pre">classtype</span></code>: <code class="docutils literal notranslate"><span class="pre">[nb_classes:</span> <span class="pre">str]</span></code> (optional for training) - <code class="docutils literal notranslate"><span class="pre">event</span></code> (e.g. pulse) or <code class="docutils literal notranslate"><span class="pre">segment</span></code> (sine or syllable)</p></li>
+<li><p class="linemarker linemarker-73">for each target specified via <code class="docutils literal notranslate"><span class="pre">y_somesuffix</span></code>, create a <code class="docutils literal notranslate"><span class="pre">classnames_suffix</span></code> and <code class="docutils literal notranslate"><span class="pre">classnames_somesuffix</span></code> attribute</p></li>
 </ul>
 </li>
 </ul>
-<p>Data is accessed via <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> and the metadata via <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a standard attribute for storing metadata in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">zarr</span></code> files and can be easily attached to a standard dictionary: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">dict();</span> <span class="pre">a.attrs</span> <span class="pre">=</span> <span class="pre">{'samplerate_x_Hz':</span> <span class="pre">10_000}</span></code>.</p>
-<p>This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org'">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
-<p>We provide a alternative storage backend, <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code>, that mirrors the data structure in directory hierarchy with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html">numpy’s npy</a> files (inspired by Cyrille Rossant’s series of blog posts (<a class="reference external" href="https://cyrille.rossant.net/moving-away-hdf5/">1</a>, <a class="reference external" href="https://cyrille.rossant.net/should-you-use-hdf5/">2</a>), <a class="reference external" href="https://github.com/bastibe/jbof">jbof</a> and <a class="reference external" href="https://exdir.readthedocs.io/">exdir</a>). Keys map to directories; values and <code class="docutils literal notranslate"><span class="pre">attrs</span></code> map to <code class="docutils literal notranslate"><span class="pre">npy</span></code> files (see <code class="docutils literal notranslate"><span class="pre">das.npy_dir</span></code>). For instance, <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> is stored in <code class="docutils literal notranslate"><span class="pre">dirname.npy/train/x.npy</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is stored in the top-level directory. Storing data as <code class="docutils literal notranslate"><span class="pre">npy</span></code> files provides a fast memory-mapping mechanism for out-of-memory access if your data set does not fit in memory. While zarr, h5py, and xarray provide mechanisms for out-of-memory access, they tend to be slower in our experience or require fine tuning to reach the performance reached with memmapped npy files.</p>
-<p>During training, data is loaded (see <code class="docutils literal notranslate"><span class="pre">das.io</span></code>) with the correct backend given by the extension of the file or directory. Currently supported files types are:</p>
+</li>
+</ul>
+<p class="linemarker linemarker-75">Data is accessed via <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> and the metadata via <code class="docutils literal notranslate"><span class="pre">data.attrs</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is a standard attribute for storing metadata in <code class="docutils literal notranslate"><span class="pre">hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">zarr</span></code> files and can be easily attached to a standard dictionary: <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">dict();</span> <span class="pre">a.attrs</span> <span class="pre">=</span> <span class="pre">{'samplerate_x_Hz':</span> <span class="pre">10_000}</span></code>.</p>
+<p class="linemarker linemarker-77">This structure can be implemented via python’s builtin <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#dictionaries">dictionary</a>, <a class="reference external" href="https://www.h5py.org">hdf5</a>, <a class="reference external" href="http://xarray.pydata.org'">xarray</a>, <a class="reference external" href="https://zarr.readthedocs.io">zarr</a>, or anything else that implements a key-value interface (called a Mapping in python).</p>
+<p class="linemarker linemarker-79">We provide a alternative storage backend, <code class="docutils literal notranslate"><span class="pre">npy_dir</span></code>, that mirrors the data structure in directory hierarchy with <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.load.html">numpy’s npy</a> files (inspired by Cyrille Rossant’s series of blog posts (<a class="reference external" href="https://cyrille.rossant.net/moving-away-hdf5/">1</a>, <a class="reference external" href="https://cyrille.rossant.net/should-you-use-hdf5/">2</a>), <a class="reference external" href="https://github.com/bastibe/jbof">jbof</a> and <a class="reference external" href="https://exdir.readthedocs.io/">exdir</a>). Keys map to directories; values and <code class="docutils literal notranslate"><span class="pre">attrs</span></code> map to <code class="docutils literal notranslate"><span class="pre">npy</span></code> files (see <code class="docutils literal notranslate"><span class="pre">das.npy_dir</span></code>). For instance, <code class="docutils literal notranslate"><span class="pre">data['train']['x']</span></code> is stored in <code class="docutils literal notranslate"><span class="pre">dirname.npy/train/x.npy</span></code>. <code class="docutils literal notranslate"><span class="pre">attrs</span></code> is stored in the top-level directory. Storing data as <code class="docutils literal notranslate"><span class="pre">npy</span></code> files provides a fast memory-mapping mechanism for out-of-memory access if your data set does not fit in memory. While zarr, h5py, and xarray provide mechanisms for out-of-memory access, they tend to be slower in our experience or require fine tuning to reach the performance reached with memmapped npy files.</p>
+<p class="linemarker linemarker-81">During training, data is loaded (see <code class="docutils literal notranslate"><span class="pre">das.io</span></code>) with the correct backend given by the extension of the file or directory. Currently supported files types are:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://zarr.readthedocs.io/">zarr</a> storages (files or directories ending in <code class="docutils literal notranslate"><span class="pre">.zarr</span></code>),</p></li>
-<li><p><a class="reference external" href="http://docs.h5py.org/">hdf5</a> files (files ending in <code class="docutils literal notranslate"><span class="pre">.h5</span></code>),</p></li>
-<li><p>directories ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.save.html">numpy</a> files.</p></li>
+<li><p class="linemarker linemarker-82"><a class="reference external" href="https://zarr.readthedocs.io/">zarr</a> storages (files or directories ending in <code class="docutils literal notranslate"><span class="pre">.zarr</span></code>),</p></li>
+<li><p class="linemarker linemarker-83"><a class="reference external" href="http://docs.h5py.org/">hdf5</a> files (files ending in <code class="docutils literal notranslate"><span class="pre">.h5</span></code>),</p></li>
+<li><p class="linemarker linemarker-84">directories ending in <code class="docutils literal notranslate"><span class="pre">.npy</span></code> with <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.save.html">numpy</a> files.</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">zarr</span></code> is great for assembling and storing datasets, in particular for datasets with unknown final size since it allows appending to arrays, and is used as an intermediate storage during dataset assembly. For training, <code class="docutils literal notranslate"><span class="pre">npy</span></code> is the fastest, in particular for random access of datasets that are too large to fit in memory, thanks to highly efficient memory mapping.</p>
+<p class="linemarker linemarker-86"><code class="docutils literal notranslate"><span class="pre">zarr</span></code> is great for assembling and storing datasets, in particular for datasets with unknown final size since it allows appending to arrays, and is used as an intermediate storage during dataset assembly. For training, <code class="docutils literal notranslate"><span class="pre">npy</span></code> is the fastest, in particular for random access of datasets that are too large to fit in memory, thanks to highly efficient memory mapping.</p>
 </section>
 </section>
 
@@ -387,10 +387,10 @@ tick,event
                 </div>
                 <div class="title">Developer API</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="cli.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -412,9 +412,7 @@ tick,event
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -426,7 +424,7 @@ tick,event
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -454,11 +452,6 @@ tick,event
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

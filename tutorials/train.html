@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Predict" href="predict.html" /><link rel="prev" title="Make a dataset from custom data formats" href="make_ds_notebook.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>Train - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,29 +273,29 @@
         <article role="main">
           <section id="train">
 <h1>Train<a class="headerlink" href="#train" title="Permalink to this headline">#</a></h1>
-<p>The network can be trained using three interfaces:</p>
+<p class="linemarker linemarker-10003">The network can be trained using three interfaces:</p>
 <ul class="simple">
-<li><p>python, via <code class="docutils literal notranslate"><span class="pre">das.train.train</span></code></p></li>
-<li><p>the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>.</p></li>
-<li><p>the GUI - see the <a class="reference internal" href="../tutorials_gui/train.html"><span class="doc std std-doc">GUI tutorial</span></a></p></li>
+<li><p class="linemarker linemarker-10005">python, via <code class="docutils literal notranslate"><span class="pre">das.train.train</span></code></p></li>
+<li><p class="linemarker linemarker-10006">the command-line interface <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>.</p></li>
+<li><p class="linemarker linemarker-10007">the GUI - see the <a class="reference internal" href="../tutorials_gui/train.html"><span class="doc std std-doc">GUI tutorial</span></a></p></li>
 </ul>
-<p>Training will:</p>
+<p class="linemarker linemarker-10009">Training will:</p>
 <ul class="simple">
-<li><p>load train/val/test data form a dataset</p></li>
-<li><p>initialize the network</p></li>
-<li><p>save all parameters for reproducibility</p></li>
-<li><p>train the network and save the best network to disk</p></li>
-<li><p>run inference and evaluate the network using the test data.</p></li>
+<li><p class="linemarker linemarker-10011">load train/val/test data form a dataset</p></li>
+<li><p class="linemarker linemarker-10012">initialize the network</p></li>
+<li><p class="linemarker linemarker-10013">save all parameters for reproducibility</p></li>
+<li><p class="linemarker linemarker-10014">train the network and save the best network to disk</p></li>
+<li><p class="linemarker linemarker-10015">run inference and evaluate the network using the test data.</p></li>
 </ul>
-<p>The names of files created during training start with an optional prefix and the time stamp of the start time of training, as in <code class="docutils literal notranslate"><span class="pre">my-awesome-prefix_20192310_091032</span></code>. Typically, three files are created:</p>
+<p class="linemarker linemarker-10017">The names of files created during training start with an optional prefix and the time stamp of the start time of training, as in <code class="docutils literal notranslate"><span class="pre">my-awesome-prefix_20192310_091032</span></code>. Typically, three files are created:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">*_params.yaml</span></code> - training parameters etc.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*_model.h5</span></code> -  model architecture and weights</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">*_results.h5</span></code> - predictions and evaluation results for the test set (only created if the training dataset contains a test set)</p></li>
+<li><p class="linemarker linemarker-10018"><code class="docutils literal notranslate"><span class="pre">*_params.yaml</span></code> - training parameters etc.</p></li>
+<li><p class="linemarker linemarker-10019"><code class="docutils literal notranslate"><span class="pre">*_model.h5</span></code> -  model architecture and weights</p></li>
+<li><p class="linemarker linemarker-10020"><code class="docutils literal notranslate"><span class="pre">*_results.h5</span></code> - predictions and evaluation results for the test set (only created if the training dataset contains a test set)</p></li>
 </ul>
 <section id="training-using-python">
 <h2>Training using python<a class="headerlink" href="#training-using-python" title="Permalink to this headline">#</a></h2>
-<p>Training is done using the <code class="docutils literal notranslate"><span class="pre">train</span></code> function in the <code class="docutils literal notranslate"><span class="pre">das.train</span></code> module:</p>
+<p class="linemarker linemarker-20003">Training is done using the <code class="docutils literal notranslate"><span class="pre">train</span></code> function in the <code class="docutils literal notranslate"><span class="pre">das.train</span></code> module:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train</span>
@@ -399,16 +399,16 @@ train(*, data_dir: str, y_suffix: str = &#39;&#39;, save_dir: str = &#39;./&#39;
 </div>
 </div>
 </div>
-<p>Calling the <code class="docutils literal notranslate"><span class="pre">train</span></code> function produce fairly verbose logging messages, to help with troubleshooting:</p>
+<p class="linemarker linemarker-40002">Calling the <code class="docutils literal notranslate"><span class="pre">train</span></code> function produce fairly verbose logging messages, to help with troubleshooting:</p>
 <ul class="simple">
-<li><p>run time parameters</p></li>
-<li><p>information on the size of the training and validation data</p></li>
-<li><p>network architecture</p></li>
-<li><p>training progress (training and validation loss)</p></li>
-<li><p>after training, a classification report for the test data (if test data exist in the dataset)</p></li>
+<li><p class="linemarker linemarker-40004">run time parameters</p></li>
+<li><p class="linemarker linemarker-40005">information on the size of the training and validation data</p></li>
+<li><p class="linemarker linemarker-40006">network architecture</p></li>
+<li><p class="linemarker linemarker-40007">training progress (training and validation loss)</p></li>
+<li><p class="linemarker linemarker-40008">after training, a classification report for the test data (if test data exist in the dataset)</p></li>
 </ul>
-<p>When done, <code class="docutils literal notranslate"><span class="pre">train</span></code> returns the trained keras model and a parameter dictionary with all arguments required to reproduce the model.</p>
-<p>To demonstrate the outputs of <code class="docutils literal notranslate"><span class="pre">train</span></code>, the following trains a small network on a small dataset to annotate pulse and sine song from <em>Drosophila melanogater</em>. Expected performance (f1-score) is about 75%.</p>
+<p class="linemarker linemarker-40010">When done, <code class="docutils literal notranslate"><span class="pre">train</span></code> returns the trained keras model and a parameter dictionary with all arguments required to reproduce the model.</p>
+<p class="linemarker linemarker-40012">To demonstrate the outputs of <code class="docutils literal notranslate"><span class="pre">train</span></code>, the following trains a small network on a small dataset to annotate pulse and sine song from <em>Drosophila melanogater</em>. Expected performance (f1-score) is about 75%.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s1">&#39;tcn&#39;</span><span class="p">,</span>  <span class="c1"># see `das.models` for valid model_names</span>
@@ -728,14 +728,14 @@ INFO:root:DONE.
 </section>
 <section id="training-using-command-line-scripts">
 <h2>Training using command-line scripts<a class="headerlink" href="#training-using-command-line-scripts" title="Permalink to this headline">#</a></h2>
-<p>The training function <code class="docutils literal notranslate"><span class="pre">das.train.train</span></code> and all its arguments are also accessible from the command line via <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for use on the terminal. See <span class="xref myst">here</span> for a description of all command-line arguments. The command-line interface is generated with <a class="reference external" href="https://defopt.readthedocs.io/en/stable/index.html">defopt</a>.</p>
-<p>For instance, training command above can be invoked from the command line:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>das train --data-dir dat/dmel_single_raw.npy --save-dir res --model-name tcn --kernel-size <span class="m">16</span> --nb-filters <span class="m">16</span> --nb-hist <span class="m">512</span> --nb-epoch <span class="m">20</span> -i
+<p class="linemarker linemarker-60003">The training function <code class="docutils literal notranslate"><span class="pre">das.train.train</span></code> and all its arguments are also accessible from the command line via <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code> for use on the terminal. See <span class="xref myst">here</span> for a description of all command-line arguments. The command-line interface is generated with <a class="reference external" href="https://defopt.readthedocs.io/en/stable/index.html">defopt</a>.</p>
+<p class="linemarker linemarker-60005">For instance, training command above can be invoked from the command line:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>das<span class="w"> </span>train<span class="w"> </span>--data-dir<span class="w"> </span>dat/dmel_single_raw.npy<span class="w"> </span>--save-dir<span class="w"> </span>res<span class="w"> </span>--model-name<span class="w"> </span>tcn<span class="w"> </span>--kernel-size<span class="w"> </span><span class="m">16</span><span class="w"> </span>--nb-filters<span class="w"> </span><span class="m">16</span><span class="w"> </span>--nb-hist<span class="w"> </span><span class="m">512</span><span class="w"> </span>--nb-epoch<span class="w"> </span><span class="m">20</span><span class="w"> </span>-i
 </pre></div>
 </div>
-<p>Shell scripts are particularly useful if you want to fit the network with with different configurations to optimize <a class="reference internal" href="structparams.html"><span class="doc std std-doc">structural parameters</span></a>. For instance, this script will fit networks with different numbers of TCN blocks (<code class="docutils literal notranslate"><span class="pre">nb_conv</span></code>) and filters (<code class="docutils literal notranslate"><span class="pre">nb_filters</span></code>):</p>
+<p class="linemarker linemarker-60010">Shell scripts are particularly useful if you want to fit the network with with different configurations to optimize <a class="reference internal" href="structparams.html"><span class="doc std std-doc">structural parameters</span></a>. For instance, this script will fit networks with different numbers of TCN blocks (<code class="docutils literal notranslate"><span class="pre">nb_conv</span></code>) and filters (<code class="docutils literal notranslate"><span class="pre">nb_filters</span></code>):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-conda activate das
+conda<span class="w"> </span>activate<span class="w"> </span>das
 
 <span class="nv">YSUFFIX</span><span class="o">=</span><span class="s2">&quot;pulse&quot;</span>
 <span class="nv">MODELNAME</span><span class="o">=</span><span class="s1">&#39;tcn&#39;</span>
@@ -747,19 +747,19 @@ conda activate das
 <span class="nv">NB_FILTERS</span><span class="o">=</span><span class="m">32</span>
 <span class="nv">NB_CONV</span><span class="o">=</span><span class="m">3</span>
 
-<span class="k">for</span> NB_CONV <span class="k">in</span> <span class="m">2</span> <span class="m">3</span> <span class="m">4</span>
+<span class="k">for</span><span class="w"> </span>NB_CONV<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span>
 <span class="k">do</span>
-    <span class="k">for</span> NB_FILTERS <span class="k">in</span> <span class="m">16</span> <span class="m">32</span> <span class="m">64</span>
-    <span class="k">do</span>
-        das train -i --nb-filters <span class="nv">$NB_FILTERS</span> --kernel-size <span class="nv">$KERNEL_SIZE</span> --nb-conv <span class="nv">$NB_CONV</span> --nb-hist <span class="nv">$NB_HIST</span> --save-dir <span class="nv">$SAVEDIR</span> --y-suffix <span class="nv">$YSUFFIX</span> --data-dir <span class="nv">$DATADIR</span> --model-name <span class="nv">$MODELNAME</span>
-    <span class="k">done</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span>NB_FILTERS<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="m">64</span>
+<span class="w">    </span><span class="k">do</span>
+<span class="w">        </span>das<span class="w"> </span>train<span class="w"> </span>-i<span class="w"> </span>--nb-filters<span class="w"> </span><span class="nv">$NB_FILTERS</span><span class="w"> </span>--kernel-size<span class="w"> </span><span class="nv">$KERNEL_SIZE</span><span class="w"> </span>--nb-conv<span class="w"> </span><span class="nv">$NB_CONV</span><span class="w"> </span>--nb-hist<span class="w"> </span><span class="nv">$NB_HIST</span><span class="w"> </span>--save-dir<span class="w"> </span><span class="nv">$SAVEDIR</span><span class="w"> </span>--y-suffix<span class="w"> </span><span class="nv">$YSUFFIX</span><span class="w"> </span>--data-dir<span class="w"> </span><span class="nv">$DATADIR</span><span class="w"> </span>--model-name<span class="w"> </span><span class="nv">$MODELNAME</span>
+<span class="w">    </span><span class="k">done</span>
 <span class="k">done</span>
 </pre></div>
 </div>
-<p>A description of all command line arguments can be obtained by typing <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span> <span class="pre">--help</span></code> in a terminal:</p>
+<p class="linemarker linemarker-60034">A description of all command line arguments can be obtained by typing <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span> <span class="pre">--help</span></code> in a terminal:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das train --help
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das<span class="w"> </span>train<span class="w"> </span>--help
 </pre></div>
 </div>
 </div>
@@ -923,10 +923,10 @@ optional arguments:
                 </div>
                 <div class="title">Predict</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="make_ds_notebook.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -948,9 +948,7 @@ optional arguments:
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -962,7 +960,7 @@ optional arguments:
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -988,11 +986,6 @@ optional arguments:
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

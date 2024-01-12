@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.kapre.utils" href="das.kapre.utils.html" /><link rel="prev" title="das.kapre.filterbank" href="das.kapre.filterbank.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.kapre.time_frequency - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -277,79 +277,79 @@
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.kapre.time_frequency.</span></span><span class="sig-name descname"><span class="pre">Melspectrogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram" title="Permalink to this definition">#</a></dt>
 <dd><blockquote>
-<div><p>### <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram" title="das.kapre.time_frequency.Melspectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Melspectrogram</span></code></a>
+<div><p class="linemarker linemarker-1">### <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram" title="das.kapre.time_frequency.Melspectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Melspectrogram</span></code></a>
 <a href="#id1"><span class="problematic" id="id2">``</span></a>python
 kapre.time_frequency.Melspectrogram(sr=22050, n_mels=128, fmin=0.0, fmax=None,</p>
 <blockquote>
-<div><p>power_melgram=1.0, return_decibel_melgram=False,
+<div><p class="linemarker linemarker-4">power_melgram=1.0, return_decibel_melgram=False,
 trainable_fb=False, <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs)</p>
 </div></blockquote>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a></p>
+<p class="linemarker linemarker-6"><a href="#id5"><span class="problematic" id="id6">``</span></a></p>
 </div></blockquote>
 <dl>
-<dt>d</dt><dd><p>Mel-spectrogram layer that outputs mel-spectrogram(s) in 2D image format.</p>
-<p>Its base class is <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram" title="das.kapre.time_frequency.Spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Spectrogram</span></code></a>.</p>
-<p>Mel-spectrogram is an efficient representation using the property of human
+<dt>d</dt><dd><p class="linemarker linemarker-8">Mel-spectrogram layer that outputs mel-spectrogram(s) in 2D image format.</p>
+<p class="linemarker linemarker-10">Its base class is <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram" title="das.kapre.time_frequency.Spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Spectrogram</span></code></a>.</p>
+<p class="linemarker linemarker-12">Mel-spectrogram is an efficient representation using the property of human
 auditory system – by compressing frequency axis into mel-scale axis.</p>
 <dl class="simple">
 <dt>#### Parameters</dt><dd><ul class="simple">
-<li><p>sr: integer &gt; 0 [scalar]
+<li><p class="linemarker linemarker-16">sr: integer &gt; 0 [scalar]
 - sampling rate of the input audio signal.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">22050</span></code></p></li>
-<li><p>n_mels: int &gt; 0 [scalar]
+<li><p class="linemarker linemarker-20">n_mels: int &gt; 0 [scalar]
 - The number of mel bands.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">128</span></code></p></li>
-<li><p>fmin: float &gt; 0 [scalar]
+<li><p class="linemarker linemarker-24">fmin: float &gt; 0 [scalar]
 - Minimum frequency to include in Mel-spectrogram.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">0.0</span></code></p></li>
-<li><p>fmax: float &gt; <code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin</span></code> [scalar]
+<li><p class="linemarker linemarker-28">fmax: float &gt; <code class="xref py py-obj docutils literal notranslate"><span class="pre">fmin</span></code> [scalar]
 - Maximum frequency to include in Mel-spectrogram.
 - If <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, it is inferred as <code class="xref py py-obj docutils literal notranslate"><span class="pre">sr</span> <span class="pre">/</span> <span class="pre">2</span></code>.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p>power_melgram: float [scalar]
+<li><p class="linemarker linemarker-33">power_melgram: float [scalar]
 - Power of <code class="xref py py-obj docutils literal notranslate"><span class="pre">2.0</span></code> if power-spectrogram,
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code> if amplitude spectrogram.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
-<li><p>return_decibel_melgram: bool
+<li><p class="linemarker linemarker-38">return_decibel_melgram: bool
 - Whether to return in decibel or not, i.e. returns log10(amplitude spectrogram) if <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>.
 - Recommended to use <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, although it’s not by default.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></p></li>
-<li><p>trainable_fb: bool
+<li><p class="linemarker linemarker-43">trainable_fb: bool
 - Whether the spectrogram -&gt; mel-spectrogram filterbanks are trainable.
 - If <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, the frequency-to-mel matrix is initialised with mel frequencies but trainable.
 - If <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>, it is initialised and then frozen.
 - Default: <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code></p></li>
-<li><p>htk: bool
+<li><p class="linemarker linemarker-49">htk: bool
 - Check out Librosa’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">mel-spectrogram</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">mel</span></code> option.</p></li>
-<li><p>norm: float [scalar]
+<li><p class="linemarker linemarker-52">norm: float [scalar]
 - Check out Librosa’s <code class="xref py py-obj docutils literal notranslate"><span class="pre">mel-spectrogram</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">mel</span></code> option.</p></li>
-<li><p><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs:
+<li><p class="linemarker linemarker-55"><a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs:
 - The keyword arguments of <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram" title="das.kapre.time_frequency.Spectrogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Spectrogram</span></code></a> such as <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_dft</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_hop</span></code>,
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">padding</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable_kernel</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format</span></code>.</p></li>
 </ul>
 </dd>
 <dt>#### Notes</dt><dd><ul class="simple">
-<li><p>The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>.</p></li>
+<li><p class="linemarker linemarker-60">The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>.</p></li>
 </ul>
 </dd>
 <dt>E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signal, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signal.</dt><dd><ul class="simple">
-<li><p>It supports multichannel signal input, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
-<li><p>The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
+<li><p class="linemarker linemarker-62">It supports multichannel signal input, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
+<li><p class="linemarker linemarker-63">The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
 </ul>
 </dd>
 </dl>
-<p>#### Returns</p>
+<p class="linemarker linemarker-65">#### Returns</p>
 <dl class="simple">
 <dt>A Keras layer</dt><dd><ul class="simple">
-<li><p>abs(mel-spectrogram) in a shape of 2D data, i.e.,</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_mels,</span> <span class="pre">n_time)</span></code> if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>,</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_mels,</span> <span class="pre">n_time,</span> <span class="pre">n_channel)</span></code> if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>,</p></li>
+<li><p class="linemarker linemarker-68">abs(mel-spectrogram) in a shape of 2D data, i.e.,</p></li>
+<li><p class="linemarker linemarker-69"><code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_mels,</span> <span class="pre">n_time)</span></code> if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>,</p></li>
+<li><p class="linemarker linemarker-70"><code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_mels,</span> <span class="pre">n_time,</span> <span class="pre">n_channel)</span></code> if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>,</p></li>
 </ul>
 </dd>
 </dl>
 </dd>
 </dl>
-<p>[summary]</p>
+<p class="linemarker linemarker-73">[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -365,16 +365,16 @@ auditory system – by compressing frequency axis into mel-scale axis.</p>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
-<li><p>Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
-<li><p>The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
+<li><p class="linemarker linemarker-92">The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
+<li><p class="linemarker linemarker-93">Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
+<li><p class="linemarker linemarker-94">The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
 <dt>Keras layer computing the spectrogram</dt><dd><ul class="simple">
-<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
-<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
+<li><p class="linemarker linemarker-99">if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
+<li><p class="linemarker linemarker-100">if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -387,12 +387,12 @@ auditory system – by compressing frequency axis into mel-scale axis.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram.build" title="Permalink to this definition">#</a></dt>
-<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
-<p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
+<dd><p class="linemarker linemarker-1">Creates the variables of the layer (optional, for subclass implementers).</p>
+<p class="linemarker linemarker-3">This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
 layer instantiation and layer call. It is invoked automatically before
 the first execution of <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
-<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+<p class="linemarker linemarker-8">This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
 (at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -406,47 +406,47 @@ the first execution of <a class="reference internal" href="#das.kapre.time_frequ
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram.call" title="Permalink to this definition">#</a></dt>
-<dd><p>This is where the layer’s logic lives.</p>
-<p>The <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+<dd><p class="linemarker linemarker-1">This is where the layer’s logic lives.</p>
+<p class="linemarker linemarker-3">The <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
 wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
 It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.build" title="das.kapre.time_frequency.Melspectrogram.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code></a> method
 that is called automatically before <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – <p>Input tensor, or dict/list/tuple of input tensors.
+<li><p><strong>inputs</strong> – <p class="linemarker linemarker-8">Input tensor, or dict/list/tuple of input tensors.
 The first positional <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> argument is subject to special rules:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> must be explicitly passed. A layer cannot have zero</p>
 <blockquote>
-<div><p>arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
+<div><p class="linemarker linemarker-11">arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
 of a keyword argument.</p>
 </div></blockquote>
 <ul>
-<li><p>NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
-<li><p>Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
+<li><p class="linemarker linemarker-13">NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
+<li><p class="linemarker linemarker-14">Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-15">Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
 using shape info from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
+<li><p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-18">Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
 If a layer has tensor arguments in <code class="xref py py-obj docutils literal notranslate"><span class="pre">*args</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">**kwargs</span></code>, their
 casting behavior in mixed precision should be handled manually.</p></li>
-<li><p>The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+<li><p class="linemarker linemarker-21">The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
+<li><p class="linemarker linemarker-22">Integration with various ecosystem packages like TFMOT, TFLite,
 TF.js, etc is only supported for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and not for tensors in
 positional and keyword arguments.</p></li>
 </ul>
 </p></li>
 <li><p><strong>*args</strong> – Additional positional arguments. May contain tensors, although
 this is not recommended, for the reasons above.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional keyword arguments. May contain tensors, although
+<li><p><strong>**kwargs</strong> – <p class="linemarker linemarker-27">Additional keyword arguments. May contain tensors, although
 this is not recommended, for the reasons above.
 The following optional keyword arguments are reserved:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code>: Boolean scalar tensor of Python boolean indicating</p>
 <blockquote>
-<div><p>whether the <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
+<div><p class="linemarker linemarker-31">whether the <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
 </div></blockquote>
 <ul>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
+<li><p class="linemarker linemarker-32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.call" title="das.kapre.time_frequency.Melspectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code> argument, its default value will be set to the mask generated
 for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> by the previous layer (if <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code> did come from a layer
 that generated a corresponding mask, i.e. if it came from a Keras
@@ -464,8 +464,8 @@ layer with masking support).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram.compute_output_shape" title="Permalink to this definition">#</a></dt>
-<dd><p>Computes the output shape of the layer.</p>
-<p>This method will cause the layer’s state to be built, if that has not
+<dd><p class="linemarker linemarker-1">Computes the output shape of the layer.</p>
+<p class="linemarker linemarker-3">This method will cause the layer’s state to be built, if that has not
 happened before. This requires that the layer will later be used with
 inputs that match the input shape provided here.</p>
 <dl class="field-list simple">
@@ -484,15 +484,15 @@ instead of an integer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Melspectrogram.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Melspectrogram.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Melspectrogram.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the config of the layer.</p>
-<p>A layer config is a Python dictionary (serializable)
+<dd><p class="linemarker linemarker-1">Returns the config of the layer.</p>
+<p class="linemarker linemarker-3">A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
 The same layer can be reinstantiated later
 (without its trained weights) from this configuration.</p>
-<p>The config of a layer does not include connectivity
+<p class="linemarker linemarker-8">The config of a layer does not include connectivity
 information, nor the layer class name. These are handled
 by <code class="xref py py-obj docutils literal notranslate"><span class="pre">Network</span></code> (one layer of abstraction above).</p>
-<p>Note that <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.get_config" title="das.kapre.time_frequency.Melspectrogram.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
+<p class="linemarker linemarker-12">Note that <a class="reference internal" href="#das.kapre.time_frequency.Melspectrogram.get_config" title="das.kapre.time_frequency.Melspectrogram.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
 every time it is called. The callers should make a copy of the returned dict
 if they want to modify it.</p>
 <dl class="field-list simple">
@@ -507,7 +507,7 @@ if they want to modify it.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.kapre.time_frequency.</span></span><span class="sig-name descname"><span class="pre">Spectrogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram" title="Permalink to this definition">#</a></dt>
-<dd><p>Spectrogram layer returns spectrogram(s).</p>
+<dd><p class="linemarker linemarker-1">Spectrogram layer returns spectrogram(s).</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kapre</span><span class="o">.</span><span class="n">time_frequency</span><span class="o">.</span><span class="n">Spectrogram</span><span class="p">(</span>
 <span class="go">            n_dft=512, n_hop=None, padding=&#39;same&#39;,</span>
@@ -516,7 +516,7 @@ if they want to modify it.</p>
 <span class="go">            )</span>
 </pre></div>
 </div>
-<p>[summary]</p>
+<p class="linemarker linemarker-11">[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -532,16 +532,16 @@ if they want to modify it.</p>
 </dl>
 <p class="rubric">Notes</p>
 <ul class="simple">
-<li><p>The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
-<li><p>Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
-<li><p>The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
+<li><p class="linemarker linemarker-30">The input should be a 2D array, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(audio_channel,</span> <span class="pre">audio_length)</span></code>. E.g., <code class="xref py py-obj docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">44100)</span></code> for mono signals, <code class="xref py py-obj docutils literal notranslate"><span class="pre">(2,</span> <span class="pre">44100)</span></code> for stereo signals.</p></li>
+<li><p class="linemarker linemarker-31">Supports multichannel inputs, so <code class="xref py py-obj docutils literal notranslate"><span class="pre">audio_channel</span></code> can be any positive integer.</p></li>
+<li><p class="linemarker linemarker-32">The input shape is not related to keras <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_data_format()</span></code> config.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p><dl class="simple">
 <dt>Keras layer computing the spectrogram</dt><dd><ul class="simple">
-<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
-<li><p>if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
+<li><p class="linemarker linemarker-37">if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_first</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_channel,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">)</span></code></p></li>
+<li><p class="linemarker linemarker-38">if <code class="xref py py-obj docutils literal notranslate"><span class="pre">channels_last</span></code>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(None,</span> <span class="pre">n_time,</span> <span class="pre">n_freq,</span> <span class="pre">n_channel)</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -554,12 +554,12 @@ if they want to modify it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram.build" title="Permalink to this definition">#</a></dt>
-<dd><p>Creates the variables of the layer (optional, for subclass implementers).</p>
-<p>This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
+<dd><p class="linemarker linemarker-1">Creates the variables of the layer (optional, for subclass implementers).</p>
+<p class="linemarker linemarker-3">This is a method that implementers of subclasses of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code>
 can override if they need a state-creation step in-between
 layer instantiation and layer call. It is invoked automatically before
 the first execution of <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a>.</p>
-<p>This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
+<p class="linemarker linemarker-8">This is typically used to create the weights of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Layer</span></code> subclasses
 (at the discretion of the subclass implementer).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -573,47 +573,47 @@ the first execution of <a class="reference internal" href="#das.kapre.time_frequ
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram.call">
 <span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram.call" title="Permalink to this definition">#</a></dt>
-<dd><p>This is where the layer’s logic lives.</p>
-<p>The <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
+<dd><p class="linemarker linemarker-1">This is where the layer’s logic lives.</p>
+<p class="linemarker linemarker-3">The <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method may not create state (except in its first invocation,
 wrapping the creation of variables or other resources in <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.init_scope()</span></code>).
 It is recommended to create state in <code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__()</span></code>, or the <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.build" title="das.kapre.time_frequency.Spectrogram.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build()</span></code></a> method
 that is called automatically before <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> executes the first time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – <p>Input tensor, or dict/list/tuple of input tensors.
+<li><p><strong>inputs</strong> – <p class="linemarker linemarker-8">Input tensor, or dict/list/tuple of input tensors.
 The first positional <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> argument is subject to special rules:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> must be explicitly passed. A layer cannot have zero</p>
 <blockquote>
-<div><p>arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
+<div><p class="linemarker linemarker-11">arguments, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> cannot be provided via the default value
 of a keyword argument.</p>
 </div></blockquote>
 <ul>
-<li><p>NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
-<li><p>Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
+<li><p class="linemarker linemarker-13">NumPy array or Python scalar values in <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> get cast as tensors.</p></li>
+<li><p class="linemarker linemarker-14">Keras mask metadata is only collected from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-15">Layers are built (<code class="xref py py-obj docutils literal notranslate"><span class="pre">build(input_shape)</span></code> method)
 using shape info from <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
-<li><p>Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
+<li><p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_spec</span></code> compatibility is only checked against <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.</p></li>
+<li><p class="linemarker linemarker-18">Mixed precision input casting is only applied to <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code>.
 If a layer has tensor arguments in <code class="xref py py-obj docutils literal notranslate"><span class="pre">*args</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">**kwargs</span></code>, their
 casting behavior in mixed precision should be handled manually.</p></li>
-<li><p>The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
-<li><p>Integration with various ecosystem packages like TFMOT, TFLite,
+<li><p class="linemarker linemarker-21">The SavedModel input specification is generated using <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> only.</p></li>
+<li><p class="linemarker linemarker-22">Integration with various ecosystem packages like TFMOT, TFLite,
 TF.js, etc is only supported for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> and not for tensors in
 positional and keyword arguments.</p></li>
 </ul>
 </p></li>
 <li><p><strong>*args</strong> – Additional positional arguments. May contain tensors, although
 this is not recommended, for the reasons above.</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional keyword arguments. May contain tensors, although
+<li><p><strong>**kwargs</strong> – <p class="linemarker linemarker-27">Additional keyword arguments. May contain tensors, although
 this is not recommended, for the reasons above.
 The following optional keyword arguments are reserved:
 - <code class="xref py py-obj docutils literal notranslate"><span class="pre">training</span></code>: Boolean scalar tensor of Python boolean indicating</p>
 <blockquote>
-<div><p>whether the <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
+<div><p class="linemarker linemarker-31">whether the <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call</span></code></a> is meant for training or inference.</p>
 </div></blockquote>
 <ul>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
+<li><p class="linemarker linemarker-32"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code>: Boolean input mask. If the layer’s <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.call" title="das.kapre.time_frequency.Spectrogram.call"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call()</span></code></a> method takes a
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">mask</span></code> argument, its default value will be set to the mask generated
 for <code class="xref py py-obj docutils literal notranslate"><span class="pre">inputs</span></code> by the previous layer (if <code class="xref py py-obj docutils literal notranslate"><span class="pre">input</span></code> did come from a layer
 that generated a corresponding mask, i.e. if it came from a Keras
@@ -631,8 +631,8 @@ layer with masking support).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram.compute_output_shape">
 <span class="sig-name descname"><span class="pre">compute_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram.compute_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram.compute_output_shape" title="Permalink to this definition">#</a></dt>
-<dd><p>Computes the output shape of the layer.</p>
-<p>This method will cause the layer’s state to be built, if that has not
+<dd><p class="linemarker linemarker-1">Computes the output shape of the layer.</p>
+<p class="linemarker linemarker-3">This method will cause the layer’s state to be built, if that has not
 happened before. This requires that the layer will later be used with
 inputs that match the input shape provided here.</p>
 <dl class="field-list simple">
@@ -651,15 +651,15 @@ instead of an integer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.Spectrogram.get_config">
 <span class="sig-name descname"><span class="pre">get_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#Spectrogram.get_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.Spectrogram.get_config" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the config of the layer.</p>
-<p>A layer config is a Python dictionary (serializable)
+<dd><p class="linemarker linemarker-1">Returns the config of the layer.</p>
+<p class="linemarker linemarker-3">A layer config is a Python dictionary (serializable)
 containing the configuration of a layer.
 The same layer can be reinstantiated later
 (without its trained weights) from this configuration.</p>
-<p>The config of a layer does not include connectivity
+<p class="linemarker linemarker-8">The config of a layer does not include connectivity
 information, nor the layer class name. These are handled
 by <code class="xref py py-obj docutils literal notranslate"><span class="pre">Network</span></code> (one layer of abstraction above).</p>
-<p>Note that <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.get_config" title="das.kapre.time_frequency.Spectrogram.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
+<p class="linemarker linemarker-12">Note that <a class="reference internal" href="#das.kapre.time_frequency.Spectrogram.get_config" title="das.kapre.time_frequency.Spectrogram.get_config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_config()</span></code></a> does not guarantee to return a fresh copy of dict
 every time it is called. The callers should make a copy of the returned dict
 if they want to modify it.</p>
 <dl class="field-list simple">
@@ -674,17 +674,17 @@ if they want to modify it.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.kapre.time_frequency.conv_output_length">
 <span class="sig-prename descclassname"><span class="pre">das.kapre.time_frequency.</span></span><span class="sig-name descname"><span class="pre">conv_output_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/kapre/time_frequency.html#conv_output_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.kapre.time_frequency.conv_output_length" title="Permalink to this definition">#</a></dt>
-<dd><p>Determines output length of a convolution given input length.
+<dd><p class="linemarker linemarker-1">Determines output length of a convolution given input length.
 # Arguments</p>
 <blockquote>
-<div><p>input_length: integer.
+<div><p class="linemarker linemarker-3">input_length: integer.
 filter_size: integer.
 padding: one of <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;same&quot;</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;valid&quot;</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;full&quot;</span></code>.
 stride: integer.
 dilation: dilation rate, integer.</p>
 </div></blockquote>
 <dl class="simple">
-<dt># Returns</dt><dd><p>The output length (integer).</p>
+<dt># Returns</dt><dd><p class="linemarker linemarker-9">The output length (integer).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -703,10 +703,10 @@ dilation: dilation rate, integer.</p>
                 </div>
                 <div class="title">das.kapre.utils</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="das.kapre.filterbank.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -728,9 +728,7 @@ dilation: dilation rate, integer.</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -748,11 +746,6 @@ dilation: dilation rate, integer.</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -14,7 +14,7 @@ _Visual C++ runtime (Windows only)_: This is typically installed so only require
 Create an anaconda environment called `das` that contains all the required packages:
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.31.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+mamba create python=3.9 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 ```
 
 

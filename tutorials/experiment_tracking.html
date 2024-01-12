@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Generate segment labels" href="label_segments.html" /><link rel="prev" title="Architecture tuning" href="architecture_tuning.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>Experiment tracking with Weights &amp; Biases - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,41 +273,41 @@
         <article role="main">
           <section id="experiment-tracking-with-weights-biases">
 <h1>Experiment tracking with Weights &amp; Biases<a class="headerlink" href="#experiment-tracking-with-weights-biases" title="Permalink to this headline">#</a></h1>
-<p><a class="reference external" href="https://wandb.ai">Weights &amp; Biases</a> for tracking experiments and visualizing results. Great for comparing different model fits during manual parameter and automatic architecture tuning (see <a class="reference internal" href="architecture_tuning.html"><span class="doc std std-doc">example</span></a>).</p>
+<p class="linemarker linemarker-3"><a class="reference external" href="https://wandb.ai">Weights &amp; Biases</a> for tracking experiments and visualizing results. Great for comparing different model fits during manual parameter and automatic architecture tuning (see <a class="reference internal" href="architecture_tuning.html"><span class="doc std std-doc">example</span></a>).</p>
 <section id="setup-weights-biases">
 <h2>Setup Weights &amp; Biases<a class="headerlink" href="#setup-weights-biases" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>Create account at <a class="reference external" href="https://wandb.ai">https://wandb.ai</a></p></li>
-<li><p>Install the wandb python package and log in:</p></li>
+<li><p class="linemarker linemarker-6">Create account at <a class="reference external" href="https://wandb.ai">https://wandb.ai</a></p></li>
+<li><p class="linemarker linemarker-7">Install the wandb python package and log in:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install wandb -c conda-forge
-wandb login
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>wandb<span class="w"> </span>-c<span class="w"> </span>conda-forge
+wandb<span class="w"> </span>login
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>See <a class="reference external" href="https://docs.wandb.ai/quickstart#1.-set-up-wandb">wandb docs</a> for details.</p></li>
+<li><p class="linemarker linemarker-12">See <a class="reference external" href="https://docs.wandb.ai/quickstart#1.-set-up-wandb">wandb docs</a> for details.</p></li>
 </ul>
 </section>
 <section id="log-your-das-runs">
 <h2>Log your DAS runs:<a class="headerlink" href="#log-your-das-runs" title="Permalink to this headline">#</a></h2>
 <ul class="simple">
-<li><p>CLI:</p></li>
+<li><p class="linemarker linemarker-15">CLI:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>das train OTHER_CLI_ARGS --wandb-token MY_SUPER_SECRET_TOKEN --wandb-entity django_reinhardt --wandb-project test_run
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>das<span class="w"> </span>train<span class="w"> </span>OTHER_CLI_ARGS<span class="w"> </span>--wandb-token<span class="w"> </span>MY_SUPER_SECRET_TOKEN<span class="w"> </span>--wandb-entity<span class="w"> </span>django_reinhardt<span class="w"> </span>--wandb-project<span class="w"> </span>test_run
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Python:</p></li>
+<li><p class="linemarker linemarker-19">Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">das</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">wandb</span><span class="o">-</span><span class="n">token</span><span class="o">=</span><span class="s2">&quot;MY_SUPER_SECRET_TOKEN&quot;</span><span class="p">,</span> <span class="n">wandb</span><span class="o">-</span><span class="n">entity</span><span class="o">=</span><span class="s2">&quot;django_reinhardt&quot;</span><span class="p">,</span> <span class="n">wandb_project</span><span class="o">=</span><span class="s2">&quot;test_run&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Args:</p>
+<li><p class="linemarker linemarker-23">Args:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">wandb_api_token</span></code>: API token from wandb. See the <a class="reference external" href="https://docs.wandb.ai/quickstart#1.-set-up-wandb">wandb docs</a> on how to generate the token.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">wandb_project</span></code>: Project to log to - useful for grouping runs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">wandb_entity</span></code>: User or team name to log to.</p></li>
+<li><p class="linemarker linemarker-24"><code class="docutils literal notranslate"><span class="pre">wandb_api_token</span></code>: API token from wandb. See the <a class="reference external" href="https://docs.wandb.ai/quickstart#1.-set-up-wandb">wandb docs</a> on how to generate the token.</p></li>
+<li><p class="linemarker linemarker-25"><code class="docutils literal notranslate"><span class="pre">wandb_project</span></code>: Project to log to - useful for grouping runs.</p></li>
+<li><p class="linemarker linemarker-26"><code class="docutils literal notranslate"><span class="pre">wandb_entity</span></code>: User or team name to log to.</p></li>
 </ul>
 </li>
 </ul>
@@ -326,10 +326,10 @@ wandb login
                 </div>
                 <div class="title">Generate segment labels</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="architecture_tuning.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -351,9 +351,7 @@ wandb login
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -365,7 +363,7 @@ wandb login
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            Contents
+            On this page
           </span>
         </div>
         <div class="toc-tree-container">
@@ -391,11 +389,6 @@ wandb login
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

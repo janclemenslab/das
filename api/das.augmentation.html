@@ -5,12 +5,11 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.block_stratify" href="das.block_stratify.html" /><link rel="prev" title="das.annot" href="das.annot.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
+    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
         <title>das.augmentation - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -158,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -257,7 +256,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,19 +273,19 @@
         <article role="main">
           <section id="module-das.augmentation">
 <span id="das-augmentation"></span><h1>das.augmentation<a class="headerlink" href="#module-das.augmentation" title="Permalink to this headline">#</a></h1>
-<p>Waveform level augmentations.</p>
-<p>Individual implementations of <a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Augmentation</span></code></a> are callables that accept
+<p class="linemarker linemarker-1">Waveform level augmentations.</p>
+<p class="linemarker linemarker-3">Individual implementations of <a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Augmentation</span></code></a> are callables that accept
 the signal to augment as an argument and return the augmented signal.</p>
-<p>Augmentation parameters can be <a class="reference internal" href="#das.augmentation.Constant" title="das.augmentation.Constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constant</span></code></a>, or random with <a class="reference internal" href="#das.augmentation.Normal" title="das.augmentation.Normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Normal</span></code></a> or <a class="reference internal" href="#das.augmentation.Uniform" title="das.augmentation.Uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Uniform</span></code></a> distribution.
+<p class="linemarker linemarker-6">Augmentation parameters can be <a class="reference internal" href="#das.augmentation.Constant" title="das.augmentation.Constant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Constant</span></code></a>, or random with <a class="reference internal" href="#das.augmentation.Normal" title="das.augmentation.Normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Normal</span></code></a> or <a class="reference internal" href="#das.augmentation.Uniform" title="das.augmentation.Uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Uniform</span></code></a> distribution.
 Random parameters will be sampled from a given distribution anew for each augmentation.</p>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">aug</span> <span class="pre">=</span> <span class="pre">Gain(gain=Normal(mean=1,</span> <span class="pre">std=0.5));</span> <span class="pre">augmented_signal</span> <span class="pre">=</span> <span class="pre">aug(signal)</span></code></p>
-<p>Can be configured using a yaml file:
+<p class="linemarker linemarker-9"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aug</span> <span class="pre">=</span> <span class="pre">Gain(gain=Normal(mean=1,</span> <span class="pre">std=0.5));</span> <span class="pre">augmented_signal</span> <span class="pre">=</span> <span class="pre">aug(signal)</span></code></p>
+<p class="linemarker linemarker-11">Can be configured using a yaml file:
 <a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>yaml
 Gain:  # Name of the augmentation class</p>
 <blockquote>
 <div><dl class="simple">
 <dt>gain:  # arg for the augmentation class</dt><dd><dl class="simple">
-<dt>Uniform:  # Param type</dt><dd><p>lower: 0.5  # param args
+<dt>Uniform:  # Param type</dt><dd><p class="linemarker linemarker-16">lower: 0.5  # param args
 upper: 2  # param args</p>
 </dd>
 </dl>
@@ -295,13 +295,13 @@ upper: 2  # param args</p>
 <dl>
 <dt>MaskNoise:</dt><dd><dl class="simple">
 <dt>std:</dt><dd><dl class="simple">
-<dt>Normal:</dt><dd><p>mean: 0
+<dt>Normal:</dt><dd><p class="linemarker linemarker-22">mean: 0
 std: 0.05</p>
 </dd>
 </dl>
 </dd>
 <dt>mean:</dt><dd><dl class="simple">
-<dt>Constant:</dt><dd><p>value: 0</p>
+<dt>Constant:</dt><dd><p class="linemarker linemarker-26">value: 0</p>
 </dd>
 </dl>
 </dd>
@@ -309,36 +309,36 @@ std: 0.05</p>
 </dd>
 <dt>NotchFilter:</dt><dd><dl class="simple">
 <dt>freq:  # Param-type arg</dt><dd><dl class="simple">
-<dt>Uniform:</dt><dd><p>lower: 100
+<dt>Uniform:</dt><dd><p class="linemarker linemarker-31">lower: 100
 upper: 600</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p>Q: 30  # standard arg
+<p class="linemarker linemarker-33">Q: 30  # standard arg
 samplerate_Hz: 10_000  # standard arg</p>
 </dd>
 </dl>
-<p><a href="#id5"><span class="problematic" id="id6">``</span></a>`
+<p class="linemarker linemarker-35"><a href="#id5"><span class="problematic" id="id6">``</span></a>`
 Caution: You need to add a suffix starting with ‘-’ (like “MaskNoise-1”) to the class name</p>
 <blockquote>
-<div><p>if you want to use a class multiple times</p>
+<div><p class="linemarker linemarker-37">if you want to use a class multiple times</p>
 </div></blockquote>
-<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">augs</span> <span class="pre">=</span> <span class="pre">Augmentations.from_yaml(filename)</span></code></p>
+<p class="linemarker linemarker-39"><code class="xref py py-obj docutils literal notranslate"><span class="pre">augs</span> <span class="pre">=</span> <span class="pre">Augmentations.from_yaml(filename)</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Augmentation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentation</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentation" title="Permalink to this definition">#</a></dt>
-<dd><p>Base class for all augmentations.</p>
-<p>Augmentations are callables that return the augmented input.
+<dd><p class="linemarker linemarker-1">Base class for all augmentations.</p>
+<p class="linemarker linemarker-3">Augmentations are callables that return the augmented input.
 Can optionally pass through a second input.</p>
-<p>batch_x is expected to be [batch, time, channel].
+<p class="linemarker linemarker-6">batch_x is expected to be [batch, time, channel].
 _apply works on [time, channel] inputs</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Augmentations">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Augmentations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">augmentations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><span class="pre">das.augmentation.Augmentation</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Augmentations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Augmentations" title="Permalink to this definition">#</a></dt>
-<dd><p>Bundles several augmentations.</p>
+<dd><p class="linemarker linemarker-1">Bundles several augmentations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>augmentations</strong> (<em>List</em><em>[</em><a class="reference internal" href="#das.augmentation.Augmentation" title="das.augmentation.Augmentation"><em>Augmentation</em></a><em>]</em>) – List of Augmentation instances.</p>
@@ -349,7 +349,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.CircShift">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">CircShift</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#CircShift"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.CircShift" title="Permalink to this definition">#</a></dt>
-<dd><p>Circularly shift input along the first axis.</p>
+<dd><p class="linemarker linemarker-1">Circularly shift input along the first axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>shift</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Amount of shift, in samples.</p>
@@ -360,7 +360,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Constant">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Constant" title="Permalink to this definition">#</a></dt>
-<dd><p>Constant parameter.</p>
+<dd><p class="linemarker linemarker-1">Constant parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>value</strong> (<em>float</em><em>, </em><em>optional</em>) – Constant parameter value. Defaults to 0.0.</p>
@@ -371,7 +371,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Gain">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Gain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Gain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Gain" title="Permalink to this definition">#</a></dt>
-<dd><p>Multiply signal with gain factor.</p>
+<dd><p class="linemarker linemarker-1">Multiply signal with gain factor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>gain</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Gain.</p>
@@ -382,7 +382,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.HorizontalFlip">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">HorizontalFlip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#HorizontalFlip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.HorizontalFlip" title="Permalink to this definition">#</a></dt>
-<dd><p>Horizontally flip signal.</p>
+<dd><p class="linemarker linemarker-1">Horizontally flip signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>flip</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Signal is flipped if &gt;0.</p>
@@ -393,7 +393,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.MaskMean">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskMean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskMean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskMean" title="Permalink to this definition">#</a></dt>
-<dd><p>Replaces stretch of <code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code> samples with mean over that stretch.</p>
+<dd><p class="linemarker linemarker-1">Replaces stretch of <code class="xref py py-obj docutils literal notranslate"><span class="pre">duration</span></code> samples with mean over that stretch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>duration</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Duration of the stretch, in samples.</p>
@@ -404,7 +404,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.MaskNoise">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">MaskNoise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#MaskNoise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.MaskNoise" title="Permalink to this definition">#</a></dt>
-<dd><p>Add noise or replace signal by noise for the full duration or a part of it.</p>
+<dd><p class="linemarker linemarker-1">Add noise or replace signal by noise for the full duration or a part of it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -420,7 +420,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Normal">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Normal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Normal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Normal" title="Permalink to this definition">#</a></dt>
-<dd><p>Normally distributed parameter.</p>
+<dd><p class="linemarker linemarker-1">Normally distributed parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -434,25 +434,25 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.NormalizeMax">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">NormalizeMax</span></span><a class="reference internal" href="../_modules/das/augmentation.html#NormalizeMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.NormalizeMax" title="Permalink to this definition">#</a></dt>
-<dd><p>Multiply signal with gain factor.</p>
+<dd><p class="linemarker linemarker-1">Multiply signal with gain factor.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.NormalizePercentile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">NormalizePercentile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#NormalizePercentile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.NormalizePercentile" title="Permalink to this definition">#</a></dt>
-<dd><p>Multiply signal with gain factor.</p>
+<dd><p class="linemarker linemarker-1">Multiply signal with gain factor.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.NormalizeStd">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">NormalizeStd</span></span><a class="reference internal" href="../_modules/das/augmentation.html#NormalizeStd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.NormalizeStd" title="Permalink to this definition">#</a></dt>
-<dd><p>Multiply signal with gain factor.</p>
+<dd><p class="linemarker linemarker-1">Multiply signal with gain factor.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.NotchFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">NotchFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">freq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">Q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate_Hz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#NotchFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.NotchFilter" title="Permalink to this definition">#</a></dt>
-<dd><p>Notch filter.</p>
+<dd><p class="linemarker linemarker-1">Notch filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>freq</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – freq to remove, in Hz.</p>
@@ -463,7 +463,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Offset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Offset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Offset" title="Permalink to this definition">#</a></dt>
-<dd><p>Add horizontal offset.</p>
+<dd><p class="linemarker linemarker-1">Add horizontal offset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>offset</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Offset.</p>
@@ -474,14 +474,14 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Param">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Param</span></span><a class="reference internal" href="../_modules/das/augmentation.html#Param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Param" title="Permalink to this definition">#</a></dt>
-<dd><p>Base class for all parameters.</p>
-<p>Parameters are callables that return parameter values.</p>
+<dd><p class="linemarker linemarker-1">Base class for all parameters.</p>
+<p class="linemarker linemarker-3">Parameters are callables that return parameter values.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Uniform">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Uniform" title="Permalink to this definition">#</a></dt>
-<dd><p>Uniformly distributed parameter.</p>
+<dd><p class="linemarker linemarker-1">Uniformly distributed parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -495,7 +495,7 @@ _apply works on [time, channel] inputs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.augmentation.Upsampling">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.augmentation.</span></span><span class="sig-name descname"><span class="pre">Upsampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><span class="pre">das.augmentation.Param</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/augmentation.html#Upsampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.augmentation.Upsampling" title="Permalink to this definition">#</a></dt>
-<dd><p>Upsample signal.</p>
+<dd><p class="linemarker linemarker-1">Upsample signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>factor</strong> (<a class="reference internal" href="#das.augmentation.Param" title="das.augmentation.Param"><em>Param</em></a>) – Upsampling factor.</p>
@@ -520,10 +520,10 @@ _apply works on [time, channel] inputs</p>
                 </div>
                 <div class="title">das.block_stratify</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="das.annot.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -545,9 +545,7 @@ _apply works on [time, channel] inputs</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
@@ -565,11 +563,6 @@ _apply works on [time, channel] inputs</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
