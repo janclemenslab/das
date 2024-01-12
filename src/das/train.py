@@ -81,6 +81,8 @@ def train(
     post_opt_min_len_min: float = 0.0005,
     post_opt_min_len_max: float = 1.0,
     post_opt_min_len_steps: int = 20,
+    morph_kernel_duration: int = 32,
+    morph_nb_kernels: int = 0,
     resnet_compute: bool = False,
     resnet_train: bool = False,
     _qt_progress: bool = False,
@@ -205,12 +207,16 @@ def train(
         post_opt_min_len_max (float): Defaults to 1 second.
         post_opt_min_len_steps (int): Defaults to 20.
 
+        morph_nb_kernels (int): Defaults to 0 (do not add morphological kernels).
+        morph_kernel_duration (int): Defaults to 32.
+
         resnet_compute (bool): Defaults to False.
         resnet_train (bool): Defaults to False.
-        Returns
-            model (keras.Model)
-            params (Dict[str, Any])
-            history (keras.callbacks.History)
+
+    Returns:
+        model (keras.Model)
+        params (Dict[str, Any])
+        history (keras.callbacks.History)
     """
     # _qt_progress: tuple of (multiprocessing.Queue, threading.Event)
     #        The queue is used to transmit progress updates to the GUI,
@@ -421,7 +427,9 @@ def train(
         wandb = tracking.Wandb(wandb_project, wandb_api_token, wandb_entity, params)
         if wandb:
             callbacks.append(wandb.callback())
-            params["wandb_run_name"] = wandb.run.name
+            params["wandb_run_name"] = None
+            if hasattr(wandb.run, "name"):
+                params["wandb_run_name"] = wandb.run.name
 
     utils.save_params(params, save_name)
 

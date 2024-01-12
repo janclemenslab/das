@@ -1,11 +1,11 @@
 """
 References
 ----------
-Implementation of Morphological Layers [1]_, [2]_, [3]_, [4]_
+Implementation of Morphological Layers:
 
-.. [1] Serra, J. (1983) Image Analysis and Mathematical Morphology.
+Serra, J. (1983) Image Analysis and Mathematical Morphology.
        Academic Press, Inc. Orlando, FL, USA
-.. [2] Soille, P. (1999). Morphological Image Analysis. Springer-Verlag
+Soille, P. (1999). Morphological Image Analysis. Springer-Verlag
 """
 
 import tensorflow as tf
@@ -17,26 +17,12 @@ from tensorflow.keras.layers import Layer
 from tensorflow.python.keras.utils import conv_utils
 from tensorflow.keras.layers import InputSpec
 from tensorflow.python.ops import nn
-from tensorflow.python.ops import math_ops
-from tensorflow.python.ops import array_ops
 from tensorflow.python.keras import activations
 from .constraints import SEconstraint, ZeroToOne
 from .initializers import MinusOnesZeroCenter
 import skimage.morphology as skm
 import scipy.ndimage.morphology as snm
 from skimage.draw import line
-
-"""
-Global Variables
-----------------
-MIN_LATT : float
-    Minimum lattice value.
-"""
-
-"""
-Get Lines
----------
-"""
 
 
 def get_lines(sw):
@@ -200,30 +186,19 @@ def gradient2d(x, st_element, strides, padding, rates=(1, 1)):
     """Gradient Operator.
 
     Args:
-    x : tf.Tensor
-        Input tensor.
-    st_element : tf.Tensor
-        Nonflat structuring element.
-    strides : tuple
-        Strides are only applied in the second operator (erosion).
-    padding : str
-        Padding as classical convolutional layers.
-    rates : tuple, optional
-        Rates are only applied in the second operator (erosion).
+        x : tf.Tensor Input tensor.
+        st_element (tf.Tensor): Nonflat structuring element.
+        strides (tuple): Strides are only applied in the second operator (erosion).
+        padding (str): Padding as classical convolutional layers.
+        rates (tuple, optional): Rates are only applied in the second operator (erosion).
 
     Returns
-    -------
-    tf.Tensor
-        Result of the gradient operation.
-
+        tf.Tensor: Result of the gradient operation.
     """
     x = tf.nn.dilation2d(x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,)) - tf.nn.erosion2d(
         x, st_element, (1,) + strides + (1,), padding.upper(), "NHWC", (1,) + rates + (1,)
     )
     return x
-
-
-import tensorflow as tf
 
 
 @tf.function
@@ -665,7 +640,6 @@ def region_minima_transform(X):
     Returns:
         Tensor after region minima transform.
     """
-    h = 1.0 / 255.0
     return h_concave_transform([tf.convert_to_tensor([[1.0 / 255.0]]), X])
 
 
@@ -3883,7 +3857,7 @@ class ToggleMapping2D(Layer):
             return (input_shape[0],) + tuple(new_space) + (self.num_filters * input_shape[self.channel_axis],)
 
         def get_config(self):
-            config = super().get_config().copy()
+            config = super(ToggleMapping2D, self).get_config().copy()
             config.update(
                 {
                     "num_filters": self.num_filters,

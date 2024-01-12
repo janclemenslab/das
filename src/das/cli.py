@@ -18,7 +18,16 @@ def version():
     import h5py
     import sklearn as sk
     import tensorflow as tf
-    import tensorflow.keras
+
+    try:
+        import tensorflow.keras
+    except (ModuleNotFoundError, ImportError):
+        pass
+    try:
+        import keras
+    except (ModuleNotFoundError, ImportError):
+        pass
+
     import xarray as xr
 
     try:
@@ -44,7 +53,10 @@ def version():
 
     logger.info("")
     logger.info(f"  tensorflow v{tf.__version__}")
-    logger.info(f"  keras v{tensorflow.keras.__version__}")
+    if not hasattr(tensorflow.keras, "__version__"):
+        logger.info(f"  keras v{keras.__version__}")
+    else:
+        logger.info(f"  keras v{tensorflow.keras.__version__}")
     logger.info(f"     GPU is {'' if gpu else 'not'} available.")
     logger.info("")
     logger.info(f"  python v{sys.version}")

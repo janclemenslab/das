@@ -1,11 +1,6 @@
 from tensorflow.keras import backend as K
 from tensorflow.keras.regularizers import Regularizer
 
-"""
-===============
-GLOBAL VARIABLE
-===============
-"""
 MIN_LATT = -1
 
 
@@ -44,9 +39,6 @@ class L1L2Lattice(Regularizer):
             dict: Regularizer configuration.
         """
         return {"l1": float(self.l1), "l2": float(self.l2)}
-
-
-# Aliases.
 
 
 def l1lattice(l=0.01):

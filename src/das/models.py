@@ -45,6 +45,8 @@ def tcn_stft(
     nb_pre_conv: int = 0,
     pre_nb_dft: int = 64,
     nb_lstm_units: int = 0,
+    morph_nb_kernels: int = 1,
+    morph_kernel_duration: int = 32,
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
@@ -76,6 +78,8 @@ def tcn_stft(
                                     Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
         nb_lstm_units (int, optional): Defaults to 0.
+        morph_nb_kernels (int): Defaults to 0 (no morphological kernels).
+        morph_kernel_duration (int): Defaults to 32.
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but may speed up inference.
                                    Defaults to True.
@@ -129,6 +133,24 @@ def tcn_stft(
         x = kl.Bidirectional(kl.LSTM(units=nb_lstm_units, return_sequences=True))(x)
 
     x = kl.Dense(nb_classes, activation="softmax")(x)
+
+    if morph_nb_kernels > 0:
+        x = x[:, :, tf.newaxis, :]
+        x = Closing2D(
+            num_filters=morph_nb_kernels,
+            padding="same",
+            kernel_size=(morph_kernel_duration, 1),
+            kernel_regularization=l1lattice(0.002),
+            # kernel_constraint=ser,
+        )(x)
+        x = Opening2D(
+            num_filters=morph_nb_kernels,
+            padding="same",
+            kernel_size=(morph_kernel_duration, 1),
+            kernel_regularization=l1lattice(0.002),
+            # kernel_constraint=ser,
+        )(x)
+        x = x[..., 0, :]
 
     if nb_pre_conv > 0 and upsample:
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
@@ -244,6 +266,8 @@ def tcn_stft_morph(
     nb_pre_conv: int = 0,
     pre_nb_dft: int = 64,
     nb_lstm_units: int = 0,
+    morph_nb_kernels: int = 1,
+    morph_kernel_duration: int = 33,
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
@@ -274,7 +298,9 @@ def tcn_stft_morph(
                                     Number of filters is pre_nb_dft // 2 + 1.
                                     Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
-        nb_lstm_units (int, optional): Defaults to 0.
+        nb_lstm_units (int, optional): Defaults to 0 (no lstm units).
+        morph_nb_kernels (int): Defaults to 1 (no morphological kernels).
+        morph_kernel_duration (int): Defaults to 33.
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but may speed up inference.
                                    Defaults to True.
@@ -329,30 +355,22 @@ def tcn_stft_morph(
 
     x = kl.Dense(nb_classes, activation="softmax")(x)
 
-    # from .morpholayers.constraints import Disk
-    # import skimage.morphology as skm
-    # def ser(length):
-    #     return skm.rectangle(length, 1)
-    # skimage.morphology.remove_small_holes
-    # skimage.morphology.remove_small_objects
-    morph_kernel_duration = 33
-    if morph_kernel_duration is not None:
+    if morph_nb_kernels > 0:
         x = x[:, :, tf.newaxis, :]
         x = Closing2D(
-            num_filters=1,
+            num_filters=morph_nb_kernels,
             padding="same",
             kernel_size=(morph_kernel_duration, 1),
             kernel_regularization=l1lattice(0.002),
             # kernel_constraint=ser,
         )(x)
         x = Opening2D(
-            num_filters=1,
+            num_filters=morph_nb_kernels,
             padding="same",
             kernel_size=(morph_kernel_duration, 1),
             kernel_regularization=l1lattice(0.002),
             # kernel_constraint=ser,
         )(x)
-
         x = x[..., 0, :]
 
     if nb_pre_conv > 0 and upsample:
