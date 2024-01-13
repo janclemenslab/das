@@ -55,6 +55,8 @@ test:
     - das
     - das.kapre
     - das.tcn
+    - das.morpholayers
+    - tensorflow
   commands:
     - das --help
     - das gui --help
