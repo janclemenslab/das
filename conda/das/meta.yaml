@@ -31,13 +31,14 @@ requirements:
     - h5py
     - matplotlib
     - pandas
+    - numpy>=1.23
     - numpy=1.23  # [win and py=39]
     - peakutils
     - pyyaml
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave>=0.34.1
+    - xarray-behave>=0.34.2
     - conda-forge::cudatoolkit # [linux or win]
     - conda-forge::cudnn # [linux or win]
 #     - conda-forge::tensorflow # [linux]
