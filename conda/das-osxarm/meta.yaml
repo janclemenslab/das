@@ -13,7 +13,7 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
-  script: pwd && $SRC_DIR/conda/das-osxarm/build_osx-arm64.sh
+  script: pwd && "${SRC_DIR}/conda/das-osxarm/build_osx-arm64.sh"
 
 
 requirements:
