@@ -32,7 +32,7 @@ requirements:
     - matplotlib
     - pandas
     - numpy>=1.23
-    - numpy=1.23  # [win and py=39]
+    - numpy=1.23  # [win and py39]
     - peakutils
     - pyyaml
     - scikit-learn
