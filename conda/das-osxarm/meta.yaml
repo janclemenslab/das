@@ -13,13 +13,13 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
+  script: pwd && $SRC_DIR/conda/das-osxarm/build_osx-arm64.sh
+
 
 requirements:
   host:
     - python {{ python }}
     - pip
-    # - h5py
-    # - numpy
   run:
     - python {{ python }}
     - rich
@@ -33,9 +33,8 @@ requirements:
     - pyside2
     - scikit-learn
     - scikit-image
-    - tqdm
-    - xarray-behave>=0.34.0
-    # - apple::tensorflow-deps=2.13
+    # - tqdm
+    - xarray-behave>=0.34.2
     - keras
     - keras-tuner
 
