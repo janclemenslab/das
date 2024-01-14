@@ -1,0 +1,79 @@
+{% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
+{% set name = "das" %}
+{% set version = data.get('version') %}
+
+package:
+  name: das
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+
+build:
+  number: 0
+  entry_points:
+    - das=das.cli:main
+
+outputs:
+  - name: das
+    script: build_unix.sh  # [unix and not arm64]
+    script: build_osxarm64.sh  # [osx and arm64]
+    script: build_win.bat  # [win]
+    requirements:
+      host:
+        - python {{ python }}
+        - pip
+      run:
+        - python {{ python }}
+        - rich
+        - flammkuchen
+        - matplotlib
+        - pandas
+        - numpy
+        - peakutils
+        - pyyaml
+        - defopt=6.3
+        - scikit-learn
+        - scikit-image
+        - xarray-behave>=0.34.2
+        - keras
+        - tqdm
+        # - h5py
+        # - pyside2
+        - numpy>=1.23
+        - numpy=1.23  # [win and py39]
+        - conda-forge::cudatoolkit # [linux or win]
+        - conda-forge::cudnn # [linux or win]
+        - conda-forge::tensorflow<2.10 # [linux]
+        - tensorflow-gpu>2.3 # [win and py<310]
+        - tensorflow==2.10 # [win and py>=310]
+        - anaconda::tensorflow==2.9.1 # [osx and not arm64]
+        # - apple::tensorflow-deps # [not osx and arm64]
+        - keras
+        - keras-tuner  # [not arm64]
+
+    test:
+      imports:
+        - das
+        - das.kapre
+        - das.tcn
+        - das.morpholayers
+        - tensorflow
+      commands:
+        - das --help
+        - das gui --help
+        - das predict --help
+        - das version
+
+about:
+  home: "http://github.com/janclemenslab/das"
+  license: MIT
+  license_family: MIT
+  license_file:
+  summary: "DAS"
+  doc_url: "https://janclemenslab.org/das"
+  dev_url: "http://github.com/janclemenslab/das"
+
+extra:
+  recipe-maintainers:
+    - postpop

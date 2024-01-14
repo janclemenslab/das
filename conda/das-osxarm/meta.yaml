@@ -13,8 +13,6 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
-  script: pwd && "${SRC_DIR}/conda/das-osxarm/build_osx-arm64.sh"
-
 
 requirements:
   host:
@@ -43,9 +41,12 @@ test:
     - das
     - das.kapre
     - das.tcn
+    - das.morpholayers
+    - tensorflow
   commands:
     - das --help
     - das gui --help
+    - das version
 
 about:
   home: "http://github.com/janclemenslab/das"
