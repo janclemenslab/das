@@ -20,7 +20,7 @@ jobs:
       fail-fast: False
       matrix:
         python-version: [3.9 , '3.10', '3.11']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-13, macOS-14]
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
@@ -42,6 +42,6 @@ jobs:
         use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
     - name: Build and upload to anaconda
       run: |
-        conda mambabuild conda/das -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        conda mambabuild conda/das-test -c conda-forge -c ncb -c anaconda -c nvidia --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
