@@ -31,7 +31,7 @@ requirements:
     - h5py
     - matplotlib
     - pandas
-    # - numpy>=1.23
+    - numpy>=1.23  # [not win and py>39]
     - numpy=1.23  # [win and py39]
     - peakutils
     - pyyaml
@@ -41,7 +41,6 @@ requirements:
     - xarray-behave>=0.34.2
     - conda-forge::cudatoolkit # [linux or win]
     - conda-forge::cudnn # [linux or win]
-#     - conda-forge::tensorflow # [linux]
     - conda-forge::tensorflow<2.10 # [linux]
     - tensorflow-gpu>2.3 # [win and py<310]
     - tensorflow==2.10 # [win and py>=310]
