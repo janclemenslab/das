@@ -5,11 +5,12 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Load the model - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +158,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -256,8 +257,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -282,7 +282,7 @@
 </div>
 <section id="load-the-model">
 <h1>Load the model<a class="headerlink" href="#load-the-model" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-20003">Change <code class="docutils literal notranslate"><span class="pre">model_savename</span></code> - if the model is saved at <code class="docutils literal notranslate"><span class="pre">res/20220601_103543_model.h5</span></code>, then <code class="docutils literal notranslate"><span class="pre">model_savename=&quot;res/20220601_103543&quot;</span></code>.</p>
+<p>Change <code class="docutils literal notranslate"><span class="pre">model_savename</span></code> - if the model is saved at <code class="docutils literal notranslate"><span class="pre">res/20220601_103543_model.h5</span></code>, then <code class="docutils literal notranslate"><span class="pre">model_savename=&quot;res/20220601_103543&quot;</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model_savename</span> <span class="o">=</span> <span class="s1">&#39;res/20220601_103543&#39;</span>
@@ -321,7 +321,7 @@
 </section>
 <section id="prep-callbacks">
 <h1>Prep callbacks<a class="headerlink" href="#prep-callbacks" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-80003">The new model will be saved to <code class="docutils literal notranslate"><span class="pre">model_savename</span> <span class="pre">+</span> <span class="pre">&quot;_continued_model.h5&quot;</span></code>, in our example “res/20220601_103543_continued_model.h5”.</p>
+<p>The new model will be saved to <code class="docutils literal notranslate"><span class="pre">model_savename</span> <span class="pre">+</span> <span class="pre">&quot;_continued_model.h5&quot;</span></code>, in our example “res/20220601_103543_continued_model.h5”.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">das</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">model_savename</span> <span class="o">+</span> <span class="s2">&quot;_continued&quot;</span><span class="p">)</span>
@@ -411,7 +411,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -429,6 +431,11 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

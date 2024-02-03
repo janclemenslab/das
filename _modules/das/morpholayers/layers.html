@@ -4,16 +4,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.morpholayers.layers - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/css/lightbox.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -157,7 +157,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -299,7 +299,7 @@
 
 
 <div class="viewcode-block" id="get_lines"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.get_lines">[docs]</a><span class="k">def</span> <span class="nf">get_lines</span><span class="p">(</span><span class="n">sw</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get lines.</span>
+    <span class="sd">&quot;&quot;&quot;Get lines.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    sw (int): Size of the lines.</span>
@@ -326,7 +326,7 @@
 
 <div class="viewcode-block" id="convolution2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.convolution2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">convolution2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Convolution Operator (Depthwise).</span>
+    <span class="sd">&quot;&quot;&quot;Basic Convolution Operator (Depthwise).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    x : tf.Tensor</span>
@@ -350,7 +350,7 @@
 
 <div class="viewcode-block" id="dilation2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.dilation2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">dilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Dilation Operator.</span>
+    <span class="sd">&quot;&quot;&quot;Basic Dilation Operator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    x : tf.Tensor</span>
@@ -376,7 +376,7 @@
 
 <div class="viewcode-block" id="erosion2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.erosion2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">erosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Erosion Operator.</span>
+    <span class="sd">&quot;&quot;&quot;Basic Erosion Operator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    x : tf.Tensor</span>
@@ -402,7 +402,7 @@
 
 <div class="viewcode-block" id="opening2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.opening2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">opening2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Opening Operator.</span>
+    <span class="sd">&quot;&quot;&quot;Basic Opening Operator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    x : tf.Tensor</span>
@@ -429,7 +429,7 @@
 
 <div class="viewcode-block" id="closing2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.closing2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">closing2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Closing Operator.</span>
+    <span class="sd">&quot;&quot;&quot;Basic Closing Operator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">    x : tf.Tensor</span>
@@ -456,7 +456,7 @@
 
 <div class="viewcode-block" id="gradient2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.gradient2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">gradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gradient Operator.</span>
+    <span class="sd">&quot;&quot;&quot;Gradient Operator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x : tf.Tensor Input tensor.</span>
@@ -476,7 +476,7 @@
 
 <div class="viewcode-block" id="internalgradient2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.internalgradient2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">internalgradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal Gradient Operator</span>
+    <span class="sd">&quot;&quot;&quot;Internal Gradient Operator</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor.</span>
@@ -494,7 +494,7 @@
 
 <div class="viewcode-block" id="externalgradient2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.externalgradient2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">externalgradient2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;External Gradient Operator</span>
+    <span class="sd">&quot;&quot;&quot;External Gradient Operator</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor.</span>
@@ -512,7 +512,7 @@
 
 <div class="viewcode-block" id="togglemapping2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.togglemapping2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">togglemapping2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;same&quot;</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Toggle Mapping Operator</span>
+    <span class="sd">&quot;&quot;&quot;Toggle Mapping Operator</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor.</span>
@@ -536,7 +536,7 @@
 
 <div class="viewcode-block" id="togglemapping"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.togglemapping">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">togglemapping</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;K steps of toggle mapping operator</span>
+    <span class="sd">&quot;&quot;&quot;K steps of toggle mapping operator</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -556,7 +556,7 @@
 
 <div class="viewcode-block" id="antidilation2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.antidilation2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">antidilation2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Dilation Operator of the negative of the input image</span>
+    <span class="sd">&quot;&quot;&quot;Basic Dilation Operator of the negative of the input image</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor.</span>
@@ -574,7 +574,7 @@
 
 <div class="viewcode-block" id="antierosion2d"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.antierosion2d">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">antierosion2d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">st_element</span><span class="p">,</span> <span class="n">strides</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">rates</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Erosion Operator of the negative of the input image</span>
+    <span class="sd">&quot;&quot;&quot;Basic Erosion Operator of the negative of the input image</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: Input tensor.</span>
@@ -606,7 +606,7 @@
 
 <div class="viewcode-block" id="condition_equal"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.condition_equal">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">condition_equal</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two tensors are not equal element-wise.</span>
+    <span class="sd">&quot;&quot;&quot;Check if two tensors are not equal element-wise.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        last: Previous tensor.</span>
@@ -620,7 +620,7 @@
 
 
 <div class="viewcode-block" id="update_dilation"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.update_dilation">[docs]</a><span class="k">def</span> <span class="nf">update_dilation</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the dilation step during reconstruction.</span>
+    <span class="sd">&quot;&quot;&quot;Update the dilation step during reconstruction.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        last: Previous tensor.</span>
@@ -635,7 +635,7 @@
 
 <div class="viewcode-block" id="geodesic_dilation_step"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_dilation_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_dilation_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;1 step of reconstruction by dilation.</span>
+    <span class="sd">&quot;&quot;&quot;1 step of reconstruction by dilation.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -650,7 +650,7 @@
 
 <div class="viewcode-block" id="geodesic_dilation"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_dilation">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_dilation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Full reconstruction by dilation if steps=None, else</span>
+    <span class="sd">&quot;&quot;&quot;Full reconstruction by dilation if steps=None, else</span>
 <span class="sd">    K steps reconstruction by dilation.</span>
 
 <span class="sd">    Args:</span>
@@ -667,7 +667,7 @@
 
 
 <div class="viewcode-block" id="reconstruction_dilation"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.reconstruction_dilation">[docs]</a><span class="k">def</span> <span class="nf">reconstruction_dilation</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Full geodesic reconstruction by dilation, reaching idempotence.</span>
+    <span class="sd">&quot;&quot;&quot;Full geodesic reconstruction by dilation, reaching idempotence.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -679,7 +679,7 @@
 
 
 <div class="viewcode-block" id="update_erosion"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.update_erosion">[docs]</a><span class="k">def</span> <span class="nf">update_erosion</span><span class="p">(</span><span class="n">last</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the erosion step during reconstruction.</span>
+    <span class="sd">&quot;&quot;&quot;Update the erosion step during reconstruction.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        last: Previous tensor.</span>
@@ -694,7 +694,7 @@
 
 <div class="viewcode-block" id="geodesic_erosion_step"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_erosion_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_erosion_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    1 step of reconstruction by erosion.</span>
 
 <span class="sd">    Args:</span>
@@ -710,7 +710,7 @@
 
 <div class="viewcode-block" id="geodesic_erosion"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.geodesic_erosion">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">geodesic_erosion</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Full reconstruction by erosion if steps=None, else</span>
+    <span class="sd">&quot;&quot;&quot;Full reconstruction by erosion if steps=None, else</span>
 <span class="sd">    K steps reconstruction by erosion.</span>
 
 <span class="sd">    Args:</span>
@@ -728,7 +728,7 @@
 
 
 <div class="viewcode-block" id="reconstruction_erosion"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.reconstruction_erosion">[docs]</a><span class="k">def</span> <span class="nf">reconstruction_erosion</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Full geodesic reconstruction by erosion, reaching idempotence</span>
+    <span class="sd">&quot;&quot;&quot;Full geodesic reconstruction by erosion, reaching idempotence</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -742,7 +742,7 @@
 
 <div class="viewcode-block" id="leveling_iteration"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.leveling_iteration">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">leveling_iteration</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;K steps of reconstruction by dilation</span>
+    <span class="sd">&quot;&quot;&quot;K steps of reconstruction by dilation</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -776,7 +776,7 @@
 
 <div class="viewcode-block" id="distance_step"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.distance_step">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">distance_step</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;One step of morphological distance by dilation</span>
+    <span class="sd">&quot;&quot;&quot;One step of morphological distance by dilation</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -790,7 +790,7 @@
 
 <div class="viewcode-block" id="morphological_distance"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.morphological_distance">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">morphological_distance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Morphological Distance Transform if steps=None, else</span>
+    <span class="sd">&quot;&quot;&quot;Morphological Distance Transform if steps=None, else</span>
 <span class="sd">    K steps morphological Distance</span>
 
 <span class="sd">    Args:</span>
@@ -808,7 +808,7 @@
 
 <div class="viewcode-block" id="leveling"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.leveling">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">leveling</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Leveling from Marker</span>
+    <span class="sd">&quot;&quot;&quot;Perform Leveling from Marker</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -827,7 +827,7 @@
 
 <div class="viewcode-block" id="h_maxima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.h_maxima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">h_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;H-maxima transform of image X[1] with h=X[0]</span>
+    <span class="sd">&quot;&quot;&quot;H-maxima transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -843,7 +843,7 @@
 
 <div class="viewcode-block" id="h_minima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.h_minima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">h_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;H-maxima transform of image X[1] with h=X[0]</span>
+    <span class="sd">&quot;&quot;&quot;H-maxima transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -860,7 +860,7 @@
 
 <div class="viewcode-block" id="h_convex_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.h_convex_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">h_convex_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;H-convex transform of image X[1] with h=X[0]</span>
+    <span class="sd">&quot;&quot;&quot;H-convex transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -876,7 +876,7 @@
 
 <div class="viewcode-block" id="h_concave_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.h_concave_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">h_concave_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;H-convex transform of image X[1] with h=X[0]</span>
+    <span class="sd">&quot;&quot;&quot;H-convex transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -892,7 +892,7 @@
 
 <div class="viewcode-block" id="region_maxima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.region_maxima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">region_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Region maxima transform of image X</span>
+    <span class="sd">&quot;&quot;&quot;Region maxima transform of image X</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -905,7 +905,7 @@
 
 <div class="viewcode-block" id="region_minima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.region_minima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">region_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Region minima transform of image X</span>
+    <span class="sd">&quot;&quot;&quot;Region minima transform of image X</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -918,7 +918,7 @@
 
 <div class="viewcode-block" id="extended_maxima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.extended_maxima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">extended_maxima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extended maxima transform of image X[1] with h=X[0]</span>
+    <span class="sd">&quot;&quot;&quot;Extended maxima transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X: Input tensor.</span>
@@ -931,7 +931,7 @@
 
 <div class="viewcode-block" id="extended_minima_transform"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.extended_minima_transform">[docs]</a><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
 <span class="k">def</span> <span class="nf">extended_minima_transform</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    extended minima transform of image X[1] with h=X[0]</span>
 
 <span class="sd">    Args:</span>
@@ -951,7 +951,7 @@
 
 
 <div class="viewcode-block" id="Erosion2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Erosion2D">[docs]</a><span class="k">class</span> <span class="nc">Erosion2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sum of Depthwise (Marginal) Erosion 2D on the third axes</span>
 <span class="sd">    for now assuming channel last</span>
 
@@ -1077,7 +1077,7 @@
 
 
 <div class="viewcode-block" id="Dilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Dilation2D">[docs]</a><span class="k">class</span> <span class="nc">Dilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sum of Depthwise (Marginal) Dilation 2D on the third axes</span>
 <span class="sd">    for now assuming channel last</span>
 
@@ -1203,7 +1203,7 @@
 
 
 <div class="viewcode-block" id="IntegratorofOperator2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.IntegratorofOperator2D">[docs]</a><span class="k">class</span> <span class="nc">IntegratorofOperator2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Integrator on channel axis of 2D operator apply per channel</span>
 <span class="sd">    for now assuming channel last</span>
 
@@ -1334,7 +1334,7 @@
 
 
 <div class="viewcode-block" id="MaxofErosions2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MaxofErosions2D">[docs]</a><span class="k">class</span> <span class="nc">MaxofErosions2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Maximum of Erosion 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    [1]_, [2]_, [3]_, [4]_</span>
@@ -1439,7 +1439,7 @@
 
 
 <div class="viewcode-block" id="MaxofErosions2D_old"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MaxofErosions2D_old">[docs]</a><span class="k">class</span> <span class="nc">MaxofErosions2D_old</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Maximum of Erosion 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    [1]_, [2]_, [3]_, [4]_</span>
@@ -1543,7 +1543,7 @@
 
 
 <div class="viewcode-block" id="MinofDilations2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MinofDilations2D">[docs]</a><span class="k">class</span> <span class="nc">MinofDilations2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Minimum of Dilations 2D Layer assuming channel last</span>
 
 <span class="sd">    :param num_filters: the number of filters</span>
@@ -1638,7 +1638,7 @@
 
 
 <div class="viewcode-block" id="MinofDilations2D_old"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MinofDilations2D_old">[docs]</a><span class="k">class</span> <span class="nc">MinofDilations2D_old</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Minimum of Dilations 2D Layer assuming channel last</span>
 
 <span class="sd">    :param num_filters: the number of filters</span>
@@ -1739,7 +1739,7 @@
 
 
 <div class="viewcode-block" id="DepthwiseOperator2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.DepthwiseOperator2D">[docs]</a><span class="k">class</span> <span class="nc">DepthwiseOperator2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Depthwise Operator 2D Layer: Depthwise Operator for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1866,7 +1866,7 @@
 
 
 <div class="viewcode-block" id="DepthwiseDilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.DepthwiseDilation2D">[docs]</a><span class="k">class</span> <span class="nc">DepthwiseDilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Depthwise Dilation 2D Layer: Depthwise Dilation for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1969,7 +1969,7 @@
 
 
 <div class="viewcode-block" id="DepthwiseErosion2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.DepthwiseErosion2D">[docs]</a><span class="k">class</span> <span class="nc">DepthwiseErosion2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Depthwise Erosion 2D Layer: Depthwise Dilation for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2081,7 +2081,7 @@
 
 <span class="c1"># TODO CHECK SEPARABLE (Not coherent with definition)</span>
 <div class="viewcode-block" id="SeparableDilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.SeparableDilation2D">[docs]</a><span class="k">class</span> <span class="nc">SeparableDilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Separable Dilation 2D Layer: First Depthwise Dilation follows by a Pointwise Dilation</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2202,7 +2202,7 @@
 
 
 <div class="viewcode-block" id="SeparableErosion2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.SeparableErosion2D">[docs]</a><span class="k">class</span> <span class="nc">SeparableErosion2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Separable Erosion 2D Layer: First Depthwise Erosion follows by a Pointwise Erosion</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2322,7 +2322,7 @@
 
 
 <div class="viewcode-block" id="BSErosion2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.BSErosion2D">[docs]</a><span class="k">class</span> <span class="nc">BSErosion2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Blueprint Separable Erosion 2D Layer: First Pointwise follows by Depthwise Erosion</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2435,7 +2435,7 @@
 
 
 <div class="viewcode-block" id="BSDilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.BSDilation2D">[docs]</a><span class="k">class</span> <span class="nc">BSDilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Blueprint Separable Dilation 2D Layer: First Pointwise follows by Depthwise Dilation</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2549,7 +2549,7 @@
 
 
 <div class="viewcode-block" id="SeparableDilation3D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.SeparableDilation3D">[docs]</a><span class="k">class</span> <span class="nc">SeparableDilation3D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Separable Dilation 3D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2667,7 +2667,7 @@
 
 <span class="c1"># TODO: CONVERT TO KERNEL_CONSTRAINT?</span>
 <div class="viewcode-block" id="DilationSE2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.DilationSE2D">[docs]</a><span class="k">class</span> <span class="nc">DilationSE2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Dilation SE 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2779,7 +2779,7 @@
 
 
 <div class="viewcode-block" id="Antierosion2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Antierosion2D">[docs]</a><span class="k">class</span> <span class="nc">Antierosion2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    AntiErosion 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2866,7 +2866,7 @@
 
 
 <div class="viewcode-block" id="Antidilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Antidilation2D">[docs]</a><span class="k">class</span> <span class="nc">Antidilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Antidilation 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2956,7 +2956,7 @@
 
 
 <div class="viewcode-block" id="QuadraticDilation2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.QuadraticDilation2D">[docs]</a><span class="k">class</span> <span class="nc">QuadraticDilation2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quadratic Dilation 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3053,7 +3053,7 @@
 
 
 <div class="viewcode-block" id="TopHatOpening2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.TopHatOpening2D">[docs]</a><span class="k">class</span> <span class="nc">TopHatOpening2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TopHat from Opening 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3140,7 +3140,7 @@
 
 
 <div class="viewcode-block" id="TopHatClosing2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.TopHatClosing2D">[docs]</a><span class="k">class</span> <span class="nc">TopHatClosing2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TopHat from Closing 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3236,7 +3236,7 @@
 
 
 <div class="viewcode-block" id="Opening2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Opening2D">[docs]</a><span class="k">class</span> <span class="nc">Opening2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Opening 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3318,7 +3318,7 @@
 
 
 <div class="viewcode-block" id="Closing2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Closing2D">[docs]</a><span class="k">class</span> <span class="nc">Closing2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Closing 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3407,7 +3407,7 @@
 
 
 <div class="viewcode-block" id="DepthwiseDilationLines2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.DepthwiseDilationLines2D">[docs]</a><span class="k">class</span> <span class="nc">DepthwiseDilationLines2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Depthwise Dilation Lines 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3545,7 +3545,7 @@
 
 
 <div class="viewcode-block" id="MorphoAverage2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MorphoAverage2D">[docs]</a><span class="k">class</span> <span class="nc">MorphoAverage2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Average of Dilation and Erosion2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3632,7 +3632,7 @@
 
 
 <div class="viewcode-block" id="QuadraticAverage2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.QuadraticAverage2D">[docs]</a><span class="k">class</span> <span class="nc">QuadraticAverage2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quadratic Average between Dilation and Erosion 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3734,7 +3734,7 @@
 
 
 <div class="viewcode-block" id="Probing2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Probing2D">[docs]</a><span class="k">class</span> <span class="nc">Probing2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Morphological Probing 2D Layer for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3827,7 +3827,7 @@
 
 
 <div class="viewcode-block" id="Gradient2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.Gradient2D">[docs]</a><span class="k">class</span> <span class="nc">Gradient2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Morphological Gradient 2D Layer for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3907,7 +3907,7 @@
 
 
 <div class="viewcode-block" id="InternalGradient2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.InternalGradient2D">[docs]</a><span class="k">class</span> <span class="nc">InternalGradient2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Internal Morphological Gradient 2D Layer for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3987,7 +3987,7 @@
 
 
 <div class="viewcode-block" id="ExternalGradient2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.ExternalGradient2D">[docs]</a><span class="k">class</span> <span class="nc">ExternalGradient2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    External Morphological Gradient 2D Layer for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -4067,7 +4067,7 @@
 
 
 <div class="viewcode-block" id="ToggleMapping2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.ToggleMapping2D">[docs]</a><span class="k">class</span> <span class="nc">ToggleMapping2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ToggleMapping 2D Layer for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -4151,7 +4151,7 @@
 
 
 <div class="viewcode-block" id="MinPooling2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MinPooling2D">[docs]</a><span class="k">class</span> <span class="nc">MinPooling2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Min Pooling layer for arbitrary pooling functions, for 2D inputs (e.g. images).</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">      pool_size: An integer or tuple/list of 2 integers: (pool_height, pool_width)</span>
@@ -4212,7 +4212,7 @@
 
 
 <div class="viewcode-block" id="GradPooling2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.GradPooling2D">[docs]</a><span class="k">class</span> <span class="nc">GradPooling2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Grad Pooling layer for arbitrary pooling functions, for 2D inputs (e.g. images).</span>
 <span class="sd">    Arguments:</span>
 <span class="sd">      pool_size: An integer or tuple/list of 2 integers: (pool_height, pool_width)</span>
@@ -4279,7 +4279,7 @@
 
 
 <div class="viewcode-block" id="MixedPooling2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MixedPooling2D">[docs]</a><span class="k">class</span> <span class="nc">MixedPooling2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Mixed Pooling.</span>
 <span class="sd">    Combine max pooling and average pooling in fixed proportion specified by alpha a:</span>
 <span class="sd">    f mixed (x) = a * f max(x) + (1-a) * f avg(x)</span>
@@ -4349,7 +4349,7 @@
 
 
 <div class="viewcode-block" id="MixedMaxMinPooling2D"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.MixedMaxMinPooling2D">[docs]</a><span class="k">class</span> <span class="nc">MixedMaxMinPooling2D</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    MixedMaxMinPooling2D.</span>
 <span class="sd">    Combine max pooling and min pooling in fixed proportion specified by alpha a:</span>
 <span class="sd">    f mixed (x) = a * f max(x) + (1-a) * f min(x)</span>
@@ -4419,7 +4419,7 @@
 
 
 <div class="viewcode-block" id="LasryLionsDE"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.LasryLionsDE">[docs]</a><span class="k">class</span> <span class="nc">LasryLionsDE</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lasry Dilation 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4541,7 +4541,7 @@
 
 
 <div class="viewcode-block" id="LasryLionsED"><a class="viewcode-back" href="../../../api/das.morpholayers.layers.html#das.morpholayers.layers.LasryLionsED">[docs]</a><span class="k">class</span> <span class="nc">LasryLionsED</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Lasry Erosion-Dilation 2D Layer</span>
 <span class="sd">    for now assuming channel last</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4829,7 +4829,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -4847,8 +4849,11 @@
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/scripts/furo.js"></script>
     <script src="../../../_static/tabs.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
-    <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

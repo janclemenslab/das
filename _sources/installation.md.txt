@@ -11,10 +11,18 @@ _Libsoundfile (Linux only)_: If you are on Linux and want to load audio from a w
 _Visual C++ runtime (Windows only)_: This is typically installed so only required if _DAS_ fails to load the native tensorflow runtime. Download the latest version [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
 
 ## Install _DAS_
-Create an anaconda environment called `das` that contains all the required packages:
+Create an anaconda environment called `das` that contains all the required packages.
+
+On windows
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+mamba create python=3.9 das=0.32.0 "numpy<1.24" -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+```
+
+On Linux or MacOS (intel and arm):
+```shell
+conda install mamba -c conda-forge -n base -y
+mamba create python=3.10 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 ```
 
 

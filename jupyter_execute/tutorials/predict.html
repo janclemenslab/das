@@ -5,11 +5,12 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Predict - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +158,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -256,8 +257,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,17 +273,17 @@
         <article role="main">
           <section id="predict">
 <h1>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-10003">Similar to training, prediction can be done via three interfaces:</p>
+<p>Similar to training, prediction can be done via three interfaces:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-10004">via python, <code class="docutils literal notranslate"><span class="pre">das.predict.predict</span></code></p></li>
-<li><p class="linemarker linemarker-10005">via the command line, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">predict</span></code>, with audio data from a wav file.</p></li>
-<li><p class="linemarker linemarker-10006">the GUI - see the <a class="reference internal" href="../../tutorials_gui/predict.html"><span class="doc std std-doc">GUI tutorial</span></a></p></li>
+<li><p>via python, <code class="docutils literal notranslate"><span class="pre">das.predict.predict</span></code></p></li>
+<li><p>via the command line, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">predict</span></code>, with audio data from a wav file.</p></li>
+<li><p>the GUI - see the <a class="reference internal" href="../../tutorials_gui/predict.html"><span class="doc std std-doc">GUI tutorial</span></a></p></li>
 </ul>
-<p class="linemarker linemarker-10008">Prediction will:</p>
+<p>Prediction will:</p>
 <ul class="simple">
-<li><p class="linemarker linemarker-10010">load the audio data and the network</p></li>
-<li><p class="linemarker linemarker-10011">run inference to produce confidence scores (<code class="docutils literal notranslate"><span class="pre">class_probabilties</span></code>)</p></li>
-<li><p class="linemarker linemarker-10012">post-process the confidence score to extract the times of events and label segments.</p></li>
+<li><p>load the audio data and the network</p></li>
+<li><p>run inference to produce confidence scores (<code class="docutils literal notranslate"><span class="pre">class_probabilties</span></code>)</p></li>
+<li><p>post-process the confidence score to extract the times of events and label segments.</p></li>
 </ul>
 <section id="prediction-using-python">
 <h2>Prediction using python<a class="headerlink" href="#prediction-using-python" title="Permalink to this headline">#</a></h2>
@@ -397,26 +397,26 @@ Wall time: 2.62 s
 <section id="outputs-of-predict">
 <h3>Outputs of <code class="docutils literal notranslate"><span class="pre">predict</span></code><a class="headerlink" href="#outputs-of-predict" title="Permalink to this headline">#</a></h3>
 <ul class="simple">
-<li><p class="linemarker linemarker-50003"><code class="docutils literal notranslate"><span class="pre">class_probabilties</span></code>: <code class="docutils literal notranslate"><span class="pre">[T,</span> <span class="pre">nb_classes]</span></code> including noise.</p></li>
-<li><p class="linemarker linemarker-50004"><code class="docutils literal notranslate"><span class="pre">segments</span></code>: Labelled segments</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">class_probabilties</span></code>: <code class="docutils literal notranslate"><span class="pre">[T,</span> <span class="pre">nb_classes]</span></code> including noise.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segments</span></code>: Labelled segments</p>
 <ul>
-<li><p class="linemarker linemarker-50005"><code class="docutils literal notranslate"><span class="pre">samplerate_Hz</span></code>:</p></li>
-<li><p class="linemarker linemarker-50006"><code class="docutils literal notranslate"><span class="pre">names</span></code>: names of all segment types</p></li>
-<li><p class="linemarker linemarker-50007"><code class="docutils literal notranslate"><span class="pre">index</span></code>: indices of all segments types into class_probabiltiies</p></li>
-<li><p class="linemarker linemarker-50008"><code class="docutils literal notranslate"><span class="pre">probabilities</span> <span class="pre">=</span> <span class="pre">class_probabilites[:,</span> <span class="pre">index]</span></code></p></li>
-<li><p class="linemarker linemarker-50009"><code class="docutils literal notranslate"><span class="pre">sequence</span></code>: sequence of segment names (one entry per detected segment). Excludes noise</p></li>
-<li><p class="linemarker linemarker-50010"><code class="docutils literal notranslate"><span class="pre">samples</span></code>: labelled sample trace (label of the sequence occupying each sample)</p></li>
-<li><p class="linemarker linemarker-50011"><code class="docutils literal notranslate"><span class="pre">onsets_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">offsets_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">durations_seconds</span></code>: Onsets, offsets, and duration of individual segmeents</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_Hz</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">names</span></code>: names of all segment types</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index</span></code>: indices of all segments types into class_probabiltiies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">probabilities</span> <span class="pre">=</span> <span class="pre">class_probabilites[:,</span> <span class="pre">index]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sequence</span></code>: sequence of segment names (one entry per detected segment). Excludes noise</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samples</span></code>: labelled sample trace (label of the sequence occupying each sample)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">onsets_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">offsets_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">durations_seconds</span></code>: Onsets, offsets, and duration of individual segmeents</p></li>
 </ul>
 </li>
-<li><p class="linemarker linemarker-50012"><code class="docutils literal notranslate"><span class="pre">events</span></code>: Detected events</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">events</span></code>: Detected events</p>
 <ul>
-<li><p class="linemarker linemarker-50013"><code class="docutils literal notranslate"><span class="pre">samplerate_Hz</span></code>:</p></li>
-<li><p class="linemarker linemarker-50014"><code class="docutils literal notranslate"><span class="pre">index</span></code>: indices of all events types into class_probabiltiies</p></li>
-<li><p class="linemarker linemarker-50015"><code class="docutils literal notranslate"><span class="pre">names</span></code>: names of all event types</p></li>
-<li><p class="linemarker linemarker-50016"><code class="docutils literal notranslate"><span class="pre">probabilities</span></code>: probabilities (confidence scores) for detected events. Value of <code class="docutils literal notranslate"><span class="pre">class_probabilities</span></code> for the detected event index at each event time.</p></li>
-<li><p class="linemarker linemarker-50017"><code class="docutils literal notranslate"><span class="pre">seconds</span></code>: times (seconds) of detected events</p></li>
-<li><p class="linemarker linemarker-50018"><code class="docutils literal notranslate"><span class="pre">sequence</span></code>: sequence of event names (one per detected event).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">samplerate_Hz</span></code>:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">index</span></code>: indices of all events types into class_probabiltiies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">names</span></code>: names of all event types</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">probabilities</span></code>: probabilities (confidence scores) for detected events. Value of <code class="docutils literal notranslate"><span class="pre">class_probabilities</span></code> for the detected event index at each event time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seconds</span></code>: times (seconds) of detected events</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sequence</span></code>: sequence of event names (one per detected event).</p></li>
 </ul>
 </li>
 </ul>
@@ -469,11 +469,11 @@ Wall time: 2.62 s
 </section>
 <section id="prediction-using-command-line-scripts">
 <h2>Prediction using command-line scripts<a class="headerlink" href="#prediction-using-command-line-scripts" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-70003">Will save the output of <code class="docutils literal notranslate"><span class="pre">das.predict.predict</span></code> to a h5 file ending in <code class="docutils literal notranslate"><span class="pre">_das.h5</span></code> or specified via the <code class="docutils literal notranslate"><span class="pre">--save-filename</span></code> argument.</p>
-<p class="linemarker linemarker-70005">See <a class="reference internal" href="../../technical/cli.html"><span class="doc std std-doc">cli</span></a> for a full list of arguments.</p>
+<p>Will save the output of <code class="docutils literal notranslate"><span class="pre">das.predict.predict</span></code> to a h5 file ending in <code class="docutils literal notranslate"><span class="pre">_das.h5</span></code> or specified via the <code class="docutils literal notranslate"><span class="pre">--save-filename</span></code> argument.</p>
+<p>See <a class="reference internal" href="../../technical/cli.html"><span class="doc std std-doc">cli</span></a> for a full list of arguments.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das<span class="w"> </span>predict<span class="w"> </span>dat/dmel_song_rt.wav<span class="w"> </span>models/dmel_single_rt/20200430_201821
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>das predict dat/dmel_song_rt.wav models/dmel_single_rt/20200430_201821
 </pre></div>
 </div>
 </div>
@@ -530,7 +530,9 @@ INFO:root:Done.
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -542,7 +544,7 @@ INFO:root:Done.
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
@@ -571,6 +573,11 @@ INFO:root:Done.
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/scripts/furo.js"></script>
     <script src="../../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

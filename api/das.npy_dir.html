@@ -5,11 +5,12 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.postprocessing" href="das.postprocessing.html" /><link rel="prev" title="das.models_legacy" href="das.models_legacy.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.npy_dir - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +158,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -256,8 +257,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,11 +273,11 @@
         <article role="main">
           <section id="module-das.npy_dir">
 <span id="das-npy-dir"></span><h1>das.npy_dir<a class="headerlink" href="#module-das.npy_dir" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-1">Dict of dicts &lt;-&gt; hierarchy of npy files.</p>
-<p class="linemarker linemarker-3">Tools for working with dictionaries of dictionaries.
+<p>Dict of dicts &lt;-&gt; hierarchy of npy files.</p>
+<p>Tools for working with dictionaries of dictionaries.
 The keys of the first dictionary are mapped to directories.
 The values in the nested dictionary are saved as npy files with the key as the name.</p>
-<p class="linemarker linemarker-7">As an example, this code:
+<p>As an example, this code:
 <code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">data</span> <span class="pre">=</span> <span class="pre">{'first_level':</span> <span class="pre">{'song':</span> <span class="pre">some_data,</span> <span class="pre">'response':</span> <span class="pre">some_other_data}}</span>
 <span class="pre">data.attrs</span> <span class="pre">=</span> <span class="pre">{'song_name':</span> <span class="pre">'this</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">dream...',</span> <span class="pre">'response_name':</span> <span class="pre">'yeah'}</span>
@@ -286,17 +286,17 @@ The values in the nested dictionary are saved as npy files with the key as the n
 will result in a folder <code class="xref py py-obj docutils literal notranslate"><span class="pre">song_responses.npy</span></code> containing
 one subfolder <code class="xref py py-obj docutils literal notranslate"><span class="pre">first_level</span></code> with two npy files - <code class="xref py py-obj docutils literal notranslate"><span class="pre">song.npy</span></code> containing <code class="xref py py-obj docutils literal notranslate"><span class="pre">some_data</span></code> and
 <code class="xref py py-obj docutils literal notranslate"><span class="pre">responses.npy</span></code> containing <code class="xref py py-obj docutils literal notranslate"><span class="pre">some_other_data</span></code>. The <code class="xref py py-obj docutils literal notranslate"><span class="pre">attrs</span></code> attribute can be used to store metadata and will be stored in <code class="xref py py-obj docutils literal notranslate"><span class="pre">song_responses.npy/attrs.npy</span></code>)</p>
-<p class="linemarker linemarker-17"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">das.npy.load('song_responses.npy')</span></code> will restore the data with the metadata.</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span> <span class="pre">=</span> <span class="pre">das.npy.load('song_responses.npy')</span></code> will restore the data with the metadata.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="das.npy_dir.DictClass">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">DictClass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/npy_dir.html#DictClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.DictClass" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Wrap dict in class so we can attach attrs to it.</p>
+<dd><p>Wrap dict in class so we can attach attrs to it.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.load">
 <span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memmap_dirs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#das.npy_dir.DictClass" title="das.npy_dir.DictClass"><span class="pre">das.npy_dir.DictClass</span></a></span></span><a class="reference internal" href="../_modules/das/npy_dir.html#load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.load" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Load hierarchy of npy files into dict of dicts.</p>
+<dd><p>Load hierarchy of npy files into dict of dicts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -316,7 +316,7 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
 <dl class="py function">
 <dt class="sig sig-object py" id="das.npy_dir.save">
 <span class="sig-prename descclassname"><span class="pre">das.npy_dir.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#das.npy_dir.DictClass" title="das.npy_dir.DictClass"><span class="pre">das.npy_dir.DictClass</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/das/npy_dir.html#save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.npy_dir.save" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Save nested dict in data to location as a directory with npy files dir.</p>
+<dd><p>Save nested dict in data to location as a directory with npy files dir.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -341,10 +341,10 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
                 </div>
                 <div class="title">das.postprocessing</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="das.models_legacy.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -366,7 +366,9 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -384,6 +386,11 @@ one subfolder <code class="xref py py-obj docutils literal notranslate"><span cl
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

@@ -5,11 +5,12 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Programming documentation" href="../tutorials/tutorials.html" /><link rel="prev" title="Train" href="train.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>Predict - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +158,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -256,8 +257,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,7 +273,7 @@
         <article role="main">
           <section id="predict">
 <h1>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-2">Once training finished, generate annotations using the trained network via <em>DAS/Predict</em>. In contrast to training, prediction is very fast and does not require a GPU - if you trained the network remotely on a machine with a GPU, copy the generated files ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> to your local machine.</p>
+<p>Once training finished, generate annotations using the trained network via <em>DAS/Predict</em>. In contrast to training, prediction is very fast and does not require a GPU - if you trained the network remotely on a machine with a GPU, copy the generated files ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> and <code class="docutils literal notranslate"><span class="pre">_params.yaml</span></code> to your local machine.</p>
 <figure class="align-default" id="xb-predict-fig">
 <a class="reference internal image-reference" href="../_images/xb_predict.png"><img alt="predict" src="../_images/xb_predict.png" style="width: 750px;" /></a>
 <figcaption>
@@ -281,27 +281,27 @@
 </figcaption>
 </figure>
 <ul class="simple">
-<li><p class="linemarker linemarker-10"><em>Model</em>: Go to the save folder specific during training and select the file ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> with the chosen prefix and timestamp.</p></li>
-<li><p class="linemarker linemarker-11"><em>Start/End seconds</em>: Specify the part of the recording to predict labels for. Defaults to the whole recording.</p></li>
-<li><p class="linemarker linemarker-12"><em>Proof reading mode</em>: If True, the predictions will not yet be fully integrated but special song types ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> will be created. You can the fix the predictions in the view and then approve them, which will strip off the <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> from them. If False, will be automatically approved and the predicted song types will be given their original names. For this tutorial, enable the proof reading mode.</p></li>
-<li><p class="linemarker linemarker-13"><strong>Event detection</strong>:</p>
+<li><p><em>Model</em>: Go to the save folder specific during training and select the file ending in <code class="docutils literal notranslate"><span class="pre">_model.h5</span></code> with the chosen prefix and timestamp.</p></li>
+<li><p><em>Start/End seconds</em>: Specify the part of the recording to predict labels for. Defaults to the whole recording.</p></li>
+<li><p><em>Proof reading mode</em>: If True, the predictions will not yet be fully integrated but special song types ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> will be created. You can the fix the predictions in the view and then approve them, which will strip off the <code class="docutils literal notranslate"><span class="pre">_proposals</span></code> from them. If False, will be automatically approved and the predicted song types will be given their original names. For this tutorial, enable the proof reading mode.</p></li>
+<li><p><strong>Event detection</strong>:</p>
 <ul>
-<li><p class="linemarker linemarker-14"><em>Threshold</em>: The network produces a confidence value between 0 and 1 for each sample. Events are detected based on peaks in these confidence values. The threshold sets the minimal height of these confidence peaks.</p></li>
-<li><p class="linemarker linemarker-15"><em>Minimal event interval for detection (seconds)</em>: Will skip events that come to close to each other, for instance if the peaks in the confidence are jagged. Leave as is.</p></li>
-<li><p class="linemarker linemarker-16"><em>Delete events closer/farther than (seconds)</em>: Additional post-detection interval filters for removing events that come to close or too far after another event. The “too far” filter allows you to only keep events that arrive next to each other—for instance in a train—and remove isolated events that are likely spurious detections.</p></li>
+<li><p><em>Threshold</em>: The network produces a confidence value between 0 and 1 for each sample. Events are detected based on peaks in these confidence values. The threshold sets the minimal height of these confidence peaks.</p></li>
+<li><p><em>Minimal event interval for detection (seconds)</em>: Will skip events that come to close to each other, for instance if the peaks in the confidence are jagged. Leave as is.</p></li>
+<li><p><em>Delete events closer/farther than (seconds)</em>: Additional post-detection interval filters for removing events that come to close or too far after another event. The “too far” filter allows you to only keep events that arrive next to each other—for instance in a train—and remove isolated events that are likely spurious detections.</p></li>
 </ul>
 </li>
-<li><p class="linemarker linemarker-17"><strong>Segment detection</strong>:</p>
+<li><p><strong>Segment detection</strong>:</p>
 <ul>
-<li><p class="linemarker linemarker-18"><em>Threshold</em>: The network produces a confidence value between 0 and 1 for each sample. Events are detected based on peaks in these confidence values. The threshold sets the minimal height of these confidence peaks.</p></li>
-<li><p class="linemarker linemarker-19"><em>Fill gaps shorter than (seconds)</em>: … .</p></li>
-<li><p class="linemarker linemarker-20"><em>Delete segments shorter than (seconds)</em>: … .</p></li>
+<li><p><em>Threshold</em>: The network produces a confidence value between 0 and 1 for each sample. Events are detected based on peaks in these confidence values. The threshold sets the minimal height of these confidence peaks.</p></li>
+<li><p><em>Fill gaps shorter than (seconds)</em>: … .</p></li>
+<li><p><em>Delete segments shorter than (seconds)</em>: … .</p></li>
 </ul>
 </li>
 </ul>
 <section id="proof-reading">
 <h2>Proof reading<a class="headerlink" href="#proof-reading" title="Permalink to this headline">#</a></h2>
-<p class="linemarker linemarker-23">Because you created predictions in proof reading mode, the predictions will be assigned to two new song types, starting with the original name of the song type and ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code>. To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. See <span class="xref myst">Create annotations</span> and <span class="xref myst">Edit annotations</span>. Once you have corrected all errors in the view, select the proposals type you want to fix (<code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> or <code class="docutils literal notranslate"><span class="pre">pulse_proposals</span></code>), and approve the corresponding annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code>. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>). Alternatively, <code class="docutils literal notranslate"><span class="pre">H</span></code> will approve proposals of all song types in view.</p>
+<p>Because you created predictions in proof reading mode, the predictions will be assigned to two new song types, starting with the original name of the song type and ending in <code class="docutils literal notranslate"><span class="pre">_proposals</span></code>. To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors—add missing annotations, remove false positive annotations, adjust the timing of annotations. See <span class="xref myst">Create annotations</span> and <span class="xref myst">Edit annotations</span>. Once you have corrected all errors in the view, select the proposals type you want to fix (<code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> or <code class="docutils literal notranslate"><span class="pre">pulse_proposals</span></code>), and approve the corresponding annotations with <code class="docutils literal notranslate"><span class="pre">G</span></code>. This will rename the proposals in the view to the original names (for instance, <code class="docutils literal notranslate"><span class="pre">sine_proposals</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">sine</span></code>). Alternatively, <code class="docutils literal notranslate"><span class="pre">H</span></code> will approve proposals of all song types in view.</p>
 </section>
 </section>
 
@@ -317,10 +317,10 @@
                 </div>
                 <div class="title">Programming documentation</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="train.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -342,7 +342,9 @@
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -354,7 +356,7 @@
       <div class="toc-sticky toc-scroll">
         <div class="toc-title-container">
           <span class="toc-title">
-            On this page
+            Contents
           </span>
         </div>
         <div class="toc-tree-container">
@@ -379,6 +381,11 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>

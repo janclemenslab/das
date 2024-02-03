@@ -5,11 +5,12 @@
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.io" href="das.io.html" /><link rel="prev" title="das.evaluate" href="das.evaluate.html" />
 
-    <!-- Generated with Sphinx 4.5.0 and Furo 2023.03.27 -->
+    <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
         <title>das.event_utils - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
@@ -157,7 +158,7 @@
   
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -256,8 +257,7 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          
-<div class="theme-toggle-container theme-toggle-content">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -273,11 +273,11 @@
         <article role="main">
           <section id="module-das.event_utils">
 <span id="das-event-utils"></span><h1>das.event_utils<a class="headerlink" href="#module-das.event_utils" title="Permalink to this headline">#</a></h1>
-<p class="linemarker linemarker-1">Utilities for handling events.</p>
+<p>Utilities for handling events.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.detect_events">
 <span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">detect_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_probability</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/event_utils.html#detect_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.detect_events" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Detect events as peaks in probabilitiy.</p>
+<dd><p>Detect events as peaks in probabilitiy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -301,7 +301,7 @@ event_confidence: event_probability at the event_index</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.evaluate_eventtimes">
 <span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">evaluate_eventtimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventtimes_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventtimes_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/event_utils.html#evaluate_eventtimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.evaluate_eventtimes" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">[summary]</p>
+<dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -323,7 +323,7 @@ event_confidence: event_probability at the event_index</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.event_interval_filter">
 <span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">event_interval_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_dist_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_dist_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span></span></span><a class="reference internal" href="../_modules/das/event_utils.html#event_interval_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.event_interval_filter" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">[summary]</p>
+<dd><p>[summary]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -344,7 +344,7 @@ event_confidence: event_probability at the event_index</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.find_nearest">
 <span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">find_nearest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/event_utils.html#find_nearest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.find_nearest" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Find nearest occurrence of each item of values in array.</p>
+<dd><p>Find nearest occurrence of each item of values in array.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -367,7 +367,7 @@ NOTE: Returns nan-arrays of the same size as values if <code class="xref py py-o
 <dl class="py function">
 <dt class="sig sig-object py" id="das.event_utils.match_events">
 <span class="sig-prename descclassname"><span class="pre">das.event_utils.</span></span><span class="sig-name descname"><span class="pre">match_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eventindices_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eventindices_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/event_utils.html#match_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.event_utils.match_events" title="Permalink to this definition">#</a></dt>
-<dd><p class="linemarker linemarker-1">Find events eventindices_pred that match those (within tol) in eventindices_true.</p>
+<dd><p>Find events eventindices_pred that match those (within tol) in eventindices_true.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -400,10 +400,10 @@ nearest_dist: dist of each eventindices_pred to the nearest true_event</p>
                 </div>
                 <div class="title">das.io</div>
               </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="das.evaluate.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -425,7 +425,9 @@ nearest_dist: dist of each eventindices_pred to the nearest true_event</p>
             
           </div>
           <div class="right-details">
-            
+            <div class="icons">
+              
+            </div>
           </div>
         </div>
         
@@ -443,6 +445,11 @@ nearest_dist: dist of each eventindices_pred to the nearest true_event</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/furo.js"></script>
     <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2/dist/js/lightbox-plus-jquery.min.js"></script>
     <script src="../_static/sphinxcontrib-images/LightBox2/lightbox2-customize/jquery-noconflict.js"></script>
     </body>
