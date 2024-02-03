@@ -22,8 +22,6 @@ requirements:
   host:
     - python {{ python }}
     - pip
-    # - h5py
-    # - numpy>=1.23
   run:
     - python {{ python }}
     - rich
