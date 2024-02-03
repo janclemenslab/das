@@ -31,7 +31,7 @@ requirements:
     - h5py
     - matplotlib
     - pandas
-    - numpy>=1.23
+    # - numpy>=1.23
     - numpy=1.23  # [win and py39]
     - peakutils
     - pyyaml
