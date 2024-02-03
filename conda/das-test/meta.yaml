@@ -38,8 +38,9 @@ outputs:
         - xarray-behave>=0.34.2
         - keras
         - tqdm
-        - numpy>=1.23
-        - numpy=1.23  # [win and py39]
+        - numpy>=1.23  # [linux or osx or arm64]
+        - numpy>=1.23  # [win and py>39]
+        - numpy<1.24  # [win and py39]
         - conda-forge::cudatoolkit # [linux or win]
         - conda-forge::cudnn # [linux or win]
         - conda-forge::tensorflow<2.10 # [linux]
