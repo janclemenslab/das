@@ -22,7 +22,7 @@ jobs:
         # python-version: [3.9, '3.10', '3.11']
         # os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: [3.9]
-        os: [ubuntu-latest]
+        os: [windows-latest]
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
