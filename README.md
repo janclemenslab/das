@@ -30,15 +30,18 @@ __CUDA libraries for using the GPU__: While _DAS_ works well for annotating song
 __Libsoundfile on linux__: The graphical user interface (GUI) reads audio data using [soundfile](http://pysoundfile.readthedocs.io/), which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Note that _DAS_ will work w/o `libsndfile` but will not be able to load exotic audio formats.
 
 ### Install _DAS_
-Create an anaconda environment called `das` that contains all the required packages:
+Create an anaconda environment called `das` that contains all the required packages.
+
+On windows:
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+mamba create python=3.9 das=0.32.0 "numpy<1.24" -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
-For linux, the last line needs to be:
+On Linux or MacOS (intel and arm):
 ```shell
-CONDA_OVERRIDE_CUDA=11.2 mamba create python=3.9 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+conda install mamba -c conda-forge -n base -y
+mamba create python=3.10 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 ```
 
 ## Usage
