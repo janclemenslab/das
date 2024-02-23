@@ -306,7 +306,6 @@
 <li><p><em>Initialize annotations</em>: Initialize the song types you want to annotate. Song types and categories are specified with a string: “name,category;name2,category2” (category is either event or segment), for instance “pulse,event;sine,segments”. After loading, you can add, delete, and rename song types via the <em>Audio/Add or edit annotation types</em> menu.</p></li>
 <li><p><em>Minimal/Maximal spectrogram frequency</em>: Focus the range of frequencies in the spectrogram display on the frequencies that occur in the song you want to annotate. For instance, for fly song, we typically choose 50-1000Hz. If checking <code class="docutils literal notranslate"><span class="pre">None</span></code>, will default to the between 0 and half the audio sample rate.</p></li>
 <li><p><em>Band-pass filter audio</em>: To remove noise at high or low frequencies, specify the lower and upper frequency of the pass-band. Filtering will take a while for long, multi-channel audio. Caution: If you train a network using filtered data, you need to apply the same filter to all recordings you want to apply the network to.</p></li>
-<li><p>Load cue points (IGNORE)</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
