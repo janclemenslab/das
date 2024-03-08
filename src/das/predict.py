@@ -1,6 +1,7 @@
 """Code for training and evaluating networks."""
 import logging
 import os
+import shutil
 import flammkuchen
 import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
@@ -47,6 +48,7 @@ def predict_probabilities(
     class_probabilities = zarr.zeros(
         shape=(0, params["nb_classes"]), chunks=(100_000, params["nb_classes"]), dtype="float", store=temp_store, overwrite=True
     )
+
     # predict and unpack batch by batch to memmaped np or zarr array
     for batch_number, batch_data in tqdm(enumerate(pred_gen), total=nb_batches, disable=verbose < 1):
         y_pred_batch = model.predict_on_batch(batch_data)  # run the network
@@ -68,6 +70,7 @@ def predict_probabilities(
 
     class_probabilities = da.from_zarr(class_probabilities, inline_array=True)
     class_probabilities = class_probabilities.rechunk((1_000_000, params["nb_classes"]))
+    class_probabilities.temp_dir = temp_store.dir_path()  #  save path to temp store so we can explicitly delete it
     return class_probabilities
 
 
@@ -514,7 +517,7 @@ def predict(
         x = np.pad(x, ((0, pad_len), (0, 0)), mode="edge")
 
     class_probabilities = predict_probabilities(x, model, params, verbose, prepend_data_padding)
-
+    temp_dir = class_probabilities.temp_dir
     if pad:
         # set all song probs in padded section to zero to avoid out of bounds detections!
         # assumes that the non-song class is at index 0
@@ -540,6 +543,7 @@ def predict(
         segments["probabilities"] = _to_np(segments["probabilities"])
         segments["samples"] = _to_np(segments["samples"])
         class_probabilities = _to_np(class_probabilities)
+    class_probabilities.temp_dir = temp_dir
     return events, segments, class_probabilities, params["class_names"]
 
 
@@ -698,8 +702,11 @@ def cli_predict(
                 logging.info(f"   Saving results to {save_filename}.")
                 evt.to_df().to_csv(save_filename)
                 logging.info("Done.")
-
             # reset
+            temp_dir = class_probabilities.temp_dir
+            del class_probabilities
+            shutil.rmtree(temp_dir, ignore_errors=True)
+            print(os.path.exists(temp_dir))
             if os.path.isdir(path):
                 save_filename = None
         except Exception:
