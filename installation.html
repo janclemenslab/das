@@ -276,7 +276,6 @@
 <section id="pre-requisites">
 <h2>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">#</a></h2>
 <p><em>Anaconda python</em>: Install the <a class="reference external" href="https://docs.anaconda.com/anaconda/install/">anaconda python distribution</a> (or <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">miniconda</a>). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">conda</span></code>.</p>
-<!-- _CUDA libraries for using the GPU_: While _DAS_ works on a standard desktop CPU, a dedicated GPU will greatly improve annotation speed and is highly recommended for training. _DAS_ uses Tensorflow as a  deep-learning backend. To ensure that Tensorflow can utilize the GPU, the CUDA and cuDNN libraries need to be installed. See the [tensorflow docs](https://www.tensorflow.org/install/gpu) for details. -->
 <p><em>Libsoundfile (Linux only)</em>: If you are on Linux and want to load audio from a wide range of audio formats (other than <code class="docutils literal notranslate"><span class="pre">wav</span></code>), then you need to install <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. The GUI uses the <a class="reference external" href="http://pysoundfile.readthedocs.io/">soundfile</a> python package, which relies on <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code>. <code class="docutils literal notranslate"><span class="pre">libsndfile</span></code> will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">libsndfile1</span></code>. Again, this is only required if you work with more exotic audio files.</p>
 <p><em>Visual C++ runtime (Windows only)</em>: This is typically installed so only required if <em>DAS</em> fails to load the native tensorflow runtime. Download the latest version <a class="reference external" href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">here</a>.</p>
 </section>
@@ -285,12 +284,12 @@
 <p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages.</p>
 <p>On windows</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install mamba -c conda-forge -n base -y
-mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.0 <span class="s2">&quot;numpy&lt;1.24&quot;</span> -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.1 <span class="s2">&quot;numpy&lt;1.24&quot;</span> -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 </pre></div>
 </div>
 <p>On Linux or MacOS (intel and arm):</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install mamba -c conda-forge -n base -y
-mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10 <span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+mamba create <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10 <span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.1 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 </pre></div>
 </div>
 </section>
