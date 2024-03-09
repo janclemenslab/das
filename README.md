@@ -35,13 +35,13 @@ Create an anaconda environment called `das` that contains all the required packa
 On windows:
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.32.0 "numpy<1.24" -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+mamba create python=3.9 das=0.32.1 "numpy<1.24" -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
 ```
 
 On Linux or MacOS (intel and arm):
 ```shell
 conda install mamba -c conda-forge -n base -y
-mamba create python=3.10 das=0.32.0 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+mamba create python=3.10 das=0.32.1 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
 ```
 
 ## Usage
