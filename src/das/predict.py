@@ -543,7 +543,8 @@ def predict(
         segments["probabilities"] = _to_np(segments["probabilities"])
         segments["samples"] = _to_np(segments["samples"])
         class_probabilities = _to_np(class_probabilities)
-    class_probabilities.temp_dir = temp_dir
+    else:
+        class_probabilities.temp_dir = temp_dir
     return events, segments, class_probabilities, params["class_names"]
 
 
@@ -703,10 +704,11 @@ def cli_predict(
                 evt.to_df().to_csv(save_filename)
                 logging.info("Done.")
             # reset
-            temp_dir = class_probabilities.temp_dir
-            del class_probabilities
-            shutil.rmtree(temp_dir, ignore_errors=True)
-            print(os.path.exists(temp_dir))
+            if hasattr(class_probabilities, "temp_dir"):
+                temp_dir = class_probabilities.temp_dir
+                del class_probabilities
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
             if os.path.isdir(path):
                 save_filename = None
         except Exception:
