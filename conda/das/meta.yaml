@@ -37,7 +37,7 @@ requirements:
     - scikit-learn
     - scikit-image
     - tqdm
-    - xarray-behave>=0.34.2
+    - xarray-behave>=0.35
     - conda-forge::cudatoolkit # [linux or win]
     - conda-forge::cudnn # [linux or win]
     - conda-forge::tensorflow<2.10 # [linux]
