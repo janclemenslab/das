@@ -34,7 +34,7 @@ jobs:
         auto-update-conda: true
         miniforge-variant: Mambaforge
         channels: conda-forge,ncb,anaconda,apple,defaults
-        python-version: 3.9
+        python-version: 3.11
         mamba-version: "*"
         auto-activate-base: false
         activate-environment: anaconda-client-env
