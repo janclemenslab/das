@@ -280,6 +280,6 @@ def blur_events(event_trace: np.ndarray, event_std_seconds: float, samplerate: f
         np.ndarray: blurred event trace
     """
     event_std_samples = event_std_seconds * samplerate
-    win = scipy.signal.gaussian(int(event_std_samples * 8), std=event_std_samples)
+    win = scipy.signal.windows.gaussian(int(event_std_samples * 8), std=event_std_samples)
     event_trace = scipy.signal.convolve(event_trace.astype(float), win, mode="same")
     return event_trace
