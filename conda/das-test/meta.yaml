@@ -35,7 +35,7 @@ outputs:
         - defopt=6.3
         - scikit-learn
         - scikit-image
-        - xarray-behave>=0.35.2
+        - xarray-behave>=0.35.3
         - keras
         - tqdm
         - numpy>=1.23  # [linux or osx or arm64]
