@@ -40,7 +40,7 @@ outputs:
         - tqdm
         - numpy>=1.23  # [unix and not arm64]
         # - numpy>=1.23  # [linux or osx or arm64]
-        - numpy<1.25  # [osx and arm64]
+        - numpy<1.24  # [osx and arm64]
         - numpy>=1.23  # [win and py>39]
         - numpy<1.24  # [win and py39]
         - conda-forge::cudatoolkit # [linux or win]
