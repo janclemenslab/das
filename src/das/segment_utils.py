@@ -1,4 +1,5 @@
 """Segment (syllable) utilities."""
+
 import numpy as np
 from typing import Tuple
 

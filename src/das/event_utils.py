@@ -1,4 +1,5 @@
 """Utilities for handling events."""
+
 import numpy as np
 import peakutils
 from typing import Iterable, Optional, List, Tuple, Union

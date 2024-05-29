@@ -1,4 +1,5 @@
 """Code for training networks."""
+
 import time
 import logging
 import flammkuchen as fl

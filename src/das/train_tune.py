@@ -1,4 +1,5 @@
 """Code for tuning the hyperparameters of a network."""
+
 # TODO:
 # write custom Tuner that generates datasets and overlap based nb_hist and kernel params
 # see: https://keras.io/guides/keras_tuner/custom_tuner/

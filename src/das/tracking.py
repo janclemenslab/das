@@ -4,6 +4,7 @@ We currenlty have integrations for `tensorboard <https://www.tensorflow.org/tens
 While tensorboard is integrated with tensorflow. To use wandb you'll have to install the wandb API:
 "pip install wandb" or "conda install wandb -c conda-forge".
 """
+
 import logging
 import os
 from typing import Optional, Dict

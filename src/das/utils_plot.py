@@ -1,4 +1,5 @@
 """Plot utilities."""
+
 import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 import matplotlib_scalebar

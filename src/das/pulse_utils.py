@@ -1,4 +1,5 @@
 """Utilities for handling pulses."""
+
 import numpy as np
 import scipy.signal as ss
 from typing import List, Tuple

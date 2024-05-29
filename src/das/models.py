@@ -1,4 +1,5 @@
 """Defines the network architectures."""
+
 import tensorflow as tf
 import tensorflow.keras as keras
 import tensorflow.keras.layers as kl

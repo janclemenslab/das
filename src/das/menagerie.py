@@ -1,4 +1,5 @@
 """Utilities for interacting with DAS-Menagerie."""
+
 from typing import Callable
 import urllib.request
 import tempfile

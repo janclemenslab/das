@@ -13,6 +13,7 @@ Notes
         later I realised it'd be better to just use it.
     * TODO: remove copied code and use librosa.
 """
+
 from tensorflow.keras import backend as K
 import numpy as np
 import librosa

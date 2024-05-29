@@ -38,6 +38,7 @@ Caution: You need to add a suffix starting with '-' (like "MaskNoise-1") to the 
 
 `augs = Augmentations.from_yaml(filename)`
 """
+
 import numpy as np
 from typing import List, Optional
 import scipy.signal
@@ -71,8 +72,7 @@ class Param:
     Parameters are callables that return parameter values.
     """
 
-    def __call__(self) -> np.ndarray:
-        ...
+    def __call__(self) -> np.ndarray: ...
 
 
 @_register_param
