@@ -22,6 +22,7 @@ Developer API
    das.evaluate
    das.event_utils
    das.io
+   das.loss
    das.make_dataset
    das.menagerie
    das.models

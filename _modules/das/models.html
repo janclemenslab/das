@@ -208,6 +208,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.evaluate.html">das.evaluate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.io.html">das.io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.loss.html">das.loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.models.html">das.models</a></li>
@@ -272,6 +273,7 @@
         <article role="main">
           <h1>Source code for das.models</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Defines the network architectures.&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
 <span class="kn">import</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">as</span> <span class="nn">kl</span>
@@ -281,6 +283,7 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span> <span class="k">as</span> <span class="n">tcn_layer</span>
 <span class="kn">from</span> <span class="nn">.kapre.time_frequency</span> <span class="kn">import</span> <span class="n">Spectrogram</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">spec_utils</span>
+<span class="kn">from</span> <span class="nn">.loss</span> <span class="kn">import</span> <span class="n">TMSE</span><span class="p">,</span> <span class="n">WeightedLoss</span>
 <span class="kn">from</span> <span class="nn">das.morpholayers.layers</span> <span class="kn">import</span> <span class="n">Closing2D</span><span class="p">,</span> <span class="n">Opening2D</span>
 <span class="kn">from</span> <span class="nn">das.morpholayers.regularizers</span> <span class="kn">import</span> <span class="n">l1lattice</span>
 
@@ -324,6 +327,7 @@
     <span class="n">upsample</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">use_separable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">use_resnet</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">tmse_weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="nb">compile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwignored</span><span class="p">,</span>
 <span class="p">):</span>
@@ -358,6 +362,7 @@
 <span class="sd">                                   Defaults to True.</span>
 <span class="sd">        use_separable (bool, optional): use separable convs in residual block. Defaults to False.</span>
 <span class="sd">        use_resnet (bool, optional): Defaults to False.</span>
+<span class="sd">        tmse_weight (float): Defaults to 0.0. No tmse.</span>
 <span class="sd">        kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred</span>
 
 <span class="sd">    Returns:</span>
@@ -434,6 +439,10 @@
     <span class="k">if</span> <span class="n">use_resnet</span><span class="p">:</span>
         <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;trainable_stft&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">model</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;resnet50v2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">tmse_weight</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">WeightedLoss</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">categorical_crossentropy</span><span class="p">,</span> <span class="n">TMSE</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">tmse_weight</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="nb">compile</span><span class="p">:</span>
         <span class="n">optimizer</span> <span class="o">=</span> <span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>

@@ -2,11 +2,10 @@
 <html class="no-js">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
-        <title>&lt;no title&gt; - DAS documentation</title>
+        <title>das.loss - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
@@ -272,16 +271,57 @@
           </label>
         </div>
         <article role="main">
-          <p>You may need to install keras-tuner for this to work.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train_tune</span>
-<span class="n">tuner</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="s1">&#39;tutorial_dataset.npy&#39;</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="s1">&#39;res&#39;</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">tune_config</span><span class="o">=</span><span class="s1">&#39;tuning.yml&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
+          <h1>Source code for das.loss</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tensorflow.math</span> <span class="kn">import</span> <span class="n">square</span>
+<span class="kn">from</span> <span class="nn">tensorflow.nn</span> <span class="kn">import</span> <span class="n">log_softmax</span>
+<span class="kn">from</span> <span class="nn">tensorflow.raw_ops</span> <span class="kn">import</span> <span class="n">Mean</span>
+<span class="kn">from</span> <span class="nn">tensorflow.experimental.numpy</span> <span class="kn">import</span> <span class="n">clip</span><span class="p">,</span> <span class="n">append</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.losses</span> <span class="kn">import</span> <span class="n">Loss</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 
+
+<div class="viewcode-block" id="TMSE"><a class="viewcode-back" href="../../api/das.loss.html#das.loss.TMSE">[docs]</a><span class="k">class</span> <span class="nc">TMSE</span><span class="p">(</span><span class="n">Loss</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trunc</span> <span class="o">=</span> <span class="n">trunc</span>
+
+<div class="viewcode-block" id="TMSE.call"><a class="viewcode-back" href="../../api/das.loss.html#das.loss.TMSE.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Temporal MSE Loss</span>
+
+<span class="sd">        Temporal MSE Loss Function</span>
+<span class="sd">        Proposed in Y. A. Farha et al. MS-TCN: Multi-Stage Temporal Convolutional Network for ActionSegmentation in CVPR2019</span>
+<span class="sd">        arXiv: https://arxiv.org/pdf/1903.01945.pdf</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            y_true (_type_): _description_</span>
+<span class="sd">            y_pred (_type_): _description_</span>
+<span class="sd">            trunc (_type_, optional): _description_. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">squared_difference</span> <span class="o">=</span> <span class="n">square</span><span class="p">(</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">log_softmax</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">tmse</span> <span class="o">=</span> <span class="n">Mean</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">squared_difference</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trunc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tmse</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">tmse</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">trunc</span><span class="p">)</span>
+        <span class="n">tmse</span> <span class="o">=</span> <span class="n">append</span><span class="p">(</span><span class="n">tmse</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tmse</span></div></div>
+
+
+<div class="viewcode-block" id="WeightedLoss"><a class="viewcode-back" href="../../api/das.loss.html#das.loss.WeightedLoss">[docs]</a><span class="k">class</span> <span class="nc">WeightedLoss</span><span class="p">(</span><span class="n">Loss</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">losses</span><span class="p">,</span> <span class="n">loss_weights</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">losses</span> <span class="o">=</span> <span class="n">losses</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_weights</span> <span class="o">=</span> <span class="n">loss_weights</span>
+
+<div class="viewcode-block" id="WeightedLoss.call"><a class="viewcode-back" href="../../api/das.loss.html#das.loss.WeightedLoss.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">loss</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">losses</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_weights</span><span class="p">):</span>
+            <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">loss</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">total_loss</span></div></div>
+</pre></div>
         </article>
       </div>
       <footer>

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.predict" href="das.predict.html" /><link rel="prev" title="das.npy_dir" href="das.npy_dir.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.make_dataset" href="das.make_dataset.html" /><link rel="prev" title="das.io" href="das.io.html" />
 
     <meta name="generator" content="sphinx-4.5.0, furo 2022.06.21"/>
-        <title>das.postprocessing - DAS documentation</title>
+        <title>das.loss - DAS documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
@@ -209,13 +209,13 @@
 <li class="toctree-l2"><a class="reference internal" href="das.evaluate.html">das.evaluate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.event_utils.html">das.event_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.io.html">das.io</a></li>
-<li class="toctree-l2"><a class="reference internal" href="das.loss.html">das.loss</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.loss</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.make_dataset.html">das.make_dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.menagerie.html">das.menagerie</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models.html">das.models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.models_legacy.html">das.models_legacy</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.npy_dir.html">das.npy_dir</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.postprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.postprocessing.html">das.postprocessing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.predict.html">das.predict</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.pulse_utils.html">das.pulse_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.segment_utils.html">das.segment_utils</a></li>
@@ -272,29 +272,103 @@
           </label>
         </div>
         <article role="main">
-          <section id="module-das.postprocessing">
-<span id="das-postprocessing"></span><h1>das.postprocessing<a class="headerlink" href="#module-das.postprocessing" title="Permalink to this headline">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="das.postprocessing.optimize">
-<span class="sig-prename descclassname"><span class="pre">das.postprocessing.</span></span><span class="sig-name descname"><span class="pre">optimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_save_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gap_durs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_lens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/postprocessing.html#optimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.postprocessing.optimize" title="Permalink to this definition">#</a></dt>
-<dd><p>[summary]</p>
+          <section id="module-das.loss">
+<span id="das-loss"></span><h1>das.loss<a class="headerlink" href="#module-das.loss" title="Permalink to this headline">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="das.loss.TMSE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.loss.</span></span><span class="sig-name descname"><span class="pre">TMSE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/loss.html#TMSE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.loss.TMSE" title="Permalink to this definition">#</a></dt>
+<dd><p>Initializes <code class="xref py py-obj docutils literal notranslate"><span class="pre">Loss</span></code> class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dataset_path</strong> (<em>str</em>) – [description]</p></li>
-<li><p><strong>model_save_name</strong> (<em>str</em>) – [description]</p></li>
-<li><p><strong>gap_durs</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – in seconds.</p></li>
-<li><p><strong>min_lens</strong> (<em>List</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – in seconds.</p></li>
-<li><p><strong>nb_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of parallel workers to use. Defaults to -1 (same as cores).</p></li>
+<li><p><strong>reduction</strong> – <p>Type of <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras.losses.Reduction</span></code> to apply to
+loss. Default value is <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code> indicates that the reduction
+option will be determined by the usage context. For almost all cases
+this defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">SUM_OVER_BATCH_SIZE</span></code>. When used with
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.distribute.Strategy</span></code>, outside of built-in training loops such as
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>, using <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">SUM_OVER_BATCH_SIZE</span></code>
+will raise an error. Please see this custom training [tutorial](</p>
+<blockquote>
+<div><dl class="simple">
+<dt><a class="reference external" href="https://www.tensorflow.org/tutorials/distribute/custom_training">https://www.tensorflow.org/tutorials/distribute/custom_training</a>) for</dt><dd><p>more details.</p>
+</dd>
+</dl>
+</div></blockquote>
+</p></li>
+<li><p><strong>name</strong> – Optional name for the instance.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.loss.TMSE.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/loss.html#TMSE.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.loss.TMSE.call" title="Permalink to this definition">#</a></dt>
+<dd><p>Temporal MSE Loss</p>
+<p>Temporal MSE Loss Function
+Proposed in Y. A. Farha et al. MS-TCN: Multi-Stage Temporal Convolutional Network for ActionSegmentation in CVPR2019
+arXiv: <a class="reference external" href="https://arxiv.org/pdf/1903.01945.pdf">https://arxiv.org/pdf/1903.01945.pdf</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>y_pred</strong> (<em>_type_</em>) – _description_</p></li>
+<li><p><strong>trunc</strong> (<em>_type_</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>[description]</p>
+<dd class="field-even"><p>_description_</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[float, float, Dict[str, Union[float, List[float]]]]</p>
+<dd class="field-odd"><p>_type_</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="das.loss.WeightedLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.loss.</span></span><span class="sig-name descname"><span class="pre">WeightedLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">losses</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/loss.html#WeightedLoss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.loss.WeightedLoss" title="Permalink to this definition">#</a></dt>
+<dd><p>Initializes <code class="xref py py-obj docutils literal notranslate"><span class="pre">Loss</span></code> class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reduction</strong> – <p>Type of <code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras.losses.Reduction</span></code> to apply to
+loss. Default value is <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code>. <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code> indicates that the reduction
+option will be determined by the usage context. For almost all cases
+this defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">SUM_OVER_BATCH_SIZE</span></code>. When used with
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.distribute.Strategy</span></code>, outside of built-in training loops such as
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">tf.keras</span></code> <code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code>, using <code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTO</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">SUM_OVER_BATCH_SIZE</span></code>
+will raise an error. Please see this custom training [tutorial](</p>
+<blockquote>
+<div><dl class="simple">
+<dt><a class="reference external" href="https://www.tensorflow.org/tutorials/distribute/custom_training">https://www.tensorflow.org/tutorials/distribute/custom_training</a>) for</dt><dd><p>more details.</p>
+</dd>
+</dl>
+</div></blockquote>
+</p></li>
+<li><p><strong>name</strong> – Optional name for the instance.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="das.loss.WeightedLoss.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/loss.html#WeightedLoss.call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.loss.WeightedLoss.call" title="Permalink to this definition">#</a></dt>
+<dd><p>Invokes the <code class="xref py py-obj docutils literal notranslate"><span class="pre">Loss</span></code> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_true</strong> – Ground truth values. shape = <code class="xref py py-obj docutils literal notranslate"><span class="pre">[batch_size,</span> <span class="pre">d0,</span> <span class="pre">..</span> <span class="pre">dN]</span></code>, except
+sparse loss functions such as sparse categorical crossentropy where
+shape = <code class="xref py py-obj docutils literal notranslate"><span class="pre">[batch_size,</span> <span class="pre">d0,</span> <span class="pre">..</span> <span class="pre">dN-1]</span></code></p></li>
+<li><p><strong>y_pred</strong> – The predicted values. shape = <code class="xref py py-obj docutils literal notranslate"><span class="pre">[batch_size,</span> <span class="pre">d0,</span> <span class="pre">..</span> <span class="pre">dN]</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loss values with the shape <code class="xref py py-obj docutils literal notranslate"><span class="pre">[batch_size,</span> <span class="pre">d0,</span> <span class="pre">..</span> <span class="pre">dN-1]</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -304,23 +378,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.predict.html">
+          <a class="next-page" href="das.make_dataset.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.predict</div>
+                <div class="title">das.make_dataset</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="das.npy_dir.html">
+          <a class="prev-page" href="das.io.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">das.npy_dir</div>
+                <div class="title">das.io</div>
                 
               </div>
             </a>
