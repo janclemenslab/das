@@ -33,16 +33,12 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: true
-        miniforge-variant: Mambaforge
         channels: conda-forge,ncb,anaconda,apple,defaults
         python-version: 3.11
-        mamba-version: "*"
         auto-activate-base: false
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-        use-mamba: true
-        use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
     - name: Build and upload to anaconda
       run: |
         conda mambabuild conda/das-test -c conda-forge -c ncb -c anaconda -c nvidia -c apple --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
