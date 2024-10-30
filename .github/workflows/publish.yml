@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: ['3.10']
+        python-version: [3.9, '3.10']
         os: [ubuntu-latest, windows-latest, macOS-13, macOS-14]
         include:
         - python-version: 3.9
@@ -34,13 +34,14 @@ jobs:
       with:
         auto-update-conda: true
         channels: conda-forge,ncb,anaconda,apple,defaults
-        python-version: 3.11
+        python-version: 3.12
         auto-activate-base: false
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
     - name: Build and upload to anaconda
       run: |
-        conda mambabuild conda/das-test -c conda-forge -c ncb -c anaconda -c nvidia -c apple --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        conda mambabuild conda/das-test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
+        # conda mambabuild conda/das-test -c conda-forge -c ncb -c anaconda -c nvidia -c apple --python ${{ matrix.python-version }} --user ncb --token $ANACONDA_TOKEN
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
