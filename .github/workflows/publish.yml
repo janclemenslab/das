@@ -35,7 +35,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: true
-        channels: conda-forge,ncb,anaconda,apple,defaults
+        channels: conda-forge,ncb,apple,defaults
         python-version: 3.12
         auto-activate-base: false
         activate-environment: anaconda-client-env
