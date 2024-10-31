@@ -39,7 +39,7 @@ outputs:
         # - numpy<1.24  # [win and py39]
         - conda-forge::cudatoolkit
         - conda-forge::cudnn
-        - tensorflow
+        - tensorflow<2.16
         # - tensorflow>2.3 # [win and py<310]
         # - tensorflow # [win and py==310]
         # - tensorflow==2.10 # [win and py>310]
