@@ -15,8 +15,8 @@ strategy:
     #   python.version: '3.9'
     Python310:
       python.version: '3.10'
-    Python311:
-      python.version: '3.11'
+    # Python311:
+    #   python.version: '3.11'
 
 steps:
 - task: UsePythonVersion@0
@@ -41,3 +41,15 @@ steps:
     call activate anaconda-client-env
     conda build conda/das-test --test -c conda-forge -c ncb -c nvidia -c apple --python $(python.version)
   displayName: Test conda package
+
+- script: |
+    # call activate anaconda-client-env
+    conda create python=3.10 das=0.32.3 -c local -c conda-forge -c ncb -c nvidia -c apple -n das -y
+    call activate das
+    das version
+  displayName: Test install package
+
+- script: |
+    call activate anaconda-client-env
+    # conda build conda/das-test --test -c conda-forge -c ncb -c nvidia -c apple --python $(python.version)
+  displayName: Upload package to anaconda
