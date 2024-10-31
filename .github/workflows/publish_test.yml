@@ -1,4 +1,4 @@
-name: Publish to Anaconda.org
+name: Publish to Anaconda.org (win test)
 
 on:
   release:
