@@ -30,15 +30,22 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: true
-        channels: conda-forge,ncb,apple,defaults
+        channels: conda-forge,ncb,apple
         python-version: 3.12
         auto-activate-base: false
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-    - name: Build and upload to anaconda
+    - name: Build conda package
       run: |
-        conda mambabuild conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload
-        conda mambabuild conda/das-test --test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload
+        conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload --output-folder build
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+    - name: Install and test conda package
+      run: |
+        conda deactivate
+        conda create python=${{ matrix.python-version }} das=0.32.3 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -c file://$(pwd)/build -n das_test -y
+        conda activate das_test
+        python -c "import das; print(sleap.__version__)"
+        das version
+
