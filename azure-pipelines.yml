@@ -34,6 +34,5 @@ steps:
 
 - script: |
     call activate anaconda-client-env
-    mkdir ./build
-    conda build conda/das-test --no-test --debug -c conda-forge -c ncb -c nvidia --python $(python.version) --output-folder ./build
+    conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia --python $(python.version)
   displayName: Build conda package
