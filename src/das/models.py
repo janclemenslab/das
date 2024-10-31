@@ -9,6 +9,7 @@ from typing import List, Optional, Tuple
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
 from . import spec_utils
+from .loss import TMSE, WeightedLoss
 from das.morpholayers.layers import Closing2D, Opening2D
 from das.morpholayers.regularizers import l1lattice
 
@@ -52,6 +53,7 @@ def tcn_stft(
     upsample: bool = True,
     use_separable: bool = False,
     use_resnet: bool = False,
+    tmse_weight: float = 0.0,
     compile: bool = True,
     **kwignored,
 ):
@@ -86,6 +88,7 @@ def tcn_stft(
                                    Defaults to True.
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
         use_resnet (bool, optional): Defaults to False.
+        tmse_weight (float): Defaults to 0.0. No tmse.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -162,6 +165,10 @@ def tcn_stft(
     if use_resnet:
         model.get_layer(name="trainable_stft").trainable = False
         model.get_layer(name="resnet50v2").trainable = False
+
+    if tmse_weight > 0:
+        batch_size = 32
+        loss = WeightedLoss([tf.keras.metrics.categorical_crossentropy, TMSE(batch_size)], [1.0, tmse_weight])
 
     if compile:
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.0)

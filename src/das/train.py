@@ -86,6 +86,7 @@ def train(
     morph_nb_kernels: int = 0,
     resnet_compute: bool = False,
     resnet_train: bool = False,
+    tmse_weight: float = 0.0,
     _qt_progress: bool = False,
 ) -> Tuple[keras.Model, Dict[str, Any], keras.callbacks.History]:
     """Train a DAS network.
@@ -213,6 +214,8 @@ def train(
 
         resnet_compute (bool): Defaults to False.
         resnet_train (bool): Defaults to False.
+
+        tmse_weight (float): Defaults to 0.0.
 
     Returns:
         model (keras.Model)

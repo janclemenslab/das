@@ -24,6 +24,7 @@ def test_import():
 
     # from das import train_tune
     from das import utils
-    from das import utils_plot
+
+    # from das import utils_plot
     import das.kapre
     import das.tcn

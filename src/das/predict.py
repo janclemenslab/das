@@ -424,6 +424,10 @@ def predict(
     pad: bool = True,
     prepend_data_padding: bool = True,
     save_memory: bool = False,
+    bandpass_low_freq: float = None,
+    bandpass_up_freq: float = None,
+    resample: bool = True,
+    fs_audio: Optional[float] = None,
 ):
     """[summary]
 
@@ -495,6 +499,17 @@ def predict(
     else:
         assert isinstance(model, models.keras.models.Model)
         assert isinstance(params, dict)
+
+    fs_model = params["samplerate_x_Hz"]
+
+    if fs_audio is not None:
+        if bandpass_low_freq is not None or bandpass_up_freq is not None:
+            logging.info(f"   Filtering audio between {bandpass_low_freq}Hz and {bandpass_up_freq}Hz.")
+            x = utils.bandpass_filter_song(x, fs_audio, bandpass_low_freq, bandpass_up_freq)
+
+        if resample and fs_audio != fs_model:
+            logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")
+            x = utils.resample(x, fs_audio, fs_model)
 
     # use postprocessing values from params and/or args
     if segment_use_optimized and "post_opt" in params and isinstance(params["post_opt"], dict):
