@@ -11,8 +11,8 @@ pool:
 
 strategy:
   matrix:
-    # Python39:
-    #   python.version: '3.9'
+    Python39:
+      python.version: '3.9'
     Python310:
       python.version: '3.10'
     # Python311:
@@ -43,9 +43,8 @@ steps:
   displayName: Test conda package
 
 - script: |
-    # call activate anaconda-client-env
-    conda create python=3.10 das=0.32.3 -c local -c conda-forge -c ncb -c nvidia -c apple -n das -y
-    call activate das
+    conda create python=$(python.version) das=0.32.3 -c local -c conda-forge -c ncb -c nvidia -c apple -n das_test -y
+    call activate das_test
     das version
   displayName: Test install package
 
