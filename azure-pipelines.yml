@@ -34,5 +34,10 @@ steps:
 
 - script: |
     call activate anaconda-client-env
-    conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia --python $(python.version)
+    conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple --python $(python.version)
   displayName: Build conda package
+
+- script: |
+    call activate anaconda-client-env
+    conda build conda/das-test --test -c conda-forge -c ncb -c nvidia -c apple --python $(python.version)
+  displayName: Test conda package
