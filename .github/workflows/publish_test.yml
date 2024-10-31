@@ -38,13 +38,13 @@ jobs:
         condarc-file: condarc.yml
     - name: Build conda package
       run: |
-        conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload --output-folder build
+        conda build conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple -c local -c ncb --python ${{ matrix.python-version }} --no-anaconda-upload
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
     - name: Install and test conda package
       run: |
         conda deactivate
-        conda create python=${{ matrix.python-version }} das=0.32.3 -c conda-forge -c ncb -c nvidia -c apple -c file://$(pwd)/build -n das_test -y
+        conda create python=${{ matrix.python-version }} das=0.32.3 -c conda-forge -c ncb -c nvidia -c apple -c local -c ncb -n das_test -y
         conda activate das_test
         conda list
         python -c "import das; print(das.__version__)"
