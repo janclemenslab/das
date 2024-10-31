@@ -38,7 +38,7 @@ jobs:
         condarc-file: condarc.yml
     - name: Build and upload to anaconda
       run: |
-        conda mambabuild conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple -python ${{ matrix.python-version }} --no-anaconda-upload
+        conda mambabuild conda/das-test --no-test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload
         conda mambabuild conda/das-test --test -c conda-forge -c ncb -c nvidia -c apple --python ${{ matrix.python-version }} --no-anaconda-upload
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
