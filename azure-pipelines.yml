@@ -27,7 +27,6 @@ steps:
 - powershell: Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
   displayName: Add conda to PATH
 
-steps:
 - checkout: self
 
 - script: conda env create --quiet --file build_env.yml
@@ -35,5 +34,5 @@ steps:
 
 - script: |
     call activate anaconda-client-env
-    conda mambabuild conda/das-test -c conda-forge -c ncb -c nvidia --python ${{ matrix.python-version }}
+    conda mambabuild conda/das-test -c conda-forge -c ncb -c nvidia --python $(python.version)
   displayName: Build conda package
