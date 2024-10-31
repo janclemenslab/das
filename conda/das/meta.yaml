@@ -13,52 +13,57 @@ build:
   number: 0
   entry_points:
     - das=das.cli:main
-  # script: build_osx-arm64.sh  # [arm64]
-  # script: build_other.sh  # [not arm64]
-  script_env:
-    - CONDA_OVERRIDE_CUDA=11.2
 
-requirements:
-  host:
-    - python {{ python }}
-    - pip
-  run:
-    - python {{ python }}
-    - rich
-    - flammkuchen
-    - h5py
-    - matplotlib
-    - pandas
-    - numpy
-    # - numpy>=1.23  # [not win and py>39]
-    # - numpy<1.24  # [win and py39]
-    - peakutils
-    - pyyaml
-    - scikit-learn
-    - scikit-image
-    - tqdm
-    - xarray-behave>=0.35
-    - conda-forge::cudatoolkit # [linux or win]
-    - conda-forge::cudnn # [linux or win]
-    - conda-forge::tensorflow<2.10 # [linux]
-    - anaconda::tensorflow  # [win]
-    # - tensorflow-gpu>2.3 # [win and py<310]
-    # - tensorflow==2.10 # [win and py>=310]
-    - anaconda::tensorflow==2.9.1 # [osx]
-    - apple::tensorflow-deps # [not osx and arm64]
-    - keras
-    - keras-tuner  # [not arm64]
+outputs:
+  - name: das
+    script: build_unix.sh  # [unix and not arm64]
+    script: build_osxarm64.sh  # [osx and arm64]
+    script: build_win.bat  # [win]
+    requirements:
+      host:
+        - python {{ python }}
+        - pip
+      run:
+        - python {{ python }}
+        - rich
+        - flammkuchen
+        - matplotlib
+        - pandas
+        - numpy
+        - peakutils
+        - pyyaml
+        - defopt=6.3
+        - scikit-learn
+        - scikit-image
+        - xarray-behave>=0.35.5
+        - tqdm
+        - numpy>=1.23  # [unix and not arm64]
+        # - numpy>=1.23  # [linux or osx or arm64]
+        - numpy<1.24  # [osx and arm64]
+        - numpy>=1.23  # [win and py>39]
+        - numpy<1.24  # [win and py39]
+        - conda-forge::cudatoolkit # [linux or win]
+        - conda-forge::cudnn # [linux or win]
+        - conda-forge::tensorflow<2.10 # [linux]
+        - tensorflow>2.3 # [win and py<310]
+        - tensorflow # [win and py==310]
+        - tensorflow==2.10 # [win and py>310]
+        - anaconda::tensorflow==2.9.1 # [osx and not arm64]
+        - keras<2.16
+        - keras-tuner  # [not arm64]
 
-test:
-  imports:
-    - das
-    - das.kapre
-    - das.tcn
-    - das.morpholayers
-    - tensorflow
-  commands:
-    - das --help
-    - das gui --help
+    test:
+      imports:
+        - das
+        - das.kapre
+        - das.tcn
+        - das.morpholayers
+        - tensorflow
+      commands:
+        - das --help
+        - das gui --help
+        - das predict --help
+        - das version
 
 about:
   home: "http://github.com/janclemenslab/das"
