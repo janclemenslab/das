@@ -49,4 +49,14 @@ jobs:
         conda list
         python -c "import das; print(das.__version__)"
         das version
+    - name: Install and test conda package
+      run: |
+        conda deactivate
+        conda create python=${{ matrix.python-version }} "numpy<1.24" das=0.32.3 -c conda-forge -c ncb -c nvidia -c apple -c local -c ncb -n das_test -y
+        conda activate das_test
+        conda list
+        python -c "import das; print(das.__version__)"
+        das version
+      if: ${{ matrix.python-version == '3.10' }}
+
 
