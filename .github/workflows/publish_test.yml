@@ -46,6 +46,7 @@ jobs:
         conda deactivate
         conda create python=${{ matrix.python-version }} das=0.32.3 -c conda-forge -c ncb -c nvidia -c apple -c file://$(pwd)/build -n das_test -y
         conda activate das_test
+        conda list
         python -c "import das; print(sleap.__version__)"
         das version
 
