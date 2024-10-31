@@ -35,8 +35,8 @@ outputs:
         - scikit-image
         - xarray-behave>=0.35.5
         - tqdm
-        # - numpy>=1.23  # [win and py>39]
-        # - numpy<1.24  # [win and py39]
+        - numpy>=1.23  # [win and py>39]
+        - numpy<1.24  # [win and py39]
         - conda-forge::cudatoolkit
         - conda-forge::cudnn
         - tensorflow<2.16
