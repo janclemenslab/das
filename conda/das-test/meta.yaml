@@ -44,7 +44,7 @@ outputs:
         # - tensorflow # [win and py==310]
         # - tensorflow==2.10 # [win and py>310]
         - keras<2.16
-        - keras-tuner  # [not arm64]
+        # - keras-tuner  # [not arm64]
 
     # test:
     #   imports:
