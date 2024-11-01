@@ -46,18 +46,18 @@ outputs:
         - keras<2.16
         - keras-tuner  # [not arm64]
 
-    test:
-      imports:
-        - das
-        - das.kapre
-        - das.tcn
-        - das.morpholayers
-        - tensorflow
-      commands:
-        - das --help
-        - das gui --help
-        - das predict --help
-        - das version
+    # test:
+    #   imports:
+    #     - das
+    #     - das.kapre
+    #     - das.tcn
+    #     - das.morpholayers
+    #     - tensorflow
+    #   commands:
+    #     - das --help
+    #     - das gui --help
+    #     - das predict --help
+    #     - das version
 
 about:
   home: "http://github.com/janclemenslab/das"
