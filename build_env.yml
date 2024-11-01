@@ -2,9 +2,8 @@ name: anaconda-client-env
 channels:
   - conda-forge
 dependencies:
+  - conda
   - anaconda-client
-  # - boa
   - conda-build
-  # - conda-verify
   - pip
   - git
