@@ -2,7 +2,7 @@
 always_yes: yes
 changeps1: no
 channels:
-- conda-forge
-- nvidia
-- apple
-- ncb
+  - conda-forge
+  - nvidia
+  - apple
+  - ncb
