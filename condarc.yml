@@ -6,3 +6,5 @@ channels:
   - nvidia
   - apple
   - ncb
+conda-build:
+   pkg_format: 2
