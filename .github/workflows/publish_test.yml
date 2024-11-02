@@ -1,4 +1,4 @@
-name: Publish to Anaconda.org (win test)
+name: Publish to Anaconda.org
 
 on:
   release:
@@ -19,8 +19,13 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: [3.9, '3.10']
-        os: [windows-latest]
+        # os: [windows-latest]
+        # python-version: ['3.12']
+        python-version: ['3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest, macOS-13, macOS-14]
+        include:
+        - python-version: 3.9
+          os: windows-latest
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
@@ -30,33 +35,25 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: true
-        channels: conda-forge,ncb,apple
+        channels: conda-forge,ncb
         python-version: 3.12
         auto-activate-base: false
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-    - name: Build conda package
+    - name: Build
       run: |
-        conda build conda/das-test --python ${{ matrix.python-version }} --no-anaconda-upload
+        mkdir ./build
+        conda build conda/das-test --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+    - name: Test
+      run: |
+        conda deactivate
+        conda create -n das_test das -c ./build -c local -c conda-forge -c apple -c nvidia -c ncb -y
+        conda activate das_test
+        python -c "import das; print(das.__version__)"
+        das version
+    - name: Upload
+      run: |
+        conda build conda/das-test --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
-    - name: Test conda package
-      run: |
-        conda deactivate
-        conda create python=${{ matrix.python-version }} das=0.32.3 -c ./build -c conda-forge -c nvidia -c apple -c ncb -n das_test -y
-        conda activate das_test
-        conda list
-        python -c "import das; print(das.__version__)"
-        das version
-    - name: Test conda package
-      run: |
-        conda deactivate
-        conda create python=${{ matrix.python-version }} "numpy<1.24" das=0.32.3 -c conda-forge -c ncb -c nvidia -c apple -c local -c ncb -n das_test -y
-        conda activate das_test
-        conda list
-        python -c "import das; print(das.__version__)"
-        das version
-      if: ${{ matrix.python-version == 3.9 }}
-
-
