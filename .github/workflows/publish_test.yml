@@ -1,5 +1,4 @@
-name: Publish to Anaconda.org
-
+name: Publish (test)
 on:
   release:
     types:
