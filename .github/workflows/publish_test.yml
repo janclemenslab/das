@@ -43,7 +43,7 @@ jobs:
     - name: Build
       run: |
         mkdir ./build
-        conda build conda/das-test --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+        conda build conda/das --no-test --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
     - name: Test
       run: |
         conda deactivate
@@ -53,6 +53,6 @@ jobs:
         das version
     - name: Upload
       run: |
-        conda build conda/das-test --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
+        conda build conda/das --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
       env:
         ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
