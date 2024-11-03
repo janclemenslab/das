@@ -47,7 +47,7 @@ jobs:
     - name: Test
       run: |
         conda deactivate
-        conda create -n das_test das -c ./build -c local -c conda-forge -c apple -c nvidia -c ncb -y
+        conda create -n das_test python=${{ matrix.python-version }} das -c ./build -c local -c conda-forge -c apple -c nvidia -c ncb -y
         conda activate das_test
         python -c "import das; print(das.__version__)"
         das version
