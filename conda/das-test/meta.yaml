@@ -16,6 +16,8 @@ build:
 
 outputs:
   - name: das
+    script: build_unix.sh  # [unix and not arm64]
+    script: build_osxarm64.sh  # [osx and arm64]
     script: build_win.bat  # [win]
     requirements:
       host:
@@ -35,29 +37,22 @@ outputs:
         - scikit-image
         - xarray-behave>=0.35.5
         - tqdm
+        - numpy>=1.23  # [unix and not arm64]
+        # - numpy>=1.23  # [linux or osx or arm64]
+        # - numpy<1.24  # [osx and arm64]
         - numpy>=1.23  # [win and py>39]
         - numpy<1.24  # [win and py39]
-        - conda-forge::cudatoolkit
-        - conda-forge::cudnn
-        # - tensorflow<2.16
-        - tensorflow>2.3 # [win and py<310]
-        - tensorflow # [win and py==310]
-        - tensorflow==2.10 # [win and py>310]
-        # - keras<2.16
+        - conda-forge::cudatoolkit # [linux or win]
+        - conda-forge::cudnn # [linux or win]
+        # - conda-forge::tensorflow<2.10 # [linux]
+        - conda-forge::tensorflow<2.10, >2.3 # [linux or win]
+        # - tensorflow>2.3 # [win and py<310]
+        # - tensorflow>2.3 # [win and py<310]
+        # - tensorflow # [win and py==310]
+        # - tensorflow==2.10 # [win and py>310]
+        - anaconda::tensorflow==2.9.1 # [osx and not arm64]
+        - keras<2.16, >2.3
         # - keras-tuner  # [not arm64]
-
-    # test:
-    #   imports:
-    #     - das
-    #     - das.kapre
-    #     - das.tcn
-    #     - das.morpholayers
-    #     - tensorflow
-    #   commands:
-    #     - das --help
-    #     - das gui --help
-    #     - das predict --help
-    #     - das version
 
 about:
   home: "http://github.com/janclemenslab/das"
@@ -67,7 +62,3 @@ about:
   summary: "DAS"
   doc_url: "https://janclemenslab.org/das"
   dev_url: "http://github.com/janclemenslab/das"
-
-extra:
-  recipe-maintainers:
-    - postpop
