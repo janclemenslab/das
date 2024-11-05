@@ -18,12 +18,10 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        # os: [windows-latest]
-        # python-version: ['3.12']
         python-version: ['3.10', '3.11', '3.12']
-        os: [ubuntu-latest, windows-latest, macOS-13, macOS-14]
+        os: [ubuntu-latest, macOS-14]
         include:
-        - python-version: 3.9
+        - python-version: 3.10
           os: windows-latest
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
@@ -40,20 +38,31 @@ jobs:
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-    - name: Build
+    - name: Build (non Windows)
+      if: matrix.os == 'ubuntu-latest'
       run: |
         mkdir ./build
-        conda build conda/das-test --no-test --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+        conda build conda/das --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+    - name: Build (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        mkdir ./build
+        conda build conda/das-win --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+    - name: Build (Windows)
+      if: matrix.os == 'macOS-14'
+      run: |
+        mkdir ./build
+        conda build conda/das-osxarm --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
     - name: Test
       run: |
         conda deactivate
-        conda create -n das_test python=${{ matrix.python-version }} das -c ./build -c local -c conda-forge -c apple -c nvidia -c ncb -y
+        conda create -n das_test python=${{ matrix.python-version }} das -c ./build -c conda-forge -c apple -c nvidia -c ncb -y
         conda activate das_test
         conda list
         das version
         python -c "import das; print(das.__version__)"
-    - name: Upload
-      run: |
-        conda build conda/das-test --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
-      env:
-        ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+    # - name: Upload
+    #   run: |
+    #     conda build conda/das-test --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
+    #   env:
+    #     ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
