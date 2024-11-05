@@ -23,6 +23,8 @@ jobs:
         include:
         - python-version: '3.10'
           os: windows-latest
+    env:
+      ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
@@ -53,6 +55,7 @@ jobs:
       run: |
         mkdir ./build
         conda build conda/das-osxarm --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+        
     - name: Test
       run: |
         conda deactivate
@@ -61,8 +64,16 @@ jobs:
         conda list
         das version
         python -c "import das; print(das.__version__)"
-    # - name: Upload
-    #   run: |
-    #     conda build conda/das-test --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
-    #   env:
-    #     ANACONDA_TOKEN: ${{ secrets.ANACONDA_TOKEN }}
+        
+    - name: Upload (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        conda build conda/das-ubuntu --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
+    - name: Upload (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        conda build conda/das-win --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}
+    - name: Upload (Mac arm)
+      if: matrix.os == 'macOS-14'
+      run: |
+        conda build conda/das-osxarm --no-test --python ${{ matrix.python-version }} --output-folder ./build --user ncb --token ${{ secrets.ANACONDA_TOKEN }}        
