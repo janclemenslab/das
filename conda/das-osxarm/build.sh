@@ -4,10 +4,7 @@ export PIP_NO_INDEX=False
 export PIP_NO_DEPENDENCIES=False
 export PIP_IGNORE_INSTALLED=False
 
-$PYTHON -m pip install keras-tuner==1.1.2 kt-legacy -vv --no-dependencies
-# $PYTHON -m pip install kt-legacy -vv --no-dependencies
-# $PYTHON -m pip install tensorflow-macos==2.9 tensorflow-metal==0.5.0
-# $PYTHON -m pip install tensorflow-macos==2.13 tensorflow-metal==1.0.0
-$PYTHON -m pip install tensorflow-macos==2.14 tensorflow-metal==1.1.0
-$PYTHON -m pip install das -vv --no-dependencies
+# $PYTHON -m pip install tensorflow==2.15.1 tensorflow-metal==1.1.0 numpy==1.23.5
+# $PYTHON -m pip install tensorflow==2.15.1 tensorflow-metal==1.1.0
+$PYTHON -m pip install das --no-dependencies
 

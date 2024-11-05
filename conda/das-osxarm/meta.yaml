@@ -20,21 +20,20 @@ requirements:
     - pip
   run:
     - python {{ python }}
-    - rich
-    - flammkuchen
-    - matplotlib
-    - pandas
-    - numpy
-    - peakutils
-    - pyyaml
-    - defopt=6.3
-    - pyside2
-    - scikit-learn
-    - scikit-image
-    # - tqdm
-    - xarray-behave>=0.34.2
-    - keras
-    - keras-tuner
+    # - rich
+    # - flammkuchen
+    # - matplotlib
+    # - pandas
+    # - numpy=1.23.5  # [py<=311]
+    # - peakutils
+    # - pyyaml
+    # - defopt=6.3
+    # - scikit-learn
+    # - scikit-image
+    - tqdm
+    - xarray-behave=0.35.7
+    - conda-forge::tensorflow=2.15  # [py<=311]
+    # - tensorflow # [py==312]
 
 test:
   imports:
