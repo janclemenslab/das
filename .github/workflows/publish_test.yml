@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: False
       matrix:
-        python-version: ['3.10', '3.11', '3.12']
+        python-version: ['3.10', '3.11']  #, '3.12']
         os: [ubuntu-latest, macOS-14]
         include:
         - python-version: '3.10'
@@ -38,7 +38,7 @@ jobs:
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-    - name: Build (non Windows)
+    - name: Build (Ubuntu)
       if: matrix.os == 'ubuntu-latest'
       run: |
         mkdir ./build
@@ -48,7 +48,7 @@ jobs:
       run: |
         mkdir ./build
         conda build conda/das-win --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
-    - name: Build (Windows)
+    - name: Build (Mac arm)
       if: matrix.os == 'macOS-14'
       run: |
         mkdir ./build
