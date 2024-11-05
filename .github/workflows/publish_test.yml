@@ -42,7 +42,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         mkdir ./build
-        conda build conda/das --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
+        conda build conda/das-ubuntu --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
     - name: Build (Windows)
       if: matrix.os == 'windows-latest'
       run: |
