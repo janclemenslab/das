@@ -1,0 +1,43 @@
+{% set data = load_setup_py_data(setup_file='../../setup.py', from_recipe_dir=True) %}
+{% set name = "das" %}
+{% set version = data.get('version') %}
+
+package:
+  name: das
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+
+build:
+  number: 0
+  entry_points:
+    - das=das.cli:main
+
+outputs:
+  - name: das
+    script: build_unix.sh
+    requirements:
+      host:
+        - python {{ python }}
+        - pip
+      run:
+        - python {{ python }}
+        - cudatoolkit
+        - cudnn
+        - tqdm
+        - tensorflow<2.16
+        - xarray-behave=0.35.7
+
+about:
+  home: "http://github.com/janclemenslab/das"
+  license: MIT
+  license_family: MIT
+  license_file:
+  summary: "DAS"
+  doc_url: "https://janclemenslab.org/das"
+  dev_url: "http://github.com/janclemenslab/das"
+
+extra:
+  recipe-maintainers:
+    - postpop
