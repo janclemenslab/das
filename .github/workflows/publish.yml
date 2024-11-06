@@ -1,4 +1,4 @@
-name: Publish (test)
+name: Publish
 on:
   release:
     types:
