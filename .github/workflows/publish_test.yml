@@ -46,7 +46,7 @@ jobs:
         activate-environment: anaconda-client-env
         environment-file: build_env.yml
         condarc-file: condarc.yml
-    - name: Build ${{ matrix.os }}
+    - name: Build (${{ matrix.os }})
       run: |
         mkdir ./build
         conda build conda/${{ matrix.folder}} --no-anaconda-upload --python ${{ matrix.python-version }} --output-folder ./build
