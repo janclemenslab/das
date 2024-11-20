@@ -27,7 +27,7 @@ On windows:
 conda create python=3.10 das=0.32.4 -c conda-forge -c ncb -c nvidia -n das -y
 ```
 
-On Linux or MacOS (intel and arm):
+On Linux or MacOS (arm only):
 ```shell
 conda create python=3.11 das=0.32.4 -c conda-forge -c ncb -c nvidia -c apple -n das -y
 ```
