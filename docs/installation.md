@@ -2,25 +2,21 @@
 
 ## Pre-requisites
 
-_Anaconda python_: Install the [anaconda python distribution](https://docs.anaconda.com/anaconda/install/) (or [miniconda](https://docs.conda.io/en/latest/miniconda.html)). If conda is already installed on your system, make sure you have conda v4.8.4+. If not, update from an older version with `conda update conda`.
+_Anaconda python_: Install the [anaconda python distribution](https://docs.anaconda.com/anaconda/install/) (or [miniconda](https://docs.conda.io/en/latest/miniconda.html)). If you have conda already installed, make sure you have at least conda v23.10.0. If not, update from an older version with `conda update conda -n base`.
 
 _Libsoundfile (Linux only)_: If you are on Linux and want to load audio from a wide range of audio formats (other than `wav`), then you need to install `libsndfile`. The GUI uses the [soundfile](http://pysoundfile.readthedocs.io/) python package, which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Again, this is only required if you work with more exotic audio files.
-
-_Visual C++ runtime (Windows only)_: This is typically installed so only required if _DAS_ fails to load the native tensorflow runtime. Download the latest version [here](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
 
 ## Install _DAS_
 Create an anaconda environment called `das` that contains all the required packages.
 
-On windows
+On windows:
 ```shell
-conda install mamba -c conda-forge -n base -y
-mamba create python=3.9 das=0.32.3 "numpy<1.24" -c conda-forge -c ncb -c anaconda -c nvidia -n das -y
+conda create python=3.10 das=0.32.4 -c conda-forge -c ncb -c nvidia -n das -y
 ```
 
 On Linux or MacOS (intel and arm):
 ```shell
-conda install mamba -c conda-forge -n base -y
-mamba create python=3.10 das=0.32.3 -c conda-forge -c ncb -c anaconda -c nvidia -c apple -n das -y
+conda create python=3.11 das=0.32.4 -c conda-forge -c ncb -c nvidia -c apple -n das -y
 ```
 
 
