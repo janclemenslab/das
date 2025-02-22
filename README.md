@@ -24,12 +24,12 @@ Create an anaconda environment called `das` that contains all the required packa
 
 On windows:
 ```shell
-conda create python=3.10 das=0.32.4 -c conda-forge -c ncb -c nvidia -n das -y
+conda create python=3.10 das=0.32.5 -c conda-forge -c ncb -c nvidia -n das -y
 ```
 
 On Linux or MacOS (arm only):
 ```shell
-conda create python=3.11 das=0.32.4 -c conda-forge -c ncb -c nvidia -c apple -n das -y
+conda create python=3.11 das=0.32.5 -c conda-forge -c ncb -c nvidia -c apple -n das -y
 ```
 
 ## Usage
