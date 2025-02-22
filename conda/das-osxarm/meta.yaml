@@ -31,7 +31,7 @@ requirements:
     # - scikit-learn
     # - scikit-image
     - tqdm
-    - xarray-behave=0.37.2
+    - xarray-behave=0.37.3
     - conda-forge::tensorflow=2.15  # [py<=311]
     # - tensorflow # [py==312]
 
