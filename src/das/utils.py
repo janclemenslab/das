@@ -237,23 +237,23 @@ class QtProgressCallback(keras.callbacks.Callback):
         self._check_if_stopped()
 
 
-def resample(x: np.array, fs_audio: float, fs_model: float):
-    """Resample audio to model rate.
+def resample(x: np.ndarray, fs_audio: float, fs_target: float) -> np.ndarray:
+    """Resample source to target rate along axis 0.
 
     Rounds rates to next even number for efficiency.
 
     Args:
-        x (np.array): _description_
-        fs_audio (float): _description_
-        fs_model (float): _description_
+        x (np.ndarray): [time x channels] array.
+        fs_audio (float): Hz.
+        fs_target (float): Hz.
 
     Returns:
-        np.array: Audio resample to fs_model.
+        np.ndarray: Resampled audio.
     """
     fs_audio_even = int(fs_audio // 2) * 2
-    fs_model_even = int(fs_model // 2) * 2
-    gcd = np.gcd(fs_audio_even, fs_model_even)
-    x = scipy.signal.resample_poly(x, fs_audio_even // gcd, fs_model_even // gcd, axis=0)
+    fs_target_even = int(fs_target // 2) * 2
+    gcd = np.gcd(fs_audio_even, fs_target_even)
+    x = scipy.signal.resample_poly(x, fs_target_even // gcd, fs_audio_even // gcd, axis=0)
     return x
 
 

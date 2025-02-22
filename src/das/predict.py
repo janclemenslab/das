@@ -362,6 +362,7 @@ def predict_events(
 
 def predict_song(
     class_probabilities: np.ndarray,
+    samplerate: float,
     params: Dict[str, Any],
     event_thres: float = 0.5,
     event_dist: float = 0.01,
@@ -373,7 +374,25 @@ def predict_song(
     segment_minlen: float = None,
     segment_fillgap: float = None,
 ):
-    samplerate = params["samplerate_x_Hz"]
+    """_summary_
+
+    Args:
+        class_probabilities (np.ndarray): _description_
+        samplerate (float): sample rate of class_probabilities in Hz.
+        params (Dict[str, Any]): _description_
+        event_thres (float, optional): _description_. Defaults to 0.5.
+        event_dist (float, optional): _description_. Defaults to 0.01.
+        event_dist_min (float, optional): _description_. Defaults to 0.
+        event_dist_max (float, optional): _description_. Defaults to np.inf.
+        segment_ref_onsets (Optional[List[float]], optional): _description_. Defaults to None.
+        segment_ref_offsets (Optional[List[float]], optional): _description_. Defaults to None.
+        segment_thres (float, optional): _description_. Defaults to 0.5.
+        segment_minlen (float, optional): _description_. Defaults to None.
+        segment_fillgap (float, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
     events_offset = 0
 
     segment_dims = np.where([val == "segment" for val in params["class_types"]])[0]
@@ -493,7 +512,6 @@ def predict(
         class_probabilities (np.array): [T, nb_classes]
         class_names (List[str]): [nb_classes]
     """
-
     if model_save_name is not None:
         model, params = utils.load_model_and_params(model_save_name)
     else:
@@ -503,13 +521,19 @@ def predict(
     fs_model = params["samplerate_x_Hz"]
 
     if fs_audio is not None:
+        fs_probs = fs_audio
         if bandpass_low_freq is not None or bandpass_up_freq is not None:
             logging.info(f"   Filtering audio between {bandpass_low_freq}Hz and {bandpass_up_freq}Hz.")
             x = utils.bandpass_filter_song(x, fs_audio, bandpass_low_freq, bandpass_up_freq)
 
         if resample and fs_audio != fs_model:
             logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")
+            print("before", x.shape)
             x = utils.resample(x, fs_audio, fs_model)
+            print("after", x.shape)
+            fs_probs = fs_model
+    else:
+        fs_probs = fs_model  # fs_audio is undefined - best guess is that it matches the model's rate
 
     # use postprocessing values from params and/or args
     if segment_use_optimized and "post_opt" in params and isinstance(params["post_opt"], dict):
@@ -523,7 +547,6 @@ def predict(
 
     if pad:
         # figure out length in multiples of batches
-
         batch_len = params["batch_size"] * params["nb_hist"] + params["nb_hist"]
         x_len_original = len(x)
         pad_len = 0
@@ -544,6 +567,7 @@ def predict(
 
     events, segments = predict_song(
         class_probabilities=class_probabilities,
+        samplerate=fs_probs,
         params=params,
         event_thres=event_thres,
         event_dist=event_dist,
@@ -653,7 +677,6 @@ def cli_predict(
 
     logging.info(f"Loading model from {model_save_name}.")
     model, params = utils.load_model_and_params(model_save_name)
-    fs_model = params["samplerate_x_Hz"]
 
     for recording_filename in filenames:
         logging.info(f"   Loading data from {recording_filename}.")
@@ -663,14 +686,6 @@ def cli_predict(
             x = x.T  # [channels, time] -> [time, channels]
             if x.ndim == 1:
                 x = x[:, np.newaxis]
-
-            if bandpass_low_freq is not None or bandpass_up_freq is not None:
-                logging.info(f"   Filtering audio between {bandpass_low_freq}Hz and {bandpass_up_freq}Hz.")
-                x = utils.bandpass_filter_song(x, fs_audio, bandpass_low_freq, bandpass_up_freq)
-
-            if resample and fs_audio != fs_model:
-                logging.info(f"   Resampling. Audio rate is {fs_audio}Hz but model was trained on data with {fs_model}Hz.")
-                x = utils.resample(x, fs_audio, fs_model)
 
             logging.info(f"   Annotating using model at {model_save_name}.")
             # TODO: load model once, provide as direct arg
@@ -690,6 +705,10 @@ def cli_predict(
                 segment_minlen,
                 segment_fillgap,
                 save_memory=True,
+                resample=resample,
+                fs_audio=fs_audio,
+                bandpass_low_freq=bandpass_low_freq,
+                bandpass_up_freq=bandpass_up_freq,
             )
 
             if "event" in params["class_types"]:
