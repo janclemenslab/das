@@ -20,7 +20,7 @@ requires = [
     'kt-legacy',
     'xarray-behave',
     'tqdm',
-    'numpy=1.26.4 ; platform_system == "Windows"',
+    'numpy==1.26.4 ; platform_system == "Windows"',
 ]
 #   - numexpr=2.8.4
 
