@@ -1,0 +1,12 @@
+name: das_pip
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - ffmpeg==6
+  - cudatoolkit=11.2
+  - cudnn=8.1
+  - pip:
+    - tensorflow==2.10.*
+    - das

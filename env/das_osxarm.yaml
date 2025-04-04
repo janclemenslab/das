@@ -1,0 +1,14 @@
+name: das_pip
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - ffmpeg==6
+  - pip:
+    - tqdm
+    - zarr<3
+    - xarray-behave==0.37.3
+    - tensorflow==2.15.1
+    - tensorflow-metal==1.1.0
+    - das
