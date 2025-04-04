@@ -2,7 +2,7 @@ name: das_pip
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
+  - python=3.11
   - pip
   - ffmpeg==6
   - cudatoolkit=11.8
