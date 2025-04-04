@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.tcn.tcn" href="das.tcn.tcn.html" /><link rel="prev" title="das.utils" href="das.utils.html" />
 
     <!-- Generated with Sphinx 4.5.0 and Furo 2023.05.20 -->
         <title>das.utils_plot - DAS documentation</title>
@@ -162,7 +162,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
@@ -199,7 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Developer API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Developer API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
@@ -221,7 +221,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -270,8 +272,207 @@
           </label>
         </div>
         <article role="main">
-          <section id="das-utils-plot">
-<h1>das.utils_plot<a class="headerlink" href="#das-utils-plot" title="Permalink to this headline">#</a></h1>
+          <section id="module-das.utils_plot">
+<span id="das-utils-plot"></span><h1>das.utils_plot<a class="headerlink" href="#module-das.utils_plot" title="Permalink to this headline">#</a></h1>
+<p>Plot utilities.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="das.utils_plot.Pdf">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">Pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">savename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autosave</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kws</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#Pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.Pdf" title="Permalink to this definition">#</a></dt>
+<dd><p>Thin wrapper around Autosaving variant</p>
+<p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>savename</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>autosave</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to True.</p></li>
+<li><p><strong>style</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.annotate_events">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">annotate_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#annotate_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.annotate_events" title="Permalink to this definition">#</a></dt>
+<dd><p>Plot events as vertical lines to plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>event_seconds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of event times in seconds</p></li>
+<li><p><strong>event_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of event names. Defaults to None.</p></li>
+<li><p><strong>tmin</strong> (<em>float</em><em>, </em><em>optional</em>) – Start of the range of events annotated in seconds. Defaults to 0.</p></li>
+<li><p><strong>tmax</strong> (<em>float</em><em>, </em><em>optional</em>) – End of the range of events annotated in seconds. Defaults to np.inf.</p></li>
+<li><p><strong>color</strong> (<em>optional</em>) – Either a single valid matplotlib color (in that case all segment types will have that color)
+or a list of matplotlib colors, one for each segment type.
+Defaults to None, in which case a list of distinct colors
+will be created automatically from colorcet’s ‘glasbey_light’ palette.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the number of colors does not match the number of unique event names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.annotate_segments">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">annotate_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">onset_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset_seconds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#annotate_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.annotate_segments" title="Permalink to this definition">#</a></dt>
+<dd><p>Plot segments as vertical lines to plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>onset_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>offset_seconds</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>segment_names</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+<li><p><strong>tmin</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]. Defaults to 0.</p></li>
+<li><p><strong>tmax</strong> (<em>float</em><em>, </em><em>optional</em>) – [description]. Defaults to np.inf.</p></li>
+<li><p><strong>color</strong> (<em>optional</em>) – Either a single valid matplotlib color (in that case all segment types will have that color)
+or a list of matplotlib colors, one for each segment type.
+Defaults to None, in which case a list of distinct colors
+will be created automatically from colorcet’s ‘glasbey_light’ palette.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the number of colors does not match the number of unique segment names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.bar_text">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">bar_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#bar_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.bar_text" title="Permalink to this definition">#</a></dt>
+<dd><p>Add labels to the end of each bar in a bar chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The matplotlib object containing the axes
+of the plot to annotate. Defaults to current axis.</p></li>
+<li><p><strong>spacing</strong> (<em>int</em>) – The distance between the labels and the bars. Defaults to -20 (inside bar)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.downsample_plot">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">downsample_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#downsample_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.downsample_plot" title="Permalink to this definition">#</a></dt>
+<dd><p>Reduces complexity of exported pdfs w/o impairing visual appearance.</p>
+<p>Modified from pyqtgraph - downsampleMethod=peak.
+Keeps peaks so the envelope of the waveform is preserved.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.generate_colors">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">generate_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#generate_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.generate_colors" title="Permalink to this definition">#</a></dt>
+<dd><p>[summary]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nb_colors</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 1.</p></li>
+<li><p><strong>start_color</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – [description]. Defaults to None.</p></li>
+<li><p><strong>start</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 0.</p></li>
+<li><p><strong>step</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[description]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[type]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.imshow_text">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">imshow_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'w'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'k'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_zeros</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#imshow_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.imshow_text" title="Permalink to this definition">#</a></dt>
+<dd><p>Text labels for individual cells of an imshow plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>[</em><em>type</em><em>]</em>) – Color values</p></li>
+<li><p><strong>labels</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – Text labels. Defaults to None.</p></li>
+<li><p><strong>ax</strong> (<em>[</em><em>type</em><em>]</em><em>, </em><em>optional</em>) – axis. Defaults to plt.gca().</p></li>
+<li><p><strong>color_high</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘w’.</p></li>
+<li><p><strong>color_low</strong> (<em>str</em><em>, </em><em>optional</em>) – [description]. Defaults to ‘k’.</p></li>
+<li><p><strong>color_threshold</strong> (<em>int</em><em>, </em><em>optional</em>) – [description]. Defaults to 50.</p></li>
+<li><p><strong>skip_zeros</strong> (<em>bool</em><em>, </em><em>optional</em>) – [description]. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.label_axes">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">label_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#label_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.label_axes" title="Permalink to this definition">#</a></dt>
+<dd><p>Walks through axes and labels each.</p>
+<p>kwargs are collected and passed to <code class="xref py py-obj docutils literal notranslate"><span class="pre">annotate</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>Figure</em>) – Figure object to work on</p></li>
+<li><p><strong>labels</strong> (<em>iterable</em><em> or </em><em>None</em>) – iterable of strings to use to label the axes.
+If None, lower case letters are used.</p></li>
+<li><p><strong>loc</strong> (<em>len=2 tuple of floats</em>) – Where to put the label in axes-fraction units</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.remove_axes">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">remove_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tblr'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#remove_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.remove_axes" title="Permalink to this definition">#</a></dt>
+<dd><p>Remove top &amp; left border around plot or all axes &amp; ticks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Axes to modify. Defaults to None (currently active axis - plt.gca()).</p></li>
+<li><p><strong>all</strong> (<em>bool</em><em>, </em><em>optional</em>) – Remove all axes &amp; ticks (True) or top &amp; left border only (False). Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.scalebar">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">scalebar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lower</span> <span class="pre">right'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frameon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#scalebar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.scalebar" title="Permalink to this definition">#</a></dt>
+<dd><p>Add scalebar to axis.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>plt.subplot(122)
+plt.plot([0,1,2,3], [1,4,2,5])
+scalebar(0.5, ‘femtoseconds’, label=’duration’, location=’lower right’)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>length</strong> (<em>float</em>) – Length of the scalebar in units of axis ticks - length of 1.0 corresponds to spacing between to major x-ticks</p></li>
+<li><p><strong>dx</strong> (<em>int</em><em>, </em><em>optional</em>) – Scale factor for length. E.g. if scale factor is 10, the scalebar of length 1.0 will span 10 ticks. Defaults to 1.</p></li>
+<li><p><strong>units</strong> (<em>str</em><em>, </em><em>optional</em>) – Unit label (e.g. ‘milliseconds’). Defaults to ‘’.</p></li>
+<li><p><strong>label</strong> (<em>str</em><em>, </em><em>optional</em>) – Title for scale bar (e.g. ‘Duration’). Defaults to None.</p></li>
+<li><p><strong>axis</strong> (<em>matplotlib.axes.Axes</em><em>, </em><em>optional</em>) – Axes to add scalebar to. Defaults to None (currently active axis - plt.gca()).</p></li>
+<li><p><strong>location</strong> (<em>str</em><em>, </em><em>optional</em>) – Where in the axes to put the scalebar (upper/lower/’’, left/right/center). Defaults to ‘lower right’.</p></li>
+<li><p><strong>frameon</strong> (<em>bool</em><em>, </em><em>optional</em>) – Add background (True) or not (False). Defaults to False.</p></li>
+<li><p><strong>kwargs</strong> – location=None, pad=None, border_pad=None, sep=None,
+frameon=None, color=None, box_color=None, box_alpha=None,
+scale_loc=None, label_loc=None, font_properties=None,
+label_formatter=None, animated=False):</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handle to scalebar object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.utils_plot.tablelegend">
+<span class="sig-prename descclassname"><span class="pre">das.utils_plot.</span></span><span class="sig-name descname"><span class="pre">tablelegend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils_plot.html#tablelegend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils_plot.tablelegend" title="Permalink to this definition">#</a></dt>
+<dd><p>Place a table legend on the axes.</p>
+<p>Creates a legend where the labels are not directly placed with the artists,
+but are used as row and column headers, looking like this:</p>
+</dd></dl>
+
 </section>
 
         </article>
@@ -279,8 +480,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="das.tcn.tcn.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">das.tcn.tcn</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="das.utils.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">das.utils</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

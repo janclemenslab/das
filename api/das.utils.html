@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.tcn.tcn" href="das.tcn.tcn.html" /><link rel="prev" title="das.train" href="das.train.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.utils_plot" href="das.utils_plot.html" /><link rel="prev" title="das.train_tune" href="das.train_tune.html" />
 
     <!-- Generated with Sphinx 4.5.0 and Furo 2023.05.20 -->
         <title>das.utils - DAS documentation</title>
@@ -221,7 +221,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -521,22 +523,22 @@ Second, try to init model from parameters and then add weights…</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="das.utils.resample">
-<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_audio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/utils.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.resample" title="Permalink to this definition">#</a></dt>
-<dd><p>Resample audio to model rate.</p>
+<span class="sig-prename descclassname"><span class="pre">das.utils.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_audio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fs_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="reference internal" href="../_modules/das/utils.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.utils.resample" title="Permalink to this definition">#</a></dt>
+<dd><p>Resample source to target rate along axis 0.</p>
 <p>Rounds rates to next even number for efficiency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>np.array</em>) – _description_</p></li>
-<li><p><strong>fs_audio</strong> (<em>float</em>) – _description_</p></li>
-<li><p><strong>fs_model</strong> (<em>float</em>) – _description_</p></li>
+<li><p><strong>x</strong> (<em>np.ndarray</em>) – [time x channels] array.</p></li>
+<li><p><strong>fs_audio</strong> (<em>float</em>) – Hz.</p></li>
+<li><p><strong>fs_target</strong> (<em>float</em>) – Hz.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Audio resample to fs_model.</p>
+<dd class="field-even"><p>Resampled audio.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>np.array</p>
+<dd class="field-odd"><p>np.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -563,23 +565,23 @@ Second, try to init model from parameters and then add weights…</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="das.tcn.tcn.html">
+          <a class="next-page" href="das.utils_plot.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">das.tcn.tcn</div>
+                <div class="title">das.utils_plot</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="das.train.html">
+          <a class="prev-page" href="das.train_tune.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">das.train</div>
+                <div class="title">das.train_tune</div>
                 
               </div>
             </a>

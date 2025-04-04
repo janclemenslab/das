@@ -221,7 +221,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -501,6 +503,36 @@ Defaults to True.</p></li>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>dict[‘segmentnames’][‘denselabels-samples’/’onsets’/’offsets’/’probabilities’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.predict.predict_song">
+<span class="sig-prename descclassname"><span class="pre">das.predict.</span></span><span class="sig-name descname"><span class="pre">predict_song</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_probabilities</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_thres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_dist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_dist_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_dist_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_ref_onsets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_ref_offsets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_thres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_minlen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_fillgap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/predict.html#predict_song"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.predict.predict_song" title="Permalink to this definition">#</a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>class_probabilities</strong> (<em>np.ndarray</em>) – _description_</p></li>
+<li><p><strong>samplerate</strong> (<em>float</em>) – sample rate of class_probabilities in Hz.</p></li>
+<li><p><strong>params</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – _description_</p></li>
+<li><p><strong>event_thres</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to 0.5.</p></li>
+<li><p><strong>event_dist</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to 0.01.</p></li>
+<li><p><strong>event_dist_min</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to 0.</p></li>
+<li><p><strong>event_dist_max</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to np.inf.</p></li>
+<li><p><strong>segment_ref_onsets</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>segment_ref_offsets</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>segment_thres</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to 0.5.</p></li>
+<li><p><strong>segment_minlen</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>segment_fillgap</strong> (<em>float</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
 </dd>
 </dl>
 </dd></dl>

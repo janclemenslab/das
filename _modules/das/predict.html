@@ -220,7 +220,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -271,26 +273,26 @@
           <h1>Source code for das.predict</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Code for training and evaluating networks.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">flammkuchen</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">event_utils</span><span class="p">,</span> <span class="n">segment_utils</span><span class="p">,</span> <span class="n">annot</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span>
-<span class="kn">import</span> <span class="nn">librosa</span>
-<span class="kn">import</span> <span class="nn">zarr</span>
-<span class="kn">from</span> <span class="nn">tqdm.autonotebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span> <span class="nn">dask.config</span>
-<span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
-<span class="kn">from</span> <span class="nn">dask.diagnostics</span> <span class="kn">import</span> <span class="n">ProgressBar</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flammkuchen</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">event_utils</span><span class="p">,</span> <span class="n">segment_utils</span><span class="p">,</span> <span class="n">annot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.autonotebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dask.config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dask.array</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">da</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dask.diagnostics</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProgressBar</span>
 
 <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;array.slicing.split_large_chunks&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
 
 
-<div class="viewcode-block" id="predict_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_probabilities">[docs]</a><span class="k">def</span> <span class="nf">predict_probabilities</span><span class="p">(</span>
+<div class="viewcode-block" id="predict_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_probabilities">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">predict_probabilities</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -346,7 +348,7 @@
     <span class="k">return</span> <span class="n">class_probabilities</span></div>
 
 
-<div class="viewcode-block" id="labels_from_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.labels_from_probabilities">[docs]</a><span class="k">def</span> <span class="nf">labels_from_probabilities</span><span class="p">(</span>
+<div class="viewcode-block" id="labels_from_probabilities"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.labels_from_probabilities">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">labels_from_probabilities</span><span class="p">(</span>
     <span class="n">probabilities</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">slice</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert class-wise probabilities into labels.</span>
@@ -382,7 +384,7 @@
     <span class="k">return</span> <span class="n">labels</span></div>
 
 
-<div class="viewcode-block" id="predict_segments"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_segments">[docs]</a><span class="k">def</span> <span class="nf">predict_segments</span><span class="p">(</span>
+<div class="viewcode-block" id="predict_segments"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_segments">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">predict_segments</span><span class="p">(</span>
     <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">segment_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -522,7 +524,7 @@
     <span class="k">return</span> <span class="n">segments</span></div>
 
 
-<span class="k">def</span> <span class="nf">_detect_events_oom</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_detect_events_oom</span><span class="p">(</span>
     <span class="n">event_probability</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.70</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">block_info</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper around detect_events that returns 2D np.ndarray for use in predict_oom.&quot;&quot;&quot;</span>
@@ -549,7 +551,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">event_indices</span><span class="p">,</span> <span class="n">event_confidence</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="predict_events"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_events">[docs]</a><span class="k">def</span> <span class="nf">predict_events</span><span class="p">(</span>
+<div class="viewcode-block" id="predict_events"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_events">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">predict_events</span><span class="p">(</span>
     <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
     <span class="n">event_dims</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -631,8 +633,9 @@
     <span class="k">return</span> <span class="n">events</span></div>
 
 
-<span class="k">def</span> <span class="nf">predict_song</span><span class="p">(</span>
+<div class="viewcode-block" id="predict_song"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict_song">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">predict_song</span><span class="p">(</span>
     <span class="n">class_probabilities</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">event_thres</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="n">event_dist</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
@@ -644,7 +647,25 @@
     <span class="n">segment_minlen</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">segment_fillgap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="n">samplerate</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;samplerate_x_Hz&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_probabilities (np.ndarray): _description_</span>
+<span class="sd">        samplerate (float): sample rate of class_probabilities in Hz.</span>
+<span class="sd">        params (Dict[str, Any]): _description_</span>
+<span class="sd">        event_thres (float, optional): _description_. Defaults to 0.5.</span>
+<span class="sd">        event_dist (float, optional): _description_. Defaults to 0.01.</span>
+<span class="sd">        event_dist_min (float, optional): _description_. Defaults to 0.</span>
+<span class="sd">        event_dist_max (float, optional): _description_. Defaults to np.inf.</span>
+<span class="sd">        segment_ref_onsets (Optional[List[float]], optional): _description_. Defaults to None.</span>
+<span class="sd">        segment_ref_offsets (Optional[List[float]], optional): _description_. Defaults to None.</span>
+<span class="sd">        segment_thres (float, optional): _description_. Defaults to 0.5.</span>
+<span class="sd">        segment_minlen (float, optional): _description_. Defaults to None.</span>
+<span class="sd">        segment_fillgap (float, optional): _description_. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">events_offset</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="n">segment_dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">([</span><span class="n">val</span> <span class="o">==</span> <span class="s2">&quot;segment&quot;</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]])[</span><span class="mi">0</span><span class="p">]</span>
@@ -674,10 +695,10 @@
         <span class="n">event_dist_min</span><span class="p">,</span>
         <span class="n">event_dist_max</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span>
+    <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span></div>
 
 
-<div class="viewcode-block" id="predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict">[docs]</a><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span>
+<div class="viewcode-block" id="predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.predict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -764,7 +785,6 @@
 <span class="sd">        class_probabilities (np.array): [T, nb_classes]</span>
 <span class="sd">        class_names (List[str]): [nb_classes]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="k">if</span> <span class="n">model_save_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -774,13 +794,19 @@
     <span class="n">fs_model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;samplerate_x_Hz&quot;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">fs_audio</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fs_probs</span> <span class="o">=</span> <span class="n">fs_audio</span>
         <span class="k">if</span> <span class="n">bandpass_low_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">bandpass_up_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Filtering audio between </span><span class="si">{</span><span class="n">bandpass_low_freq</span><span class="si">}</span><span class="s2">Hz and </span><span class="si">{</span><span class="n">bandpass_up_freq</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">bandpass_filter_song</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">bandpass_low_freq</span><span class="p">,</span> <span class="n">bandpass_up_freq</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">resample</span> <span class="ow">and</span> <span class="n">fs_audio</span> <span class="o">!=</span> <span class="n">fs_model</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Resampling. Audio rate is </span><span class="si">{</span><span class="n">fs_audio</span><span class="si">}</span><span class="s2">Hz but model was trained on data with </span><span class="si">{</span><span class="n">fs_model</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;before&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">fs_model</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">fs_probs</span> <span class="o">=</span> <span class="n">fs_model</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fs_probs</span> <span class="o">=</span> <span class="n">fs_model</span>  <span class="c1"># fs_audio is undefined - best guess is that it matches the model&#39;s rate</span>
 
     <span class="c1"># use postprocessing values from params and/or args</span>
     <span class="k">if</span> <span class="n">segment_use_optimized</span> <span class="ow">and</span> <span class="s2">&quot;post_opt&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;post_opt&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">):</span>
@@ -794,7 +820,6 @@
 
     <span class="k">if</span> <span class="n">pad</span><span class="p">:</span>
         <span class="c1"># figure out length in multiples of batches</span>
-
         <span class="n">batch_len</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;batch_size&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;nb_hist&quot;</span><span class="p">]</span>
         <span class="n">x_len_original</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">pad_len</span> <span class="o">=</span> <span class="mi">0</span>
@@ -815,6 +840,7 @@
 
     <span class="n">events</span><span class="p">,</span> <span class="n">segments</span> <span class="o">=</span> <span class="n">predict_song</span><span class="p">(</span>
         <span class="n">class_probabilities</span><span class="o">=</span><span class="n">class_probabilities</span><span class="p">,</span>
+        <span class="n">samplerate</span><span class="o">=</span><span class="n">fs_probs</span><span class="p">,</span>
         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
         <span class="n">event_thres</span><span class="o">=</span><span class="n">event_thres</span><span class="p">,</span>
         <span class="n">event_dist</span><span class="o">=</span><span class="n">event_dist</span><span class="p">,</span>
@@ -835,13 +861,13 @@
     <span class="k">return</span> <span class="n">events</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">class_probabilities</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">_to_np</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_to_np</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">dask</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
         <span class="n">array</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">array</span>
 
 
-<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span> <span class="nf">cli_predict</span><span class="p">(</span>
+<div class="viewcode-block" id="cli_predict"><a class="viewcode-back" href="../../api/das.predict.html#das.predict.cli_predict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cli_predict</span><span class="p">(</span>
     <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">model_save_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -924,7 +950,6 @@
 
     <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loading model from </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="n">model</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">load_model_and_params</span><span class="p">(</span><span class="n">model_save_name</span><span class="p">)</span>
-    <span class="n">fs_model</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;samplerate_x_Hz&quot;</span><span class="p">]</span>
 
     <span class="k">for</span> <span class="n">recording_filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Loading data from </span><span class="si">{</span><span class="n">recording_filename</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -934,14 +959,6 @@
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># [channels, time] -&gt; [time, channels]</span>
             <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">bandpass_low_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">bandpass_up_freq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Filtering audio between </span><span class="si">{</span><span class="n">bandpass_low_freq</span><span class="si">}</span><span class="s2">Hz and </span><span class="si">{</span><span class="n">bandpass_up_freq</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">bandpass_filter_song</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">bandpass_low_freq</span><span class="p">,</span> <span class="n">bandpass_up_freq</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">resample</span> <span class="ow">and</span> <span class="n">fs_audio</span> <span class="o">!=</span> <span class="n">fs_model</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Resampling. Audio rate is </span><span class="si">{</span><span class="n">fs_audio</span><span class="si">}</span><span class="s2">Hz but model was trained on data with </span><span class="si">{</span><span class="n">fs_model</span><span class="si">}</span><span class="s2">Hz.&quot;</span><span class="p">)</span>
-                <span class="n">x</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">,</span> <span class="n">fs_model</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Annotating using model at </span><span class="si">{</span><span class="n">model_save_name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
             <span class="c1"># TODO: load model once, provide as direct arg</span>
@@ -961,6 +978,10 @@
                 <span class="n">segment_minlen</span><span class="p">,</span>
                 <span class="n">segment_fillgap</span><span class="p">,</span>
                 <span class="n">save_memory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">resample</span><span class="o">=</span><span class="n">resample</span><span class="p">,</span>
+                <span class="n">fs_audio</span><span class="o">=</span><span class="n">fs_audio</span><span class="p">,</span>
+                <span class="n">bandpass_low_freq</span><span class="o">=</span><span class="n">bandpass_low_freq</span><span class="p">,</span>
+                <span class="n">bandpass_up_freq</span><span class="o">=</span><span class="n">bandpass_up_freq</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="k">if</span> <span class="s2">&quot;event&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;class_types&quot;</span><span class="p">]:</span>

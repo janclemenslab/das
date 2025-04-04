@@ -220,7 +220,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -271,20 +273,20 @@
           <h1>Source code for das.utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;General utilities&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">tensorflow.keras</span> <span class="k">as</span> <span class="nn">keras</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">h5py</span>
-<span class="kn">import</span> <span class="nn">scipy.signal</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kapre</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tcn</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow.keras</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">keras</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.signal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">kapre</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">tcn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
 
-<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model">[docs]</a><span class="k">def</span> <span class="nf">load_model</span><span class="p">(</span>
+<div class="viewcode-block" id="load_model"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_model</span><span class="p">(</span>
     <span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">model_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
     <span class="n">model_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_model.h5&quot;</span><span class="p">,</span>
@@ -325,7 +327,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="load_model_from_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_from_params">[docs]</a><span class="k">def</span> <span class="nf">load_model_from_params</span><span class="p">(</span>
+<div class="viewcode-block" id="load_model_from_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_from_params">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_model_from_params</span><span class="p">(</span>
     <span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">model_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
     <span class="n">weights_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_model.h5&quot;</span><span class="p">,</span>
@@ -358,7 +360,7 @@
     <span class="k">return</span> <span class="n">model</span></div>
 
 
-<div class="viewcode-block" id="save_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.save_params">[docs]</a><span class="k">def</span> <span class="nf">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_params.yaml&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="save_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.save_params">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">save_params</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_params.yaml&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save model/training parameters to yaml.</span>
 
 <span class="sd">    Args:</span>
@@ -370,7 +372,7 @@
         <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_params">[docs]</a><span class="k">def</span> <span class="nf">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_params.yaml&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="load_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_params">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_params</span><span class="p">(</span><span class="n">file_trunk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params_ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_params.yaml&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load model/training parameters from yaml</span>
 
 <span class="sd">    Args:</span>
@@ -389,7 +391,7 @@
     <span class="k">return</span> <span class="n">params</span></div>
 
 
-<div class="viewcode-block" id="load_model_and_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_and_params">[docs]</a><span class="k">def</span> <span class="nf">load_model_and_params</span><span class="p">(</span>
+<div class="viewcode-block" id="load_model_and_params"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_model_and_params">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_model_and_params</span><span class="p">(</span>
     <span class="n">model_save_name</span><span class="p">,</span> <span class="n">model_dict</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">model_dict</span><span class="p">,</span> <span class="n">custom_objects</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;[summary]</span>
@@ -407,13 +409,13 @@
     <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">params</span></div>
 
 
-<span class="k">def</span> <span class="nf">_download_if_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_download_if_url</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;http&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">url</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">urllib.request</span>
-        <span class="kn">import</span> <span class="nn">tempfile</span>
-        <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.request</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
         <span class="n">filename</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># get filename</span>
         <span class="n">tmpdir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
@@ -422,7 +424,7 @@
         <span class="k">return</span> <span class="n">local_path</span>
 
 
-<div class="viewcode-block" id="load_from"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_from">[docs]</a><span class="k">def</span> <span class="nf">load_from</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">datasets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<div class="viewcode-block" id="load_from"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.load_from">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_from</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">datasets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load datasets from h5 file.</span>
 
 <span class="sd">    Args:</span>
@@ -438,24 +440,24 @@
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<span class="k">class</span> <span class="nc">Timer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Timer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
-    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;Timer not started yet.&quot;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -467,8 +469,8 @@
         <span class="k">return</span> <span class="n">s</span>
 
 
-<div class="viewcode-block" id="QtProgressCallback"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback">[docs]</a><span class="k">class</span> <span class="nc">QtProgressCallback</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">Callback</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_epochs</span><span class="p">,</span> <span class="n">comms</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">QtProgressCallback</span><span class="p">(</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">Callback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nb_epochs</span><span class="p">,</span> <span class="n">comms</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Init the callback.</span>
 
 <span class="sd">        Args:</span>
@@ -482,53 +484,53 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">queue</span> <span class="o">=</span> <span class="n">comms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_event</span> <span class="o">=</span> <span class="n">comms</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_check_if_stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_if_stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">stop_training</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-<div class="viewcode-block" id="QtProgressCallback.on_train_begin"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_begin">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_train_begin"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_begin">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Starting training.&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="QtProgressCallback.on_train_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_train_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_end">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Finishing training.&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="QtProgressCallback.on_epoch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_epoch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_epoch_end">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">epoch</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="QtProgressCallback.on_train_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_train_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_train_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_train_batch_end">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_stopped</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="QtProgressCallback.on_test_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_test_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_test_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_test_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_test_batch_end">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_test_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_stopped</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="QtProgressCallback.on_predict_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_predict_batch_end">[docs]</a>    <span class="k">def</span> <span class="nf">on_predict_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="QtProgressCallback.on_predict_batch_end"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.QtProgressCallback.on_predict_batch_end">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">on_predict_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">logs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_if_stopped</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="resample"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.resample">[docs]</a><span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fs_model</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample audio to model rate.</span>
+<div class="viewcode-block" id="resample"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.resample">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">resample</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">fs_audio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fs_target</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample source to target rate along axis 0.</span>
 
 <span class="sd">    Rounds rates to next even number for efficiency.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        x (np.array): _description_</span>
-<span class="sd">        fs_audio (float): _description_</span>
-<span class="sd">        fs_model (float): _description_</span>
+<span class="sd">        x (np.ndarray): [time x channels] array.</span>
+<span class="sd">        fs_audio (float): Hz.</span>
+<span class="sd">        fs_target (float): Hz.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        np.array: Audio resample to fs_model.</span>
+<span class="sd">        np.ndarray: Resampled audio.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fs_audio_even</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs_audio</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="n">fs_model_even</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs_model</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
-    <span class="n">gcd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">fs_audio_even</span><span class="p">,</span> <span class="n">fs_model_even</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">resample_poly</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_audio_even</span> <span class="o">//</span> <span class="n">gcd</span><span class="p">,</span> <span class="n">fs_model_even</span> <span class="o">//</span> <span class="n">gcd</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fs_target_even</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs_target</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="n">gcd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">fs_audio_even</span><span class="p">,</span> <span class="n">fs_target_even</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">resample_poly</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fs_target_even</span> <span class="o">//</span> <span class="n">gcd</span><span class="p">,</span> <span class="n">fs_audio_even</span> <span class="o">//</span> <span class="n">gcd</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="bandpass_filter_song"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.bandpass_filter_song">[docs]</a><span class="k">def</span> <span class="nf">bandpass_filter_song</span><span class="p">(</span>
+<div class="viewcode-block" id="bandpass_filter_song"><a class="viewcode-back" href="../../api/das.utils.html#das.utils.bandpass_filter_song">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">bandpass_filter_song</span><span class="p">(</span>
     <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sampling_rate_hz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f_low</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">f_high</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Band-pass filter channel data</span>

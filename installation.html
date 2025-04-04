@@ -221,7 +221,9 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -279,15 +281,35 @@
 </section>
 <section id="install-das">
 <h2>Install <em>DAS</em><a class="headerlink" href="#install-das" title="Permalink to this headline">#</a></h2>
-<p>Create an anaconda environment called <code class="docutils literal notranslate"><span class="pre">das</span></code> that contains all the required packages.</p>
-<p>On windows:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w"> </span><span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.4<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>ncb<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y
+<!-- Create an anaconda environment called `das` that contains all the required packages.
+
+On windows:
+```shell
+conda create python=3.10 das=0.32.5 -c conda-forge -c ncb -c nvidia -n das -y
+```
+
+On Linux or MacOS (arm only):
+```shell
+conda create python=3.11 das=0.32.5 -c conda-forge -c ncb -c nvidia -c apple -n das -y
+``` -->
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">#</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_win.yaml
 </pre></div>
 </div>
-<p>On Linux or MacOS (arm only):</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.11<span class="w"> </span><span class="nv">das</span><span class="o">=</span><span class="m">0</span>.32.4<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>-c<span class="w"> </span>ncb<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>-c<span class="w"> </span>apple<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y
+</section>
+<section id="mac-m1-and-later">
+<h3>Mac (M1 and later)<a class="headerlink" href="#mac-m1-and-later" title="Permalink to this headline">#</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
 </pre></div>
 </div>
+</section>
+<section id="linux">
+<h3>Linux<a class="headerlink" href="#linux" title="Permalink to this headline">#</a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>das<span class="w"> </span>-y<span class="w"> </span>-f<span class="w"> </span>https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_linux.yaml
+</pre></div>
+</div>
+</section>
 </section>
 <section id="test-the-installation-optional">
 <h2>Test the installation (Optional)<a class="headerlink" href="#test-the-installation-optional" title="Permalink to this headline">#</a></h2>
@@ -380,7 +402,12 @@ das<span class="w"> </span>gui
             <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#pre-requisites">Pre-requisites</a></li>
-<li><a class="reference internal" href="#install-das">Install <em>DAS</em></a></li>
+<li><a class="reference internal" href="#install-das">Install <em>DAS</em></a><ul>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+<li><a class="reference internal" href="#mac-m1-and-later">Mac (M1 and later)</a></li>
+<li><a class="reference internal" href="#linux">Linux</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#test-the-installation-optional">Test the installation (Optional)</a></li>
 <li><a class="reference internal" href="#make-a-desktop-icon-optional">Make a desktop icon (Optional)</a></li>
 <li><a class="reference internal" href="#next-steps">Next steps</a></li>

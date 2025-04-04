@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="das.utils" href="das.utils.html" /><link rel="prev" title="das.train" href="das.train.html" />
 
     <!-- Generated with Sphinx 4.5.0 and Furo 2023.05.20 -->
         <title>das.train_tune - DAS documentation</title>
@@ -162,7 +162,7 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../quickstart_fly.html">Quick start tutorial (fly)</a></li>
@@ -199,7 +199,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../technical/data_formats.html">Data formats</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">Developer API</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Developer API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">Developer API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of Developer API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="das.annot.html">das.annot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.augmentation.html">das.augmentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.block_stratify.html">das.block_stratify</a></li>
@@ -221,7 +221,9 @@
 <li class="toctree-l2"><a class="reference internal" href="das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.train.html">das.train</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.utils.html">das.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -270,8 +272,200 @@
           </label>
         </div>
         <article role="main">
-          <section id="das-train-tune">
-<h1>das.train_tune<a class="headerlink" href="#das-train-tune" title="Permalink to this headline">#</a></h1>
+          <section id="module-das.train_tune">
+<span id="das-train-tune"></span><h1>das.train_tune<a class="headerlink" href="#module-das.train_tune" title="Permalink to this headline">#</a></h1>
+<p>Code for tuning the hyperparameters of a network.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="das.train_tune.DasTuner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.train_tune.</span></span><span class="sig-name descname"><span class="pre">DasTuner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/train_tune.html#DasTuner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.train_tune.DasTuner" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="das.train_tune.DasTuner.run_trial">
+<span class="sig-name descname"><span class="pre">run_trial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps_per_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/train_tune.html#DasTuner.run_trial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.train_tune.DasTuner.run_trial" title="Permalink to this definition">#</a></dt>
+<dd><p>Evaluates a set of hyperparameter values.</p>
+<p>This method is called multiple times during <code class="xref py py-obj docutils literal notranslate"><span class="pre">search</span></code> to build and
+evaluate the models with different hyperparameters and return the
+objective value.</p>
+<p>Example:</p>
+<p>You can use it with <code class="xref py py-obj docutils literal notranslate"><span class="pre">self.hypermodel</span></code> to build and fit the model.</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>python
+def run_trial(self, trial, <a href="#id5"><span class="problematic" id="id6">*</span></a>args, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs):</p>
+<blockquote>
+<div><p>hp = trial.hyperparameters
+model = self.hypermodel.build(hp)
+return self.hypermodel.fit(hp, model, <a href="#id9"><span class="problematic" id="id10">*</span></a>args, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs)</p>
+</div></blockquote>
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<p>You can also use it as a black-box optimizer for anything.</p>
+<p><a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a>python
+def run_trial(self, trial, <a href="#id21"><span class="problematic" id="id22">*</span></a>args, <a href="#id23"><span class="problematic" id="id24">**</span></a>kwargs):</p>
+<blockquote>
+<div><p>hp = trial.hyperparameters
+x = hp.Float(“x”, -2.0, 2.0)
+y = x * x + 2 * x + 1
+return y</p>
+</div></blockquote>
+<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trial</strong> – A <code class="xref py py-obj docutils literal notranslate"><span class="pre">Trial</span></code> instance that contains the information needed to
+run this trial. Hyperparameters can be accessed via
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">trial.hyperparameters</span></code>.</p></li>
+<li><p><strong>*args</strong> – Positional arguments passed by <code class="xref py py-obj docutils literal notranslate"><span class="pre">search</span></code>.</p></li>
+<li><p><strong>**kwargs</strong> – Keyword arguments passed by <code class="xref py py-obj docutils literal notranslate"><span class="pre">search</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A <code class="xref py py-obj docutils literal notranslate"><span class="pre">History</span></code> object, which is the return value of <code class="xref py py-obj docutils literal notranslate"><span class="pre">model.fit()</span></code>, a
+dictionary, a float, or a list of one of these types.</p>
+<p>If return a dictionary, it should be a dictionary of the metrics to
+track. The keys are the metric names, which contains the
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">objective</span></code> name. The values should be the metric values.</p>
+<p>If return a float, it should be the <code class="xref py py-obj docutils literal notranslate"><span class="pre">objective</span></code> value.</p>
+<p>If evaluating the model for multiple times, you may return a list
+of results of any of the types above. The final objective value is
+the average of the results in the list.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="das.train_tune.TunableModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">das.train_tune.</span></span><span class="sig-name descname"><span class="pre">TunableModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/train_tune.html#TunableModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.train_tune.TunableModel" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="das.train_tune.TunableModel.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/das/train_tune.html#TunableModel.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.train_tune.TunableModel.build" title="Permalink to this definition">#</a></dt>
+<dd><p>Builds a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hp</strong> – A <code class="xref py py-obj docutils literal notranslate"><span class="pre">HyperParameters</span></code> instance.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A model instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="das.train_tune.train">
+<span class="sig-prename descclassname"><span class="pre">das.train_tune.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_suffix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tcn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_conv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_separable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_hist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_boundaries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_pre_conv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_nb_dft</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_kernel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_nb_filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upsample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_lstm_units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">learning_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_lr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_lr_patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fraction_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_level_subsampling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">augmentations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensorboard</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb_api_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb_project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wandb_entity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_messages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_stacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_y_hist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tune_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_tune_trials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_qt_progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">keras.src.engine.training.Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/das/train_tune.html#train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#das.train_tune.train" title="Permalink to this definition">#</a></dt>
+<dd><p>Tune the hyperparameters of a DAS network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – Path to the directory or file with the dataset for training.
+Accepts npy-dirs (recommended), h5 files or zarr files.
+See documentation for how the dataset should be organized.</p></li>
+<li><p><strong>x_suffix</strong> (<em>str</em>) – Select dataset used for training in the data_dir by suffix (<code class="xref py py-obj docutils literal notranslate"><span class="pre">y_</span></code> + X_SUFFIX).
+Defaults to ‘’ (will use the standard data ‘x’)</p></li>
+<li><p><strong>y_suffix</strong> (<em>str</em>) – Select dataset used as a training target in the data_dir by suffix (<code class="xref py py-obj docutils literal notranslate"><span class="pre">y_</span></code> + Y_SUFFIX).
+Song-type specific targets can be created with a training dataset,
+Defaults to ‘’ (will use the standard target ‘y’)</p></li>
+<li><p><strong>save_dir</strong> (<em>str</em>) – Directory to save training outputs.
+The path of output files will constructed from the SAVE_DIR, an optional SAVE_PREFIX,
+and the time stamp of the start of training.
+Defaults to the current directory (‘./’).</p></li>
+<li><p><strong>save_prefix</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Prepend to timestamp.
+Name of files created will be start with SAVE_DIR/SAVE_PREFIX + “_” + TIMESTAMP
+or with SAVE_DIR/TIMESTAMP if SAVE_PREFIX is empty.
+Defaults to ‘’ (empty).</p></li>
+<li><p><strong>save_name</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Append to prefix.
+Name of files created will be start with SAVE_DIR/SAVE_PREFIX + “_” + SAVE_NAME
+or with SAVE_DIR/SAVE_NAME if SAVE_PREFIX is empty.
+Defaults to TIMESTAMP.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – Network architecture to use.
+Use <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code> (TCN) or <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_stft</span></code> (TCN with STFT frontend).
+See das.models for a description of all models.
+Defaults to <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code>.</p></li>
+<li><p><strong>nb_filters</strong> (<em>int</em>) – Number of filters per layer.
+Defaults to 16.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Duration of the filters (=kernels) in samples.
+Defaults to 16.</p></li>
+<li><p><strong>nb_conv</strong> (<em>int</em>) – Number of TCN blocks in the network.
+Defaults to 3.</p></li>
+<li><p><strong>use_separable</strong> (<em>List</em><em>[</em><em>bool</em><em>]</em>) – Specify which TCN blocks should use separable convolutions.
+Provide as a space-separated sequence of “False” or “True.
+For instance: “True False False” will set the first block in a
+three-block (as given by nb_conv) network to use separable convolutions.
+Defaults to False (no block uses separable convolutions).</p></li>
+<li><p><strong>nb_hist</strong> (<em>int</em>) – Number of samples processed at once by the network (a.k.a chunk duration).
+Defaults to 1024 samples.</p></li>
+<li><p><strong>ignore_boundaries</strong> (<em>bool</em>) – Minimize edge effects by discarding predictions at the edges of chunks.
+Defaults to True.</p></li>
+<li><p><strong>batch_norm</strong> (<em>bool</em>) – Batch normalize.
+Defaults to True.</p></li>
+<li><p><strong>nb_pre_conv</strong> (<em>int</em>) – Adds fronted with downsampling. The downsampling factor is <code class="xref py py-obj docutils literal notranslate"><span class="pre">2**nb_pre_conv</span></code>.
+The type of frontend depends on the model:
+if model is <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code>: adds a frontend of N conv blocks (conv-relu-batchnorm-maxpool2) to the TCN.
+if model is <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_tcn</span></code>: adds a frontend of N TCN blocks to the TCN.
+if model is <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_stft</span></code>: adds a trainable STFT frontend.
+Defaults to 0 (no frontend, no downsampling).</p></li>
+<li><p><strong>pre_nb_dft</strong> (<em>int</em>) – Duration of filters (in samples) for the STFT frontend.
+Number of filters is pre_nb_dft // 2 + 1.
+Defaults to 64.</p></li>
+<li><p><strong>pre_nb_filters</strong> (<em>int</em>) – Number of filters per layer in the pre-processing TCN.
+Defaults to 16.</p></li>
+<li><p><strong>pre_kernel_size</strong> (<em>int</em>) – Duration of filters (=kernels) in samples in the pre-processing TCN.
+Defaults to 3.</p></li>
+<li><p><strong>upsample</strong> (<em>bool</em>) – whether or not to restore the model output to the input samplerate.
+Should generally be True during training and evaluation but my speed up inference.
+Defaults to True.</p></li>
+<li><p><strong>dilations</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of dilation rate, defaults to [1, 2, 4, 8, 16] (5 layer with 2x dilation per TCN block)</p></li>
+<li><p><strong>nb_lstm_units</strong> (<em>int</em>) – If &gt;0, adds LSTM with <code class="xref py py-obj docutils literal notranslate"><span class="pre">nb_lstm_units</span></code> LSTM units to the output of the stack of TCN blocks.
+Defaults to 0 (no LSTM layer).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em>) – Verbosity of training output (0 - no output during training, 1 - progress bar, 2 - one line per epoch).
+Defaults to 2.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size
+Defaults to 32.</p></li>
+<li><p><strong>nb_epoch</strong> (<em>int</em>) – Maximal number of training epochs.
+Training will stop early if validation loss did not decrease in the last 20 epochs.
+Defaults to 400.</p></li>
+<li><p><strong>learning_rate</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Learning rate of the model. Defaults should work in most cases.
+Values typically range between 0.1 and 0.00001.
+If None, uses model specific defaults: <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code> 0.0001, <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_stft</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_tcn</span></code> 0.0005.
+Defaults to None.</p></li>
+<li><p><strong>reduce_lr</strong> (<em>bool</em>) – Reduce learning rate when the validation loss plateaus.
+Defaults to False.</p></li>
+<li><p><strong>reduce_lr_patience</strong> (<em>int</em>) – Number of epochs w/o a reduction in validation loss after which
+to trigger a reduction in learning rate.
+Defaults to 5 epochs.</p></li>
+<li><p><strong>fraction_data</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Fraction of training and validation data to use.
+Defaults to 1.0.</p></li>
+<li><p><strong>seed</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Random seed to reproducibly select fractions of the data.
+Defaults to None (no seed).</p></li>
+<li><p><strong>batch_level_subsampling</strong> (<em>bool</em>) – Select fraction of data for training from random subset of shuffled batches.
+If False, select a continuous chunk of the recording.
+Defaults to False.</p></li>
+<li><p><strong>tensorboard</strong> (<em>bool</em>) – Write tensorboard logs to save_dir. Defaults to False.</p></li>
+<li><p><strong>wandb_api_token</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – API token for logging to wandb.
+Defaults to None (no logging to wandb).</p></li>
+<li><p><strong>wandb_project</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Project to log to for wandb.
+Defaults to None (no logging to wandb).</p></li>
+<li><p><strong>wandb_entity</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Entity (user or team) to log to for wandb.
+Defaults to None (no logging to wandb).</p></li>
+<li><p><strong>log_messages</strong> (<em>bool</em>) – Sets terminal logging level to INFO.
+Defaults to False (will follow existing settings).</p></li>
+<li><p><strong>nb_stacks</strong> (<em>int</em>) – Unused if model name is <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_tcn</span></code>, or <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_stft</span></code>. Defaults to 2.</p></li>
+<li><p><strong>with_y_hist</strong> (<em>bool</em>) – Unused if model name is <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_tcn</span></code>, or <code class="xref py py-obj docutils literal notranslate"><span class="pre">tcn_stft</span></code>. Defaults to True.</p></li>
+<li><p><strong>balance</strong> (<em>bool</em>) – Balance data. Weights class-wise errors by the inverse of the class frequencies.
+Defaults to False.</p></li>
+<li><p><strong>version_data</strong> (<em>bool</em>) – Save MD5 hash of the data_dir to log and params.yaml.
+Defaults to True (set to False for large datasets since it can be slow).</p></li>
+<li><p><strong>tune_config</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Yaml file with key:value pairs defining the search space for tuning.
+Keys are parameter names, values are lists of possible parameter values.</p></li>
+<li><p><strong>nb_tune_trials</strong> (<em>int</em>) – Number of model variants to test during hyper parameter tuning. Defaults to 1_000.</p></li>
+<li><p><strong>Returns</strong> – model (keras.Model)
+params (Dict[str, Any])</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -279,8 +473,26 @@
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="das.utils.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">das.utils</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="das.train.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">das.train</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
