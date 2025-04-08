@@ -221,9 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -284,9 +282,9 @@ It is particularly useful to track the tuning on <a class="reference external" h
 <section id="manual-tuning">
 <h2>Manual tuning<a class="headerlink" href="#manual-tuning" title="Permalink to this headline">#</a></h2>
 <p>If the search space is small and training fast, it is often best to do an exhaustive search by fitting models with all parameter combinations. It is advisable to run repeated fits with the same combination to be robust to random effects.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">das.train</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
 
 <span class="n">nb_convs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">nb_filters</span> <span class="o">=</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">96</span><span class="p">]</span>
@@ -329,7 +327,7 @@ It is particularly useful to track the tuning on <a class="reference external" h
 </pre></div>
 </div>
 <p>The tuner will then run a bunch of fits to find an optimal parameter combination in the search space defined in the yaml file - see keras tuner for how this works.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">das.train_tune</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">das.train_tune</span>
 
 <span class="n">model</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">tuner</span> <span class="o">=</span> <span class="n">das</span><span class="o">.</span><span class="n">train_tune</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
     <span class="n">data_dir</span><span class="o">=</span><span class="s2">&quot;tutorial_dataset.npy&quot;</span><span class="p">,</span>

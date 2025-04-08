@@ -221,9 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -280,14 +278,14 @@
 <p>Disabling eager execution is crucial for low latency annotation - eager execution increases latencies 6-fold, from 5 ms to 30 ms.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="n">USE_GPU</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># </span>
 <span class="c1"># disable existing GPUs if testing CPU</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span> <span class="k">if</span> <span class="n">USE_GPU</span> <span class="k">else</span> <span class="s1">&#39;-1&#39;</span>
 <span class="c1"># disabling eager execution in tensorflow speeds up annotations by ~6x</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.python.framework.ops</span><span class="w"> </span><span class="kn">import</span> <span class="n">disable_eager_execution</span>
+    <span class="kn">from</span> <span class="nn">tensorflow.python.framework.ops</span> <span class="kn">import</span> <span class="n">disable_eager_execution</span>
     <span class="n">disable_eager_execution</span><span class="p">()</span>
 
     <span class="n">tf</span><span class="o">.</span><span class="n">compat</span><span class="o">.</span><span class="n">v1</span><span class="o">.</span><span class="n">disable_eager_execution</span><span class="p">()</span>
@@ -312,14 +310,14 @@ CPUs: [PhysicalDevice(name=&#39;/physical_device:CPU:0&#39;, device_type=&#39;CP
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;jpg&#39;  # smaller mem footprint for page
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">das.utils</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">das.predict</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.signal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.io.wavfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">das.utils</span>
+<span class="kn">import</span> <span class="nn">das.predict</span>
+<span class="kn">import</span> <span class="nn">scipy.signal</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">scipy.io.wavfile</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ncb.mplstyle&#39;</span><span class="p">)</span>
 </pre></div>
@@ -384,7 +382,7 @@ CPUs: [PhysicalDevice(name=&#39;/physical_device:CPU:0&#39;, device_type=&#39;CP
 <p>To demonstrate real-time inference, we create a virtual microphone that returns chunk of audio data in real time. The microphone takes a full recording and returns chunks of data at a rate determined by the chunk duration. In a real experimental setup, this would be a function that runs the data acquisition or a multi-processing queue that gets fed by the acquisition system.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">virtual_microphone</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">virtual_microphone</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">samplerate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">block</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
     
     <span class="n">RUN</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">current_position</span> <span class="o">=</span> <span class="mi">0</span>
@@ -444,7 +442,7 @@ Consuming and plotting 100 chunks...
 <p>Test the model and a simple song detection routine with a chunk that contains song. A specific song type is detect if the corresponding confidence exceeds 0.7 during a chunk.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">report_song</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">pulse_index</span><span class="p">,</span> <span class="n">sine_index</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">report_song</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">pulse_index</span><span class="p">,</span> <span class="n">sine_index</span><span class="p">):</span>
     <span class="n">report</span> <span class="o">=</span> <span class="s1">&#39;pulse? &#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;yes&#39;</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="n">pulse_index</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.7</span> <span class="k">else</span> <span class="s1">&#39; no&#39;</span><span class="p">)</span>
     <span class="n">report</span> <span class="o">+=</span> <span class="s1">&#39; sine? &#39;</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;yes&#39;</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="n">sine_index</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.7</span> <span class="k">else</span> <span class="s1">&#39; no&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">report</span>

@@ -221,9 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.utils.html">das.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -278,16 +276,16 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;jpg&#39;  # smaller mem footprint for page
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">zarr</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">librosa.feature</span><span class="o">,</span><span class="w"> </span><span class="nn">librosa.display</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">colorcet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.metrics</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span>
+<span class="kn">import</span> <span class="nn">zarr</span>
+<span class="kn">import</span> <span class="nn">librosa.feature</span><span class="o">,</span> <span class="nn">librosa.display</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">colorcet</span> <span class="k">as</span> <span class="nn">cc</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">das.utils</span><span class="o">,</span><span class="w"> </span><span class="nn">das.utils_plot</span><span class="o">,</span><span class="w"> </span><span class="nn">das.predict</span><span class="o">,</span><span class="w"> </span><span class="nn">das.data</span><span class="o">,</span><span class="w"> </span><span class="nn">das.models</span><span class="o">,</span><span class="w"> </span><span class="nn">das.train</span><span class="o">,</span><span class="w"> </span><span class="nn">das.io</span><span class="o">,</span><span class="w"> </span><span class="nn">das.evaluate</span><span class="o">,</span><span class="w"> </span><span class="nn">das.segment_utils</span>
+<span class="kn">import</span> <span class="nn">das.utils</span><span class="o">,</span> <span class="nn">das.utils_plot</span><span class="o">,</span> <span class="nn">das.predict</span><span class="o">,</span> <span class="nn">das.data</span><span class="o">,</span> <span class="nn">das.models</span><span class="o">,</span> <span class="nn">das.train</span><span class="o">,</span> <span class="nn">das.io</span><span class="o">,</span> <span class="nn">das.evaluate</span><span class="o">,</span> <span class="nn">das.segment_utils</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ncb.mplstyle&#39;</span><span class="p">)</span>
 </pre></div>

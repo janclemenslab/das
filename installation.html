@@ -221,9 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/das.spec_utils.html">das.spec_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tracking.html">das.tracking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.train.html">das.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.train_tune.html">das.train_tune</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.utils.html">das.utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/das.utils_plot.html">das.utils_plot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn.html">das.tcn.tcn</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.tcn.tcn_new.html">das.tcn.tcn_new</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/das.morpholayers.constraints.html">das.morpholayers.constraints</a></li>
@@ -311,31 +309,10 @@ conda create python=3.11 das=0.32.5 -c conda-forge -c ncb -c nvidia -c apple -n 
 </div>
 </section>
 </section>
-<section id="test-the-installation-optional">
-<h2>Test the installation (Optional)<a class="headerlink" href="#test-the-installation-optional" title="Permalink to this headline">#</a></h2>
-<p>To quickly test the installation, run these  commands in the terminal:</p>
+<section id="open-the-graphical-user-interface">
+<h2>Open the graphical user interface<a class="headerlink" href="#open-the-graphical-user-interface" title="Permalink to this headline">#</a></h2>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>das<span class="w">  </span><span class="c1"># activate the conda environment</span>
-das<span class="w"> </span>train<span class="w"> </span>--help<span class="w">  </span><span class="c1"># test DAS training</span>
 das<span class="w"> </span>gui<span class="w">  </span><span class="c1"># start the DAS GUI</span>
-</pre></div>
-</div>
-<p>The second command will display the command line arguments for <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">train</span></code>. The last command, <code class="docutils literal notranslate"><span class="pre">das</span> <span class="pre">gui</span></code>, will start the GUI. This step will <em>not</em> work with the no-GUI install.</p>
-</section>
-<section id="make-a-desktop-icon-optional">
-<h2>Make a desktop icon (Optional)<a class="headerlink" href="#make-a-desktop-icon-optional" title="Permalink to this headline">#</a></h2>
-<p>To start the <em>DAS</em> GUI without having to use a terminal, create a clickable startup script on the desktop.</p>
-<p>On macOS or Linux, place a text file called <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS) with the following content on your desktop:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># /bin/bash</span>
-<span class="nb">source</span><span class="w"> </span><span class="nv">$CONDA_PREFIX</span>/etc/profile.d/conda.sh
-conda<span class="w"> </span>activate<span class="w"> </span>das
-das<span class="w"> </span>gui
-</pre></div>
-</div>
-<p>Make the files executable with <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">+x</span> <span class="pre">FILENAME</span></code>, where FILENAME is <code class="docutils literal notranslate"><span class="pre">das.sh</span></code> (linux) or <code class="docutils literal notranslate"><span class="pre">das.command</span></code> (macOS).</p>
-<p>For windows, place a text file called <code class="docutils literal notranslate"><span class="pre">das.bat</span></code> with the following content on the desktop:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>TITLE<span class="w"> </span>DAS
-CALL<span class="w"> </span>conda.bat<span class="w"> </span>activate<span class="w"> </span>das
-das<span class="w"> </span>gui
 </pre></div>
 </div>
 </section>
@@ -408,8 +385,7 @@ das<span class="w"> </span>gui
 <li><a class="reference internal" href="#linux">Linux</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#test-the-installation-optional">Test the installation (Optional)</a></li>
-<li><a class="reference internal" href="#make-a-desktop-icon-optional">Make a desktop icon (Optional)</a></li>
+<li><a class="reference internal" href="#open-the-graphical-user-interface">Open the graphical user interface</a></li>
 <li><a class="reference internal" href="#next-steps">Next steps</a></li>
 </ul>
 </li>
