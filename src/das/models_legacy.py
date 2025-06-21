@@ -32,7 +32,7 @@ def cnn(
     return_sequences=False,
     sample_weight_mode: str = None,
     learning_rate: float = 0.0001,
-    **kwignored
+    **kwignored,
 ):
     """CNN for single-frequency and multi-channel data - uses 1D convolutions.
 
@@ -95,7 +95,7 @@ def cnn2D(
     return_sequences=False,
     sample_weight_mode: str = None,
     learning_rate: float = 0.0001,
-    **kwignored
+    **kwignored,
 ):
     """CNN for multi-frequency and multi-channel data - uses 2D convolutions.
 
@@ -162,7 +162,7 @@ def fcn(
     return_sequences=True,
     sample_weight_mode: str = None,
     learning_rate: float = 0.0001,
-    **kwignored
+    **kwignored,
 ):
     """[summary]
 
@@ -223,7 +223,7 @@ def fcn2D(
     return_sequences=True,
     sample_weight_mode: str = None,
     learning_rate: float = 0.0005,
-    **kwignored
+    **kwignored,
 ):
     """[summary]
 
@@ -289,7 +289,7 @@ def tcn_seq(
     upsample: bool = True,
     out_activation: str = "softmax",
     use_separable: bool = False,
-    **kwignored
+    **kwignored,
 ):
     """Create TCN network.
 
@@ -378,7 +378,7 @@ def tcn_tcn(
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
-    **kwignored
+    **kwignored,
 ):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -475,7 +475,7 @@ def tcn_small(
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
-    **kwignored
+    **kwignored,
 ):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend.
 
@@ -574,7 +574,7 @@ def tcn_stft(
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
-    **kwignored
+    **kwignored,
 ):
     """Create TCN network with optional trainable STFT layer as pre-processing and downsampling frontend.
 
@@ -681,7 +681,7 @@ def tcn_multi(
     pre_kernel_size: int = 16,
     pre_nb_filters: int = 16,
     pre_nb_conv: int = 2,
-    **kwignored
+    **kwignored,
 ):
     """Create TCN network with TCN layer as pre-processing and downsampling frontend with weights shared between channels.
 

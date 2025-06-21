@@ -56,7 +56,7 @@ class Normalization2D(Layer):
         int_axis: Optional[int] = None,
         image_data_format: str = "default",
         eps: float = 1e-10,
-        **kwargs
+        **kwargs,
     ):
         """[summary]
 

@@ -56,7 +56,7 @@ class Filterbank(Layer):
         fmax=None,
         bins_per_octave=12,
         image_data_format="default",
-        **kwargs
+        **kwargs,
     ):
         """TODO: is sr necessary? is fmax necessary? init with None?"""
         self.supports_masking = True

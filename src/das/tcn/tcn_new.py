@@ -50,7 +50,7 @@ class ResidualBlock(Layer):
         use_batch_norm: bool = False,
         use_layer_norm: bool = False,
         use_separable: bool = False,
-        **kwargs
+        **kwargs,
     ):
         """Defines the residual block for the WaveNet TCN
 
@@ -233,7 +233,7 @@ class TCN(Layer):
         use_batch_norm=False,
         use_layer_norm=False,
         use_separable=False,
-        **kwargs
+        **kwargs,
     ):
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
