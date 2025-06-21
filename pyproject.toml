@@ -31,7 +31,7 @@ documentation = "https://janclemenslab.org/das/"
 [tool.flit.module]
 name = "das"
 
-[tool.flit.scripts]
+[project.scripts]
 das = "das.cli:main"
 
 [tool.pytest.ini_options]
