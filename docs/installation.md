@@ -37,32 +37,10 @@ conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/da
 
 
 
-## Test the installation (Optional)
-To quickly test the installation, run these  commands in the terminal:
+## Open the graphical user interface
 ```shell
 conda activate das  # activate the conda environment
-das train --help  # test DAS training
 das gui  # start the DAS GUI
-```
-The second command will display the command line arguments for `das train`. The last command, `das gui`, will start the GUI. This step will *not* work with the no-GUI install.
-
-## Make a desktop icon (Optional)
-To start the _DAS_ GUI without having to use a terminal, create a clickable startup script on the desktop.
-
-On macOS or Linux, place a text file called `das.sh` (linux) or `das.command` (macOS) with the following content on your desktop:
-```shell
-# /bin/bash
-source $CONDA_PREFIX/etc/profile.d/conda.sh
-conda activate das
-das gui
-```
-Make the files executable with `chmod +x FILENAME`, where FILENAME is `das.sh` (linux) or `das.command` (macOS).
-
-For windows, place a text file called `das.bat` with the following content on the desktop:
-```shell
-TITLE DAS
-CALL conda.bat activate das
-das gui
 ```
 
 ## Next steps

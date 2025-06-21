@@ -31,7 +31,6 @@ command-line interface provide more control, flexibility and automation:
    predict
    colab
    structparams
-   architecture_tuning
    experiment_tracking
    label_segments
    evaluate_fly

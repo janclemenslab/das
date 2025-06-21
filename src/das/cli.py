@@ -79,7 +79,6 @@ def main():
     """Command line interface for DAS."""
     subcommands = {
         "train": train.train,
-        # "tune": train_tune.train,
         "predict": predict.cli_predict,
         "evaluate": evaluate.cli_evaluate,
         "version": version,

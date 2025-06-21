@@ -1,30 +1,35 @@
 [build-system]
-requires = ["flit_core >=3"]
+requires = ["flit_core >=3.2"]
 build-backend = "flit_core.buildapi"
 
-[tool.flit.metadata]
-dist-name = "das"
-module = "das"
-author = "Jan Clemens"
-author-email = "clemensjan@googlemail.com"
-home-page = "https://github.com/janclemenslab/das"
-classifiers = ["License :: OSI Approved :: MIT License"]
-requires-python = ">=3.6"
-requires = [
+[project]
+name = "das"
+authors = [{ name = "Jan Clemens", email = "clemensjan@googlemail.com" }]
+classifiers = ["License :: OSI Approved :: Apache Software License"]
+dynamic = ["version", "description"]
+requires-python = ">=3.10"
+dependencies = [
     'scipy',
     'scikit-learn',
     'matplotlib',
     'pandas',
     'matplotlib_scalebar',
-    'keras-tuner',
-    'kt-legacy',
     'xarray-behave',
     'tqdm',
     'numpy==1.26.4 ; platform_system == "Windows"',
 ]
-#   - numexpr=2.8.4
 
-description-file = "README.md"
+readme = "README.md"
+
+[project.optional-dependencies]
+dev = ["pytest", "flit"]
+
+[project.urls]
+source = "https://github.com/janclemenslab/das"
+documentation = "https://janclemenslab.org/das/"
+
+[tool.flit.module]
+name = "das"
 
 [tool.flit.scripts]
 das = "das.cli:main"
@@ -33,8 +38,8 @@ das = "das.cli:main"
 minversion = "6.0"
 testpaths = ["tests"]
 
-[tool.black]
-line-length = 128
-
 [tool.ruff]
 line-length = 128
+extend-select = ["C4", "NPY", "PD", "TCH"]
+ignore = ["E501"]
+show-fixes = true

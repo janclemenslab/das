@@ -1,9 +1,0 @@
-name: anaconda-client-env
-channels:
-  - conda-forge
-dependencies:
-  - conda
-  - anaconda-client
-  - conda-build
-  - pip
-  - git
