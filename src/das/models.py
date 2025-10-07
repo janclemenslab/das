@@ -168,7 +168,10 @@ def tcn_stft(
 
     if tmse_weight > 0:
         batch_size = 32
-        loss = WeightedLoss([tf.keras.metrics.categorical_crossentropy, TMSE(batch_size)], [1.0, tmse_weight])
+        loss = WeightedLoss(
+            [tf.keras.metrics.categorical_crossentropy, TMSE(batch_size)],
+            [1.0, tmse_weight],
+        )
 
     if compile:
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.0)
@@ -181,7 +184,7 @@ def stft_res_dense(
     nb_freq: int,
     nb_classes: int,
     nb_hist: int = 1,
-    sample_weight_mode: str = None,
+    sample_weight_mode: Optional[str] = None,
     learning_rate: float = 0.0005,
     compile: bool = True,
     stft_compute: bool = False,
@@ -224,7 +227,11 @@ def stft_res_dense(
         out = vision_model(out, training=False)
         out = kl.BatchNormalization()(out)
         out = kl.TimeDistributed(
-            kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))
+            kl.Dense(
+                min(32, 4 * nb_classes),
+                activation="tanh",
+                kernel_regularizer=regularizers.L1(1e-4),
+            )
         )(out)
 
     if len(out.shape) > 1:
@@ -232,7 +239,11 @@ def stft_res_dense(
 
     # out = kl.BatchNormalization()(out)
     # out = kl.Dropout(0.1)(out)
-    out = kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))(out)
+    out = kl.Dense(
+        min(32, 4 * nb_classes),
+        activation="tanh",
+        kernel_regularizer=regularizers.L1(1e-4),
+    )(out)
     # out = kl.Dropout(0.1)(out)
     out = kl.Dense(2 * nb_classes, activation="tanh", kernel_regularizer=regularizers.L1(1e-4))(out)
     # out = kl.Dropout(0.1)(out)
