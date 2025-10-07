@@ -1,7 +1,7 @@
 """Utils for loading and manipulating data for training and prediction."""
 
 import numpy as np
-import tensorflow.keras as keras
+import keras
 import dask.array
 from typing import Optional, Callable, Sequence, List
 from tqdm.autonotebook import tqdm

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from tensorflow.keras.layers import Layer
-from tensorflow.keras import backend as K
+from keras.layers import Layer
+from keras import backend as K
 from . import backend
 
 

@@ -1,10 +1,10 @@
 import inspect
 from typing import List
 
-from tensorflow.keras import backend as K, Model, Input, optimizers
-from tensorflow.keras import layers
-from tensorflow.keras.layers import Activation, SpatialDropout1D, Lambda
-from tensorflow.keras.layers import Layer, Conv1D, SeparableConv1D, Dense, BatchNormalization, LayerNormalization
+from keras import backend as K, Model, Input, optimizers
+from keras import layers
+from keras.layers import Activation, SpatialDropout1D, Lambda
+from keras.layers import Layer, Conv1D, SeparableConv1D, Dense, BatchNormalization, LayerNormalization
 
 
 def is_power_of_two(num: int):

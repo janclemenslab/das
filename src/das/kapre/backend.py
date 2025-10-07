@@ -14,7 +14,7 @@ Notes
     * TODO: remove copied code and use librosa.
 """
 
-from tensorflow.keras import backend as K
+from keras import backend as K
 import numpy as np
 import librosa
 

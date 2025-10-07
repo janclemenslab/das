@@ -16,7 +16,9 @@ dependencies = [
     'matplotlib_scalebar',
     'xarray-behave',
     'tqdm',
-    'numpy==1.26.4 ; platform_system == "Windows"',
+    'numpy',
+    'keras~=3.0',
+    'torch~=2.2',
 ]
 
 readme = "README.md"

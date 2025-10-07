@@ -8,20 +8,20 @@ import numpy as np
 from . import utils, data, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any, Sequence, Iterable, Union
 import glob
-import tensorflow
 import librosa
 import zarr
 from tqdm.autonotebook import tqdm
 import dask.config
 import dask.array as da
 from dask.diagnostics import ProgressBar
+import keras
 
 dask.config.set(**{"array.slicing.split_large_chunks": True})
 
 
 def predict_probabilities(
     x: np.ndarray,
-    model: tensorflow.keras.Model,
+    model: keras.Model,
     params: Dict[str, Any],
     verbose: Optional[int] = 1,
     prepend_data_padding: bool = True,

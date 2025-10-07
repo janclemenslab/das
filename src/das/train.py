@@ -4,8 +4,8 @@ import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-from tensorflow import keras
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
+import keras
 import os
 import yaml
 import dask.array as da
@@ -14,15 +14,15 @@ from . import data, models, utils, predict, io, evaluate, tracking, data_hash, a
 
 logger = logging.getLogger(__name__)
 
-try:  # fixes cuDNN error when using LSTM layer
-    import tensorflow as tf
+# try:  # fixes cuDNN error when using LSTM layer
+#     import tensorflow as tf
 
-    physical_devices = tf.config.list_physical_devices("GPU")
-    if physical_devices:
-        for device in physical_devices:
-            tf.config.experimental.set_memory_growth(device, enable=True)
-except Exception as e:
-    logger.exception(e)
+#     physical_devices = tf.config.list_physical_devices("GPU")
+#     if physical_devices:
+#         for device in physical_devices:
+#             tf.config.experimental.set_memory_growth(device, enable=True)
+# except Exception as e:
+#     logger.exception(e)
 
 
 def train(

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import numpy as np
-from tensorflow.keras import backend as K
+from keras import backend as K
 
 
 def amplitude_to_decibel(x, amin: float = 1e-10, dynamic_range: float = 80.0):

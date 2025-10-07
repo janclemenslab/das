@@ -1,6 +1,6 @@
 """General utilities"""
 
-import tensorflow.keras as keras
+import keras as keras
 import logging
 import time
 import numpy as np

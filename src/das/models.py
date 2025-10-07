@@ -1,17 +1,12 @@
 """Defines the network architectures."""
 
-import tensorflow as tf
-import tensorflow.keras as keras
-import tensorflow.keras.layers as kl
-from tensorflow.keras import regularizers
-from tensorflow.keras.applications.resnet_v2 import ResNet50V2
+import keras as keras
+import keras.layers as kl
+from keras import regularizers
+from keras.applications.resnet_v2 import ResNet50V2
 from typing import List, Optional, Tuple
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
-from . import spec_utils
-from .loss import TMSE, WeightedLoss
-from das.morpholayers.layers import Closing2D, Opening2D
-from das.morpholayers.regularizers import l1lattice
 
 model_dict = dict()
 
@@ -138,24 +133,6 @@ def tcn_stft(
 
     x = kl.Dense(nb_classes, activation="softmax")(x)
 
-    if morph_nb_kernels > 0:
-        x = x[:, :, tf.newaxis, :]
-        x = Closing2D(
-            num_filters=morph_nb_kernels,
-            padding="same",
-            kernel_size=(morph_kernel_duration, 1),
-            kernel_regularization=l1lattice(0.002),
-            # kernel_constraint=ser,
-        )(x)
-        x = Opening2D(
-            num_filters=morph_nb_kernels,
-            padding="same",
-            kernel_size=(morph_kernel_duration, 1),
-            kernel_regularization=l1lattice(0.002),
-            # kernel_constraint=ser,
-        )(x)
-        x = x[..., 0, :]
-
     if nb_pre_conv > 0 and upsample:
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)
 
@@ -169,7 +146,7 @@ def tcn_stft(
     if tmse_weight > 0:
         batch_size = 32
         loss = WeightedLoss(
-            [tf.keras.metrics.categorical_crossentropy, TMSE(batch_size)],
+            [keras.metrics.categorical_crossentropy, TMSE(batch_size)],
             [1.0, tmse_weight],
         )
 
@@ -222,7 +199,7 @@ def stft_res_dense(
     # TODO compute STFT
 
     if resnet_compute:
-        out = tf.stack((out, out, out), axis=-1)
+        out = keras.ops.stack((out, out, out), axis=-1)
         vision_model = ResNet50V2(input_shape=out.shape[1:], weights="imagenet", include_top=False)
         out = vision_model(out, training=False)
         out = kl.BatchNormalization()(out)
@@ -373,24 +350,6 @@ def tcn_stft_morph(
         x = kl.Bidirectional(kl.LSTM(units=nb_lstm_units, return_sequences=True))(x)
 
     x = kl.Dense(nb_classes, activation="softmax")(x)
-
-    if morph_nb_kernels > 0:
-        x = x[:, :, tf.newaxis, :]
-        x = Closing2D(
-            num_filters=morph_nb_kernels,
-            padding="same",
-            kernel_size=(morph_kernel_duration, 1),
-            kernel_regularization=l1lattice(0.002),
-            # kernel_constraint=ser,
-        )(x)
-        x = Opening2D(
-            num_filters=morph_nb_kernels,
-            padding="same",
-            kernel_size=(morph_kernel_duration, 1),
-            kernel_regularization=l1lattice(0.002),
-            # kernel_constraint=ser,
-        )(x)
-        x = x[..., 0, :]
 
     if nb_pre_conv > 0 and upsample:
         x = kl.UpSampling1D(size=2**nb_pre_conv)(x)

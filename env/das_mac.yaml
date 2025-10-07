@@ -1,13 +1,9 @@
-name: das_pip
+name: das_torch
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.13
   - pip
-  - ffmpeg==6
+  - ffmpeg
   - pip:
-    - tqdm
-    - zarr<3
-    - tensorflow==2.15.1
-    - tensorflow-metal==1.1.0
     - das

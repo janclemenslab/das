@@ -17,10 +17,10 @@ def version():
     import scipy
     import h5py
     import sklearn as sk
-    import tensorflow as tf
+    import torch
 
     try:
-        import tensorflow.keras
+        import keras
     except (ModuleNotFoundError, ImportError):
         pass
     try:
@@ -40,7 +40,8 @@ def version():
     except (ImportError, ModuleNotFoundError):
         has_gui = False
 
-    gpu = len(tf.config.list_physical_devices("GPU")) > 0
+    # gpu = len(tf.config.list_physical_devices("GPU")) > 0
+    gpu = None
 
     logger.info(f"  {platform.platform()}")
     logger.info(f"  DAS v{das.__version__}")
@@ -52,11 +53,11 @@ def version():
         logger.info(f"     Qt v{qtpy.QT_VERSION}")
 
     logger.info("")
-    logger.info(f"  tensorflow v{tf.__version__}")
-    if not hasattr(tensorflow.keras, "__version__"):
+    logger.info(f"  pytorch v{torch.__version__}")
+    if not hasattr(keras, "__version__"):
         logger.info(f"  keras v{keras.__version__}")
     else:
-        logger.info(f"  keras v{tensorflow.keras.__version__}")
+        logger.info(f"  keras v{keras.__version__}")
     logger.info(f"     GPU is {'' if gpu else 'not'} available.")
     logger.info("")
     logger.info(f"  python v{sys.version}")

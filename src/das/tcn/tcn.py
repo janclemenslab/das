@@ -1,13 +1,13 @@
-import tensorflow.keras.backend as K
-import tensorflow.keras.layers
-import tensorflow.keras as keras
-from tensorflow.keras import optimizers
+import keras.backend as K
+import keras.layers
+import keras
+from keras import optimizers
 
-# from tensorflow.keras.engine.topology import Layer  #only used for type annotations
-from tensorflow.keras.layers import Activation, Lambda
-from tensorflow.keras.layers import Conv1D, SpatialDropout1D, SeparableConv1D
-from tensorflow.keras.layers import Conv1D, Dense, Layer
-from tensorflow.keras import Input, Model
+# from keras.engine.topology import Layer  #only used for type annotations
+from keras.layers import Activation, Lambda
+from keras.layers import Conv1D, SpatialDropout1D, SeparableConv1D
+from keras.layers import Conv1D, Dense, Layer
+from keras import Input, Model
 
 from typing import List, Tuple
 
@@ -88,7 +88,7 @@ def residual_block(
 
     if activation == "norm_relu":
         x = Activation("relu")(conv)
-        x = Lambda(channel_normalization)(x)
+        x = Lambda(channel_normalization, output_shape=x.shape)(x)
     elif activation == "wavenet":
         x = wave_net_activation(conv)
     else:
