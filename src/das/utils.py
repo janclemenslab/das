@@ -16,7 +16,7 @@ from typing import Dict, Callable, Any, List, Tuple, Optional
 def load_model(
     file_trunk: str,
     model_dict: Dict[str, Callable],
-    model_ext: str = "_model.h5",
+    model_ext: str = "_model.keras",
     params_ext: str = "_params.yaml",
     compile: bool = True,
     custom_objects: Optional[Dict[str, Callable]] = None,

@@ -33,7 +33,7 @@ def tcn_stft(
     nb_conv: int = 1,
     loss: str = "categorical_crossentropy",
     dilations: Optional[List[int]] = None,
-    activation: str = "norm_relu",
+    activation: str = "relu",
     use_skip_connections: bool = True,
     return_sequences: bool = True,
     dropout_rate: float = 0.00,
@@ -62,7 +62,7 @@ def tcn_stft(
         nb_conv (int, optional): [description]. Defaults to 1.
         loss (str, optional): [description]. Defaults to "categorical_crossentropy".
         dilations (List[int], optional): [description]. Defaults to [1, 2, 4, 8, 16].
-        activation (str, optional): [description]. Defaults to 'norm_relu'.
+        activation (str, optional): [description]. Defaults to 'relu'.
         use_skip_connections (bool, optional): [description]. Defaults to True.
         return_sequences (bool, optional): [description]. Defaults to True.
         dropout_rate (float, optional): [description]. Defaults to 0.00.

@@ -89,13 +89,13 @@ def residual_block(
     else:
         conv = Conv1D(filters=nb_filters, kernel_size=kernel_size, dilation_rate=i, padding=padding)(x)
 
-    if activation == "norm_relu":
-        x = Activation("relu")(conv)
-        x = Lambda(channel_normalization)(x)
-    elif activation == "wavenet":
-        x = wave_net_activation(conv)
-    else:
-        x = Activation(activation)(conv)
+    # if activation == "norm_relu":
+    x = Activation("relu")(conv)
+    x = Lambda(channel_normalization)(x)
+    # elif activation == "wavenet":
+    #     x = wave_net_activation(conv)
+    # else:
+    #     x = Activation(activation)(conv)
 
     x = SpatialDropout1D(dropout_rate)(x)
 
@@ -126,7 +126,7 @@ class TCN:
         kernel_size: The size of the kernel to use in each convolutional layer.
         dilations: The list of the dilations. Example is: [1, 2, 4, 8, 16, 32, 64].
         nb_stacks : The number of stacks of residual blocks to use.
-        activation: The activations to use (norm_relu, wavenet, relu...).
+        activation: The activations to use (norm_relu, wavenet, relu...) NOT USED.
         use_skip_connections: Boolean. If we want to add skip connections from input to each residual block.
         use_separable: Boolean. Use separable convolutions in each residual block.
         return_sequences: Boolean. Whether to return the last output in the output sequence, or the full sequence.
@@ -144,7 +144,7 @@ class TCN:
         kernel_size=2,
         nb_stacks=1,
         dilations=None,
-        activation="norm_relu",
+        activation="relu",
         use_skip_connections=True,
         use_separable=False,
         padding="causal",

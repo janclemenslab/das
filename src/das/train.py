@@ -401,7 +401,7 @@ def train(
     logger.info(f"Will save to {save_name}.")
 
     # SET UP CALLBACKS
-    checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
+    checkpoint_save_name = save_name + "_model.keras"
     callbacks = [
         ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor="val_loss", verbose=1),
         EarlyStopping(monitor="val_loss", patience=20, verbose=1),
