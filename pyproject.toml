@@ -18,13 +18,33 @@ dependencies = [
     'tqdm',
     'numpy',
     'keras~=3.0',
-    'torch~=2.2',
-]
+    # 'torch~=2.2',
+    # pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+    # 'numpy==1.26.4 ; platform_system == "Windows"',
 
+
+    # macOS: standard PyTorch
+    'torch; platform_system == "Darwin"',
+    'torchvision; platform_system == "Darwin"',
+
+    # Linux/Windows: install from PyTorch CUDA 13.0 index
+    # 'torch @ https://download.pytorch.org/whl/cu130/torch-2.5.1%2Bcu130-cp311-cp311-linux_x86_64.whl; platform_system == "Linux"',
+    # 'torchvision @ https://download.pytorch.org/whl/cu130/torchvision-0.20.1%2Bcu130-cp311-cp311-linux_x86_64.whl; platform_system == "Linux"',
+    # 'torch @ https://download.pytorch.org/whl/cu130/torch-2.5.1%2Bcu130-cp311-cp311-win_amd64.whl; platform_system == "Windows"',
+    # 'torchvision @ https://download.pytorch.org/whl/cu130/torchvision-0.20.1%2Bcu130-cp311-cp311-win_amd64.whl; platform_system == "Windows"',
+
+    # Linux/Windows: install from CUDA 13.0 index (pip auto-selects wheel)
+    'torch; platform_system in ["Linux", "Windows"]',
+    'torchvision; platform_system in ["Linux", "Windows"]',
+]
 readme = "README.md"
 
+[tool.pip]
+extra-index-url = "https://download.pytorch.org/whl/cu130"
+
+
 [project.optional-dependencies]
-dev = ["pytest", "flit"]
+dev = ["pytest", "flit", "ipykernel"]
 
 [project.urls]
 source = "https://github.com/janclemenslab/das"
