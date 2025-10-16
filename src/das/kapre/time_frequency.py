@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import numpy as np
-from keras import backend as K
+
+# from keras import backend as K
+import keras
 from keras.layers import Layer
 from . import backend, backend_keras
 from typing import Optional
@@ -29,7 +31,7 @@ class Spectrogram(Layer):
         trainable_kernel: bool = False,
         image_data_format: str = "default",
         **kwargs,
-    ) -> Layer:
+    ):
         """[summary]
 
         Args:
@@ -60,7 +62,7 @@ class Spectrogram(Layer):
 
         assert image_data_format in ("default", "channels_first", "channels_last")
         if image_data_format == "default":
-            self.image_data_format = K.image_data_format()
+            self.image_data_format = keras.config.image_data_format()
         else:
             self.image_data_format = image_data_format
 
@@ -88,8 +90,10 @@ class Spectrogram(Layer):
         self.n_frame = conv_output_length(self.len_src, self.n_dft, self.padding, self.n_hop)
 
         dft_real_kernels, dft_imag_kernels = backend.get_stft_kernels(self.n_dft)
-        self.dft_real_kernels = K.variable(dft_real_kernels, dtype=K.floatx(), name="real_kernels")
-        self.dft_imag_kernels = K.variable(dft_imag_kernels, dtype=K.floatx(), name="imag_kernels")
+        # self.dft_real_kernels = keras.ops.variable(dft_real_kernels, dtype="float32", name="real_kernels")
+        # self.dft_imag_kernels = keras.ops.variable(dft_imag_kernels, dtype="float32", name="imag_kernels")
+        self.dft_real_kernels = dft_real_kernels  # keras.ops.variable(dft_real_kernels, dtype="float32", name="real_kernels")
+        self.dft_imag_kernels = dft_imag_kernels  # keras.ops.variable(dft_imag_kernels, dtype="float32", name="imag_kernels")
         # kernels shapes: (filter_length, 1, input_dim, nb_filter)?
         if self.trainable_kernel:
             self.trainable_weights.append(self.dft_real_kernels)
@@ -111,10 +115,12 @@ class Spectrogram(Layer):
         output = self._spectrogram_mono(x[:, :, 0:1])
         if self.is_mono is False:
             for ch_idx in range(1, self.n_ch):
-                output = K.concatenate((output, self._spectrogram_mono(x[:, :, ch_idx : ch_idx + 1])), axis=self.ch_axis_idx)
+                output = keras.ops.concatenate(
+                    (output, self._spectrogram_mono(x[:, :, ch_idx : ch_idx + 1])), axis=self.ch_axis_idx
+                )
         # output = output[..., 0]
         if self.power_spectrogram != 2.0:
-            output = K.pow(K.sqrt(output), self.power_spectrogram)
+            output = keras.ops.power(keras.ops.sqrt(output), self.power_spectrogram)
         if self.return_decibel_spectrogram:
             output = backend_keras.amplitude_to_decibel(output)
         return output
@@ -135,16 +141,20 @@ class Spectrogram(Layer):
     def _spectrogram_mono(self, x):
         """x.shape : (None, len_src, 1),
         returns 2D batch of a mono power-spectrogram"""
-        x = K.expand_dims(x, 3)  # add a dummy dimension (channel axis)
+        x = keras.ops.expand_dims(x, 3)  # add a dummy dimension (channel axis)
         subsample = (self.n_hop, 1)
-        output_real = K.conv2d(x, self.dft_real_kernels, strides=subsample, padding=self.padding, data_format="channels_last")
-        output_imag = K.conv2d(x, self.dft_imag_kernels, strides=subsample, padding=self.padding, data_format="channels_last")
+        output_real = keras.ops.conv(
+            x, self.dft_real_kernels, strides=subsample, padding=self.padding, data_format="channels_last"
+        )
+        output_imag = keras.ops.conv(
+            x, self.dft_imag_kernels, strides=subsample, padding=self.padding, data_format="channels_last"
+        )
         output = output_real**2 + output_imag**2
         # now shape is (batch_sample, n_frame, 1, freq)
         if self.image_data_format == "channels_last":
-            output = K.permute_dimensions(output, [0, 1, 3, 2])
+            output = keras.ops.transpose(output, [0, 1, 3, 2])
         else:
-            output = K.permute_dimensions(output, [0, 2, 3, 1])
+            output = keras.ops.transpose(output, [0, 2, 3, 1])
         return output
 
 
@@ -265,7 +275,7 @@ class Melspectrogram(Spectrogram):
         )  # (128, 1025) (mel_bin, n_freq)
         mel_basis = np.transpose(mel_basis)
 
-        self.freq2mel = K.variable(mel_basis, dtype=K.floatx())
+        self.freq2mel = mel_basis.astype("float32")
         if self.trainable_fb:
             self.trainable_weights.append(self.freq2mel)
         else:
@@ -284,17 +294,17 @@ class Melspectrogram(Spectrogram):
         #       channels_last: (batch_sample, n_freq, n_time, n_ch)
         print(x.shape, power_spectrogram.shape)
         if self.image_data_format == "channels_first":
-            power_spectrogram = K.permute_dimensions(power_spectrogram, [0, 1, 2, 3])
+            power_spectrogram = keras.ops.transpose(power_spectrogram, [0, 1, 2, 3])
         else:
-            power_spectrogram = K.permute_dimensions(power_spectrogram, [0, 3, 1, 2])
+            power_spectrogram = keras.ops.transpose(power_spectrogram, [0, 3, 1, 2])
         # now, whatever image_data_format, (batch_sample, n_ch, n_time, n_freq)
-        output = K.dot(power_spectrogram, self.freq2mel)
+        output = keras.ops.dot(power_spectrogram, self.freq2mel)
         if self.image_data_format == "channels_first":
-            output = K.permute_dimensions(output, [0, 1, 3, 2])
+            output = keras.ops.transpose(output, [0, 1, 3, 2])
         else:
-            output = K.permute_dimensions(output, [0, 3, 2, 1])
+            output = keras.ops.transpose(output, [0, 3, 2, 1])
         if self.power_melgram != 2.0:
-            output = K.pow(K.sqrt(output), self.power_melgram)
+            output = keras.ops.power(keras.ops.sqrt(output), self.power_melgram)
         if self.return_decibel_melgram:
             output = backend_keras.amplitude_to_decibel(output)
         return output

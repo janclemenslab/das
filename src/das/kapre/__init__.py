@@ -7,6 +7,6 @@ from . import time_frequency
 from . import backend
 from . import backend_keras
 
-from . import augmentation
+# from . import augmentation
 from . import filterbank
 from . import utils

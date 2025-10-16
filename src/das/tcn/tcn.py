@@ -4,7 +4,7 @@ import keras
 from keras import optimizers
 
 # from keras.engine.topology import Layer  #only used for type annotations
-from keras.layers import Activation, Lambda
+from keras.layers import Activation, Lambda, GroupNormalization
 from keras.layers import Conv1D, SpatialDropout1D, SeparableConv1D
 from keras.layers import Conv1D, Dense, Layer
 from keras import Input, Model
@@ -12,6 +12,7 @@ from keras import Input, Model
 from typing import List, Tuple
 
 
+@keras.saving.register_keras_serializable()
 def channel_normalization(x):
     # type: (Layer) -> Layer
     """Normalize a layer to the maximum activation
@@ -25,11 +26,12 @@ def channel_normalization(x):
     Returns:
         A maximal normalized layer
     """
-    max_values = K.max(K.abs(x), 2, keepdims=True) + 1e-5
+    max_values = keras.ops.max(keras.ops.abs(x), 2, keepdims=True) + 1e-5
     out = x / max_values
     return out
 
 
+@keras.saving.register_keras_serializable()
 def wave_net_activation(x: Layer) -> Layer:
     """This method defines the activation used for WaveNet
 
@@ -46,6 +48,7 @@ def wave_net_activation(x: Layer) -> Layer:
     return keras.layers.multiply([tanh_out, sigm_out])
 
 
+@keras.saving.register_keras_serializable()
 def residual_block(
     x: Layer,
     s: int,
@@ -88,7 +91,7 @@ def residual_block(
 
     if activation == "norm_relu":
         x = Activation("relu")(conv)
-        x = Lambda(channel_normalization, output_shape=x.shape)(x)
+        x = Lambda(channel_normalization)(x)
     elif activation == "wavenet":
         x = wave_net_activation(conv)
     else:

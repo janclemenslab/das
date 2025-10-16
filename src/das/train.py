@@ -1,28 +1,18 @@
 """Code for training networks."""
 
+import keras  # need to import this first to avoid segmentation fault
 import time
 import logging
 import flammkuchen as fl
 import numpy as np
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-import keras
 import os
 import yaml
 import dask.array as da
-from typing import List, Optional, Tuple, Dict, Any, Union
+from typing import List, Optional, Tuple, Dict, Any
 from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  # , timeseries
 
 logger = logging.getLogger(__name__)
-
-# try:  # fixes cuDNN error when using LSTM layer
-#     import tensorflow as tf
-
-#     physical_devices = tf.config.list_physical_devices("GPU")
-#     if physical_devices:
-#         for device in physical_devices:
-#             tf.config.experimental.set_memory_growth(device, enable=True)
-# except Exception as e:
-#     logger.exception(e)
 
 
 def train(
@@ -232,13 +222,13 @@ def train(
         dilations = [1, 2, 4, 8, 16]
 
     # FIXME THIS IS NOT GREAT:
-    sample_weight_mode = None
+    # sample_weight_mode = None
     data_padding = 0
     if with_y_hist:  # regression
         return_sequences = True
         stride = nb_hist
         y_offset = 0
-        sample_weight_mode = "temporal"
+        # sample_weight_mode = "temporal"
         if ignore_boundaries:
             data_padding = int(
                 np.ceil(kernel_size * nb_conv)
@@ -448,7 +438,7 @@ def train(
         callbacks=callbacks,
     )
 
-    tf.keras.backend.clear_session()
+    keras.backend.clear_session()
 
     # OPTIMIZE POSTPROCESSING
     if post_opt:

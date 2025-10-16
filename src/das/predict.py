@@ -1,5 +1,6 @@
 """Code for training and evaluating networks."""
 
+import keras
 import logging
 import os
 import shutil
@@ -14,7 +15,7 @@ from tqdm.autonotebook import tqdm
 import dask.config
 import dask.array as da
 from dask.diagnostics import ProgressBar
-import keras
+
 
 dask.config.set(**{"array.slicing.split_large_chunks": True})
 

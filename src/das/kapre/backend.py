@@ -8,13 +8,12 @@ Kapre backend functions
 
 Notes
 -----
-    * Don't forget to use ``K.float()``! Otherwise numpy uses float64.
+    * Don't forget to use ``keras.ops.float()``! Otherwise numpy uses float64.
     * Some functions are copied-and-pasted from librosa (to reduce dependency), but
         later I realised it'd be better to just use it.
     * TODO: remove copied code and use librosa.
 """
 
-from keras import backend as K
 import numpy as np
 import librosa
 
@@ -37,7 +36,7 @@ def mel(sr, n_dft, n_mels=128, fmin=0.0, fmax=None, htk=False, norm=1):
     fmax : highest frequency [Hz]
         If `None`, use `sr / 2.0`
     """
-    return librosa.filters.mel(sr=sr, n_fft=n_dft, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(K.floatx())
+    return librosa.filters.mel(sr=sr, n_fft=n_dft, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(np.float32)
 
 
 def get_stft_kernels(n_dft):
@@ -71,7 +70,7 @@ def get_stft_kernels(n_dft):
 
     # windowing DFT filters
     dft_window = librosa.filters.get_window("hann", n_dft, fftbins=True)  # _hann(n_dft, sym=False)
-    dft_window = dft_window.astype(K.floatx())
+    dft_window = dft_window.astype(np.float32)
     dft_window = dft_window.reshape((1, -1))
     dft_real_kernels = np.multiply(dft_real_kernels, dft_window)
     dft_imag_kernels = np.multiply(dft_imag_kernels, dft_window)
@@ -81,12 +80,12 @@ def get_stft_kernels(n_dft):
     dft_real_kernels = dft_real_kernels[:, np.newaxis, np.newaxis, :]
     dft_imag_kernels = dft_imag_kernels[:, np.newaxis, np.newaxis, :]
 
-    return dft_real_kernels.astype(K.floatx()), dft_imag_kernels.astype(K.floatx())
+    return dft_real_kernels.astype(np.float32), dft_imag_kernels.astype(np.float32)
 
 
 def filterbank_mel(sr, n_freq, n_mels=128, fmin=0.0, fmax=None, htk=False, norm=1):
     """[np]"""
-    return mel(sr, (n_freq - 1) * 2, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(K.floatx())
+    return mel(sr, (n_freq - 1) * 2, n_mels=n_mels, fmin=fmin, fmax=fmax, htk=htk, norm=norm).astype(np.float32)
 
 
 def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12, fmin=None, spread=0.125):  # pragma: no cover
@@ -133,7 +132,7 @@ def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12, fmin=None, spread=
     basis = np.zeros((n_bins, n_freq))
 
     # Get log frequencies of bins
-    log_freqs = np.log2(librosa.fft_frequencies(sr, (n_freq - 1) * 2)[1:])
+    log_freqs = np.log2(librosa.fft_frequencies(sr=sr, n_fft=(n_freq - 1) * 2)[1:])
 
     for i in range(n_bins):
         # What's the center (median) frequency of this filter?
@@ -145,4 +144,4 @@ def filterbank_log(sr, n_freq, n_bins=84, bins_per_octave=12, fmin=None, spread=
     # Normalize the filters
     basis = librosa.util.normalize(basis, norm=1, axis=1)
 
-    return basis.astype(K.floatx())
+    return basis.astype(np.float32)

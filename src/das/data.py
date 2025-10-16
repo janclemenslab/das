@@ -327,4 +327,5 @@ class AudioSequence(keras.utils.Sequence):
                 out = (batch_x, batch_y, weights)
         else:
             out = (batch_x,)
+        out = [o.astype(np.float32) for o in out]
         return out

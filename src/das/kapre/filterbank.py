@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+import keras
 from keras.layers import Layer
-from keras import backend as K
+
+# from keras import backend as K
 from . import backend
+import numpy as np
 
 
 # Todo: Filterbank(); init with mel, log, linear, etc.
@@ -76,7 +79,7 @@ class Filterbank(Layer):
         self.trainable_fb = trainable_fb
         assert image_data_format in ("default", "channels_first", "channels_last")
         if image_data_format == "default":
-            self.image_data_format = K.image_data_format()
+            self.image_data_format = keras.config.image_data_format()
         else:
             self.image_data_format = image_data_format
         super(Filterbank, self).__init__(**kwargs)
@@ -92,18 +95,18 @@ class Filterbank(Layer):
             self.n_time = input_shape[2]
 
         if self.init == "mel":
-            self.filterbank = K.variable(
-                backend.filterbank_mel(
-                    sr=self.sr, n_freq=self.n_freq, n_mels=self.n_fbs, fmin=self.fmin, fmax=self.fmax
-                ).transpose(),
-                dtype=K.floatx(),
+            self.filterbank = (
+                backend.filterbank_mel(sr=self.sr, n_freq=self.n_freq, n_mels=self.n_fbs, fmin=self.fmin, fmax=self.fmax)
+                .transpose()
+                .astype("float32")
             )
         elif self.init == "log":
-            self.filterbank = K.variable(
+            self.filterbank = (
                 backend.filterbank_log(
                     sr=self.sr, n_freq=self.n_freq, n_bins=self.n_fbs, bins_per_octave=self.bins_per_octave, fmin=self.fmin
-                ).transpose(),
-                dtype=K.floatx(),
+                )
+                .transpose()
+                .astype("float32")
             )
 
         if self.trainable_fb:
@@ -122,15 +125,15 @@ class Filterbank(Layer):
     def call(self, x):
         # reshape so that the last axis is freq axis
         if self.image_data_format == "channels_first":
-            x = K.permute_dimensions(x, [0, 1, 3, 2])
+            x = keras.ops.transpose(x, [0, 1, 3, 2])
         else:
-            x = K.permute_dimensions(x, [0, 3, 2, 1])
-        output = K.dot(x, self.filterbank)
+            x = keras.ops.transpose(x, [0, 3, 2, 1])
+        output = keras.ops.dot(x, self.filterbank)
         # reshape back
         if self.image_data_format == "channels_first":
-            return K.permute_dimensions(output, [0, 1, 3, 2])
+            return keras.ops.transpose(output, [0, 1, 3, 2])
         else:
-            return K.permute_dimensions(output, [0, 3, 2, 1])
+            return keras.ops.transpose(output, [0, 3, 2, 1])
 
     def get_config(self):
         config = {

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import numpy as np
-from keras import backend as K
+
+# from keras import backend as K
+import keras
 from keras.layers import Layer
+
 from . import backend
 from . import backend_keras
 from typing import Optional
@@ -82,7 +85,7 @@ class Normalization2D(Layer):
         ), "Incorrect image_data_format: {}".format(image_data_format)
 
         if image_data_format == "default":
-            self.image_data_format = K.image_data_format()
+            self.image_data_format = keras.ops.image_data_format()
         else:
             self.image_data_format = image_data_format
 
@@ -116,13 +119,13 @@ class Normalization2D(Layer):
 
     def call(self, x, mask=None):
         if self.axis == -1:
-            mean = K.mean(x, axis=[3, 2, 1, 0], keepdims=True)
-            std = K.std(x, axis=[3, 2, 1, 0], keepdims=True)
+            mean = keras.ops.mean(x, axis=[3, 2, 1, 0], keepdims=True)
+            std = keras.ops.std(x, axis=[3, 2, 1, 0], keepdims=True)
         elif self.axis in (0, 1, 2, 3):
             all_dims = [0, 1, 2, 3]
             del all_dims[self.axis]
-            mean = K.mean(x, axis=all_dims, keepdims=True)
-            std = K.std(x, axis=all_dims, keepdims=True)
+            mean = keras.ops.mean(x, axis=all_dims, keepdims=True)
+            std = keras.ops.std(x, axis=all_dims, keepdims=True)
         return (x - mean) / (std + self.eps)
 
     def get_config(self):
