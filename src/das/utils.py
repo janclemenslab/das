@@ -16,7 +16,7 @@ from typing import Dict, Callable, Any, List, Tuple, Optional
 def load_model(
     file_trunk: str,
     model_dict: Dict[str, Callable],
-    model_ext: str = "_model.keras",
+    model_ext: str = "_model.h5",
     params_ext: str = "_params.yaml",
     compile: bool = True,
     custom_objects: Optional[Dict[str, Callable]] = None,
@@ -78,7 +78,7 @@ def load_model_from_params(
     # get the model - calls the function that generates a model with parameters
     model = model_dict[params["model_name"]](**params)
     weights_filename = _download_if_url(file_trunk + weights_ext)
-    model.load_weights(weights_filename)
+    model.load_weights(weights_filename, skip_mismatch=True, by_name=True)
 
     if compile:
         # Compile with random standard optimizer and loss so we can use the model for prediction
@@ -114,7 +114,7 @@ def load_params(file_trunk: str, params_ext: str = "_params.yaml") -> Dict[str, 
         try:
             params = yaml.unsafe_load(f)
         except AttributeError:
-            params = yaml.load(f)
+            params = yaml.load(f, Loader=yaml.FullLoader)
     return params
 
 
