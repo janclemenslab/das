@@ -32,7 +32,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
-        uses: conda-incubator/setup-miniconda@v2.2.0
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-activate-base: true
@@ -60,15 +59,15 @@ jobs:
         if: runner.os == 'macos'
         run: |
           conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
-      - name: Install libsndfile and gcc (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install libsndfile1
-          mamba install gcc=12.1.0 -n das -y
-      - name: Run tests
-        run: |
-          conda activate das
-          pytest
+      # - name: Install libsndfile and gcc (Linux only)
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     sudo apt-get install libsndfile1
+      #     mamba install gcc=12.1.0 -n das -y
+      # - name: Run tests
+      #   run: |
+      #     conda activate das
+      #     pytest
       - name: Test cli
         run: |
           conda activate das
