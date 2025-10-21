@@ -31,7 +31,7 @@ jobs:
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
+      # - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-activate-base: true
