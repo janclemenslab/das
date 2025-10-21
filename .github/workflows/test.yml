@@ -45,14 +45,18 @@ jobs:
           # condarc-file: condarc.yml
           use-mamba: true
           use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
-      - name: 'Workaround for mamba-org/mamba#488 (Linux)'
-        shell: bash -l {0}
-        if: runner.os == 'Linux'
-        run: rm /usr/share/miniconda/pkgs/cache/*.json
-      - name: Install DAS
+      - name: Install DAS (windows)
+        if: runner.os == 'Windows'
         run: |
-          mamba create das python=${{ matrix.python-version }} -n das -c conda-forge -c ncb -c anaconda -c nvidia -y
-          mamba install pytest -n das -y
+          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_win.yaml
+      - name: Install DAS (linux)
+        if: runner.os == 'Linux'
+        run: |
+          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_linux.yaml
+      - name: Install DAS (macOS)
+        if: runner.os == 'macos'
+        run: |
+          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
       - name: Install libsndfile and gcc (Linux only)
         if: runner.os == 'Linux'
         run: |
