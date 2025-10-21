@@ -6,8 +6,4 @@ dependencies:
   - pip
   - ffmpeg==6
   - pip:
-    - tqdm
-    - zarr<3
-    - tensorflow==2.15.1
-    - tensorflow-metal==1.1.0
     - das

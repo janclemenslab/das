@@ -8,5 +8,4 @@ dependencies:
   - cudatoolkit=11.8
   - cudnn=8.8
   - pip:
-    - tensorflow==2.13
     - das
