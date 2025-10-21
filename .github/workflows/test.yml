@@ -30,6 +30,7 @@ jobs:
         with:
           auto-activate-base: true
           activate-environment: ""
+          channels: conda-forge,nvidia
       - name: Install DAS (windows)
         if: runner.os == 'Windows'
         run: |
