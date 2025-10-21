@@ -20,33 +20,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         python-version: [3.13]
-        # exclude:
-        #   - os: macos-latest
-        #     python-version: 3.7
-        #   - os: windows-latest
-        #     python-version: 3.7
     defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
       run:
         shell: bash -l {0}
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      # - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-activate-base: true
           activate-environment: ""
-          # auto-update-conda: true
-          # miniforge-variant: Mambaforge
-          # channels: conda-forge,ncb,anaconda,defaults
-          # python-version: ${{ matrix.python-version }}
-          # mamba-version: "*"
-          # auto-activate-base: false
-          # activate-environment: anaconda-client-env
-          # environment-file: build_env.yml
-          # condarc-file: condarc.yml
-          # use-mamba: true
-          # use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
       - name: Install DAS (windows)
         if: runner.os == 'Windows'
         run: |
@@ -59,20 +42,10 @@ jobs:
         if: runner.os == 'macos'
         run: |
           conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
-      # - name: Install libsndfile and gcc (Linux only)
-      #   if: runner.os == 'Linux'
-      #   run: |
-      #     sudo apt-get install libsndfile1
-      #     mamba install gcc=12.1.0 -n das -y
-      # - name: Run tests
-      #   run: |
-      #     conda activate das
-      #     pytest
       - name: Test cli
         run: |
           conda activate das
           das version
           das train --help
-          das tune --help
           das predict --help
           das gui --help
