@@ -33,18 +33,21 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
         uses: conda-incubator/setup-miniconda@v2.2.0
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          auto-update-conda: true
-          miniforge-variant: Mambaforge
-          channels: conda-forge,ncb,anaconda,defaults
-          python-version: ${{ matrix.python-version }}
-          mamba-version: "*"
-          auto-activate-base: false
+          auto-activate-base: true
+          activate-environment: ""with:
+          # auto-update-conda: true
+          # miniforge-variant: Mambaforge
+          # channels: conda-forge,ncb,anaconda,defaults
+          # python-version: ${{ matrix.python-version }}
+          # mamba-version: "*"
+          # auto-activate-base: false
           # activate-environment: anaconda-client-env
           # environment-file: build_env.yml
           # condarc-file: condarc.yml
-          use-mamba: true
-          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
+          # use-mamba: true
+          # use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
       - name: Install DAS (windows)
         if: runner.os == 'Windows'
         run: |
