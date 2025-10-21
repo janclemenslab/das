@@ -35,7 +35,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           auto-activate-base: true
-          activate-environment: ""with:
+          activate-environment: ""
           # auto-update-conda: true
           # miniforge-variant: Mambaforge
           # channels: conda-forge,ncb,anaconda,defaults
