@@ -5,7 +5,7 @@ import pandas as pd
 import flammkuchen
 from typing import Optional, Dict, Callable, Any
 import logging
-from . import predict, data, utils, models, io
+from . import predict, utils, models, io
 from .event_utils import evaluate_eventtimes
 
 logger = logging.getLogger(__name__)
@@ -118,8 +118,8 @@ def evaluate_probabilities(
     # do not prepend padding since we create y from the generator
     y_pred = predict.predict_probabilities(x, model=model, params=params, verbose=verbose, prepend_data_padding=False)
 
-    eval_gen = data.AudioSequence(x, y, shuffle=False, **params)
-    x, y = data.get_data_from_gen(eval_gen)
+    eval_gen = io.AudioSequence(x, y, shuffle=False, **params)
+    x, y = io.get_data_from_gen(eval_gen)
 
     return x, y, y_pred
 

@@ -17,17 +17,16 @@ Developer API
    das.annot
    das.augmentation
    das.block_stratify
-   das.data
-   das.data_hash
    das.evaluate
    das.event_utils
    das.io
+   das.io.data_hash
+   das.io.npy_dir
    das.loss
    das.make_dataset
    das.menagerie
    das.models
    das.models_legacy
-   das.npy_dir
    das.postprocessing
    das.predict
    das.pulse_utils

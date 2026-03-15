@@ -6,7 +6,7 @@ import os
 import shutil
 import flammkuchen
 import numpy as np
-from . import utils, data, models, event_utils, segment_utils, annot
+from . import utils, io, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any, Sequence, Iterable, Union
 import glob
 import librosa
@@ -41,7 +41,7 @@ def predict_probabilities(
         y_pred - output of network for each sample [samples, nb_classes]
     """
 
-    pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
+    pred_gen = io.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
     nb_batches = len(pred_gen)
     verbose = 1
     prepend_data_padding = True
@@ -56,7 +56,7 @@ def predict_probabilities(
         y_pred_batch = model.predict_on_batch(batch_data)  # run the network
 
         # reshape from [batches, nb_hist, ...] to [time, ...]
-        y_pred_unpacked_batch = data.unpack_batches(y_pred_batch, pred_gen.data_padding)
+        y_pred_unpacked_batch = io.unpack_batches(y_pred_batch, pred_gen.data_padding)
 
         if prepend_data_padding:
             pad_width = None

@@ -10,7 +10,7 @@ import os
 import yaml
 import dask.array as da
 from typing import List, Optional, Tuple, Dict, Any
-from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  # , timeseries
+from . import models, utils, predict, io, evaluate, tracking, augmentation, postprocessing  # , timeseries
 
 logger = logging.getLogger(__name__)
 
@@ -278,7 +278,7 @@ def train(
 
     if version_data:
         logger.info("Versioning the data:")
-        params["data_hash"] = data_hash.hash_data(data_dir)
+        params["data_hash"] = io.data_hash.hash_data(data_dir)
         logger.info(f"   MD5 hash of {data_dir} is")
         logger.info(f"   {params['data_hash']}")
 
@@ -302,10 +302,10 @@ def train(
         fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0
     ):  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(
+        first_sample_train, last_sample_train = io.sub_range(
             d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed
         )
-        first_sample_val, last_sample_val = data.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_val, last_sample_val = io.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
     elif sample_bounds_provided:
         logger.info("Using provided start/end samples:")
         logger.info(f"Train: {first_sample_train}:{last_sample_train}, Val: {first_sample_val}:{last_sample_val}.")
@@ -348,10 +348,10 @@ def train(
     if balance:
         logger.info("Balancing classes:")
         logger.info("   Computing class weights.")
-        params["class_weights"] = data.compute_class_weights(d["train"]["y"][first_sample_train:last_sample_train])
+        params["class_weights"] = io.compute_class_weights(d["train"]["y"][first_sample_train:last_sample_train])
         logger.info(f"   {params['class_weights']}")
 
-    data_gen = data.AudioSequence(
+    data_gen = io.AudioSequence(
         d["train"]["x"],
         d["train"]["y"],
         shuffle=True,
@@ -362,7 +362,7 @@ def train(
         batch_processor=augs,
         **params,
     )
-    val_gen = data.AudioSequence(
+    val_gen = io.AudioSequence(
         d["val"]["x"],
         d["val"]["y"],
         shuffle=False,
