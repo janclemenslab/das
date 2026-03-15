@@ -9,10 +9,7 @@ def test_import():
     from das import evaluate
     from das import event_utils
     from das import io
-    from das.io import data_hash
-    from das.io import npy_dir
     from das import make_dataset
-    from das import menagerie
     from das import models
     from das import tracking
     from das import postprocessing
@@ -21,5 +18,16 @@ def test_import():
     from das import segment_utils
     from das import train
     from das import utils
-    import das.kapre
-    import das.tcn
+    from das.io import data_hash
+    from das.io import npy_dir
+    import das.models.kapre
+    import das.models.menagerie
+    import das.models.tcn
+
+
+def test_model_registry():
+    from das import models
+
+    assert "tcn" in models.model_dict
+    assert "tcn_stft" in models.model_dict
+    assert callable(models.load_model_and_params)

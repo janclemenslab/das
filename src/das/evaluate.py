@@ -5,7 +5,7 @@ import pandas as pd
 import flammkuchen
 from typing import Optional, Dict, Callable, Any
 import logging
-from . import predict, utils, models, io
+from . import predict, models, io
 from .event_utils import evaluate_eventtimes
 
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ def segment_timing(labels, samplerate: float):
 def evaluate_probabilities(
     x,
     y,
-    model: Optional[models.keras.models.Model] = None,
+    model: Optional[keras.Model] = None,
     params: Optional[Dict] = None,
     model_savename: Optional[str] = None,
     verbose: int = 1,
@@ -98,7 +98,7 @@ def evaluate_probabilities(
     Args:
         x ([type]): [description]
         y ([type]): [description]
-        model (Union[models.keras.models.Model], optional): [description]. Defaults to None.
+        model (Union[keras.Model], optional): [description]. Defaults to None.
         params (Union[Dict], optional): [description]. Defaults to None.
         model_savename (Union[str], optional): [description]. Defaults to None.
         verbose (int, optional): [description]. Defaults to 1.
@@ -109,7 +109,7 @@ def evaluate_probabilities(
     # TODO if called w/o x and y, load dataset from params
     if model is None or params is None:
         if model_savename is not None:
-            model, params = utils.load_model_and_params(model_savename)
+            model, params = models.load_model_and_params(model_savename)
         else:
             raise ValueError(
                 f"Required: Either a model and params OR a model_savename so we can load model and params. But model={model}, params={params}, model_savename={model_savename}."
@@ -143,7 +143,7 @@ def evaluate(
         _type_: _description_
     """
     logger.info("Loading last best model.")
-    model, params = utils.load_model_and_params(model_save_name, custom_objects=custom_objects)
+    model, params = models.load_model_and_params(model_save_name, custom_objects=custom_objects)
     logger.info(model.summary())
 
     logger.info(f"Loading data from {params['data_dir']}.")

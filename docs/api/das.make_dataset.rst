@@ -1,4 +1,4 @@
-﻿das.make_dataset
+das.make_dataset
 ================
 
 .. automodule:: das.make_dataset

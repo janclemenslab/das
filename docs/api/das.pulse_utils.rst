@@ -1,4 +1,4 @@
-﻿das.pulse_utils
+das.pulse_utils
 ===============
 
 .. automodule:: das.pulse_utils

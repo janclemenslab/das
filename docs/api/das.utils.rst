@@ -1,4 +1,4 @@
-﻿das.utils
+das.utils
 =========
 
 .. automodule:: das.utils

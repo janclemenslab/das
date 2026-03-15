@@ -431,7 +431,7 @@ def predict(
     model_save_name: str = None,
     verbose: int = 1,
     batch_size: int = None,
-    model: models.keras.models.Model = None,
+    model: keras.Model = None,
     params: Dict = None,
     event_thres: float = 0.5,
     event_dist: float = 0.01,
@@ -458,7 +458,7 @@ def predict(
 
     To re-use the same model with multiple recordings, load the modal and params
     once and pass them to `predict`
-    ```my_model, my_params = das.utils.load_model_and_params(model_save_name)
+    ```my_model, my_params = das.models.load_model_and_params(model_save_name)
     for data in data_list:
         das.predict.predict(x=data, model=my_model, params=my_params)
     ```
@@ -514,9 +514,9 @@ def predict(
         class_names (List[str]): [nb_classes]
     """
     if model_save_name is not None:
-        model, params = utils.load_model_and_params(model_save_name)
+        model, params = models.load_model_and_params(model_save_name)
     else:
-        assert isinstance(model, models.keras.models.Model)
+        assert isinstance(model, keras.Model)
         assert isinstance(params, dict)
 
     fs_model = params["samplerate_x_Hz"]
@@ -677,7 +677,7 @@ def cli_predict(
         filenames = [path]
 
     logging.info(f"Loading model from {model_save_name}.")
-    model, params = utils.load_model_and_params(model_save_name)
+    model, params = models.load_model_and_params(model_save_name)
 
     for recording_filename in filenames:
         logging.info(f"   Loading data from {recording_filename}.")

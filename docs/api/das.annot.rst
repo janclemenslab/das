@@ -1,4 +1,4 @@
-﻿das.annot
+das.annot
 =========
 
 .. automodule:: das.annot
