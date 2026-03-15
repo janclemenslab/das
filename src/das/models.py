@@ -2,9 +2,7 @@
 
 import keras as keras
 import keras.layers as kl
-from keras import regularizers
-from keras.applications.resnet_v2 import ResNet50V2
-from typing import List, Optional, Tuple
+from typing import List, Optional
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
 
@@ -41,13 +39,9 @@ def tcn_stft(
     nb_pre_conv: int = 0,
     pre_nb_dft: int = 64,
     nb_lstm_units: int = 0,
-    morph_nb_kernels: int = 1,
-    morph_kernel_duration: int = 32,
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
-    use_resnet: bool = False,
-    tmse_weight: float = 0.0,
     compile: bool = True,
     **kwignored,
 ):
@@ -75,13 +69,10 @@ def tcn_stft(
                                     Defaults to 64.
         learning_rate (float, optional) Defaults to 0.0005
         nb_lstm_units (int, optional): Defaults to 0.
-        morph_nb_kernels (int): Defaults to 0 (no morphological kernels).
-        morph_kernel_duration (int): Defaults to 32.
         upsample (bool, optional): whether or not to restore the model output to the input samplerate.
                                    Should generally be True during training and evaluation but may speed up inference.
                                    Defaults to True.
         use_separable (bool, optional): use separable convs in residual block. Defaults to False.
-        use_resnet (bool, optional): Defaults to False.
         kwignored (Dict, optional): additional kw args in the param dict used for calling m(**params) to be ingonred
 
     Returns:
@@ -103,15 +94,7 @@ def tcn_stft(
             name="trainable_stft",
             image_data_format="channels_last",
         )(out)
-        if not use_resnet:
-            out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
-
-    if use_resnet:
-        out = kl.Activation("relu")(out)
-        out = kl.Concatenate(axis=-1)([out, out, out])
-        out = ResNet50V2(input_shape=out.shape[1:], weights="imagenet", include_top=False)(out)
         out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
-        out = kl.BatchNormalization()(out)
 
     x = tcn_layer.TCN(
         nb_filters=nb_filters,
@@ -137,9 +120,6 @@ def tcn_stft(
     output_layer = x
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
-    if use_resnet:
-        model.get_layer(name="trainable_stft").trainable = False
-        model.get_layer(name="resnet50v2").trainable = False
 
     if compile:
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.0)
