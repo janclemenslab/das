@@ -34,8 +34,8 @@ dependencies = [
     # 'torchvision @ https://download.pytorch.org/whl/cu130/torchvision-0.20.1%2Bcu130-cp311-cp311-win_amd64.whl; platform_system == "Windows"',
 
     # Linux/Windows: install from CUDA 13.0 index (pip auto-selects wheel)
-    'torch; platform_system in ["Linux", "Windows"]',
-    'torchvision; platform_system in ["Linux", "Windows"]',
+    'torch; platform_system == "Linux" or platform_system == "Windows"',
+    'torchvision; platform_system == "Linux" or platform_system == "Windows"',
 ]
 readme = "README.md"
 
