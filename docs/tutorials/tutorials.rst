@@ -24,7 +24,6 @@ command-line interface provide more control, flexibility and automation:
    :maxdepth: 1
    :hidden:
 
-   :toctree: pro
    convert
    make_ds_notebook
    train
@@ -36,4 +35,3 @@ command-line interface provide more control, flexibility and automation:
    evaluate_fly
    evaluate_bird
    realtime
-

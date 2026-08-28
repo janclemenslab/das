@@ -11,8 +11,6 @@ interfaces <cli.html>`__ and `data formats <data_formats.html>`__
    :maxdepth: 1
    :hidden:
 
-   :toctree: tec
    cli
    data_formats
-
 

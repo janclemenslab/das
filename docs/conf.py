@@ -28,11 +28,8 @@ author = 'Jan Clemens'
 # ones.
 extensions = [
     "sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.napoleon", "sphinx.ext.viewcode", "myst_nb",
-    "sphinx.ext.autosummary", "sphinx_panels", "sphinxcontrib.images", 'sphinx.ext.autosectionlabel', "sphinx_inline_tabs"
+    "sphinx.ext.autosummary", "sphinx_panels", "sphinxcontrib.images", "sphinx_inline_tabs"
 ]
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
 
 # The master toctree document.
 master_doc = "index"
@@ -48,7 +45,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'README.md']
 
 html_logo = 'images/icon.png'
 html_theme_options = {
-    'display_version': False,
     'sidebar_hide_name': True,
     "collapse_navigation": False,
 }
@@ -102,4 +98,3 @@ html_theme = 'furo'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
