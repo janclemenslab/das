@@ -8,4 +8,4 @@ dependencies:
   - cudatoolkit=11.8
   - cudnn=8.8
   - pip:
-    - das
+    - das==0.32.12

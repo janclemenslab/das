@@ -44,7 +44,7 @@ def load_model(
     try:
         model_filename = _download_if_url(file_trunk + model_ext)
         model = keras.models.load_model(model_filename, custom_objects=custom_objects)
-    except (SystemError, ValueError, AttributeError):
+    except (SystemError, ValueError, AttributeError, EOFError):
         logging.debug(
             "Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.",
             exc_info=False,
@@ -78,7 +78,16 @@ def load_model_from_params(
     # get the model - calls the function that generates a model with parameters
     model = model_dict[params["model_name"]](**params)
     weights_filename = _download_if_url(file_trunk + weights_ext)
-    model.load_weights(weights_filename, skip_mismatch=True, by_name=True)
+    try:
+        model.load_weights(weights_filename, skip_mismatch=False, by_name=False)
+    except ValueError as error:
+        logging.warning(
+            "Strict weight loading failed for %s (%s). Retrying by name and skipping mismatches.",
+            weights_filename,
+            error,
+        )
+        model = model_dict[params["model_name"]](**params)
+        model.load_weights(weights_filename, skip_mismatch=True, by_name=True)
 
     if compile:
         # Compile with random standard optimizer and loss so we can use the model for prediction

@@ -4,7 +4,6 @@ from tensorflow.keras.layers import Layer
 from tensorflow.keras import backend as K
 from . import backend
 
-
 # Todo: Filterbank(); init with mel, log, linear, etc.
 # not parameterised, just a matrix multiplication
 
