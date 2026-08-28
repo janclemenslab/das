@@ -17,6 +17,8 @@ from das.utils import load_model_and_params, save_params
 )
 def test_legacy_model_loads_and_predicts(relative_trunk):
     trunk = Path(__file__).parents[1] / relative_trunk
+    if not all(Path(str(trunk) + suffix).exists() for suffix in ("_params.yaml", "_model.h5")):
+        pytest.skip("optional legacy model fixture is not checked into Git")
     model, params = load_model_and_params(str(trunk))
     input_shape = [1]
     for axis, size in enumerate(model.input_shape[1:], start=1):
