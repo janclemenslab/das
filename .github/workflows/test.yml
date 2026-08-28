@@ -26,9 +26,11 @@ jobs:
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@v4
         with:
-          auto-activate-base: true
+          conda-version: "26.5.3"
+          auto-update-conda: false
+          auto-activate: true
           activate-environment: ""
           channels: conda-forge,nvidia
       - name: Install DAS (windows)
