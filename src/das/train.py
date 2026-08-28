@@ -82,8 +82,6 @@ def train(
     post_opt_min_len_min: float = 0.0005,
     post_opt_min_len_max: float = 1.0,
     post_opt_min_len_steps: int = 20,
-    morph_kernel_duration: int = 32,
-    morph_nb_kernels: int = 0,
     resnet_compute: bool = False,
     resnet_train: bool = False,
     tmse_weight: float = 0.0,
@@ -208,9 +206,6 @@ def train(
         post_opt_min_len_min (float): Defaults to 0.0005 seconds.
         post_opt_min_len_max (float): Defaults to 1 second.
         post_opt_min_len_steps (int): Defaults to 20.
-
-        morph_nb_kernels (int): Defaults to 0 (do not add morphological kernels).
-        morph_kernel_duration (int): Defaults to 32.
 
         resnet_compute (bool): Defaults to False.
         resnet_train (bool): Defaults to False.
