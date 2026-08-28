@@ -1,6 +1,6 @@
 # Experiment tracking with Weights & Biases
 
-[Weights & Biases](https://wandb.ai) for tracking experiments and visualizing results. Great for comparing different model fits during manual parameter and automatic architecture tuning (see [example](/tutorials/architecture_tuning)).
+[Weights & Biases](https://wandb.ai) can track experiments, visualize results, and compare model fits.
 
 ## Setup Weights & Biases
 - Create account at [https://wandb.ai](https://wandb.ai)

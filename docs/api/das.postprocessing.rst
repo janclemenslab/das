@@ -1,4 +1,4 @@
-﻿das.postprocessing
+das.postprocessing
 ==================
 
 .. automodule:: das.postprocessing

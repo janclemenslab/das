@@ -1,4 +1,4 @@
-﻿das.train
+das.train
 =========
 
 .. automodule:: das.train

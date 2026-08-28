@@ -1,11 +1,25 @@
 from pathlib import Path
 
+import h5py
 import numpy as np
 import pytest
-import tensorflow as tf
 
-from das import models
-from das.utils import load_model_and_params, save_params
+from das import models, utils
+
+
+PARAMS = {
+    "model_name": "tcn_stft",
+    "nb_freq": 1,
+    "nb_classes": 2,
+    "nb_hist": 8,
+    "nb_filters": 2,
+    "kernel_size": 2,
+    "nb_conv": 1,
+    "dilations": [1],
+    "nb_pre_conv": 1,
+    "pre_nb_dft": 4,
+    "compile": False,
+}
 
 
 @pytest.mark.parametrize(
@@ -15,11 +29,12 @@ from das.utils import load_model_and_params, save_params
         "docs/tutorials/models/dmel_all/20200507_173738",
     ],
 )
-def test_legacy_model_loads_and_predicts(relative_trunk):
+def test_real_tensorflow_model_loads_and_predicts(relative_trunk):
     trunk = Path(__file__).parents[1] / relative_trunk
     if not all(Path(str(trunk) + suffix).exists() for suffix in ("_params.yaml", "_model.h5")):
         pytest.skip("optional legacy model fixture is not checked into Git")
-    model, params = load_model_and_params(str(trunk))
+
+    model, params = models.load_model_and_params(str(trunk))
     input_shape = [1]
     for axis, size in enumerate(model.input_shape[1:], start=1):
         if size is not None:
@@ -34,33 +49,52 @@ def test_legacy_model_loads_and_predicts(relative_trunk):
     assert np.isfinite(prediction).all()
 
 
-def test_model_train_save_reload_round_trip(tmp_path):
-    np.random.seed(0)
-    tf.random.set_seed(0)
-    params = {
-        "model_name": "tcn",
-        "nb_freq": 1,
-        "nb_classes": 2,
-        "nb_hist": 64,
-        "nb_filters": 2,
-        "kernel_size": 3,
-        "nb_conv": 1,
-        "dilations": [1],
-        "morph_nb_kernels": 0,
-        "learning_rate": 0.001,
-    }
-    rng = np.random.default_rng(0)
-    samples = rng.normal(size=(4, 64, 1)).astype(np.float32)
-    labels = tf.one_hot((samples[..., 0] > 0).astype(np.int32), depth=2).numpy()
-    model = models.model_dict[params["model_name"]](**params)
-    history = model.fit(samples, labels, epochs=1, batch_size=2, verbose=0)
-    prediction_before = model.predict(samples, verbose=0)
-    trunk = tmp_path / "tiny"
-    model.save(str(trunk) + "_model.h5")
-    save_params(params, str(trunk))
+def _model_with_known_weights():
+    model = models.tcn_stft(**PARAMS)
+    for index, variable in enumerate(model.weights, start=1):
+        values = np.arange(np.prod(variable.shape), dtype=np.float32).reshape(variable.shape) / index
+        variable.assign(values)
+    return model
 
-    reloaded, _ = load_model_and_params(str(trunk))
-    prediction_after = reloaded.predict(samples, verbose=0)
 
-    assert np.isfinite(history.history["loss"][0])
-    np.testing.assert_allclose(prediction_after, prediction_before, rtol=1e-5, atol=1e-6)
+def _save_legacy_h5_weights(model, filename):
+    with h5py.File(filename, "w") as file:
+        group = file.create_group("model_weights")
+        layer_names = []
+        for layer_index, layer in enumerate(layer for layer in model.layers if layer.weights):
+            layer_name = f"legacy_layer_{layer_index}"
+            layer_names.append(layer_name)
+            layer_group = group.create_group(layer_name)
+            weight_names = []
+            for weight_index, value in enumerate(layer.get_weights()):
+                weight_name = f"weight_{weight_index}"
+                weight_names.append(weight_name)
+                layer_group.create_dataset(weight_name, data=value)
+            layer_group.attrs["weight_names"] = np.asarray(weight_names, dtype="S")
+        group.attrs["layer_names"] = np.asarray(layer_names, dtype="S")
+
+
+def test_load_legacy_h5_by_strict_layer_order(tmp_path):
+    trunk = str(tmp_path / "legacy")
+    expected = _model_with_known_weights()
+    utils.save_params(PARAMS, trunk)
+    _save_legacy_h5_weights(expected, trunk + "_model.h5")
+
+    loaded, params = models.load_model_and_params(trunk)
+
+    for expected_weight, loaded_weight in zip(expected.get_weights(), loaded.get_weights()):
+        np.testing.assert_array_equal(loaded_weight, expected_weight)
+    assert params == PARAMS
+
+
+def test_load_new_keras_model(tmp_path):
+    trunk = str(tmp_path / "new")
+    expected = _model_with_known_weights()
+    utils.save_params(PARAMS, trunk)
+    expected.save(trunk + "_model.keras")
+
+    loaded, params = models.load_model_and_params(trunk)
+
+    for expected_weight, loaded_weight in zip(expected.get_weights(), loaded.get_weights()):
+        np.testing.assert_array_equal(loaded_weight, expected_weight)
+    assert params == PARAMS

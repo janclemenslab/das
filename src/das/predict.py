@@ -1,14 +1,14 @@
 """Code for training and evaluating networks."""
 
+import keras
 import logging
 import os
 import shutil
 import flammkuchen
 import numpy as np
-from . import utils, data, models, event_utils, segment_utils, annot
+from . import utils, io, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any, Sequence, Iterable, Union
 import glob
-import tensorflow
 import librosa
 import zarr
 from tqdm.autonotebook import tqdm
@@ -16,12 +16,13 @@ import dask.config
 import dask.array as da
 from dask.diagnostics import ProgressBar
 
+
 dask.config.set(**{"array.slicing.split_large_chunks": True})
 
 
 def predict_probabilities(
     x: np.ndarray,
-    model: tensorflow.keras.Model,
+    model: keras.Model,
     params: Dict[str, Any],
     verbose: Optional[int] = 1,
     prepend_data_padding: bool = True,
@@ -40,7 +41,7 @@ def predict_probabilities(
         y_pred - output of network for each sample [samples, nb_classes]
     """
 
-    pred_gen = data.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
+    pred_gen = io.AudioSequence(x=x, y=None, shuffle=False, **params)  # prep data
     nb_batches = len(pred_gen)
     verbose = 1
     prepend_data_padding = True
@@ -55,7 +56,7 @@ def predict_probabilities(
         y_pred_batch = model.predict_on_batch(batch_data)  # run the network
 
         # reshape from [batches, nb_hist, ...] to [time, ...]
-        y_pred_unpacked_batch = data.unpack_batches(y_pred_batch, pred_gen.data_padding)
+        y_pred_unpacked_batch = io.unpack_batches(y_pred_batch, pred_gen.data_padding)
 
         if prepend_data_padding:
             pad_width = None
@@ -430,7 +431,7 @@ def predict(
     model_save_name: str = None,
     verbose: int = 1,
     batch_size: int = None,
-    model: models.keras.models.Model = None,
+    model: keras.Model = None,
     params: Dict = None,
     event_thres: float = 0.5,
     event_dist: float = 0.01,
@@ -457,7 +458,7 @@ def predict(
 
     To re-use the same model with multiple recordings, load the modal and params
     once and pass them to `predict`
-    ```my_model, my_params = das.utils.load_model_and_params(model_save_name)
+    ```my_model, my_params = das.models.load_model_and_params(model_save_name)
     for data in data_list:
         das.predict.predict(x=data, model=my_model, params=my_params)
     ```
@@ -513,9 +514,9 @@ def predict(
         class_names (List[str]): [nb_classes]
     """
     if model_save_name is not None:
-        model, params = utils.load_model_and_params(model_save_name)
+        model, params = models.load_model_and_params(model_save_name)
     else:
-        assert isinstance(model, models.keras.models.Model)
+        assert isinstance(model, keras.Model)
         assert isinstance(params, dict)
 
     fs_model = params["samplerate_x_Hz"]
@@ -676,7 +677,7 @@ def cli_predict(
         filenames = [path]
 
     logging.info(f"Loading model from {model_save_name}.")
-    model, params = utils.load_model_and_params(model_save_name)
+    model, params = models.load_model_and_params(model_save_name)
 
     for recording_filename in filenames:
         logging.info(f"   Loading data from {recording_filename}.")

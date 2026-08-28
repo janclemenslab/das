@@ -1,4 +1,4 @@
-﻿das.io
+das.io
 ======
 
 .. automodule:: das.io

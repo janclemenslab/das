@@ -65,6 +65,15 @@ def _register_param(func):
     return func
 
 
+def _sample_scalar(param: "Param") -> float:
+    """Convert a parameter sample to a Python scalar."""
+
+    value = np.asarray(param())
+    if value.size != 1:
+        raise ValueError(f"Expected scalar parameter sample, got shape {value.shape}.")
+    return float(value.reshape(()))
+
+
 @dataclass
 class Param:
     """Base class for all parameters.
@@ -205,7 +214,7 @@ class NormalizePercentile(Augmentation):
         self.percentile = percentile
 
     def _apply(self, x):
-        x /= np.nanpercentile(x, self.percentile())
+        x /= np.nanpercentile(x, _sample_scalar(self.percentile))
         return x
 
 
@@ -249,7 +258,7 @@ class HorizontalFlip(Augmentation):
         self.flip = flip
 
     def _apply(self, x):
-        if self.flip() > 0:
+        if _sample_scalar(self.flip) > 0:
             x *= -1
         return x
 
@@ -272,7 +281,8 @@ class Upsampling(Augmentation):
 
     def _apply(self, x):
         len_x = x.shape[0]
-        x = scipy.signal.resample_poly(x, up=int(len_x * self.factor()), down=len_x)
+        factor = _sample_scalar(self.factor)
+        x = scipy.signal.resample_poly(x, up=int(len_x * factor), down=len_x)
         x = x[:len_x]
         return x
 
@@ -308,8 +318,9 @@ class MaskNoise(Augmentation):
             mask_start = 0
             duration = len_x
         else:
-            duration = int(self.duration())
-            mask_start = np.random.randint(low=0, high=len_x - duration)
+            duration = min(len_x, max(1, int(_sample_scalar(self.duration))))
+            mask_start_max = len_x - duration
+            mask_start = 0 if mask_start_max == 0 else np.random.randint(low=0, high=mask_start_max + 1)
         noise = np.random.randn(duration, *x.shape[1:]) * self.std() + self.mean()
         if self.add:
             x[mask_start : mask_start + duration, :] += noise
@@ -318,7 +329,7 @@ class MaskNoise(Augmentation):
         return x
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(std={self.mean}, mean={self.mean})"
+        return f"{self.__class__.__name__}(std={self.std}, mean={self.mean})"
 
 
 @_register_augmentation
@@ -334,8 +345,9 @@ class MaskMean(Augmentation):
 
     def _apply(self, x):
         len_x = x.shape[0]
-        duration = int(self.duration())
-        mask_start = np.random.randint(low=0, high=len_x - duration)
+        duration = min(len_x, max(1, int(_sample_scalar(self.duration))))
+        mask_start_max = len_x - duration
+        mask_start = 0 if mask_start_max == 0 else np.random.randint(low=0, high=mask_start_max + 1)
         x[mask_start : mask_start + duration, :] = np.mean(x[mask_start : mask_start + duration], axis=0)
         return x
 
@@ -352,7 +364,7 @@ class CircShift(Augmentation):
         self.shift = shift
 
     def _apply(self, x):
-        x = np.roll(x, self.shift().astype(int), axis=0)
+        x = np.roll(x, int(_sample_scalar(self.shift)), axis=0)
         return x
 
 
@@ -370,7 +382,7 @@ class NotchFilter(Augmentation):
         self.samplerate_Hz = samplerate_Hz
 
     def _apply(self, x):
-        b, a = scipy.signal.iirnotch(self.freq(), self.Q, self.samplerate_Hz)
+        b, a = scipy.signal.iirnotch(_sample_scalar(self.freq), self.Q, self.samplerate_Hz)
         x = scipy.signal.filtfilt(b, a, x, axis=0)
         return x
 

@@ -1,31 +1,41 @@
-<!-- [![Test install](https://github.com/janclemenslab/das/actions/workflows/main.yml/badge.svg)](https://github.com/janclemenslab/das/actions/workflows/main.yml) -->
+# Deep Audio Segmenter (DAS)
 
-# Deep Audio Segmenter
-_DAS_ is a method for automatically annotating song from raw audio recordings based on a deep neural network. _DAS_ can be used with a graphical user interface, from the terminal, or from within python scripts.
+_DAS_ automatically annotates animal vocalizations in raw audio recordings using a deep neural network. It can be used through a graphical user interface, from the terminal, or from Python scripts.
 
-Version 0.32.13 is the final TensorFlow-backed release of _DAS_. To keep using the TensorFlow version after later releases, install `das==0.32.13`.
+Users who need the TensorFlow backend can continue to install the final TensorFlow-backed release with `das==0.32.13`.
 
-If you have questions, feedback, or find bugs please raise an [issue](https://github.com/janclemenslab/das/issues).
+## Installation
+
+```shell
+conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
+conda activate das
+uv pip install das --torch-backend=auto
+das version
+```
+
+See the [installation guide](https://janclemenslab.org/das/installation.html) for CPU- and GPU-specific options.
+
+## Documentation
+
+See the [DAS documentation](https://janclemenslab.org/das/) for the complete user guide:
+
+- The quick-start tutorials for [flies](https://janclemenslab.org/das/quickstart_fly.html) and [birds](https://janclemenslab.org/das/quickstart_bird.html) cover manual annotation, network training, and generating new annotations.
+- Use the [graphical user interface](https://janclemenslab.org/das/tutorials_gui/tutorials_gui.html).
+- Use DAS [from the terminal or Python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
+
+If you have questions, feedback, or find a bug, please [open an issue](https://github.com/janclemenslab/das/issues).
+
+## Citation
 
 Please cite _DAS_ as:
 
-Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021).
-_Fast and accurate annotation of acoustic signals with deep neural networks._
-[eLife](https://doi.org/10.7554/eLife.68837)
-
-
-See the documentation at [https://janclemenslab.org/das/](https://janclemenslab.org/das/) for instructions on how to [install DAS](https://janclemenslab.org/das/installation.html) and for a user guide:
-
-- A [quick start tutorial](https://janclemenslab.org/das/quickstart.html) walks through all steps from manually annotating song, over training a network, to generating new annotations.
-- How to use the [graphical user interface](https://janclemenslab.org/das/tutorials_gui/tutorials_gui.html).
-- How to use _DAS_ [from the terminal or from python scripts](https://janclemenslab.org/das/tutorials/tutorials.html).
-
-
+Elsa Steinfath, Adrian Palacios, Julian Rottschäfer, Deniz Yuezak, Jan Clemens (2021). _Fast and accurate annotation of acoustic signals with deep neural networks._ [eLife](https://doi.org/10.7554/eLife.68837)
 
 ## Acknowledgements
-The following packages were modified and integrated into das:
 
-- Keras implementation of TCN models modified from [keras-tcn](https://github.com/philipperemy/keras-tcn) (in `das.tcn`)
-- Trainable STFT layer implementation modified from [kapre](https://github.com/keunwoochoi/kapre) (in `das.kapre`)
+The following packages were modified and integrated into DAS:
 
-See the sub-module directories for the original READMEs.
+- Keras implementation of TCN models modified from [keras-tcn](https://github.com/philipperemy/keras-tcn) (in `das.models.tcn`)
+- Trainable STFT layer implementation modified from [kapre](https://github.com/keunwoochoi/kapre) (in `das.models.kapre`)
+
+See the corresponding source directories for the original READMEs.

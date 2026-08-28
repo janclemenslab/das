@@ -1,4 +1,4 @@
-﻿das.models
+das.models
 ==========
 
 .. automodule:: das.models

@@ -72,7 +72,7 @@ def optimize(
         Tuple[float, float, Dict[str, Union[float, List[float]]]]: [description]
     """
 
-    data = io.npy_dir.load(dataset_path, memmap_dirs="all")
+    data = io.npy_dir.NpyDir.load(dataset_path, memmap_dirs="all")
     fs = data.attrs["samplerate_x_Hz"]
 
     gap_durs = (gap_durs * fs).astype(int)

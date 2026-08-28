@@ -1,4 +1,4 @@
-﻿das.predict
+das.predict
 ===========
 
 .. automodule:: das.predict

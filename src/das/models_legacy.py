@@ -1,12 +1,11 @@
 """Defines the network architectures."""
 
-import tensorflow.keras as keras
-import tensorflow.keras.layers as kl
+import keras
+import keras.layers as kl
 from typing import List, Optional
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
 from .kapre.utils import AmplitudeToDB
-
 
 model_dict = dict()
 
@@ -74,9 +73,7 @@ def cnn(
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name="FCN")
-    model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
-    )
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True), loss=loss)
     return model
 
 
@@ -141,9 +138,7 @@ def cnn2D(
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name="CNN2D")
-    model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
-    )
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True), loss=loss)
     return model
 
 
@@ -201,9 +196,7 @@ def fcn(
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name="FCN")
-    model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss, sample_weight_mode=sample_weight_mode
-    )
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True), loss=loss)
 
     return model
 
@@ -264,7 +257,7 @@ def fcn2D(
     out = kl.Activation("softmax")(out)
 
     model = keras.models.Model(inp, out, name="CNN")
-    model.compile(optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True), loss=loss)
+    model.compile(optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True), loss=loss)
     return model
 
 
@@ -345,9 +338,8 @@ def tcn_seq(
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
     model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.0),
         loss=loss,
-        sample_weight_mode=sample_weight_mode,
     )
     return model
 
@@ -448,9 +440,8 @@ def tcn_tcn(
     model = keras.models.Model(input_layer, output_layer, name="TCN")
 
     model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.0),
         loss=loss,
-        sample_weight_mode=sample_weight_mode,
     )
     return model
 
@@ -545,9 +536,8 @@ def tcn_small(
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
     model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.0),
         loss=loss,
-        sample_weight_mode=sample_weight_mode,
     )
     return model
 
@@ -653,9 +643,8 @@ def tcn_stft(
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
     model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.0),
         loss=loss,
-        sample_weight_mode=sample_weight_mode,
     )
     return model
 
@@ -763,8 +752,7 @@ def tcn_multi(
 
     model = keras.models.Model(channels_in, output_layer, name="TCN")
     model.compile(
-        optimizer=keras.optimizers.Adam(lr=learning_rate, amsgrad=True, clipnorm=1.0),
+        optimizer=keras.optimizers.Adam(learning_rate=learning_rate, amsgrad=True, clipnorm=1.0),
         loss=loss,
-        sample_weight_mode=sample_weight_mode,
     )
     return model

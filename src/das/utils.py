@@ -1,16 +1,12 @@
 """General utilities"""
 
-import tensorflow.keras as keras
-import logging
+import keras as keras
 import time
 import numpy as np
 import yaml
 import h5py
 import scipy.signal
-from . import kapre
-from . import tcn
-from . import models
-from typing import Dict, Callable, Any, List, Tuple, Optional
+from typing import Callable, Dict, Any, List, Optional, Tuple
 
 
 def load_model(
@@ -21,37 +17,10 @@ def load_model(
     compile: bool = True,
     custom_objects: Optional[Dict[str, Callable]] = None,
 ):
-    """Load model with weights.
+    """Backward-compatible alias for :func:`das.models.load_model`."""
+    from .models.loading import load_model as _load_model
 
-    First tries to load the full model directly using keras.models.load_model - this will likely fail for models with custom layers.
-    Second, try to init model from parameters and then add weights...
-
-    Args:
-        file_trunk (str): [description]
-        model_dict (Dict[str, Callable): [description]
-        model_ext (str, optional): [description]. Defaults to '_weights.h5'.
-        params_ext (str, optional): [description]. Defaults to '_params.yaml'.
-        compile (bool, optional): [description]. Defaults to True.
-        custom_objects (dict, optional): ...
-
-    Returns:
-        keras.Model
-    """
-
-    if custom_objects is None:
-        custom_objects = {"Spectrogram": kapre.time_frequency.Spectrogram, "TCN": tcn.tcn_new.TCN}
-
-    try:
-        model_filename = _download_if_url(file_trunk + model_ext)
-        model = keras.models.load_model(model_filename, custom_objects=custom_objects)
-    except (SystemError, ValueError, AttributeError, EOFError):
-        logging.debug(
-            "Failed to load model using keras, likely because it contains custom layers. Will try to init model architecture from code and load weights from `_model.h5` into it.",
-            exc_info=False,
-        )
-        logging.debug("", exc_info=True)
-        model = load_model_from_params(file_trunk, model_dict, weights_ext=model_ext, params_ext=params_ext, compile=compile)
-    return model
+    return _load_model(file_trunk, model_dict, model_ext, params_ext, compile, custom_objects)
 
 
 def load_model_from_params(
@@ -61,39 +30,22 @@ def load_model_from_params(
     params_ext: str = "_params.yaml",
     compile: bool = True,
 ):
-    """Init architecture from code and load model weights into it. Helps with model loading issues across TF versions.
+    """Backward-compatible alias for :func:`das.models.load_model_from_params`."""
+    from .models.loading import load_model_from_params as _load_model_from_params
 
-    Args:
-        file_trunk (str): [description]
-        models_dict ([type]): [description]
-        weights_ext (str, optional): [description]. Defaults to '_model.h5' (use weights from model file).
-        params_ext (str, optional): [description]. Defaults to '_params.yaml'.
-        compile (bool, optional): [description]. Defaults to True.
+    return _load_model_from_params(file_trunk, model_dict, weights_ext, params_ext, compile)
 
-    Returns:
-        keras.Model
-    """
-    params = load_params(file_trunk, params_ext=params_ext)
 
-    # get the model - calls the function that generates a model with parameters
-    model = model_dict[params["model_name"]](**params)
-    weights_filename = _download_if_url(file_trunk + weights_ext)
-    try:
-        model.load_weights(weights_filename, skip_mismatch=False, by_name=False)
-    except ValueError as error:
-        logging.warning(
-            "Strict weight loading failed for %s (%s). Retrying by name and skipping mismatches.",
-            weights_filename,
-            error,
-        )
-        model = model_dict[params["model_name"]](**params)
-        model.load_weights(weights_filename, skip_mismatch=True, by_name=True)
+def load_model_and_params(model_save_name, model_dict=None, custom_objects=None) -> Tuple[keras.Model, Dict[str, Any]]:
+    """Backward-compatible alias for :func:`das.models.load_model_and_params`."""
+    from .models import model_dict as default_model_dict
+    from .models.loading import load_model_and_params as _load_model_and_params
 
-    if compile:
-        # Compile with random standard optimizer and loss so we can use the model for prediction
-        # Just re-compile the model if you want a particular optimizer and loss.
-        model.compile(optimizer=keras.optimizers.Adam(amsgrad=True), loss="mean_squared_error")
-    return model
+    return _load_model_and_params(
+        model_save_name,
+        model_dict=default_model_dict if model_dict is None else model_dict,
+        custom_objects=custom_objects,
+    )
 
 
 def save_params(params: Dict[str, Any], file_trunk: str, params_ext: str = "_params.yaml"):
@@ -123,26 +75,8 @@ def load_params(file_trunk: str, params_ext: str = "_params.yaml") -> Dict[str, 
         try:
             params = yaml.unsafe_load(f)
         except AttributeError:
-            params = yaml.load(f)
+            params = yaml.load(f, Loader=yaml.FullLoader)
     return params
-
-
-def load_model_and_params(
-    model_save_name, model_dict=models.model_dict, custom_objects=None
-) -> Tuple[keras.Model, Dict[str, Any]]:
-    """[summary]
-
-    Args:
-        model_save_name ([type]): [description]
-        model_dict ([type], optional): [description]. Defaults to models.model_dict.
-        custom_objects
-
-    Returns:
-        keras.Model, Dict[str, Any]: [description]
-    """
-    params = load_params(model_save_name)
-    model = load_model(model_save_name, model_dict=model_dict, custom_objects=custom_objects)
-    return model, params
 
 
 def _download_if_url(url: str):

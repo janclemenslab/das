@@ -6,6 +6,24 @@ ignore_modules = [
     "dsa._models",
 ]
 
+
+API_HEAD = """\
+
+.. _api:
+
+Developer API
+=============
+
+.. toctree::
+   :caption: API
+   :maxdepth: 1
+
+.. autosummary::
+   :toctree: api
+
+"""
+
+
 def make_api_doctree():
     doctree = ""
 
@@ -14,26 +32,26 @@ def make_api_doctree():
         root = root[7:]
 
         for file in sorted(files):
-            if file.endswith(".py") and not file.startswith("_"):
+            if file == "__init__.py" and root != "das":
+                full = root.replace(os.sep, ".")
+            elif file.endswith(".py") and not file.startswith("_"):
                 full = os.path.join(root, file)
                 full = full[:-3].replace(os.sep, ".")
+            else:
+                continue
 
-                ignore = False
-                for ignore_module in ignore_modules:
-                    if full.startswith(ignore_module):
-                        ignore = True
-                        break
-                if not ignore:
-                    doctree += f"   {full}\n"
-
-    # get the api doc header
-    with open("_templates/api_head.rst", "r") as f:
-        api_head = f.read()
+            ignore = False
+            for ignore_module in ignore_modules:
+                if full.startswith(ignore_module):
+                    ignore = True
+                    break
+            if not ignore:
+                doctree += f"   {full}\n"
 
     # write file for api doc with header + doctree
     with open("api.rst", "w") as f:
         f.write("..\n  This file is auto-generated.\n\n")
-        f.write(api_head)
+        f.write(API_HEAD)
         f.write(doctree)
 
 

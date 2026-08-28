@@ -17,31 +17,29 @@ Developer API
    das.annot
    das.augmentation
    das.block_stratify
-   das.data
-   das.data_hash
    das.evaluate
    das.event_utils
-   das.io
-   das.loss
    das.make_dataset
-   das.menagerie
-   das.models
-   das.models_legacy
-   das.npy_dir
    das.postprocessing
    das.predict
    das.pulse_utils
    das.segment_utils
-   das.spec_utils
    das.tracking
    das.train
    das.utils
-   das.utils_plot
-   das.tcn.tcn
-   das.tcn.tcn_new
-   das.kapre.augmentation
-   das.kapre.backend
-   das.kapre.backend_keras
-   das.kapre.filterbank
-   das.kapre.time_frequency
-   das.kapre.utils
+   das.io
+   das.io.data_hash
+   das.io.npy_dir
+   das.models
+   das.models.architectures
+   das.models.loading
+   das.models.menagerie
+   das.models.tcn
+   das.models.tcn.tcn
+   das.models.tcn.tcn_new
+   das.models.kapre
+   das.models.kapre.backend
+   das.models.kapre.backend_keras
+   das.models.kapre.filterbank
+   das.models.kapre.time_frequency
+   das.models.kapre.utils

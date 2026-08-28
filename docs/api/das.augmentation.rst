@@ -1,4 +1,4 @@
-﻿das.augmentation
+das.augmentation
 ================
 
 .. automodule:: das.augmentation

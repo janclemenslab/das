@@ -1,4 +1,4 @@
-﻿das.block_stratify
+das.block_stratify
 ==================
 
 .. automodule:: das.block_stratify
