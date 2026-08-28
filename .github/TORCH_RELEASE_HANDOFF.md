@@ -1,53 +1,69 @@
-# DAS PyTorch release handoff
+# DAS PyTorch 0.33.0 pre-publication handoff
 
-## Verified state
+## Current state
 
-- Branch: `das.torch`
-- Prepared commit: `c24686dba90c6ccb324e916f576744acc2f5afa4`
-- GitHub Actions: [all nine jobs passed](https://github.com/janclemenslab/das/actions/runs/33186039342) on Linux, macOS, and Windows with Python 3.12, 3.13, and 3.14.
-- Local checks: 16 tests passed; all 63 notebooks parsed; clean wheel installs succeeded on Python 3.12 and 3.14 with Keras using the Torch backend.
-- The working compatibility policy is one-way: old DAS code, arguments, imports, and TensorFlow-era H5 models must work with the Torch release. New artifacts do not need to work with the TensorFlow release.
+- [`v0.32.13`](https://github.com/janclemenslab/das/releases/tag/v0.32.13) is published as the final TensorFlow-backed release. It removes morphology layers and model tuning.
+- The PyTorch backend was merged by [PR #91](https://github.com/janclemenslab/das/pull/91) into `master` at `7de908e4a41cc2ea715275dfbf2608f15fe8200b`.
+- The final post-merge [3 OS × 3 Python matrix](https://github.com/janclemenslab/das/actions/runs/33196234272) passed on that exact commit.
+- DAS reports version `0.33.0` and requires Python 3.12 or newer.
+- There is no `v0.33.0` tag, PyPI artifact, or GitHub release. PyPI still ends at `0.32.13`.
 
-## Release decisions
+## Verification completed
 
-- `v0.32.13` is the final TensorFlow-backed release on `master`.
-- Recommended first Torch-backed release: `0.33.0` with tag `v0.33.0`.
-- Supported Python versions are 3.12 through 3.14; user documentation defaults to Python 3.14.
-- Keep the strict-first model loading behavior: try strict layer-order loading, warn on failure, then retry with the loose compatibility flags.
-- Morphology layers and automatic model tuning remain removed.
+- A clean archive of the merged commit built `das-0.33.0-py3-none-any.whl` with SHA-256 `af2957591dbe5584f569330eb1e26ad5841c346ebfcfdf6c8114d1a5cb93781e`.
+- Fresh Python 3.12 and 3.14 environments installed that wheel with `uv` and the Torch backend.
+- Both environments passed all 19 tests, including two real TensorFlow-era H5 models, plus `das version`, `das train --help`, `das predict --help`, and a GUI-window smoke test.
+- Python 3.12 passes `uv pip check`.
+- Python 3.14 runs successfully but fails `uv pip check`: `xarray-behave==0.37.4` pins `PySide6-Essentials==6.8.*`, whose metadata excludes Python 3.14.
+- A clean documentation checkout builds HTML, but with 235 warnings. The public site is still a manual legacy Pages deployment from the `gh-pages` branch and was last updated in April 2025.
 
-## Required work before publishing
+## Blockers before publication
 
-1. Start from a fresh checkout and fetch the remote branches. Do not use the local `master` branch blindly: it currently contains the unpushed commit `65ec1c1`.
-2. Open a pull request from `das.torch` into the current remote `master`. The branches diverged at `2969928`; remote `master` has 14 unique commits and `das.torch` has 12. Resolve the integration deliberately rather than replacing or force-pushing `master`.
-3. Preserve the Torch versions of the package code, dependencies, installation documentation, and cross-platform test workflow. Preserve `master`'s deletion of `.github/workflows/publish.yml`: the copy on `das.torch` is an obsolete Conda workflow and must not survive the merge.
-4. Add a short README migration note that `das==0.32.13` remains available for users who need TensorFlow.
-5. Change `src/das/__init__.py` from `0.32.8` to `0.33.0`. Do not tag while it still reports `0.32.8`.
-6. Add concise GitHub release notes covering the Torch backend, Python 3.12 minimum, legacy model/API compatibility, new installation command, and removal of morphology/tuning.
+### GUI dependency and Python 3.14
 
-## Final release gates
+The current DAS metadata promises Python 3.14, but its GUI dependency graph does not. The published `xarray-behave` GUI also still exposes the removed morphology controls. Do not publish this mismatch.
 
-- The merged/version-bumped commit passes the complete 3 OS × 3 Python GitHub Actions matrix.
-- `uv build --wheel` succeeds from a clean checkout and the wheel metadata reports DAS 0.33.0 and `Requires-Python >=3.12`.
-- Fresh environments can install that wheel on Python 3.12 and 3.14 using `uv pip install <wheel> --torch-backend=auto`; run `uv pip check`, `das version`, `das train --help`, and `das predict --help`.
-- `pytest -q` passes from the installed release candidate, including `tests/test_legacy_api.py` and `tests/test_model_loading.py`.
-- Re-run at least one real TensorFlow-era H5 model parity check, not only synthetic fixtures.
-- Build the documentation and confirm that the README, installation page, and Colab notebook use Conda + uv, Python 3.14, and the Torch backend.
+Recommended fix: make a narrow `xarray-behave` compatibility release from its published `0.37.4` commit (`3433f0a99834`), not from current `xarray-behave/master`. Current master expects a `das.gui_app.DASConformerWindow` that DAS does not provide.
 
-## Publish sequence
+The compatibility release should:
 
-1. Merge the reviewed pull request into `master` and wait for the final matrix to pass on the merge commit.
-2. Build and verify the wheel from that exact clean `master` commit.
-3. Create and push the annotated tag:
+1. Remove the obsolete morphology fields from the DAS training form.
+2. Keep PySide 6.8 for Python below 3.14 and use a Python-3.14-compatible PySide release for Python 3.14.
+3. Pass `uv pip check` and GUI train/predict smoke tests on Python 3.12 through 3.14.
+4. Publish as `xarray-behave>=0.37.5`, then require that version from DAS.
 
-   ```shell
-   git tag -a v0.33.0 -m "Release DAS 0.33.0 (PyTorch backend)"
-   git push origin v0.33.0
-   ```
+The smaller alternative is to cap DAS at Python `<3.14` and change the documentation and CI to default to Python 3.13. The morphology form still needs a small `xarray-behave` patch either way.
 
-4. Publish the already-verified artifacts to PyPI with the project owner's credentials. There is currently no valid publishing workflow, so verify the destination and token before running `uv publish`.
-5. Create the GitHub release from `v0.33.0` and attach or reference the same release notes.
-6. In a new Python 3.14 Conda environment, install `das==0.33.0` from PyPI with `--torch-backend=auto` and repeat the CLI smoke checks.
-7. Publish the updated documentation and verify the public installation and Colab pages.
+### Documentation sources and deployment
 
-PyPI versions cannot be overwritten. If upload fails after any artifact is accepted, diagnose first and release a new patch version rather than trying to replace `0.33.0`.
+The first cleanup pass reduces the clean-build warning count from 235 to 46 without changing documentation content:
+
+- Delete the 49 tracked generated files under `docs/jupyter_execute/` (4.4 MB and about 15,000 duplicate lines).
+- Stop tracking generated `docs/api/` stubs; `sphinx.ext.autosummary` recreates them during the build.
+- Delete the unlinked, stale `continue_training.ipynb`, `inspect_dataset.ipynb`, and `tracking/fixing_identities.md` pages.
+- Keep `docs/tutorials/colab.ipynb` as the one Colab source, update its badge, and delete the stale TensorFlow copy at `colab/colab.ipynb`.
+- Track the 25 source GUI images currently hidden by `.gitignore`, fix the three incorrect bird-image names, and add `quickstart_bird.md` to the main toctree.
+- Remove unused Sphinx configuration and invalid toctree entries, then fix the remaining broken links, duplicate figure labels, headings, and augmentation docstring warnings so the build passes with warnings treated as errors.
+
+Replace the manual `ghp-import` push with one GitHub Pages workflow. It should build on pull requests and `master`, but deploy only on a published GitHub release or manual dispatch, using GitHub's official Pages artifact and deployment actions. Switch the repository Pages source from `gh-pages` to GitHub Actions and enable HTTPS. Keep the old branch as history; it does not need to be deleted.
+
+## Ponytail cleanup included in the pre-publication change
+
+- Remove the unused `torchvision` runtime dependency. DAS does not import it.
+- Delete the completed TensorFlow-only `release-test.yml` workflow.
+- Run the main test workflow on pull requests and pushes to `master`, not both for every feature-branch commit; PR #91 unnecessarily ran the same nine jobs twice.
+- Make CI install the built wheel rather than an editable checkout, run `uv pip check`, and include the GUI smoke check.
+- Ignore the now-obsolete root `env/` directory so deleted TensorFlow environment files do not reappear as untracked files.
+
+Do not remove `models_legacy.py`, the legacy import shims, `utils_plot.py`, or the bundled Kapre/TCN code in 0.33.0. They are used by the promised old-model/API compatibility surface or by maintained notebooks. Do not mix a broad 494-finding Ruff modernization into this release.
+
+## Execution plan
+
+1. Release the narrow `xarray-behave` compatibility patch and verify its supported Python matrix.
+2. Open one DAS pre-publication cleanup PR containing the dependency, CI, documentation-source, and Pages-workflow changes above.
+3. Require a zero-warning documentation build and the 3 OS × 3 Python wheel-install matrix on that PR.
+4. Rebuild the exact merged `master` wheel; on fresh Python 3.12 and 3.14 environments run `uv pip check`, all tests, CLI checks, GUI startup, and the real legacy-model parity checks.
+5. Stop for an explicit go/no-go. Do not tag or upload yet.
+6. After approval, create `v0.33.0`, publish the already-verified artifacts to PyPI, create the GitHub release, let that release deploy the Pages artifact, and verify clean PyPI installs plus the public installation and Colab pages.
+
+PyPI versions cannot be overwritten. If an upload is partially accepted, diagnose first and use a new patch version instead of replacing `0.33.0`.
