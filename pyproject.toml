@@ -7,7 +7,7 @@ name = "das"
 authors = [{ name = "Jan Clemens", email = "clemensjan@googlemail.com" }]
 classifiers = ["License :: OSI Approved :: Apache Software License"]
 dynamic = ["version", "description"]
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     'scipy',
     'scikit-learn',
@@ -16,18 +16,15 @@ dependencies = [
     'matplotlib_scalebar',
     'xarray-behave',
     'tqdm',
-    'zarr<3',
-    'numpy==1.26.4 ; platform_system == "Windows"',
-    'tensorflow==2.15.1 ; platform_system == "Darwin"',
-    'tensorflow-metal==1.1.0 ; platform_system == "Darwin"',
-    'tensorflow==2.10.* ; platform_system == "Windows"',
-    'tensorflow==2.13 ; platform_system == "Linux"',
+    'numpy',
+    'keras~=3.0',
+    'torch',
+    'torchvision',
 ]
-
 readme = "README.md"
 
 [project.optional-dependencies]
-dev = ["pytest", "flit"]
+dev = ["pytest", "flit", "ipykernel"]
 
 [project.urls]
 source = "https://github.com/janclemenslab/das"

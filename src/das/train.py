@@ -1,28 +1,18 @@
 """Code for training networks."""
 
+import keras  # need to import this first to avoid segmentation fault
 import time
 import logging
 import flammkuchen as fl
 import numpy as np
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
-from tensorflow import keras
+from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 import os
 import yaml
 import dask.array as da
-from typing import List, Optional, Tuple, Dict, Any, Union
-from . import data, models, utils, predict, io, evaluate, tracking, data_hash, augmentation, postprocessing  # , timeseries
+from typing import List, Optional, Tuple, Dict, Any
+from . import models, utils, predict, io, evaluate, tracking, augmentation, postprocessing  # , timeseries
 
 logger = logging.getLogger(__name__)
-
-try:  # fixes cuDNN error when using LSTM layer
-    import tensorflow as tf
-
-    physical_devices = tf.config.list_physical_devices("GPU")
-    if physical_devices:
-        for device in physical_devices:
-            tf.config.experimental.set_memory_growth(device, enable=True)
-except Exception as e:
-    logger.exception(e)
 
 
 def train(
@@ -207,11 +197,6 @@ def train(
         post_opt_min_len_max (float): Defaults to 1 second.
         post_opt_min_len_steps (int): Defaults to 20.
 
-        resnet_compute (bool): Defaults to False.
-        resnet_train (bool): Defaults to False.
-
-        tmse_weight (float): Defaults to 0.0.
-
     Returns:
         model (keras.Model)
         params (Dict[str, Any])
@@ -227,13 +212,13 @@ def train(
         dilations = [1, 2, 4, 8, 16]
 
     # FIXME THIS IS NOT GREAT:
-    sample_weight_mode = None
+    # sample_weight_mode = None
     data_padding = 0
     if with_y_hist:  # regression
         return_sequences = True
         stride = nb_hist
         y_offset = 0
-        sample_weight_mode = "temporal"
+        # sample_weight_mode = "temporal"
         if ignore_boundaries:
             data_padding = int(
                 np.ceil(kernel_size * nb_conv)
@@ -283,7 +268,7 @@ def train(
 
     if version_data:
         logger.info("Versioning the data:")
-        params["data_hash"] = data_hash.hash_data(data_dir)
+        params["data_hash"] = io.data_hash.hash_data(data_dir)
         logger.info(f"   MD5 hash of {data_dir} is")
         logger.info(f"   {params['data_hash']}")
 
@@ -307,10 +292,8 @@ def train(
         fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0
     ):  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = data.sub_range(
-            d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed
-        )
-        first_sample_val, last_sample_val = data.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_train, last_sample_train = io.sub_range(d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
+        first_sample_val, last_sample_val = io.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
     elif sample_bounds_provided:
         logger.info("Using provided start/end samples:")
         logger.info(f"Train: {first_sample_train}:{last_sample_train}, Val: {first_sample_val}:{last_sample_val}.")
@@ -353,10 +336,10 @@ def train(
     if balance:
         logger.info("Balancing classes:")
         logger.info("   Computing class weights.")
-        params["class_weights"] = data.compute_class_weights(d["train"]["y"][first_sample_train:last_sample_train])
+        params["class_weights"] = io.compute_class_weights(d["train"]["y"][first_sample_train:last_sample_train])
         logger.info(f"   {params['class_weights']}")
 
-    data_gen = data.AudioSequence(
+    data_gen = io.AudioSequence(
         d["train"]["x"],
         d["train"]["y"],
         shuffle=True,
@@ -367,7 +350,7 @@ def train(
         batch_processor=augs,
         **params,
     )
-    val_gen = data.AudioSequence(
+    val_gen = io.AudioSequence(
         d["val"]["x"],
         d["val"]["y"],
         shuffle=False,
@@ -406,7 +389,7 @@ def train(
     logger.info(f"Will save to {save_name}.")
 
     # SET UP CALLBACKS
-    checkpoint_save_name = save_name + "_model.h5"  # this will overwrite intermediates from previous epochs
+    checkpoint_save_name = save_name + "_model.keras"
     callbacks = [
         ModelCheckpoint(checkpoint_save_name, save_best_only=True, save_weights_only=False, monitor="val_loss", verbose=1),
         EarlyStopping(monitor="val_loss", patience=20, verbose=1),
@@ -443,7 +426,7 @@ def train(
         callbacks=callbacks,
     )
 
-    tf.keras.backend.clear_session()
+    keras.backend.clear_session()
 
     # OPTIMIZE POSTPROCESSING
     if post_opt:

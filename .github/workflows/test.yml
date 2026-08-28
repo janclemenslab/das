@@ -1,54 +1,49 @@
 name: Test install
 
 on:
+  push:
+  pull_request:
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'manual run'
 
 jobs:
   test:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        python-version: [3.13]
-    defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.12", "3.13", "3.14"]
+
+    defaults:
       run:
-        shell: bash -l {0}
-    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+        shell: bash -el {0}
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: conda-incubator/setup-miniconda@v4
+      - uses: actions/checkout@v7
+
+      - name: Create Conda environment
+        uses: conda-incubator/setup-miniconda@v4
         with:
-          conda-version: "26.5.3"
-          auto-update-conda: false
-          auto-activate: true
-          activate-environment: ""
-          channels: conda-forge,nvidia
-      - name: Install DAS (windows)
-        if: runner.os == 'Windows'
+          activate-environment: das
+          channels: conda-forge
+          conda-remove-defaults: true
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: conda install -c conda-forge ffmpeg uv -y
+
+      - name: Install DAS
+        run: uv pip install -e ".[dev]" --torch-backend=auto
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Test command line
         run: |
-          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_win.yaml
-      - name: Install DAS (linux)
-        if: runner.os == 'Linux'
-        run: |
-          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_linux.yaml
-      - name: Install DAS (macOS)
-        if: runner.os == 'macos'
-        run: |
-          conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
-      - name: Test cli
-        run: |
-          conda activate das
           das version
           das train --help
           das predict --help
-          das gui --help

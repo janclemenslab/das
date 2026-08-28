@@ -1,4 +1,4 @@
-﻿das.evaluate
+das.evaluate
 ============
 
 .. automodule:: das.evaluate
