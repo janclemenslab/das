@@ -6,4 +6,4 @@ dependencies:
   - pip
   - ffmpeg==6
   - pip:
-    - das==0.32.12
+    - das==0.32.13

@@ -8,7 +8,7 @@ _Libsoundfile (Linux only)_: If you are on Linux and want to load audio from a w
 
 ## Install _DAS_
 
-Version 0.32.12 is the final TensorFlow-backed release. The environment files below are pinned to that release so these instructions remain reproducible after _DAS_ switches to PyTorch.
+Version 0.32.13 is the final TensorFlow-backed release. The environment files below are pinned to that release so these instructions remain reproducible after _DAS_ switches to PyTorch.
 
 <!-- Create an anaconda environment called `das` that contains all the required packages.
 
@@ -24,17 +24,17 @@ conda create python=3.11 das=0.32.5 -c conda-forge -c ncb -c nvidia -c apple -n 
 
 ### Windows
 ```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.12/env/das_win.yaml
+conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.13/env/das_win.yaml
 ```
 
 ### Mac (M1 and later)
 ```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.12/env/das_mac.yaml
+conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.13/env/das_mac.yaml
 ```
 
 ### Linux
 ```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.12/env/das_linux.yaml
+conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/v0.32.13/env/das_linux.yaml
 ```
 
 
