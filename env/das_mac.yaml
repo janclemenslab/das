@@ -1,9 +1,0 @@
-name: das_torch
-channels:
-  - conda-forge
-dependencies:
-  - python=3.13
-  - pip
-  - ffmpeg
-  - pip:
-    - das

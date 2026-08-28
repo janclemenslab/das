@@ -48,3 +48,17 @@ def test_audio_sequence_shapes():
     assert batch_y.shape == (2, 2)
     assert batch_x.dtype == np.float32
     assert batch_y.dtype == np.float32
+
+
+def test_legacy_npy_dir_api(tmp_path):
+    from das import npy_dir
+
+    data = npy_dir.DictClass({"train": {"x": np.arange(6)}})
+    data.attrs = {"samplerate_x_Hz": 10_000}
+    path = tmp_path / "legacy.npy"
+
+    npy_dir.save(path, data)
+    loaded = npy_dir.load(path)
+
+    np.testing.assert_array_equal(loaded["train"]["x"], data["train"]["x"])
+    assert loaded.attrs == data.attrs

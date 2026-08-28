@@ -6,7 +6,46 @@ import numpy as np
 import yaml
 import h5py
 import scipy.signal
-from typing import Dict, Any, List, Optional
+from typing import Callable, Dict, Any, List, Optional, Tuple
+
+
+def load_model(
+    file_trunk: str,
+    model_dict: Dict[str, Callable],
+    model_ext: str = "_model.h5",
+    params_ext: str = "_params.yaml",
+    compile: bool = True,
+    custom_objects: Optional[Dict[str, Callable]] = None,
+):
+    """Backward-compatible alias for :func:`das.models.load_model`."""
+    from .models.loading import load_model as _load_model
+
+    return _load_model(file_trunk, model_dict, model_ext, params_ext, compile, custom_objects)
+
+
+def load_model_from_params(
+    file_trunk: str,
+    model_dict: Dict[str, Callable],
+    weights_ext: str = "_model.h5",
+    params_ext: str = "_params.yaml",
+    compile: bool = True,
+):
+    """Backward-compatible alias for :func:`das.models.load_model_from_params`."""
+    from .models.loading import load_model_from_params as _load_model_from_params
+
+    return _load_model_from_params(file_trunk, model_dict, weights_ext, params_ext, compile)
+
+
+def load_model_and_params(model_save_name, model_dict=None, custom_objects=None) -> Tuple[keras.Model, Dict[str, Any]]:
+    """Backward-compatible alias for :func:`das.models.load_model_and_params`."""
+    from .models import model_dict as default_model_dict
+    from .models.loading import load_model_and_params as _load_model_and_params
+
+    return _load_model_and_params(
+        model_save_name,
+        model_dict=default_model_dict if model_dict is None else model_dict,
+        custom_objects=custom_objects,
+    )
 
 
 def save_params(params: Dict[str, Any], file_trunk: str, params_ext: str = "_params.yaml"):

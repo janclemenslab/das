@@ -32,10 +32,17 @@ def channel_normalization(x):
 
 
 @keras.saving.register_keras_serializable()
+def wave_net_activation(x: Layer) -> Layer:
+    """Apply the gated activation used by WaveNet."""
+    return keras.layers.multiply([Activation("tanh")(x), Activation("sigmoid")(x)])
+
+
+@keras.saving.register_keras_serializable()
 def residual_block(
     x: Layer,
     s: int,
     i: int,
+    activation: str,
     nb_filters: int,
     kernel_size: int,
     padding: str = "causal",
@@ -70,8 +77,13 @@ def residual_block(
     else:
         conv = Conv1D(filters=nb_filters, kernel_size=kernel_size, dilation_rate=i, padding=padding)(x)
 
-    x = Activation("relu")(conv)
-    x = Lambda(channel_normalization)(x)
+    if activation == "norm_relu":
+        x = Activation("relu")(conv)
+        x = Lambda(channel_normalization)(x)
+    elif activation == "wavenet":
+        x = wave_net_activation(conv)
+    else:
+        x = Activation(activation)(conv)
 
     x = SpatialDropout1D(dropout_rate)(x)
 
@@ -124,12 +136,13 @@ class TCN:
         dropout_rate=0.0,
         return_sequences=True,
         name="tcn",
-        activation=None,
+        activation="norm_relu",
     ):
         self.name = name
         self.return_sequences = return_sequences
         self.dropout_rate = dropout_rate
         self.use_skip_connections = use_skip_connections
+        self.activation = activation
 
         try:
             len(use_separable)
@@ -158,6 +171,7 @@ class TCN:
                     x,
                     s,
                     i,
+                    self.activation,
                     self.nb_filters,
                     self.kernel_size,
                     self.padding,

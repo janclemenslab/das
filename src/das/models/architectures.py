@@ -2,9 +2,12 @@
 
 import keras as keras
 import keras.layers as kl
+from keras import regularizers
+from keras.applications.resnet_v2 import ResNet50V2
 from typing import List, Optional
 from . import tcn as tcn_layer
 from .kapre.time_frequency import Spectrogram
+from ..loss import TMSE, WeightedLoss
 
 model_dict = dict()
 
@@ -31,17 +34,20 @@ def tcn_stft(
     nb_conv: int = 1,
     loss: str = "categorical_crossentropy",
     dilations: Optional[List[int]] = None,
-    activation: str = "relu",
+    activation: str = "norm_relu",
     use_skip_connections: bool = True,
     return_sequences: bool = True,
     dropout_rate: float = 0.00,
     padding: str = "same",
+    sample_weight_mode: Optional[str] = None,
     nb_pre_conv: int = 0,
     pre_nb_dft: int = 64,
     nb_lstm_units: int = 0,
     learning_rate: float = 0.0005,
     upsample: bool = True,
     use_separable: bool = False,
+    use_resnet: bool = False,
+    tmse_weight: float = 0.0,
     compile: bool = True,
     **kwignored,
 ):
@@ -94,7 +100,15 @@ def tcn_stft(
             name="trainable_stft",
             image_data_format="channels_last",
         )(out)
+        if not use_resnet:
+            out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
+
+    if use_resnet:
+        out = kl.Activation("relu")(out)
+        out = kl.Concatenate(axis=-1)([out, out, out])
+        out = ResNet50V2(input_shape=out.shape[1:], weights="imagenet", include_top=False)(out)
         out = kl.Reshape((out.shape[1], out.shape[2] * out.shape[3]))(out)
+        out = kl.BatchNormalization()(out)
 
     x = tcn_layer.TCN(
         nb_filters=nb_filters,
@@ -121,7 +135,61 @@ def tcn_stft(
 
     model = keras.models.Model(input_layer, output_layer, name="TCN")
 
+    if use_resnet:
+        model.get_layer(name="trainable_stft").trainable = False
+        model.get_layer(name="resnet50v2").trainable = False
+
+    if tmse_weight > 0:
+        loss = WeightedLoss(
+            [keras.losses.categorical_crossentropy, TMSE(32)],
+            [1.0, tmse_weight],
+        )
+
     if compile:
         optimizer = keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.0)
         model.compile(optimizer=optimizer, loss=loss)
+    return model
+
+
+@_register_as_model
+def stft_res_dense(
+    nb_freq: int,
+    nb_classes: int,
+    nb_hist: int = 1,
+    sample_weight_mode: Optional[str] = None,
+    learning_rate: float = 0.0005,
+    compile: bool = True,
+    stft_compute: bool = False,
+    resnet_compute: bool = False,
+    resnet_train: bool = False,
+    label_smoothing: float = 0,
+    **kwignored,
+):
+    """Build the dense or optional ResNet architecture from TensorFlow-backed DAS."""
+    del sample_weight_mode, stft_compute, kwignored
+    input_layer = kl.Input(shape=(nb_hist, nb_freq))
+    out = input_layer
+
+    if resnet_compute:
+        out = keras.ops.stack((out, out, out), axis=-1)
+        out = ResNet50V2(input_shape=out.shape[1:], weights="imagenet", include_top=False)(out)
+        out = kl.BatchNormalization()(out)
+        out = kl.TimeDistributed(
+            kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))
+        )(out)
+
+    if len(out.shape) > 1:
+        out = kl.Flatten()(out)
+    out = kl.Dense(min(32, 4 * nb_classes), activation="tanh", kernel_regularizer=regularizers.L1(1e-4))(out)
+    out = kl.Dense(2 * nb_classes, activation="tanh", kernel_regularizer=regularizers.L1(1e-4))(out)
+    output_layer = kl.Dense(nb_classes, activation="softmax")(out)
+    model = keras.Model(input_layer, output_layer, name="RES")
+
+    if resnet_compute and not resnet_train:
+        model.get_layer("resnet50v2").trainable = False
+    if compile:
+        model.compile(
+            optimizer=keras.optimizers.Adam(learning_rate=learning_rate, clipnorm=1.0),
+            loss=keras.losses.CategoricalCrossentropy(label_smoothing=label_smoothing),
+        )
     return model

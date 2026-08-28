@@ -3,9 +3,6 @@ import logging
 import platform
 from . import train, predict, evaluate
 
-# from . import train_tune
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -40,8 +37,7 @@ def version():
     except (ImportError, ModuleNotFoundError):
         has_gui = False
 
-    # gpu = len(tf.config.list_physical_devices("GPU")) > 0
-    gpu = None
+    gpu = torch.cuda.is_available() or (hasattr(torch.backends, "mps") and torch.backends.mps.is_available())
 
     logger.info(f"  {platform.platform()}")
     logger.info(f"  DAS v{das.__version__}")
@@ -58,7 +54,7 @@ def version():
         logger.info(f"  keras v{keras.__version__}")
     else:
         logger.info(f"  keras v{keras.__version__}")
-    logger.info(f"     GPU is {'' if gpu else 'not'} available.")
+    logger.info(f"     GPU is {'available' if gpu else 'not available'}.")
     logger.info("")
     logger.info(f"  python v{sys.version}")
     logger.info(f"  pandas v{pd.__version__}")

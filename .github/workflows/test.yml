@@ -1,72 +1,49 @@
 name: Test install
 
 on:
+  push:
+  pull_request:
   schedule:
     - cron: "0 0 * * 0"
   workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-      tags:
-        description: 'manual run'
 
 jobs:
   test:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        python-version: [3.7, 3.8, 3.9]
-        exclude:
-          - os: macos-latest
-            python-version: 3.7
-          - os: windows-latest
-            python-version: 3.7
-    defaults:  # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.12", "3.13", "3.14"]
+
+    defaults:
       run:
-        shell: bash -l {0}
-    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+        shell: bash -el {0}
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup miniconda # https://github.com/marketplace/actions/setup-miniconda
-        uses: conda-incubator/setup-miniconda@v2.2.0
+      - uses: actions/checkout@v7
+
+      - name: Create Conda environment
+        uses: conda-incubator/setup-miniconda@v4
         with:
-          auto-update-conda: true
-          miniforge-variant: Mambaforge
-          channels: conda-forge,ncb,anaconda,defaults
+          activate-environment: das
+          channels: conda-forge
+          conda-remove-defaults: true
           python-version: ${{ matrix.python-version }}
-          mamba-version: "*"
-          auto-activate-base: false
-          # activate-environment: anaconda-client-env
-          # environment-file: build_env.yml
-          # condarc-file: condarc.yml
-          use-mamba: true
-          use-only-tar-bz2: true  # IMPORTANT: This needs to be set for caching to work properly!
-      - name: 'Workaround for mamba-org/mamba#488 (Linux)'
-        shell: bash -l {0}
-        if: runner.os == 'Linux'
-        run: rm /usr/share/miniconda/pkgs/cache/*.json
+
+      - name: Install system dependencies
+        run: conda install -c conda-forge ffmpeg uv -y
+
       - name: Install DAS
-        run: |
-          mamba create das python=${{ matrix.python-version }} -n das -c conda-forge -c ncb -c anaconda -c nvidia -y
-          mamba install pytest -n das -y
-      - name: Install libsndfile and gcc (Linux only)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get install libsndfile1
-          mamba install gcc=12.1.0 -n das -y
+        run: uv pip install -e ".[dev]" --torch-backend=auto
+
       - name: Run tests
+        run: pytest -q
+
+      - name: Test command line
         run: |
-          conda activate das
-          pytest
-      - name: Test cli
-        run: |
-          conda activate das
           das version
           das train --help
-          das tune --help
           das predict --help
-          das gui --help

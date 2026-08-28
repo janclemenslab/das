@@ -2,45 +2,33 @@
 
 ## Pre-requisites
 
-_Anaconda python_: Install the [anaconda python distribution](https://docs.anaconda.com/anaconda/install/) (or [miniconda](https://docs.conda.io/en/latest/miniconda.html)). If you have conda already installed, make sure you have at least conda v23.10.0. If not, update from an older version with `conda update conda -n base`.
+Install [Miniforge](https://github.com/conda-forge/miniforge) or another Conda distribution.
 
-_Libsoundfile (Linux only)_: If you are on Linux and want to load audio from a wide range of audio formats (other than `wav`), then you need to install `libsndfile`. The GUI uses the [soundfile](http://pysoundfile.readthedocs.io/) python package, which relies on `libsndfile`. `libsndfile` will be automatically installed on Windows and macOS. On Linux, the library needs to be installed manually with: `sudo apt-get install libsndfile1`. Again, this is only required if you work with more exotic audio files.
+## Install DAS
 
-## Install _DAS_
-<!-- Create an anaconda environment called `das` that contains all the required packages.
+Create and activate an isolated environment. Conda provides Python, FFmpeg, and `uv`; `uv` installs DAS and its Python dependencies.
 
-On windows:
 ```shell
-conda create python=3.10 das=0.32.5 -c conda-forge -c ncb -c nvidia -n das -y
+conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
+conda activate das
+uv pip install das --torch-backend=auto
 ```
 
-On Linux or MacOS (arm only):
-```shell
-conda create python=3.11 das=0.32.5 -c conda-forge -c ncb -c nvidia -c apple -n das -y
-``` -->
+`--torch-backend=auto` selects a suitable PyTorch build for the available hardware. To request a specific build instead, replace `auto` with one of these backends:
 
-### Windows
 ```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_win.yaml
+uv pip install das --torch-backend=cpu       # CPU only
+uv pip install das --torch-backend=cu130     # NVIDIA CUDA 13.0
+uv pip install das --torch-backend=rocm7.2   # AMD ROCm 7.2 on Linux
+uv pip install das --torch-backend=xpu       # Intel GPU
 ```
 
-### Mac (M1 and later)
+Available accelerator builds depend on the operating system and hardware. On macOS, the standard PyTorch build supports Apple Metal acceleration.
+
+## Verify the installation
 ```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_mac.yaml
-```
-
-### Linux
-```shell
-conda env create -n das -y -f https://raw.githubusercontent.com/janclemenslab/das/refs/heads/master/env/das_linux.yaml
-```
-
-
-
-
-## Open the graphical user interface
-```shell
-conda activate das  # activate the conda environment
-das gui  # start the DAS GUI
+das version
+das gui
 ```
 
 ## Next steps

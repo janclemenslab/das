@@ -90,17 +90,18 @@ class Spectrogram(Layer):
         self.n_frame = conv_output_length(self.len_src, self.n_dft, self.padding, self.n_hop)
 
         dft_real_kernels, dft_imag_kernels = backend.get_stft_kernels(self.n_dft)
-        # self.dft_real_kernels = keras.ops.variable(dft_real_kernels, dtype="float32", name="real_kernels")
-        # self.dft_imag_kernels = keras.ops.variable(dft_imag_kernels, dtype="float32", name="imag_kernels")
-        self.dft_real_kernels = dft_real_kernels  # keras.ops.variable(dft_real_kernels, dtype="float32", name="real_kernels")
-        self.dft_imag_kernels = dft_imag_kernels  # keras.ops.variable(dft_imag_kernels, dtype="float32", name="imag_kernels")
-        # kernels shapes: (filter_length, 1, input_dim, nb_filter)?
-        if self.trainable_kernel:
-            self.trainable_weights.append(self.dft_real_kernels)
-            self.trainable_weights.append(self.dft_imag_kernels)
-        else:
-            self.non_trainable_weights.append(self.dft_real_kernels)
-            self.non_trainable_weights.append(self.dft_imag_kernels)
+        self.dft_real_kernels = self.add_weight(
+            name="real_kernels",
+            shape=dft_real_kernels.shape,
+            initializer=keras.initializers.Constant(dft_real_kernels),
+            trainable=self.trainable_kernel,
+        )
+        self.dft_imag_kernels = self.add_weight(
+            name="imag_kernels",
+            shape=dft_imag_kernels.shape,
+            initializer=keras.initializers.Constant(dft_imag_kernels),
+            trainable=self.trainable_kernel,
+        )
 
         super(Spectrogram, self).build(input_shape)
         # self.built = True
@@ -267,20 +268,17 @@ class Melspectrogram(Spectrogram):
         self.norm = norm
 
     def build(self, input_shape):
-        super(Melspectrogram, self).build(input_shape)
-        self.built = False
-        # compute freq2mel matrix -->
         mel_basis = backend.mel(
             self.sr, self.n_dft, self.n_mels, self.fmin, self.fmax, self.htk, self.norm
         )  # (128, 1025) (mel_bin, n_freq)
-        mel_basis = np.transpose(mel_basis)
-
-        self.freq2mel = mel_basis.astype("float32")
-        if self.trainable_fb:
-            self.trainable_weights.append(self.freq2mel)
-        else:
-            self.non_trainable_weights.append(self.freq2mel)
-        self.built = True
+        mel_basis = np.transpose(mel_basis).astype("float32")
+        self.freq2mel = self.add_weight(
+            name="freq2mel",
+            shape=mel_basis.shape,
+            initializer=keras.initializers.Constant(mel_basis),
+            trainable=self.trainable_fb,
+        )
+        super(Melspectrogram, self).build(input_shape)
 
     def compute_output_shape(self, input_shape):
         if self.image_data_format == "channels_first":

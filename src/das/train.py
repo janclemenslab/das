@@ -72,6 +72,9 @@ def train(
     post_opt_min_len_min: float = 0.0005,
     post_opt_min_len_max: float = 1.0,
     post_opt_min_len_steps: int = 20,
+    resnet_compute: bool = False,
+    resnet_train: bool = False,
+    tmse_weight: float = 0.0,
     _qt_progress: bool = False,
 ) -> Tuple[keras.Model, Dict[str, Any], keras.callbacks.History]:
     """Train a DAS network.
@@ -289,9 +292,7 @@ def train(
         fraction_data is not None and not batch_level_subsampling and not sample_bounds_provided and fraction_data != 1.0
     ):  # train on a subset
         min_nb_samples = nb_hist * (batch_size + 2)  # ensure the generator contains at least one full batch
-        first_sample_train, last_sample_train = io.sub_range(
-            d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed
-        )
+        first_sample_train, last_sample_train = io.sub_range(d["train"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
         first_sample_val, last_sample_val = io.sub_range(d["val"]["x"].shape[0], fraction_data, min_nb_samples, seed=seed)
     elif sample_bounds_provided:
         logger.info("Using provided start/end samples:")

@@ -3,8 +3,8 @@ Welcome to *DAS*
 ================
 
 *DAS* — short for *Deep Audio Segmenter* — is a tool for annotating song
-in audio recordings. At the core of *DAS* is a deep neural network,
-implemented in Tensorflow. The network takes single- and multi-channel
+in audio recordings. At the core of *DAS* is a PyTorch-backed deep neural network.
+The network takes single- and multi-channel
 audio as an input and returns the probability of finding a particular
 song type for each audio sample. *DAS* can be used with a graphical user
 interface for loading audio data, annotating song manually, training a
