@@ -2,68 +2,43 @@
 
 ## Current state
 
-- [`v0.32.13`](https://github.com/janclemenslab/das/releases/tag/v0.32.13) is published as the final TensorFlow-backed release. It removes morphology layers and model tuning.
-- The PyTorch backend was merged by [PR #91](https://github.com/janclemenslab/das/pull/91) into `master` at `7de908e4a41cc2ea715275dfbf2608f15fe8200b`.
-- The final post-merge [3 OS × 3 Python matrix](https://github.com/janclemenslab/das/actions/runs/33196234272) passed on that exact commit.
-- DAS reports version `0.33.0` and requires Python 3.12 or newer.
-- There is no `v0.33.0` tag, PyPI artifact, or GitHub release. PyPI still ends at `0.32.13`.
+- [`v0.32.13`](https://github.com/janclemenslab/das/releases/tag/v0.32.13) is the published final TensorFlow-backed release. It removes morphology layers and model tuning.
+- The PyTorch backend was merged by [PR #91](https://github.com/janclemenslab/das/pull/91) into `master` at `7de908e4a41cc2ea715275dfbf2608f15fe8200b` and its 3 OS × 3 Python matrix passed.
+- The pre-publication cleanup is staged on `codex/torch-prepublish-cleanup` but is not pushed or merged yet.
+- [`xarray-behave==0.37.5`](https://pypi.org/project/xarray-behave/0.37.5/) was published from [`8302c79`](https://github.com/janclemenslab/xarray-behave/commit/8302c79) and tagged `v0.37.5`. It is intentionally based on the published 0.37.4 commit, because current `xarray-behave/master` expects a `das.gui_app.DASConformerWindow` that DAS does not provide.
+- `das==0.33.0` has not been tagged or published.
 
-## Verification completed
+## Verified locally
 
-- A clean archive of the merged commit built `das-0.33.0-py3-none-any.whl` with SHA-256 `af2957591dbe5584f569330eb1e26ad5841c346ebfcfdf6c8114d1a5cb93781e`.
-- Fresh Python 3.12 and 3.14 environments installed that wheel with `uv` and the Torch backend.
-- Both environments passed all 19 tests, including two real TensorFlow-era H5 models, plus `das version`, `das train --help`, `das predict --help`, and a GUI-window smoke test.
-- Python 3.12 passes `uv pip check`.
-- Python 3.14 runs successfully but fails `uv pip check`: `xarray-behave==0.37.4` pins `PySide6-Essentials==6.8.*`, whose metadata excludes Python 3.14.
-- A clean documentation checkout builds HTML, but with 235 warnings. The public site is still a manual legacy Pages deployment from the `gh-pages` branch and was last updated in April 2025.
+- The `xarray-behave==0.37.5` wheel requires `PySide6-Essentials==6.10.*` and contains no morphology training fields.
+- Fresh Python 3.12 and 3.14 environments install `xarray-behave==0.37.5` from PyPI with PySide 6.10.3, pass `uv pip check`, import the GUI, and pass the three tests used by its release workflow. The repository's full suite additionally has 9 assembly-test failures because its fixture data is not present; 13 other tests pass.
+- Published SHA-256 hashes: wheel `450c24bdec77477de6073e043fb7bcd89c4e4afcdfbd1f7308afbfe714bf57ec`; sdist `ceca3037ba98304d738179c6943adcdf3e5d709a69f15f35b24ca3eb52819902`.
+- A DAS 0.33.0 wheel built from the cleanup branch requires `xarray-behave>=0.37.5` and no longer requires `torchvision`.
+- With the local `xarray-behave==0.37.5` wheel, fresh Python 3.12 and 3.14 environments both pass `uv pip check`, all 19 DAS tests, CLI checks, and a real GUI-window smoke test.
+- A clean documentation archive builds successfully with 47 warnings, down from 235. Warning cleanup is deferred.
 
-## Blockers before publication
+## Cleanup included
 
-### GUI dependency and Python 3.14
+- Remove the unused `torchvision` dependency and obsolete TensorFlow release workflow.
+- Avoid duplicate feature-branch CI runs, install the built wheel in CI, run `uv pip check`, and smoke-test GUI availability.
+- Delete tracked generated Sphinx output and API stubs, three stale orphan pages, and the duplicate TensorFlow Colab notebook.
+- Track the documentation's source images, repair the three missing bird-image references, and include the bird quickstart in the main navigation.
+- Replace manual `gh-pages` pushes with a GitHub Pages workflow. Pull requests and `master` build without deploying; published releases and manual runs deploy.
+- Ignore the obsolete root `env/` directory.
 
-The current DAS metadata promises Python 3.14, but its GUI dependency graph does not. The published `xarray-behave` GUI also still exposes the removed morphology controls. Do not publish this mismatch.
+## Next steps
 
-Recommended fix: make a narrow `xarray-behave` compatibility release from its published `0.37.4` commit (`3433f0a99834`), not from current `xarray-behave/master`. Current master expects a `das.gui_app.DASConformerWindow` that DAS does not provide.
+1. Push the DAS cleanup branch and open a PR. Require the 3 OS × 3 Python wheel-install matrix and documentation build to pass.
+2. Merge the cleanup PR only when green. Then switch GitHub Pages from the legacy `gh-pages` source to GitHub Actions and enable HTTPS; keep the old branch as history.
+3. Build the exact merged DAS wheel and repeat dependency, test, CLI, GUI, and legacy-model checks on fresh Python 3.12 and 3.14 environments.
+4. Stop for an explicit DAS 0.33.0 go/no-go. Do not tag or upload before approval.
+5. On approval, publish the already-verified DAS artifacts, create the GitHub release, allow that release to deploy the documentation, and verify PyPI and public documentation installs.
 
-The compatibility release should:
+PyPI versions cannot be overwritten. If an upload is partially accepted, diagnose first and use a new patch version instead of replacing an existing version.
 
-1. Remove the obsolete morphology fields from the DAS training form.
-2. Keep PySide 6.8 for Python below 3.14 and use a Python-3.14-compatible PySide release for Python 3.14.
-3. Pass `uv pip check` and GUI train/predict smoke tests on Python 3.12 through 3.14.
-4. Publish as `xarray-behave>=0.37.5`, then require that version from DAS.
+## Deferred to round two
 
-The smaller alternative is to cap DAS at Python `<3.14` and change the documentation and CI to default to Python 3.13. The morphology form still needs a small `xarray-behave` patch either way.
+- Fix the remaining 47 Sphinx warnings and then enforce warnings as errors.
+- Apply the broad Ruff modernization separately; do not mix its 494 findings into the release.
 
-### Documentation sources and deployment
-
-The first cleanup pass reduces the clean-build warning count from 235 to 46 without changing documentation content:
-
-- Delete the 49 tracked generated files under `docs/jupyter_execute/` (4.4 MB and about 15,000 duplicate lines).
-- Stop tracking generated `docs/api/` stubs; `sphinx.ext.autosummary` recreates them during the build.
-- Delete the unlinked, stale `continue_training.ipynb`, `inspect_dataset.ipynb`, and `tracking/fixing_identities.md` pages.
-- Keep `docs/tutorials/colab.ipynb` as the one Colab source, update its badge, and delete the stale TensorFlow copy at `colab/colab.ipynb`.
-- Track the 25 source GUI images currently hidden by `.gitignore`, fix the three incorrect bird-image names, and add `quickstart_bird.md` to the main toctree.
-- Remove unused Sphinx configuration and invalid toctree entries, then fix the remaining broken links, duplicate figure labels, headings, and augmentation docstring warnings so the build passes with warnings treated as errors.
-
-Replace the manual `ghp-import` push with one GitHub Pages workflow. It should build on pull requests and `master`, but deploy only on a published GitHub release or manual dispatch, using GitHub's official Pages artifact and deployment actions. Switch the repository Pages source from `gh-pages` to GitHub Actions and enable HTTPS. Keep the old branch as history; it does not need to be deleted.
-
-## Ponytail cleanup included in the pre-publication change
-
-- Remove the unused `torchvision` runtime dependency. DAS does not import it.
-- Delete the completed TensorFlow-only `release-test.yml` workflow.
-- Run the main test workflow on pull requests and pushes to `master`, not both for every feature-branch commit; PR #91 unnecessarily ran the same nine jobs twice.
-- Make CI install the built wheel rather than an editable checkout, run `uv pip check`, and include the GUI smoke check.
-- Ignore the now-obsolete root `env/` directory so deleted TensorFlow environment files do not reappear as untracked files.
-
-Do not remove `models_legacy.py`, the legacy import shims, `utils_plot.py`, or the bundled Kapre/TCN code in 0.33.0. They are used by the promised old-model/API compatibility surface or by maintained notebooks. Do not mix a broad 494-finding Ruff modernization into this release.
-
-## Execution plan
-
-1. Release the narrow `xarray-behave` compatibility patch and verify its supported Python matrix.
-2. Open one DAS pre-publication cleanup PR containing the dependency, CI, documentation-source, and Pages-workflow changes above.
-3. Require a zero-warning documentation build and the 3 OS × 3 Python wheel-install matrix on that PR.
-4. Rebuild the exact merged `master` wheel; on fresh Python 3.12 and 3.14 environments run `uv pip check`, all tests, CLI checks, GUI startup, and the real legacy-model parity checks.
-5. Stop for an explicit go/no-go. Do not tag or upload yet.
-6. After approval, create `v0.33.0`, publish the already-verified artifacts to PyPI, create the GitHub release, let that release deploy the Pages artifact, and verify clean PyPI installs plus the public installation and Colab pages.
-
-PyPI versions cannot be overwritten. If an upload is partially accepted, diagnose first and use a new patch version instead of replacing `0.33.0`.
+Keep `models_legacy.py`, the legacy import shims, `utils_plot.py`, and bundled Kapre/TCN compatibility code. They support the promised old-model/API surface or maintained notebooks.

@@ -19,7 +19,6 @@ and options to:
    :maxdepth: 1
    :hidden:
 
-   :toctree: GUI
    load
    annotate
    train

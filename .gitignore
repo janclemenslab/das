@@ -124,10 +124,8 @@ fig*
 !/src/
 !/docs/
 !/tests/
-!/env/
 !/*.toml
 !/.github
-!/colab
 !/conda
 src/*.egg-info/
 # ignore binaries and data files in docs
@@ -138,7 +136,8 @@ docs/**/*.yaml
 docs/**/*.yml
 docs/**/*.wav
 docs/**/*.csv
-docs/images
+docs/api/
+docs/jupyter_execute/
 docs/tutorials/res
 docs/_*
 

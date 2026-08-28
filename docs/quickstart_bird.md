@@ -50,7 +50,7 @@ To navigate the view: Move forward/backward along the time axis via the `A`/`D` 
 You can play back the waveform on display through your headphones/speakers by pressing `E`.
 
 :::{figure-md} xb_display-fig
-<img src="images/xb_quick_bird_view.png" alt="waveform and spectrogram display" width="100%">
+<img src="images/xb_quick_view.png" alt="waveform and spectrogram display" width="100%">
 
 Waveform (top) and spectrogram (bottom) display of fly song.
 :::
@@ -74,7 +74,7 @@ The six syllables can now be activated for annotation using the dropdown menu on
 Song is annotated by left-clicking the waveform or spectrogram view.Annotating a syllable requires two clicks---one for the onset and one for the offset of the syllable.
 
 :::{figure-md} xb_create-fig
-<img src="/images/xb_bird_create.gif" alt="annotate song" width="700px">
+<img src="images/xb_create.gif" alt="annotate song" width="700px">
 
 Left click on waveform or spectrogram view to create annotations.
 :::
@@ -85,7 +85,7 @@ In case you misclicked, you can edit and delete annotations. Edit  syllable boun
 Delete annotations of the active syllable by right-clicking on the annotation. Annotations of all syllable types or of only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
 
 :::{figure-md} xb_edit-fig
-<img src="images/xb_bird_edit.gif" alt="annotate song" width="700px">
+<img src="images/xb_edit.gif" alt="annotate song" width="700px">
 
 Dragging moves, right click deletes annotations.
 :::

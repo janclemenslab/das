@@ -109,6 +109,7 @@ Technical documentation
    Introduction <self>
    installation
    quickstart_fly
+   quickstart_bird
    tutorials_gui/tutorials_gui
    tutorials/tutorials
    unsupervised/unsupervised
