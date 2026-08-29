@@ -2,9 +2,13 @@ import inspect
 
 import defopt
 import pytest
-from xarray_behave.gui.app import main_das
 
 from das import cli, evaluate, predict, train
+
+try:
+    from xarray_behave.gui.app import main_das
+except ImportError:
+    main_das = cli.no_xb_gui
 
 
 COMMANDS = {
@@ -125,6 +129,8 @@ def test_all_evaluate_arguments_bind():
 
 
 def test_all_gui_arguments_bind():
+    if main_das is cli.no_xb_gui:
+        pytest.skip("GUI libraries are unavailable on this runner")
     _assert_all_arguments_bind(
         main_das,
         [
