@@ -1,5 +1,8 @@
 from unittest.mock import Mock, call
 
+import flammkuchen
+import numpy as np
+
 from das import utils
 from das.models import loading
 
@@ -20,3 +23,11 @@ def test_load_model_from_params_retries_loose_with_fresh_model(monkeypatch, capl
     assert strict_model.load_weights.call_args_list == [call("example_model.h5", skip_mismatch=False, by_name=False)]
     assert loose_model.load_weights.call_args_list == [call("example_model.h5", skip_mismatch=True, by_name=True)]
     assert "Strict weight loading failed" in caplog.text
+
+
+def test_save_h5_with_numpy_2(tmp_path):
+    filename = tmp_path / "data.h5"
+
+    utils.save_h5(filename, {"labels": np.array(["pulse"]), "values": np.array([1.0])})
+
+    np.testing.assert_array_equal(flammkuchen.load(filename)["labels"], ["pulse"])

@@ -4,7 +4,6 @@ import keras
 import logging
 import os
 import shutil
-import flammkuchen
 import numpy as np
 from . import utils, io, models, event_utils, segment_utils, annot
 from typing import List, Optional, Dict, Any, Sequence, Iterable, Union
@@ -730,7 +729,7 @@ def cli_predict(
                 if save_filename is None:
                     save_filename = os.path.splitext(recording_filename)[0] + "_das.h5"
                 logging.info(f"   Saving results to {save_filename}.")
-                flammkuchen.save(save_filename, d)
+                utils.save_h5(save_filename, d)
                 logging.info("Done.")
             elif save_format == "csv":
                 evt = annot.Events.from_predict(events, segments)

@@ -9,6 +9,16 @@ import scipy.signal
 from typing import Callable, Dict, Any, List, Optional, Tuple
 
 
+def save_h5(filename: str, data: Dict[str, Any]) -> None:
+    """Save nested data with flammkuchen on current NumPy versions."""
+    for old_name, replacement in {"unicode_": np.str_, "string_": np.bytes_}.items():
+        if not hasattr(np, old_name):
+            setattr(np, old_name, replacement)  # ponytail: remove when flammkuchen supports NumPy 2.
+    import flammkuchen
+
+    flammkuchen.save(filename, data)
+
+
 def load_model(
     file_trunk: str,
     model_dict: Dict[str, Callable],

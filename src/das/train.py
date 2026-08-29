@@ -3,7 +3,6 @@
 import keras  # need to import this first to avoid segmentation fault
 import time
 import logging
-import flammkuchen as fl
 import numpy as np
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau, TensorBoard
 import os
@@ -503,7 +502,7 @@ def train(
             # 'labels_pred': np.array(labels_pred),
             "params": params,
         }
-        fl.save(save_filename, results_dict)
+        utils.save_h5(save_filename, results_dict)
         da.to_hdf5(save_filename, {"/y_pred": y_pred, "/labels_pred": labels_pred})
 
     logger.info("DONE.")
