@@ -2,10 +2,9 @@ import keras
 import sklearn.metrics
 import numpy as np
 import pandas as pd
-import flammkuchen
 from typing import Optional, Dict, Callable, Any
 import logging
-from . import predict, models, io
+from . import predict, models, io, utils
 from .event_utils import evaluate_eventtimes
 
 logger = logging.getLogger(__name__)
@@ -201,4 +200,4 @@ def cli_evaluate(model_save_name: str, verbose: int = 1):
 
     save_filename = "{0}_results.h5".format(model_save_name)
     logger.info(f"   Saving to {save_filename}.")
-    flammkuchen.save(save_filename, results_dict)
+    utils.save_h5(save_filename, results_dict)
