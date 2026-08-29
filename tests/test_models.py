@@ -1,7 +1,7 @@
-import keras
 import numpy as np
 
 from das.models.kapre.time_frequency import Spectrogram
+import keras
 
 
 def test_trainable_spectrogram_handles_silent_frames():
