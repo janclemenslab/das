@@ -121,6 +121,7 @@ class Spectrogram(Layer):
                 )
         # output = output[..., 0]
         if self.power_spectrogram != 2.0:
+            output = keras.ops.maximum(output, 1e-20)  # Keep Torch's sqrt gradient finite for silent frames.
             output = keras.ops.power(keras.ops.sqrt(output), self.power_spectrogram)
         if self.return_decibel_spectrogram:
             output = backend_keras.amplitude_to_decibel(output)
