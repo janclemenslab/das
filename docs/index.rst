@@ -108,7 +108,6 @@ Technical documentation
 
    Introduction <self>
    installation
-   install_tf
    quickstart_fly
    quickstart_bird
    tutorials_gui/tutorials_gui
