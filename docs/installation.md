@@ -8,7 +8,7 @@ Install [Miniforge](https://github.com/conda-forge/miniforge) or another Conda d
 
 Create and activate an isolated environment. Conda provides Python, FFmpeg, and `uv`; `uv` installs DAS and its Python dependencies.
 
-Users who need the TensorFlow backend can install the final TensorFlow-backed release with `uv pip install das==0.32.13`.
+Users who need the TensorFlow backend should follow the [TensorFlow installation instructions](install_tf.md) for the final TensorFlow-backed release.
 
 ```shell
 conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
