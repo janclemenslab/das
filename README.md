@@ -2,7 +2,7 @@
 
 _DAS_ automatically annotates animal vocalizations in raw audio recordings using a deep neural network. It can be used through a graphical user interface, from the terminal, or from Python scripts.
 
-Users who need the TensorFlow backend can continue to install the final TensorFlow-backed release with `das==0.32.13`.
+Users who need the TensorFlow backend should follow the [TensorFlow installation instructions](https://janclemenslab.org/das/install_tf.html) for the final TensorFlow-backed release (0.32.13).
 
 ## Installation
 
