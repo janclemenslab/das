@@ -95,6 +95,12 @@ nb_execution_mode = "off"
 #
 html_theme = 'furo'
 
+# Make only the tutorial audio files available for download from the built site.
+html_extra_path = [
+    '../tutorial/train/birdname_130519_110831.1.wav',
+    '../tutorial/test/birdname_130519_113526.55.wav',
+]
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".

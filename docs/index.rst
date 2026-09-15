@@ -38,7 +38,17 @@ Tutorials
         :classes: stretched-link
     +++
 
-    Annotate song, train a network, and predict on new samples.
+    Annotate fly song, train a network, and predict.
+
+    ---
+
+    .. link-button :: quickstart_bird
+        :text: Quick start tutorial (bird)
+        :type: ref
+        :classes: stretched-link
+    +++
+
+    Annotate zebra finch song, train a network, and predict.
 
     ---
 
@@ -71,7 +81,7 @@ Tutorials
 
     +++
 
-    Discover song types in annotated syllables.
+    Discover song types in segmented syllables.
 
 
 Technical documentation

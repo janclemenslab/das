@@ -1,19 +1,22 @@
 # Quick start tutorial (bird)
-This quick start tutorial walks through all steps required to make _DAS_ work with your data, using a recording of zebra finch song as an example. A comprehensive documentation of all menus and options can be found in the [GUI documentation](/tutorials_gui/tutorials_gui).
 
-In the tutorial, we will train _DAS_ using an iterative and adaptive protocol that allows to quickly create a large dataset of annotations: Annotate a few syllable renditions, fast-train a network on those annotations, and then use that network to predict new annotations on a larger part of the recording. These first predictions require manually correction, but correcting is typically much faster than annotating everything from scratch. This correct-train-predict cycle is then repeated with ever larger datasets until network performance is satisfactory.
+This quick start tutorial walks through all steps required to make _DAS_ work with your data, using recordings of zebra finch song as an example. A comprehensive description of all menus and options is available in the [GUI documentation](/tutorials_gui/tutorials_gui).
+
+We will use an iterative annotation workflow: annotate a few song motifs, fast-train a network on those annotations, and use that network to propose annotations for a second recording. Correcting proposals is typically much faster than annotating everything from scratch. Repeat this annotate-train-predict cycle with progressively larger datasets until performance is satisfactory.
 
 ## Download example data
-To follow the tutorial, download and open these two audio files:
 
-- [birdname_130519_113032.2.wav](https://github.com/janclemenslab/DAS/releases/download/data/birdname_130519_113032.2.wav). We will use this file for training a DAS network.
-- [birdname_130519_110831.1.wav](https://github.com/janclemenslab/DAS/releases/download/data/birdname_130519_110831.1.wav). We will use this file for testing the trained DAS network.
+Download these two audio files from this tutorial:
 
-The recordings are of a Zebra finch male, recorded by Jack Goffinet et al. (part of [this dataset](https://research.repository.duke.edu/concern/datasets/9k41zf38g)). We will walk through loading, annotating, training and predicting using these files as examples.
+- <a href="birdname_130519_110831.1.wav" download>birdname_130519_110831.1.wav</a> — training recording
+- <a href="birdname_130519_113526.55.wav" download>birdname_130519_113526.55.wav</a> — test recording
+
+The recordings are of a male zebra finch, recorded by Jack Goffinet et al. as part of [this dataset](https://research.repository.duke.edu/concern/datasets/9k41zf38g).
 
 ## Start the GUI
 
-Install _DAS_ following these [instructions](/installation). Then start the GUI by opening a terminal, activating the conda environment created during install and typing `das gui`:
+Install the PyPI version of _DAS_ following the [installation instructions](/installation). Then open a terminal, activate the conda environment created during installation, and start the GUI:
+
 ```shell
 conda activate das
 das gui
@@ -21,130 +24,133 @@ das gui
 
 The following window should open:
 
-
-:::{figure-md} xb_start-fig
-<img src="images/xb_start.png" alt="start screen" width=450>
+:::{figure-md} xb_bird_start-fig
+<img src="images/xb_start.png" alt="DAS start screen" width=450>
 
 Start screen.
 :::
 
-
 ## Load audio data
 
-Choose _Load audio from file_ and select the downloaded recording of fly song.
+Choose _Load audio from file_ and select the training recording, `birdname_130519_110831.1.wav`.
 
-In the dialog that opens, leave everything as is except.
+In the dialog that opens, leave the automatically detected audio sample rate unchanged. Leave the annotation and song-definition fields at their defaults, select _Use audio rate_, and load the data.
 
-:::{figure-md} xb_load-fig
-<img src="images/xb_quick_bird_load.png" alt="loading screen">
+:::{figure-md} xb_bird_load-fig
+<img src="images/xb_quick_bird_load.png" alt="Load the zebra finch training recording">
 
-Loading screen.
+Loading the training recording.
 :::
-
 
 ## Waveform and spectrogram display
-Loading the audio will open a window that displays the first second of audio as a waveform (top) and a spectrogram (bottom).
 
-To navigate the view: Move forward/backward along the time axis via the `A`/`D` keys and zoom in/out the time axis with the `W`/`S` keys (see also the _Playback_ menu). You can also navigate using the scroll bar below the spectrogram display or jump to specific time points using the text field to the right of the scroll bar. The temporal and frequency resolution of the spectrogram can be adjusted with the `R` and `T` keys.
+Loading the audio opens a window that displays the waveform (top) and spectrogram (bottom).
 
-You can play back the waveform on display through your headphones/speakers by pressing `E`.
+Move forward or backward with `D` or `A`, and zoom in or out with `W` or `S` (see also the _Playback_ menu). You can also navigate with the scroll bar below the spectrogram or jump to a time using the field to its right. Adjust the temporal and frequency resolution of the spectrogram with `R` and `T`.
 
-:::{figure-md} xb_display-fig
-<img src="images/xb_quick_view.png" alt="waveform and spectrogram display" width="100%">
+Play the displayed audio through your headphones or speakers by pressing `E`.
 
-Waveform (top) and spectrogram (bottom) display of fly song.
+:::{figure-md} xb_bird_display-fig
+<img src="images/xb_quick_bird_view.png" alt="Waveform and spectrogram of zebra finch song" width="100%">
+
+Waveform (top) and spectrogram (bottom) of zebra finch song.
 :::
 
+## Initialize syllable types
 
-## Initialize or edit syllable
-Before you can annotate song, you need to register the different syllable of the main motif. This bird's motif consists of six syllables.
+Before annotating, register the six syllable types in this bird's motif. Open the editor with the _Add/Edit_ button above the plots or via _Annotations/Add or edit song types_, and create six segment types named `syll1` through `syll6`.
 
-Add the six syllables for annotation via the _Add/edit_ button at the top of the windows or via the _Annotations/Add or edit song types_ menu. Let's name them `syll1` to `syll6`:
+:::{figure-md} xb_bird_make-fig
+<img src="images/xb_quick_bird_make.png" alt="Edit syllable types" height="400px">
 
-:::{figure-md} xb_make-fig
-<img src="images/xb_quick_bird_make.png" alt="edit annotation types" height="400px">
-
-Create new syllables for annotation.
+Create six syllable types for annotation.
 :::
-
 
 ## Create annotations manually
-The six syllables can now be activated for annotation using the dropdown menu on the top left of the window. The active syllable can also be changed with the number keys indicated in the dropdown menu---in this case `1`...`6`.
 
-Song is annotated by left-clicking the waveform or spectrogram view.Annotating a syllable requires two clicks---one for the onset and one for the offset of the syllable.
+Select a syllable type from the menu above the plots. You can also switch types with the number keys shown in that menu—in this case `1` through `6`.
 
-:::{figure-md} xb_create-fig
-<img src="images/xb_create.gif" alt="annotate song" width="700px">
+Annotate a syllable by left-clicking the waveform or spectrogram twice: once at the onset and once at the offset.
 
-Left click on waveform or spectrogram view to create annotations.
+:::{figure-md} xb_bird_create-fig
+<img src="images/xb_quick_bird_create.gif" alt="Annotating zebra finch syllables" width="100%">
+
+Left-click at each syllable's onset and offset to create annotations.
 :::
 
 ## Edit annotations
-In case you misclicked, you can edit and delete annotations. Edit  syllable bounds by dragging the boundaries of segments. Drag the shaded area itself to move a syllable without changing its duration. Movement can be disabled completely or restricted to the currently selected annotation type via the _Annotations_ menu.
 
-Delete annotations of the active syllable by right-clicking on the annotation. Annotations of all syllable types or of only the active one in the view can be deleted with `U` and `Y`, respectively, or via the _Annotations_ menu.
+Correct a syllable boundary by dragging it. Drag the shaded segment itself to move the syllable without changing its duration. Movement can be disabled or restricted to the selected syllable type in the _Annotations_ menu.
 
-:::{figure-md} xb_edit-fig
-<img src="images/xb_edit.gif" alt="annotate song" width="700px">
+Delete an annotation with a right-click. You can also delete all annotations in view with `U`, or only annotations of the selected type with `Y`. Change an annotation's label by selecting the desired type and using CMD/CTRL+left-click on the annotation.
 
-Dragging moves, right click deletes annotations.
+:::{figure-md} xb_bird_edit-fig
+<img src="images/xb_quick_bird_edit.gif" alt="Editing zebra finch syllable annotations" width="100%">
+
+Drag to correct boundaries or move segments; right-click to delete.
 :::
-
-Change the label of an annotation via CMD/CTRL+Left click on an existing annotation. The type of the annotation will change to the currently active one.
-
 
 ## Export annotations and make a dataset
-_DAS_ achieves good performance from few annotated examples. Once you have completely annotated the six syllables in all 8 motifs of the tutorial recording you can train a network to help with annotating the rest of the data.
 
-Training requires the audio data and the to be in a [specific format](technical/data_formats). First, export the audio data and the annotations via `File/Export for DAS` to a new folder (not the one containing the original audio)---let's call the folder `quickstart`:
+Once you have annotated the six syllables in all 14 motifs of the training recording, you can train a network to help annotate more data.
 
-:::{figure-md} xb_export-fig
-<img src="images/xb_quick_bird_export.png" alt="export audio and annotations" width=450>
+Training requires audio and annotations in a [specific format](technical/data_formats). Export them via _File/Export for DAS_ to a new folder—not the folder containing the original audio. Name the new folder `quickstart`.
 
-Export audio data and annotations for the whole recording.
+:::{figure-md} xb_bird_export-fig
+<img src="images/xb_quick_bird_export.png" alt="Export audio and annotations" width=450>
+
+Export audio and annotations for the complete recording.
 :::
 
-Then make a dataset, via _DAS/Make dataset for training_. In the file dialog, select the `quickstart` folder you exported your annotations into. In the next dialog, we will adjust how data is split into training, validation and testing data. For the small data set annotated in the first step of this tutorial, we will not test the model, to maximize the data available for optimizing the network (training and validation). Set the training split to 0.60,  the validation split to 0.40 and the test split to 0.0 (not test):
+Next, choose _DAS/Make dataset for training_ and select the `quickstart` folder. For this small initial dataset, use the annotations for training and validation only: set the training split to 0.60, validation split to 0.40, and test split to 0.0.
 
-:::{figure-md} xb_assemble-fig
-<img src="images/xb_quick_bird_make_ds.png" alt="assemble dataset" width=600>
+:::{figure-md} xb_bird_assemble-fig
+<img src="images/xb_quick_bird_make_ds.png" alt="Make a DAS training dataset" width=600>
 
 Make a dataset for training.
 :::
 
-This will create a dataset folder called `quickstart.npy` that contains the audio data and the annotations formatted for training.
+This creates a dataset named `quickstart.npy` containing the audio and annotations in the format required for training.
 
 ## Fast training
-Configure a network and start training via _DAS/Train_. This will ask you to select folder with the dataset you just created, `quickstart.npy`. Then, a dialog allows you to configure the network. For the fast training, change the following:
-- Set `Chunk duration (samples)` to 4096.
-- Set `Number of filters` to 64.
-- Set `Filter duration (samples)` to 32.
-:::{figure-md} xb_train-fig
-<img src="images/xb_quick_bird_train.png" alt="train" width=500>
 
-Train options
+Choose _DAS/Train_, select the `quickstart.npy` dataset, and configure the network. For this fast training run, change:
+
+- _Chunk duration (samples)_ to `4096`
+- _Number of filters_ to `64`
+- _Filter duration (samples)_ to `32`
+
+:::{figure-md} xb_bird_train-fig
+<img src="images/xb_quick_bird_train.png" alt="Configure DAS training" width=500>
+
+Training options.
 :::
 
-Then hit `Start training in GUI`---this will start training in a background process. A small window will display training progress (see also the output in the terminal). Training with this small dataset will finish in ?? minutes on a CPU and in 10 minutes on a GPU. For larger datasets, we highly recommend training on a machine with a discrete Nvidia GPU.
+Select _Start training in GUI_. Training runs in a background process, and a small window and the terminal show its progress. Runtime depends strongly on your computer; a GPU is recommended for larger datasets.
 
 ## Predict
-Once training finished, we'll generate annotations for a new recording. Load the recording `birdname_130519_110831.1.wav` and  generate predictions using the trained network via _DAS/Predict_. This will ask you to select a model file containing the trained model. Training creates files in the `quickstart.res` folder, starting with the time stamp of training---select the file ending in `_model.h5`.
 
-In the next dialog, predict song for 60 seconds starting after your manual annotations:
-- Make sure that `Proof reading mode` is enabled. That way, annotations created by the network will be assigned names ending in `_proposals` - in our case `sine_proposals` and `pulse_proposals`. The proposals will be transformed into proper `sine` and `pulse` annotations during proof reading.
-- Enable `Fill gaps shorter than (seconds)` by unchecking the checkbox and set it to 0.005 seconds.
-- Enable `Delete segments shorter than (seconds)` by unchecking the checkbox and leave it at the default value of 0.020 seconds.
+When training finishes, load the test recording, `birdname_130519_113526.55.wav`. Choose _DAS/Predict_, select the trained model in the `quickstart.res` folder, and choose the file ending in `_model.keras`.
 
-:::{figure-md} xb_predict-fig
-<img src="images/xb_quick_bird_predict.png" alt="predict" width=750>
+In the prediction dialog:
 
-Predict annotations for a new recording.
+- Leave _Start seconds_ at `0` and _Recording end_ selected to predict the complete test recording.
+- Keep _Proof reading mode_ enabled. Predictions will be named `syll1_proposals` through `syll6_proposals` until you approve them.
+- Enable _Fill gaps shorter than (seconds)_ by clearing _Do not fill_, and set the value to `0.005`.
+- Enable _Delete segments shorter than (seconds)_ by clearing _Do not delete_, and leave the value at `0.020`.
+
+:::{figure-md} xb_bird_predict-fig
+<img src="images/xb_quick_bird_predict.png" alt="Configure prediction for the zebra finch test recording" width=750>
+
+Predict annotations for the complete test recording.
 :::
 
-In contrast to training, prediction is very fast, and does not require a GPU---it should finish after 10 seconds. The proposed annotations should be already good. Most syllables should be correctly detected but will be some false positive detections, missed syllables, confused syllables, and syllables with imprecise boundaries. We'll fix these predictions errors in the next step.
+Prediction is much faster than training and does not require a GPU. Most proposed syllables should be detected correctly, but there may be false positives, missed or confused syllables, and imprecise boundaries.
 
-## Proof reading
-To turn the proposals into proper annotations, fix and approve them. Correct any prediction errors---add missing syllables, remove false positive syllables, correct syllable type errors, adjust the syllable timing. See [Create annotations](#create-annotations-manually) and [Edit annotations](#edit-annotations). Once you have corrected all errors in the view, the all proposals in view with `H`.
+## Proofread
 
-## Go back to "Export"
-Once all proposals have been approved, export the annotations for this file into the same `quickstart` folder, make a new dataset, train, predict, and repeat. If prediction performance is adequate, fully train the network, this time using a completely new recording as the test set and with a larger number of epochs.
+Correct the proposals: add missed syllables, delete false positives, fix label errors, and adjust syllable boundaries using the annotation tools described above. Once all proposals in view are correct, approve them with `H`.
+
+## Repeat from export
+
+Export the approved annotations for this recording into the same `quickstart` folder. Make a new dataset, train again, predict more data, and repeat. When prediction performance is adequate, fully train the network with a separate recording reserved as a test set and with more training epochs.
