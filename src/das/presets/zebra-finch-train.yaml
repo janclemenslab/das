@@ -1,0 +1,16 @@
+mode: train
+batch_size: 32
+num_time_steps: 2048
+chunk_stride: 1792
+frontend_type: stft
+frontend_num_channels: 33
+frontend_kernel_size: 64
+frontend_hop_seconds: 0.0005
+encoder_type: tcn
+encoder_hidden_size: 32
+encoder_num_layers: 4
+encoder_kernel_size: 32
+encoder_dilations: [1, 2, 4, 8, 16]
+fill_gap_ms: 5.0
+min_syllable_ms: 20.0
+syllable_tolerance_ms: 20.0

@@ -119,26 +119,3 @@ fig*
 *.err
 *.out
 
-/*
-/*/
-!/src/
-!/docs/
-!/tests/
-!/*.toml
-!/.github
-!/conda
-src/*.egg-info/
-# ignore binaries and data files in docs
-docs/**/*.h5
-docs/**/*.mat
-docs/**/*.npy
-docs/**/*.yaml
-docs/**/*.yml
-docs/**/*.wav
-docs/**/*.csv
-docs/api/
-docs/jupyter_execute/
-docs/tutorials/res
-docs/_*
-
-.codex

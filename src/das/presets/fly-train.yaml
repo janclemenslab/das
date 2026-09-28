@@ -1,0 +1,13 @@
+mode: train
+batch_size: 32
+num_time_steps: 1024
+chunk_stride: 928
+frontend_type: raw
+encoder_type: tcn
+encoder_hidden_size: 16
+encoder_num_layers: 3
+encoder_kernel_size: 16
+encoder_dilations: [1, 2, 4, 8, 16]
+fill_gap_ms: 10.0
+min_syllable_ms: 10.0
+syllable_tolerance_ms: 10.0

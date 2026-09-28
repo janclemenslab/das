@@ -1,0 +1,5 @@
+mode: predict
+batch_size: 16
+fill_gap_ms: 5.0
+min_syllable_ms: 20.0
+syllable_tolerance_ms: 20.0

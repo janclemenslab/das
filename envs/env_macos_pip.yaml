@@ -1,0 +1,33 @@
+name: das-conformer
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - ffmpeg==6
+  - pysoundfile
+  - pip:
+    - torch
+    - torchvision
+    - torchaudio
+    - torchinfo
+    - h5py
+    - matplotlib
+    - ipykernel
+    - flammkuchen
+    - librosa
+    - rich
+    - ipykernel
+    - pandas
+    # - pysoundfile  # pip package does not work
+    - numba
+    - xarray
+    - pydantic
+    - lightning
+    - torch-audiomentations
+    - nnAudio
+    - pytorch-tcn
+    - vocalpy
+    - crowsetta
+    - git+https://github.com/janclemenslab/das-conformer
+

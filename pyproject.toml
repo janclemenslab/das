@@ -1,46 +1,68 @@
+[project]
+name = "das"
+# module = "das"
+authors = [{ name = "Jan Clemens", email = "clemensjan@googlemail.com" }]
+classifiers = ["License :: OSI Approved :: Apache Software License"]
+dynamic = ["version", "description"]
+requires-python = ">=3.10"
+readme = "README.md"
+dependencies = [
+    'scipy',
+    'scikit-learn',
+    'pandas',
+    'soundfile',
+    'h5py',
+    'huggingface_hub',
+    'librosa',
+    'numpy',
+    'pyyaml',
+    'rich',
+    'transformers==4.57.1',
+    'zarr<3',
+    'lightning',
+
+    # macOS: standard PyTorch
+    'torch; platform_system == "Darwin"',
+    'torchaudio; platform_system == "Darwin"',
+
+    # Linux/Windows: install from CUDA 13.0 index (pip auto-selects wheel)
+    'torch; platform_system == "Linux" or platform_system == "Windows"',
+    'torchaudio; platform_system == "Linux" or platform_system == "Windows"',
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-xdist", "pytest-qt", "flit>=3.2,<4"]
+gui = ["magicgui", "xarray-behave>=0.38.0a1", "PySide6>=6.10", "qtpy"]
+doc = [
+       "sphinx", "furo", "ghp-import",
+       "myst-nb", "sphinx-panels",
+       ]
+
+[project.urls]
+source = "https://github.com/janclemenslab/das-conformer"
+documentation = "https://janclemenslab.org/das-alpha/"
+
+[project.scripts]
+das = "das.cli:cli_main"
+
 [build-system]
 requires = ["flit_core >=3.2"]
 build-backend = "flit_core.buildapi"
 
-[project]
-name = "das"
-authors = [{ name = "Jan Clemens", email = "clemensjan@googlemail.com" }]
-classifiers = ["License :: OSI Approved :: Apache Software License"]
-dynamic = ["version", "description"]
-requires-python = ">=3.12"
-dependencies = [
-    'scipy',
-    'scikit-learn',
-    'matplotlib',
-    'pandas',
-    'matplotlib_scalebar',
-    'xarray-behave>=0.37.5',
-    'tqdm',
-    'numpy',
-    'keras~=3.0',
-    'torch',
-]
-readme = "README.md"
-
-[project.optional-dependencies]
-dev = ["pytest", "flit", "ipykernel"]
-
-[project.urls]
-source = "https://github.com/janclemenslab/das"
-documentation = "https://janclemenslab.org/das/"
-
-[tool.flit.module]
-name = "das"
-
-[project.scripts]
-das = "das.cli:main"
+[tool.pip]
+extra-index-url = "https://download.pytorch.org/whl/cu130"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ["tests"]
+testpaths = ["tests",]
+markers = [
+    "integration: end-to-end smoke tests",
+    "regression: real-data or checkpoint-backed regression tests",
+    "slow: expensive tests excluded from the default quick suite",
+]
 
 [tool.ruff]
 line-length = 128
-extend-select = ["C4", "NPY", "PD", "TCH"]
+extend-select = ["C4", "NPY", "PD"]
 ignore = ["E501"]
 show-fixes = true

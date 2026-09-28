@@ -1,0 +1,1 @@
+"""WhisperSeg backend for DAS."""
