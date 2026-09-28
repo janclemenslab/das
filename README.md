@@ -1,5 +1,5 @@
 # DAS
-DAS 1.0a1 segments and annotates audio with Conformer, TCN, TweetyNet, and WhisperSeg models.
+DAS 1.0a2 segments and annotates audio with Conformer, TCN, TweetyNet, and WhisperSeg models.
 
 
 ## Installation
@@ -7,7 +7,7 @@ DAS 1.0a1 segments and annotates audio with Conformer, TCN, TweetyNet, and Whisp
 ```shell
 conda create -y -n das python=3.12 uv
 conda activate das
-uv pip install "das[gui]==1.0a1"
+uv pip install "das[gui]==1.0a2"
 ```
 
 For development from a source checkout, install the test and docs extras too:

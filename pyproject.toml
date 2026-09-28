@@ -39,7 +39,7 @@ doc = [
        ]
 
 [project.urls]
-source = "https://github.com/janclemenslab/das-conformer"
+source = "https://github.com/janclemenslab/das/tree/alpha"
 documentation = "https://janclemenslab.org/das-alpha/"
 
 [project.scripts]

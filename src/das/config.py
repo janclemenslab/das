@@ -759,9 +759,9 @@ class Config:
         if self.mode == "train" and self.encoder_type == "whisperseg" and Path(self.initial_model).suffix != ".ckpt":
             raise ValueError("WhisperSeg training requires a DAS .ckpt initial_model.")
         if self.mode == "train" and self.encoder_type != "whisperseg" and self.initial_model:
-            raise ValueError("initial_model is only supported for WhisperSeg training in 1.0a1.")
+            raise ValueError("initial_model is only supported for WhisperSeg training in this release.")
         if self.mode == "train" and self.encoder_type != "whisperseg" and self.freeze_encoder:
-            raise ValueError("freeze_encoder is only supported for WhisperSeg training in 1.0a1.")
+            raise ValueError("freeze_encoder is only supported for WhisperSeg training in this release.")
         if self.positive_class_weight <= 0:
             raise ValueError("positive_class_weight must be positive.")
         if self.boundary_weight <= 0 or self.boundary_width_ms < 0:

@@ -1,11 +1,11 @@
 # Install and train
 
-Install the DAS 1.0a1 pre-release with its GUI:
+Install the DAS 1.0a2 pre-release with its GUI:
 
 ```shell
 conda create -n das python=3.12 uv
 conda activate das
-uv pip install "das[gui]==1.0a1"
+uv pip install "das[gui]==1.0a2"
 ```
 
 For annotated WAV recordings, put each audio file and its annotation CSV in one folder. The default annotation name is `<audio-stem>_annotations.csv`. A CSV has `name`, `start_seconds`, and `stop_seconds` columns. Train directly from that folder:
