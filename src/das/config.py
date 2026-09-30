@@ -500,7 +500,7 @@ class Config:
         bool_flag=True,
     )
     max_length: int = _config_field(100, help="Maximum WhisperSeg decoder token length during training.", parser=int)
-    generation_max_length: int = _config_field(448, help="Maximum WhisperSeg decoder token length during prediction.", parser=int)
+    generation_max_length: int = _config_field(128, help="Maximum WhisperSeg decoder token length during prediction.", parser=int)
     total_spec_columns: int = _config_field(1000, help="WhisperSeg spectrogram time columns per training clip.", parser=int)
     seed: int | None = _config_field(None, help="Optional random seed. Leave unset for nondeterministic runs.", parser=_optional_int_parser)
     accelerator: TrainerAccelerator = _config_field(

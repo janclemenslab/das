@@ -32,6 +32,7 @@ def test_generation_casts_features_to_model_dtype():
 
     def generate(**kwargs):
         assert kwargs["input_features"].dtype == torch.float16
+        assert kwargs["force_unique_generate_call"] is True
         return torch.tensor([[1]])
 
     model.generate = generate

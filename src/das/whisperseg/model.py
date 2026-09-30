@@ -546,7 +546,7 @@ class SegmenterBase:
         eps=None,  ## for DBSCAN clustering
         time_per_frame_for_voting=None,  ## for voting
         consolidation_method="clustering",
-        max_length=448,
+        max_length=128,
         batch_size=4,
         num_trials=1,
         num_beams=4,
@@ -846,6 +846,7 @@ class WhisperSegmenterForEval(SegmenterBase):
                 pad_token_id=self.tokenizer.pad_token_id,
                 eos_token_id=self.tokenizer.eos_token_id,
                 max_length=max_length,
+                force_unique_generate_call=True,
                 num_beams=num_beams,
                 do_sample=num_beams == 1 and top_k > 1,
                 top_k=top_k,
@@ -924,6 +925,7 @@ class WhisperSegmenter(SegmenterBase):
                 pad_token_id=tokenizer.pad_token_id,
                 eos_token_id=tokenizer.eos_token_id,
                 max_length=max_length,
+                force_unique_generate_call=True,
                 num_beams=num_beams,
                 do_sample=num_beams == 1,
                 top_k=top_k,

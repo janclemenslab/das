@@ -33,7 +33,7 @@ class DecoderConfig:
     num_layers: int = 2
     dropout: float = 0.1
     max_length: int = 100
-    generation_max_length: int = 448
+    generation_max_length: int = 128
     num_trials: int = 1
     num_beams: int = 4
     top_k: int = 1
@@ -77,7 +77,7 @@ class WhisperSegDecoderConfig:
     type: Literal["whisperseg"] = "whisperseg"
     dropout: float = 0.1
     max_length: int = 100
-    generation_max_length: int = 448
+    generation_max_length: int = 128
     num_trials: int = 1
     num_beams: int = 4
     top_k: int = 1
@@ -204,7 +204,7 @@ def normalize_decoder_config(config: DecoderConfig | ResolvedDecoderConfig | Map
         return WhisperSegDecoderConfig(
             dropout=float(config.get("dropout", 0.1)),
             max_length=int(config.get("max_length", 100)),
-            generation_max_length=int(config.get("generation_max_length", 448)),
+            generation_max_length=int(config.get("generation_max_length", 128)),
             num_trials=int(config.get("num_trials", 1)),
             num_beams=int(config.get("num_beams", 4)),
             top_k=int(config.get("top_k", 1)),
