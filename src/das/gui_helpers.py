@@ -187,6 +187,8 @@ class ModelSelectionState:
 @dataclass
 class EncoderSettingsState:
     freeze_encoder: bool = _DEFAULT_CONFIG.freeze_encoder
+    whisperseg_training_method: Literal["lora", "full"] = "lora"
+    accumulate_grad_batches: int = _DEFAULT_CONFIG.accumulate_grad_batches
 
 
 @dataclass
@@ -407,9 +409,7 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
             int(
                 state.stft_frontend.num_channels
                 if frontend_type == "stft"
-                else state.mel_frontend.num_channels
-                if frontend_type == "mel"
-                else state.conv_frontend.num_channels
+                else state.mel_frontend.num_channels if frontend_type == "mel" else state.conv_frontend.num_channels
             ),
             128,
         )
@@ -421,9 +421,7 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
             int(
                 state.stft_frontend.kernel_size
                 if frontend_type == "stft"
-                else state.mel_frontend.kernel_size
-                if frontend_type == "mel"
-                else state.conv_frontend.kernel_size
+                else state.mel_frontend.kernel_size if frontend_type == "mel" else state.conv_frontend.kernel_size
             ),
             1024 if frontend_type in {"stft", "mel"} else 9,
         )
@@ -435,9 +433,7 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
             float(
                 state.stft_frontend.hop_seconds
                 if frontend_type == "stft"
-                else state.mel_frontend.hop_seconds
-                if frontend_type == "mel"
-                else state.conv_frontend.hop_seconds
+                else state.mel_frontend.hop_seconds if frontend_type == "mel" else state.conv_frontend.hop_seconds
             ),
             0.004,
         )
@@ -483,9 +479,7 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
         frontend_pad_mode=str(state.conv_frontend.pad_mode),
         frontend_fmin=float(state.stft_frontend.fmin if frontend_type == "stft" else state.mel_frontend.fmin),
         frontend_fmax=_optional_float(state.stft_frontend.fmax if frontend_type == "stft" else state.mel_frontend.fmax),
-        frontend_trainable=bool(
-            state.stft_frontend.trainable if frontend_type == "stft" else state.mel_frontend.trainable
-        ),
+        frontend_trainable=bool(state.stft_frontend.trainable if frontend_type == "stft" else state.mel_frontend.trainable),
         min_frequency=_optional_int(state.whisperseg_frontend.min_frequency),
         frequency_scale=_optional_float(state.whisperseg_frontend.frequency_scale),
         spec_time_step=_optional_float(state.whisperseg_frontend.spec_time_step),
@@ -524,6 +518,8 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
         weight_decay=float(state.model_hyperparameters.weight_decay),
         warmup_steps=int(state.model_hyperparameters.warmup_steps),
         freeze_encoder=bool(state.encoder_settings.freeze_encoder),
+        whisperseg_training_method=str(state.encoder_settings.whisperseg_training_method),
+        accumulate_grad_batches=int(state.encoder_settings.accumulate_grad_batches),
         seed=_optional_int(state.trainer.seed),
         accelerator=str(state.trainer.accelerator),
         num_devices=_optional_int(state.trainer.num_devices),
@@ -598,6 +594,8 @@ def train_config_to_gui_state(config: Config) -> TrainGuiState:
         state.model_selection.model_class = "whisperseg"
     state.model_selection.frontend_type = str(frontend["type"])
     state.encoder_settings.freeze_encoder = bool(config.freeze_encoder)
+    state.encoder_settings.whisperseg_training_method = config.whisperseg_training_method
+    state.encoder_settings.accumulate_grad_batches = int(config.accumulate_grad_batches)
     if frontend["type"] == "raw":
         pass
     elif frontend["type"] == "stft":

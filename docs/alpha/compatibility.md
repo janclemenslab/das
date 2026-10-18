@@ -4,7 +4,7 @@
 
 - Conformer, TCN, and TweetyNet use DAS `.ckpt` files.
 - Legacy DAS `*_model.h5` plus `*_params.yaml` models still load directly for prediction. `das convert-legacy` can convert them to `.ckpt`.
-- WhisperSeg uses DAS `.ckpt` files for training and prediction. Download a DAS checkpoint from Hugging Face and pass its local path to DAS. Original WhisperSeg checkpoints and Hugging Face model IDs are not loaded at runtime.
+- WhisperSeg uses DAS `.ckpt` files for training and prediction. Select a named WhisperSeg AER model to download a compact FP16 checkpoint automatically, or pass a local checkpoint. Original WhisperSeg checkpoints and raw Hugging Face model IDs are not loaded at runtime.
 
 ## Training data
 

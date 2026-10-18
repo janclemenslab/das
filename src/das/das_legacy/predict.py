@@ -243,7 +243,8 @@ def _load_legacy_h5_weights(model: LegacyTorchTCNModel, model_path: Path) -> Non
         if "tcn_initial_conv" in weights_root:
             # Older Keras exports name the input/dilated convolutions explicitly.
             conv_names = [
-                name for name in weights_root.attrs["layer_names"].astype(str)
+                name
+                for name in weights_root.attrs["layer_names"].astype(str)
                 if name.startswith(("tcn_initial_conv", "tcn_dilated_conv", "conv1d"))
             ]
         expected_conv_count = 1 + 2 * len(model.tcn.blocks)

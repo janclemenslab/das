@@ -17,6 +17,7 @@ from lightning.pytorch.loggers import CSVLogger
 from torch.utils.data import DataLoader, Dataset, Subset
 from tqdm.auto import tqdm
 
+from .whisperseg.catalog import MODEL_OPTIONS, resolve_model_checkpoint
 from .config import Config, SplitName
 from .data import (
     AudioDirDataModule,
@@ -208,12 +209,7 @@ class _PredictionFileProgressCallback(Callback):
 
 def _print_prediction_summary(annotations: pd.DataFrame | list[pd.DataFrame]) -> None:
     frames = [annotations] if isinstance(annotations, pd.DataFrame) else list(annotations)
-    counts = Counter(
-        str(name)
-        for frame in frames
-        if "name" in frame.columns
-        for name in frame["name"].dropna()
-    )
+    counts = Counter(str(name) for frame in frames if "name" in frame.columns for name in frame["name"].dropna())
     total = sum(counts.values())
     print("Prediction summary:")
     print(f"Total instances: {total}")
@@ -420,7 +416,9 @@ def _resolve_whisper_device(accelerator: str) -> str:
 def _whisper_segmenter(config: Config):
     from .whisperseg.model import WhisperSegmenter
 
-    return WhisperSegmenter(config.checkpoint, device=_resolve_whisper_device(str(config.accelerator)))
+    return WhisperSegmenter(
+        resolve_model_checkpoint(config.checkpoint), device=_resolve_whisper_device(str(config.accelerator))
+    )
 
 
 def _whisper_segment_audio(segmenter, config: Config, audio, samplerate: int, *, filename: str | None = None) -> pd.DataFrame:
@@ -491,12 +489,12 @@ def _whisperseg_report_frame_rate_hz(config: Config, segmenter) -> float:
     return 1.0 / spec_time_step
 
 
-def _whisperseg_report_class_names(segmenter, annotation_tables: list[pd.DataFrame], prediction_tables: list[pd.DataFrame]) -> list[str]:
+def _whisperseg_report_class_names(
+    segmenter, annotation_tables: list[pd.DataFrame], prediction_tables: list[pd.DataFrame]
+) -> list[str]:
     codebook = getattr(segmenter, "cluster_codebook", {}) or {}
     ordered_names = [
-        str(name)
-        for name, _cluster_id in sorted(codebook.items(), key=lambda item: int(item[1]))
-        if str(name) != "noise"
+        str(name) for name, _cluster_id in sorted(codebook.items(), key=lambda item: int(item[1])) if str(name) != "noise"
     ]
     seen = set(ordered_names)
     for table in [*annotation_tables, *prediction_tables]:
@@ -574,7 +572,9 @@ def _whisperseg_evaluation_components(
         )
         audio = _whisper_normalize_audio_array(audio)
         loaded_audio.append((audio, int(sr)))
-        prediction_tables.append(_whisper_segment_audio(segmenter, segmenter_config, audio, int(sr), filename=Path(audio_file).name))
+        prediction_tables.append(
+            _whisper_segment_audio(segmenter, segmenter_config, audio, int(sr), filename=Path(audio_file).name)
+        )
 
     class_names = _whisperseg_report_class_names(segmenter, annotation_tables, prediction_tables)
     annotated_entries = []
@@ -672,7 +672,7 @@ def _train_whisperseg(
     checkpoint_path = train_whisperseg(
         model_folder=config.output_dir,
         train_dataset_folder=data_dir,
-        initial_model_path=config.initial_model,
+        initial_model_path=resolve_model_checkpoint(config.initial_model),
         device="auto" if config.accelerator == "tpu" else str(config.accelerator),
         n_device=int(config.num_devices or 1),
         num_epochs=int(config.num_epochs),
@@ -682,6 +682,8 @@ def _train_whisperseg(
         total_spec_columns=int(config.total_spec_columns),
         batch_size=int(config.batch_size),
         learning_rate=float(config.learning_rate),
+        training_method=config.whisperseg_training_method,
+        accumulate_grad_batches=int(config.accumulate_grad_batches),
         linear_lr_schedule=bool(config.linear_lr_schedule),
         reduce_lr=bool(config.reduce_lr),
         reduce_lr_patience=int(config.reduce_lr_patience),
@@ -796,7 +798,11 @@ def _predict_whisperseg(
     if write_outputs:
         result = written_files
     else:
-        result = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=["filename", "name", "start_seconds", "stop_seconds"])
+        result = (
+            pd.concat(frames, ignore_index=True)
+            if frames
+            else pd.DataFrame(columns=["filename", "name", "start_seconds", "stop_seconds"])
+        )
     if verbose:
         log_model_samplerate = model_samplerate or (source_samplerates[0] if source_samplerates else 0)
         _log_prediction_samplerates(source_samplerates, log_model_samplerate)
@@ -832,7 +838,7 @@ def _is_whisperseg_predict_checkpoint(source: str) -> bool:
 
 
 def _is_whisperseg_predict_source(source: str) -> bool:
-    return _is_whisperseg_predict_checkpoint(source)
+    return source in MODEL_OPTIONS or _is_whisperseg_predict_checkpoint(source)
 
 
 def _predict_checkpoint_metadata(
@@ -878,6 +884,8 @@ def _whisperseg_checkpoint_metadata(
             "started_at": timestamp,
             "checkpoint_prefix": config.checkpoint_prefix,
             "initial_model": config.initial_model,
+            "whisperseg_training_method": config.whisperseg_training_method,
+            "accumulate_grad_batches": config.accumulate_grad_batches,
             "freeze_encoder": bool(config.freeze_encoder),
             "linear_lr_schedule": bool(config.linear_lr_schedule),
             "reduce_lr": bool(config.reduce_lr),
@@ -1336,9 +1344,7 @@ def _add_prediction_file_progress(trainer, loader, *, verbose: bool) -> None:
     progress_bar = getattr(trainer, "progress_bar_callback", None)
     if progress_bar is not None:
         progress_bar.disable()
-    trainer.callbacks.append(
-        _PredictionFileProgressCallback(dataset.chunk_borders, getattr(loader, "batch_size", 1))
-    )
+    trainer.callbacks.append(_PredictionFileProgressCallback(dataset.chunk_borders, getattr(loader, "batch_size", 1)))
 
 
 def evaluate(config: ConfigLike = None, *, verbose: bool = False, **overrides) -> dict[str, int]:
@@ -1627,12 +1633,8 @@ def _resolve_postprocessing_config(config: Config, runtime: PredictRuntime) -> t
     )
     fill_gap_ms = float(runtime.fill_gap_ms) if use_runtime_fill_gap else float(config.fill_gap_ms)
     min_syllable_ms = float(runtime.min_syllable_ms) if use_runtime_min_syllable else float(config.min_syllable_ms)
-    event_dist_min_ms = (
-        float(runtime.event_dist_min_ms) if use_runtime_event_dist_min else float(config.event_dist_min_ms)
-    )
-    event_dist_max_ms = (
-        float(runtime.event_dist_max_ms) if use_runtime_event_dist_max else config.event_dist_max_ms
-    )
+    event_dist_min_ms = float(runtime.event_dist_min_ms) if use_runtime_event_dist_min else float(config.event_dist_min_ms)
+    event_dist_max_ms = float(runtime.event_dist_max_ms) if use_runtime_event_dist_max else config.event_dist_max_ms
     syllable_postprocessor = (
         str(runtime.syllable_postprocessor)
         if runtime.syllable_postprocessor is not None
@@ -1712,20 +1714,18 @@ def _load_predict_model(source: str, *, config: Config) -> tuple[object, Predict
             None if predict_metadata.get("segment_threshold_low") is None else float(predict_metadata["segment_threshold_low"])
         ),
         segment_threshold_high=(
-            None if predict_metadata.get("segment_threshold_high") is None else float(predict_metadata["segment_threshold_high"])
+            None
+            if predict_metadata.get("segment_threshold_high") is None
+            else float(predict_metadata["segment_threshold_high"])
         ),
         event_threshold=(
             None if predict_metadata.get("event_threshold") is None else float(predict_metadata["event_threshold"])
         ),
         event_dist_min_ms=(
-            None
-            if predict_metadata.get("event_dist_min_ms") is None
-            else float(predict_metadata["event_dist_min_ms"])
+            None if predict_metadata.get("event_dist_min_ms") is None else float(predict_metadata["event_dist_min_ms"])
         ),
         event_dist_max_ms=(
-            None
-            if predict_metadata.get("event_dist_max_ms") is None
-            else float(predict_metadata["event_dist_max_ms"])
+            None if predict_metadata.get("event_dist_max_ms") is None else float(predict_metadata["event_dist_max_ms"])
         ),
         syllable_postprocessor=(
             None if predict_metadata.get("syllable_postprocessor") is None else str(predict_metadata["syllable_postprocessor"])

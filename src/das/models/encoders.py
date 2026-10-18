@@ -248,7 +248,9 @@ def model_hop_seconds(frontend, encoder, *, sr: float) -> float:
     return frontend_hop_seconds(frontend, sr=sr)
 
 
-def build_encoder(config: EncoderConfig | ResolvedEncoderConfig | Mapping[str, object], *, input_dim: int, sr: float | None = None) -> nn.Module:
+def build_encoder(
+    config: EncoderConfig | ResolvedEncoderConfig | Mapping[str, object], *, input_dim: int, sr: float | None = None
+) -> nn.Module:
     encoder_config = normalize_encoder_config(config)
     if isinstance(encoder_config, ConformerEncoderConfig):
         return ConformerEncoder(

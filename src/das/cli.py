@@ -67,6 +67,8 @@ _COMMAND_CONFIG_FIELDS: dict[str, tuple[str, ...]] = {
         "weight_decay",
         "warmup_steps",
         "freeze_encoder",
+        "whisperseg_training_method",
+        "accumulate_grad_batches",
         "max_length",
         "total_spec_columns",
         "seed",
@@ -135,7 +137,9 @@ _ASCII_ICON = r"""
 | | | | | | | | |
   | | | | | | |
     |   |   |
-""".strip("\n")
+""".strip(
+    "\n"
+)
 
 
 class _HelpOnlyArgumentParser(argparse.ArgumentParser):

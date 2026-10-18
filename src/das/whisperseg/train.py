@@ -1,7 +1,9 @@
+import math
 import os
 from typing import Any, Dict, Literal, Optional, Sequence
 
 import lightning.pytorch as pl
+import torch
 from lightning.pytorch.callbacks import (
     Callback,
     EarlyStopping,
@@ -26,7 +28,30 @@ from .datautils import (
 )
 from ..data.audio_dir import _normalize_include_labels, _validate_include_labels
 from ..progress import TrainingLogProgress
-from .model import checkpoint_payload, load_model
+from .model import _model_from_payload, _torch_load, checkpoint_payload, load_model
+
+
+def _load_training_checkpoint(path):
+    if not os.path.isfile(path):
+        return None
+    checkpoint = _torch_load(path)
+    if not checkpoint.get("optimizer_states") or not ("whisperseg" in checkpoint or "whisperseg_training_config" in checkpoint):
+        return None
+    if "whisperseg_training" in checkpoint:
+        payload = dict(checkpoint["whisperseg_training"])
+        payload["model_state_dict"] = {
+            name.removeprefix("model.base_model.model.").replace(".base_layer.", "."): value
+            for name, value in checkpoint["state_dict"].items()
+            if "lora_" not in name
+        }
+    elif "whisperseg" in checkpoint:
+        payload = checkpoint["whisperseg"]
+    else:
+        return WhisperSegLightningModule.load_from_checkpoint(path, map_location="cpu", weights_only=True)
+    model, tokenizer = _model_from_payload(payload)
+    module = WhisperSegLightningModule(model, tokenizer=tokenizer, **checkpoint["hyper_parameters"])
+    module.on_load_checkpoint(checkpoint)
+    return module
 
 
 class WhisperSegLightningModule(pl.LightningModule):
@@ -47,6 +72,9 @@ class WhisperSegLightningModule(pl.LightningModule):
         tokenizer=None,
         model_init_config: Optional[Dict[str, Any]] = None,
         checkpoint_metadata: Optional[Dict[str, Any]] = None,
+        training_method: Literal["lora", "full"] = "full",
+        freeze_encoder: bool = False,
+        training_options: Optional[Dict[str, Any]] = None,
     ):
         super().__init__()
         self.model = model
@@ -63,6 +91,8 @@ class WhisperSegLightningModule(pl.LightningModule):
         self.reduce_lr_min = reduce_lr_min
         self.lr_monitor = lr_monitor
         self.total_training_steps = total_training_steps
+        self.training_method = training_method
+        self.training_options = {} if training_options is None else dict(training_options)
 
         self.save_hyperparameters(ignore=["model", "tokenizer"])
 
@@ -71,7 +101,28 @@ class WhisperSegLightningModule(pl.LightningModule):
                 raise ValueError("model_init_config is required to load model when model is None")
             self.model, self.tokenizer = load_model(**self.model_init_config)
 
+        if training_method == "lora":
+            from peft import LoraConfig, get_peft_model
+
+            self.model.half()
+            self.model.config.use_cache = False
+            self.model.model.decoder.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+            self.model = get_peft_model(
+                self.model,
+                LoraConfig(
+                    r=16,
+                    lora_alpha=32,
+                    lora_dropout=0.0,
+                    bias="none",
+                    target_modules=r"model\.decoder\.layers\.\d+\.(?:(?:self_attn|encoder_attn)\.(?:q_proj|k_proj|v_proj|out_proj)|fc1|fc2)",
+                ),
+            )
+        elif freeze_encoder:
+            for parameter in self.model.model.encoder.parameters():
+                parameter.requires_grad = False
+
     def training_step(self, batch, batch_idx):
+        batch["input_features"] = batch["input_features"].to(dtype=next(self.model.parameters()).dtype)
         outputs = self.model(**batch)
         loss = outputs.loss.mean()
         self.log(
@@ -93,6 +144,7 @@ class WhisperSegLightningModule(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
+        batch["input_features"] = batch["input_features"].to(dtype=next(self.model.parameters()).dtype)
         outputs = self.model(**batch)
         loss = outputs.loss.mean()
         self.log(
@@ -110,15 +162,21 @@ class WhisperSegLightningModule(pl.LightningModule):
         no_decay = ["bias", "LayerNorm.weight"]
         optimizer_grouped_parameters = [
             {
-                "params": [p for n, p in self.model.named_parameters() if not any(nd in n for nd in no_decay)],
+                "params": [
+                    p for n, p in self.model.named_parameters() if p.requires_grad and not any(nd in n for nd in no_decay)
+                ],
                 "weight_decay": self.weight_decay,
             },
             {
-                "params": [p for n, p in self.model.named_parameters() if any(nd in n for nd in no_decay)],
+                "params": [p for n, p in self.model.named_parameters() if p.requires_grad and any(nd in n for nd in no_decay)],
                 "weight_decay": 0.0,
             },
         ]
-        optimizer = AdamW(optimizer_grouped_parameters, lr=self.learning_rate)
+        optimizer = AdamW(
+            optimizer_grouped_parameters,
+            lr=self.learning_rate,
+            **({"eps": 1e-4} if self.training_method == "lora" else {}),
+        )
 
         if self.linear_lr_schedule and self.total_training_steps:
             scheduler = get_linear_schedule_with_warmup(
@@ -157,11 +215,26 @@ class WhisperSegLightningModule(pl.LightningModule):
 
     def on_save_checkpoint(self, checkpoint: dict[str, object]) -> None:
         checkpoint["das"] = dict(self.checkpoint_metadata)
+        if self.training_method == "lora":
+            # Keep resumable adapter state separate from the merged inference export.
+            checkpoint["whisperseg_training_config"] = self.model.config.to_dict()
+            payload = checkpoint_payload(self.model, self.tokenizer, int(self.global_step))
+            del payload["model_state_dict"]
+            checkpoint["whisperseg_training"] = payload
+            return
         checkpoint["whisperseg"] = checkpoint_payload(
             self.model,
             self.tokenizer,
             int(getattr(self, "global_step", 0) or 0),
         )
+
+    def on_load_checkpoint(self, checkpoint: dict[str, object]) -> None:
+        config = (
+            checkpoint["whisperseg_training_config"]
+            if self.training_method == "lora"
+            else checkpoint["whisperseg"]["model_config"]
+        )
+        self.model.config.update(config)
 
 
 class StopOnEventCallback(Callback):
@@ -222,23 +295,25 @@ def train(
     train_dataset_folder: str,
     *,
     initial_model_path: str,
+    training_method: Literal["lora", "full"] = "lora",
     device: Literal["cpu", "cuda", "mps", "auto"] = "auto",
     n_device: int = 1,
-    num_epochs: int = 10,
-    validation_fraction: float = 0.1,
+    num_epochs: int = 24,
+    validation_fraction: float = 0.125,
     test_fraction: float = 0.0,
-    max_length: int = 100,
+    max_length: int = 128,
     total_spec_columns: int = 1000,
-    batch_size: int = 4,
-    learning_rate: float = 3e-6,
-    linear_lr_schedule: bool = True,
-    reduce_lr: bool = False,
-    reduce_lr_patience: int = 5,
-    reduce_lr_factor: float = 0.1,
+    batch_size: int = 1,
+    accumulate_grad_batches: int = 4,
+    learning_rate: float = 1e-4,
+    linear_lr_schedule: bool = False,
+    reduce_lr: bool = True,
+    reduce_lr_patience: int = 2,
+    reduce_lr_factor: float = 0.5,
     reduce_lr_min: float = 1e-8,
     early_stopping: bool = True,
-    early_stopping_patience: int = 3,
-    seed: Optional[int] = None,
+    early_stopping_patience: int = 5,
+    seed: Optional[int] = 0,
     weight_decay: float = 0.01,
     warmup_steps: int = 100,
     freeze_encoder: bool = False,
@@ -260,38 +335,62 @@ def train(
     checkpoint_metadata: Optional[Dict[str, Any]] = None,
 ):
     """Train the segmenter using PyTorch Lightning."""
-    if linear_lr_schedule and reduce_lr:
+    lightning_module = _load_training_checkpoint(initial_model_path)
+    resuming = lightning_module is not None
+    options = dict(
+        batch_size=batch_size,
+        accumulate_grad_batches=accumulate_grad_batches,
+        max_length=max_length,
+        validation_fraction=validation_fraction,
+        test_fraction=test_fraction,
+        seed=seed,
+        ignore_class_names=ignore_class_names,
+        include_labels=include_labels,
+        audio_dataset=audio_dataset,
+        data_samplerate_hz=data_samplerate_hz,
+        early_stopping=early_stopping,
+        early_stopping_patience=early_stopping_patience,
+        max_num_steps_per_epoch=max_num_steps_per_epoch,
+    )
+    if resuming:
+        options.update(lightning_module.training_options)
+        training_method = lightning_module.training_method
+    if training_method not in {"lora", "full"}:
+        raise ValueError("training_method must be lora or full.")
+    if options["accumulate_grad_batches"] < 1:
+        raise ValueError("accumulate_grad_batches must be at least 1.")
+    if not resuming and linear_lr_schedule and reduce_lr:
         raise ValueError("WhisperSeg training supports either linear_lr_schedule or reduce_lr, not both.")
 
-    if seed is not None:
-        pl.seed_everything(seed, workers=True)
+    if options["seed"] is not None:
+        pl.seed_everything(options["seed"], workers=True)
 
     os.makedirs(model_folder, exist_ok=True)
 
-    model, tokenizer = load_model(
-        initial_model_path=initial_model_path,
-        total_spec_columns=total_spec_columns,
-        encoder_dropout=encoder_dropout,
-        decoder_dropout=decoder_dropout,
-    )
-
-    if freeze_encoder:
-        for para in model.model.encoder.parameters():
-            para.requires_grad = False
+    if resuming:
+        model, tokenizer = lightning_module.model, lightning_module.tokenizer
+        total_spec_columns = model.config.total_spec_columns
+    else:
+        model, tokenizer = load_model(
+            initial_model_path=initial_model_path,
+            total_spec_columns=total_spec_columns,
+            encoder_dropout=encoder_dropout,
+            decoder_dropout=decoder_dropout,
+        )
 
     train_dataset_folder = resolve_training_data_dir(train_dataset_folder)
     try:
         audio_path_list_train, label_path_list_train = get_audio_and_label_paths(
             train_dataset_folder,
-            audio_dataset=audio_dataset,
-            data_samplerate_hz=data_samplerate_hz,
+            audio_dataset=options["audio_dataset"],
+            data_samplerate_hz=options["data_samplerate_hz"],
         )
     except TypeError:
         # Some tests monkeypatch get_audio_and_label_paths with the historical one-argument signature.
         audio_path_list_train, label_path_list_train = get_audio_and_label_paths(train_dataset_folder)
     if not audio_path_list_train:
         raise ValueError(f"No paired readable audio and .json/.csv label files found in {train_dataset_folder}.")
-    include_labels = _normalize_include_labels(include_labels)
+    include_labels = _normalize_include_labels(options["include_labels"])
     if include_labels:
         available_labels = set()
         for label_path in label_path_list_train:
@@ -299,26 +398,34 @@ def train(
             available_labels.update(str(cluster) for cluster in label["cluster"])
         _validate_include_labels(include_labels, available_labels)
 
-    default_config = determine_default_config(
-        audio_path_list_train,
-        label_path_list_train,
-        total_spec_columns,
-        ignore_cluster=ignore_class_names,
-        include_clusters=include_labels,
-        min_frequency=min_frequency,
-        frequency_scale=frequency_scale,
-        spec_time_step=spec_time_step,
-        audio_dataset=audio_dataset,
-        data_samplerate_hz=data_samplerate_hz,
+    default_config = (
+        model.config.default_segmentation_config
+        if resuming
+        else determine_default_config(
+            audio_path_list_train,
+            label_path_list_train,
+            total_spec_columns,
+            ignore_cluster=options["ignore_class_names"],
+            include_clusters=include_labels,
+            min_frequency=min_frequency,
+            frequency_scale=frequency_scale,
+            spec_time_step=spec_time_step,
+            audio_dataset=options["audio_dataset"],
+            data_samplerate_hz=options["data_samplerate_hz"],
+        )
     )
     model.config.default_segmentation_config = default_config
 
     initial_codebook = {}
-    cluster_codebook = get_cluster_codebook(
-        label_path_list_train,
-        initial_codebook,
-        ignore_cluster=ignore_class_names,
-        include_clusters=include_labels,
+    cluster_codebook = (
+        model.config.cluster_codebook
+        if resuming
+        else get_cluster_codebook(
+            label_path_list_train,
+            initial_codebook,
+            ignore_cluster=options["ignore_class_names"],
+            include_clusters=include_labels,
+        )
     )
     model.config.cluster_codebook = cluster_codebook
 
@@ -327,27 +434,27 @@ def train(
         label_path_list_train,
         cluster_codebook=cluster_codebook,
         default_config=default_config,
-        ignore_cluster=ignore_class_names,
+        ignore_cluster=options["ignore_class_names"],
         include_clusters=include_labels,
         total_spec_columns=total_spec_columns,
-        validation_fraction=validation_fraction,
-        test_fraction=test_fraction,
-        audio_dataset=audio_dataset,
-        data_samplerate_hz=data_samplerate_hz,
+        validation_fraction=options["validation_fraction"],
+        test_fraction=options["test_fraction"],
+        audio_dataset=options["audio_dataset"],
+        data_samplerate_hz=options["data_samplerate_hz"],
     )
 
     val_dataloader = None
-    if validation_fraction > 0 and val_records:
+    if options["validation_fraction"] > 0 and val_records:
         val_dataset = VocalSegDataset(
             val_records,
             tokenizer,
-            max_length,
+            options["max_length"],
             total_spec_columns,
             model.config.species_codebook,
         )
         val_dataloader = DataLoader(
             val_dataset,
-            batch_size=batch_size,
+            batch_size=options["batch_size"],
             shuffle=False,
             num_workers=num_workers,
             drop_last=False,
@@ -359,14 +466,14 @@ def train(
     training_dataset = VocalSegDataset(
         train_records,
         tokenizer,
-        max_length,
+        options["max_length"],
         total_spec_columns,
         model.config.species_codebook,
     )
 
     train_dataloader = DataLoader(
         training_dataset,
-        batch_size=batch_size,
+        batch_size=options["batch_size"],
         shuffle=True,
         num_workers=num_workers,
         drop_last=False,
@@ -379,32 +486,39 @@ def train(
         raise RuntimeError("Too few examples (less than a batch) for training.")
 
     steps_per_epoch = len(train_dataloader)
-    if max_num_steps_per_epoch is not None:
-        steps_per_epoch = min(int(max_num_steps_per_epoch), steps_per_epoch)
+    if options["max_num_steps_per_epoch"] is not None:
+        steps_per_epoch = min(int(options["max_num_steps_per_epoch"]), steps_per_epoch)
     num_epochs = int(num_epochs)
-    max_num_iterations = steps_per_epoch * num_epochs
+    max_num_iterations = math.ceil(steps_per_epoch / options["accumulate_grad_batches"]) * num_epochs
     monitor_metric = "val_loss" if val_dataloader is not None else "train_loss_epoch"
 
-    lightning_module = WhisperSegLightningModule(
-        model,
-        learning_rate=learning_rate,
-        weight_decay=weight_decay,
-        linear_lr_schedule=linear_lr_schedule,
-        warmup_steps=warmup_steps,
-        reduce_lr=reduce_lr,
-        reduce_lr_patience=reduce_lr_patience,
-        reduce_lr_factor=reduce_lr_factor,
-        reduce_lr_min=reduce_lr_min,
-        lr_monitor=monitor_metric,
-        total_training_steps=max_num_iterations,
-        tokenizer=tokenizer,
-        model_init_config={
-            "initial_model_path": initial_model_path,
-            "total_spec_columns": total_spec_columns,
-            "encoder_dropout": encoder_dropout,
-            "decoder_dropout": decoder_dropout,
-        },
-        checkpoint_metadata=checkpoint_metadata,
+    lightning_module = (
+        lightning_module
+        if resuming
+        else WhisperSegLightningModule(
+            model,
+            learning_rate=learning_rate,
+            weight_decay=weight_decay,
+            linear_lr_schedule=linear_lr_schedule,
+            warmup_steps=warmup_steps,
+            reduce_lr=reduce_lr,
+            reduce_lr_patience=reduce_lr_patience,
+            reduce_lr_factor=reduce_lr_factor,
+            reduce_lr_min=reduce_lr_min,
+            lr_monitor=monitor_metric,
+            total_training_steps=max_num_iterations,
+            tokenizer=tokenizer,
+            model_init_config={
+                "initial_model_path": initial_model_path,
+                "total_spec_columns": total_spec_columns,
+                "encoder_dropout": encoder_dropout,
+                "decoder_dropout": decoder_dropout,
+            },
+            checkpoint_metadata=checkpoint_metadata,
+            training_method=training_method,
+            freeze_encoder=freeze_encoder,
+            training_options=options,
+        )
     )
 
     checkpoint_dir = os.path.join(model_folder, "checkpoints")
@@ -429,11 +543,11 @@ def train(
     if stop_event is not None:
         callbacks.append(StopOnEventCallback(stop_event, verbose=emit_epoch_logs))
 
-    if early_stopping:
+    if options["early_stopping"]:
         callbacks.append(
             EarlyStopping(
                 monitor=monitor_metric,
-                patience=early_stopping_patience,
+                patience=options["early_stopping_patience"],
                 mode="min",
                 verbose=verbose,
             )
@@ -443,6 +557,8 @@ def train(
         accelerator="auto" if device == "auto" else ("gpu" if device == "cuda" else device),
         devices=n_device,
         max_epochs=num_epochs,
+        accumulate_grad_batches=options["accumulate_grad_batches"],
+        gradient_clip_val=1.0 if training_method == "lora" else None,
         logger=CSVLogger(save_dir=str(model_folder), name="logs"),
         callbacks=callbacks,
         enable_progress_bar=verbose and not emit_epoch_logs,
@@ -450,7 +566,7 @@ def train(
         log_every_n_steps=1,
         # suggest_integrations=False,
     )
-    if max_num_steps_per_epoch is not None:
+    if options["max_num_steps_per_epoch"] is not None:
         trainer_kwargs["limit_train_batches"] = steps_per_epoch
 
     trainer = pl.Trainer(**trainer_kwargs)
@@ -458,5 +574,23 @@ def train(
         lightning_module,
         train_dataloaders=train_dataloader,
         val_dataloaders=val_dataloader,
+        **({"ckpt_path": initial_model_path, "weights_only": True} if resuming else {}),
     )
-    return checkpoint_callback.best_model_path
+    best_path = checkpoint_callback.best_model_path
+    if training_method == "lora" and best_path:
+        checkpoint = _torch_load(best_path)
+        lightning_module.cpu()
+        lightning_module.load_state_dict(checkpoint["state_dict"])
+        merged = lightning_module.model.merge_and_unload(safe_merge=True).half().eval()
+        merged.gradient_checkpointing_disable()
+        merged.config.use_cache = True
+        export_path = os.path.join(model_folder, os.path.basename(best_path))
+        torch.save(
+            {
+                "das": dict(lightning_module.checkpoint_metadata),
+                "whisperseg": checkpoint_payload(merged, tokenizer, checkpoint["global_step"]),
+            },
+            export_path,
+        )
+        return export_path
+    return best_path

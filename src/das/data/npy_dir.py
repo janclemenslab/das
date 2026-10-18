@@ -78,10 +78,7 @@ class NPYDirGenerator(Dataset):
             self.num_classes = int(y_shape[1])
         self.chunk_start_samples = _compute_chunk_starts(self.num_samples, self.num_time_steps, self.chunk_stride)
         self.chunk_input_lengths = np.array(
-            [
-                min(self.num_time_steps, max(self.num_samples - int(start), 0))
-                for start in self.chunk_start_samples
-            ],
+            [min(self.num_time_steps, max(self.num_samples - int(start), 0)) for start in self.chunk_start_samples],
             dtype=np.int64,
         )
         self.nb_total = int(len(self.chunk_start_samples))
@@ -207,16 +204,10 @@ class NPYDirDataModule(L.LightningDataModule):
             class_names=inferred_class_names,
             class_types=self.attrs.get("class_types"),
         )
-        label_to_index = {
-            label: index
-            for index, label in enumerate(inferred_class_names)
-            if index != 0 and label != "noise"
-        }
+        label_to_index = {label: index for index, label in enumerate(inferred_class_names) if index != 0 and label != "noise"}
         _validate_include_labels(self.include_labels, set(label_to_index))
         self.include_label_indices = (
-            None
-            if not self.include_labels
-            else [label_to_index[label] for label in self.include_labels]
+            None if not self.include_labels else [label_to_index[label] for label in self.include_labels]
         )
         if self.ignore_class_names:
             self.class_names = ["noise", "song"]

@@ -79,8 +79,12 @@ def make_training_dataset(
         output.mkdir()
         np.save(
             output / "attrs.npy",
-            {"samplerate_x_Hz": samplerate, "samplerate_y_Hz": samplerate,
-             "class_names": class_names, "class_types": data.class_types},
+            {
+                "samplerate_x_Hz": samplerate,
+                "samplerate_y_Hz": samplerate,
+                "class_names": class_names,
+                "class_types": data.class_types,
+            },
             allow_pickle=True,
         )
         for name, arrays in parts.items():

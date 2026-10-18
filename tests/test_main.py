@@ -420,13 +420,13 @@ def test_train_parser_uses_whisperseg_encoder_as_backend(tmp_path: Path):
     assert config.spec_time_step == 0.001
     assert config.decoder_dropout == 0.25
     assert config.max_length == 77
-    assert config.batch_size == 4
-    assert config.num_epochs == 10
-    assert config.validation_fraction == 0.1
+    assert config.batch_size == 1
+    assert config.num_epochs == 24
+    assert config.validation_fraction == 0.125
     assert config.test_fraction == 0.0
-    assert config.learning_rate == 3e-6
+    assert config.learning_rate == 1e-4
     assert config.encoder_dropout == 0.0
-    assert config.early_stopping_patience == 3
+    assert config.early_stopping_patience == 5
 
 
 def test_train_parser_preserves_explicit_whisperseg_training_values(tmp_path: Path):
@@ -1092,16 +1092,18 @@ def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.Monk
 
     assert result == "/tmp/run/checkpoints/zf_20260423_203741_model.ckpt"
     assert train_calls["num_epochs"] == 20
+    assert train_calls["training_method"] == "lora"
+    assert train_calls["accumulate_grad_batches"] == 4
     assert train_calls["encoder_dropout"] == 0.2
     assert train_calls["decoder_dropout"] == 0.3
     assert train_calls["min_frequency"] == 200
     assert train_calls["frequency_scale"] == 0.75
     assert train_calls["spec_time_step"] == 0.002
     assert train_calls["max_length"] == 120
-    assert train_calls["linear_lr_schedule"] is True
-    assert train_calls["reduce_lr"] is False
+    assert train_calls["linear_lr_schedule"] is False
+    assert train_calls["reduce_lr"] is True
     assert train_calls["early_stopping"] is True
-    assert train_calls["early_stopping_patience"] == 3
+    assert train_calls["early_stopping_patience"] == 5
     assert train_calls["checkpoint_filename"] == "zf_20260423_203741_model"
     assert train_calls["checkpoint_metadata"] == {
         "version": 1,
@@ -1110,14 +1112,16 @@ def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.Monk
             "started_at": "20260423_203741",
             "checkpoint_prefix": "zf",
             "initial_model": "model.ckpt",
-            "freeze_encoder": False,
-            "linear_lr_schedule": True,
-            "reduce_lr": False,
-            "reduce_lr_patience": 5,
-            "reduce_lr_factor": 0.1,
+            "freeze_encoder": True,
+            "whisperseg_training_method": "lora",
+            "accumulate_grad_batches": 4,
+            "linear_lr_schedule": False,
+            "reduce_lr": True,
+            "reduce_lr_patience": 2,
+            "reduce_lr_factor": 0.5,
             "reduce_lr_min": 1e-08,
             "early_stopping": True,
-            "early_stopping_patience": 3,
+            "early_stopping_patience": 5,
             "weight_decay": 0.01,
             "warmup_steps": 100,
         },
@@ -1182,6 +1186,7 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
         str(tmp_path / "run"),
         "data",
         initial_model_path="model.ckpt",
+        training_method="full",
         validation_fraction=0.0,
         num_epochs=1,
         checkpoint_filename="zf_20260423_203741_model",
@@ -1197,7 +1202,7 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
     assert checkpoint_kwargs["enable_version_counter"] is False
     assert trainer_kwargs["logger"] == ("logger", {"save_dir": str(tmp_path / "run"), "name": "logs"})
     assert early_stopping_kwargs["monitor"] == "train_loss_epoch"
-    assert early_stopping_kwargs["patience"] == 3
+    assert early_stopping_kwargs["patience"] == 5
     assert any(isinstance(callback, tuple) and callback[0] == "early" for callback in trainer_kwargs["callbacks"])
     assert "enable_checkpointing" not in trainer_kwargs
 
@@ -1207,6 +1212,7 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
         str(tmp_path / "run"),
         "data",
         initial_model_path="model.ckpt",
+        training_method="full",
         validation_fraction=0.0,
         num_epochs=1,
         early_stopping=False,

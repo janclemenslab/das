@@ -433,10 +433,7 @@ class SincConv1d(nn.Module):
         low = (self.fmin + self.low_hz.abs()).clamp(max=self.fmax - self.min_bandwidth)
         high = (low + self.min_bandwidth + self.band_hz.abs()).clamp(max=self.fmax)
         bandwidth = high - low
-        filters = (
-            2 * high * torch.sinc(2 * high * self.times)
-            - 2 * low * torch.sinc(2 * low * self.times)
-        )
+        filters = 2 * high * torch.sinc(2 * high * self.times) - 2 * low * torch.sinc(2 * low * self.times)
         filters = filters * self.window / (2 * bandwidth)
         padded = F.pad(inputs, (self.padding, self.padding), mode=self.pad_mode)
         return F.conv1d(padded, filters.unsqueeze(1))
@@ -500,11 +497,14 @@ class SincFrontend(nn.Module):
         ):
             features = conv(features)
             features = F.gelu(norm(features.transpose(1, 2))).transpose(1, 2)
-            output_lengths = torch.div(
-                torch.clamp(output_lengths + 2 * padding - kernel_size, min=0),
-                stride,
-                rounding_mode="floor",
-            ) + 1
+            output_lengths = (
+                torch.div(
+                    torch.clamp(output_lengths + 2 * padding - kernel_size, min=0),
+                    stride,
+                    rounding_mode="floor",
+                )
+                + 1
+            )
         return features.transpose(1, 2), torch.clamp(output_lengths, max=features.shape[-1])
 
 

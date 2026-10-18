@@ -162,7 +162,7 @@ def test_load_model_checkpoint_reconstructs_embedded_model(tmp_path: Path, monke
             pass
 
     monkeypatch.setattr(whisper_model.WhisperConfig, "from_dict", lambda payload: ("model_config", payload))
-    monkeypatch.setattr(whisper_model.GenerationConfig, "from_dict", lambda payload: ("generation_config", payload))
+    monkeypatch.setattr(whisper_model.GenerationConfig, "from_dict", lambda payload, **kwargs: ("generation_config", payload | kwargs))
     monkeypatch.setattr(whisper_model, "WhisperForConditionalGeneration", FakeWhisper)
     monkeypatch.setattr(whisper_model, "_restore_tokenizer", lambda files: ("tokenizer", files))
 
@@ -171,7 +171,7 @@ def test_load_model_checkpoint_reconstructs_embedded_model(tmp_path: Path, monke
 
     assert model.config == ("model_config", {"hidden_size": 4})
     assert torch.equal(model.loaded_state_dict["weight"], state_dict["weight"])
-    assert model.generation_config == ("generation_config", {"max_length": 12})
+    assert model.generation_config == ("generation_config", {"max_length": 12, "_from_model_config": False})
     assert tokenizer == ("tokenizer", {"vocab.json": b"{}"})
 
 
@@ -240,8 +240,9 @@ def test_load_model_applies_separate_encoder_and_decoder_dropout(monkeypatch):
     class FakeConfig:
         pass
 
-    class FakeModel:
+    class FakeModel(torch.nn.Module):
         def __init__(self):
+            super().__init__()
             self.config = FakeConfig()
             self.model = type("FakeWhisper", (), {"encoder": FakeEncoder(), "decoder": FakeDecoder()})()
 
@@ -463,3 +464,45 @@ def test_vocalseg_dataset_reads_bounded_audio_chunk_on_getitem(tmp_path: Path, m
     assert set(item) == {"input_features", "decoder_input_ids", "labels"}
     assert calls
     assert max(frames for _, frames, _ in calls) < 1_000
+
+
+def test_training_adds_unknown_species_to_compact_vocabulary(tmp_path: Path, monkeypatch):
+    import json
+    from transformers import WhisperConfig, WhisperForConditionalGeneration, WhisperTokenizer
+    from das.whisperseg import model as whisper_model
+
+    tokens = [str(i) for i in range(10)] + [
+        "<|endoftext|>", "<|startoftranscript|>", "<|en|>", "<|notimestamps|>",
+        *[f"<|{i}|>" for i in range(9)], "<|human|>",
+    ]
+    (tmp_path / "vocab.json").write_text(json.dumps(dict(zip(tokens, range(len(tokens))))))
+    (tmp_path / "merges.txt").write_text("#version: 0.2\n")
+    tokenizer = WhisperTokenizer(
+        str(tmp_path / "vocab.json"), str(tmp_path / "merges.txt"), language="english",
+        additional_special_tokens=tokens[10:],
+    )
+    config = WhisperConfig(
+        vocab_size=len(tokenizer), d_model=8, encoder_layers=1, decoder_layers=1,
+        encoder_attention_heads=2, decoder_attention_heads=2,
+        encoder_ffn_dim=16, decoder_ffn_dim=16, max_source_positions=4,
+        pad_token_id=10, bos_token_id=10, eos_token_id=10, decoder_start_token_id=11,
+        species_codebook={"human": "<|human|>"},
+    )
+    model = WhisperForConditionalGeneration(config)
+    original_weights = model.get_input_embeddings().weight.detach().clone()
+    assert "<|unknown|>" not in tokenizer.get_vocab()
+    monkeypatch.setattr(whisper_model, "load_model_checkpoint", lambda _: (model, tokenizer))
+
+    model, tokenizer = whisper_model.load_model("compact.ckpt", total_spec_columns=8)
+    ids = tokenizer.encode("<|unknown|><|0|>0<|8|>")
+    assert all(isinstance(token_id, int) for token_id in ids)
+    assert ids.count(tokenizer.convert_tokens_to_ids("<|unknown|>")) == 1
+    assert model.config.species_codebook["unknown"] == "<|unknown|>"
+    assert model.config.vocab_size == len(tokenizer) == len(original_weights) + 1
+    assert torch.equal(model.get_input_embeddings().weight[:-1], original_weights)
+    output = model(input_features=torch.zeros(1, 80, 8), labels=torch.tensor([ids]))
+    assert torch.isfinite(output.loss)
+
+    weights = model.get_input_embeddings().weight.detach().clone()
+    whisper_model.load_model("compact.ckpt", total_spec_columns=8)
+    assert torch.equal(model.get_input_embeddings().weight, weights)

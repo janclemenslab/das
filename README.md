@@ -1,5 +1,5 @@
 # DAS
-DAS 1.0a3 segments and annotates audio with Conformer, TCN, TweetyNet, and WhisperSeg models.
+DAS 1.0a4 segments and annotates audio with Conformer, TCN, TweetyNet, and WhisperSeg models.
 
 
 ## Installation
@@ -7,7 +7,7 @@ DAS 1.0a3 segments and annotates audio with Conformer, TCN, TweetyNet, and Whisp
 ```shell
 conda create -y -n das python=3.12 uv
 conda activate das
-uv pip install "das[gui]==1.0a3"
+uv pip install "das[gui]==1.0a4"
 ```
 
 For development from a source checkout, install the test and docs extras too:
@@ -108,13 +108,7 @@ das convert-legacy \
 
 The converted checkpoint can then be passed to `das predict` like any native checkpoint.
 
-WhisperSeg uses DAS `.ckpt` checkpoints for training and prediction. Training requires `--initial-model /path/to/converted-whisperseg.ckpt`; original WhisperSeg `.pt` files and Hugging Face model IDs are not loaded directly.
-
-The self-contained `whisperseg-aer/v1` `.pt` bundles can be repacked once, without retraining:
-
-```shell
-python -m das.whisperseg.convert /path/to/whisperseg-aer.pt /path/to/whisperseg-aer.ckpt
-```
+WhisperSeg offers compact FP16 AER starting models in Tiny, Base, Small and Large sizes. Select one in the GUI or use `--initial-model whisperseg-aer:small-ms`. Training defaults to decoder LoRA; `--whisperseg-training-method full` selects FP32 fine-tuning. Selecting a training checkpoint as the initial model automatically resumes its adapters, optimizer and scheduler. See [WhisperSeg training and prediction](docs/alpha/whisperseg.md).
 
 For native checkpoints, `das predict` uses the saved chunk length, stride, and class names from the trained model. Legacy DAS models use the saved legacy window size, stride, and class labels from the model params. Evaluation works through `das predict --evaluate`, with optional `--split train|val|test` for split-backed datasets.
 

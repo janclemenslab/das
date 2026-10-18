@@ -18,6 +18,7 @@ dependencies = [
     'pyyaml',
     'rich',
     'transformers==4.57.1',
+    'peft==0.18.0',
     'zarr<3',
     'lightning',
 

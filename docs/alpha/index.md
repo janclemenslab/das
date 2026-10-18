@@ -1,4 +1,4 @@
-# DAS 1.0a2
+# DAS 1.0a4
 
 DAS annotates audio with Conformer, TCN, TweetyNet, or WhisperSeg models. This is a pre-release. The documentation for the published 0.33 series remains at [DAS](https://janclemenslab.org/das/).
 
@@ -6,6 +6,7 @@ DAS annotates audio with Conformer, TCN, TweetyNet, or WhisperSeg models. This i
 :maxdepth: 2
 
 quickstart
+whisperseg
 gui
 compatibility
 ```

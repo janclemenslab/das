@@ -82,6 +82,7 @@ from .gui_helpers import (
     train_config_to_gui_state,
     train_gui_state_to_config,
 )
+from .whisperseg.catalog import MODEL_OPTIONS
 from .api import _is_whisperseg_predict_source, _load_checkpoint_metadata, predict, train
 
 LineText = Annotated[str, {"widget_type": "LineEdit"}]
@@ -113,7 +114,9 @@ PREDICT_AFTER_TRAIN_OPTIONS = [
 class DataSectionForm:
     batch_size: PositiveInt = 8
     num_workers: NonNegativeInt = 0
-    validation_fraction: FloatValue = DataSectionState.validation_fraction
+    validation_fraction: Annotated[float, {"widget_type": "FloatSpinBox", "min": 0.0, "max": 1.0, "step": 0.001}] = (
+        DataSectionState.validation_fraction
+    )
     test_fraction: FloatValue = DataSectionState.test_fraction
     ignore_class_names: BoolValue = DataSectionState.ignore_class_names
 
@@ -139,6 +142,8 @@ class PredictRuntimeSectionForm:
 @guiclass
 class EncoderSettingsForm:
     freeze_encoder: BoolValue = EncoderSettingsState.freeze_encoder
+    whisperseg_training_method: Literal["lora", "full"] = EncoderSettingsState.whisperseg_training_method
+    accumulate_grad_batches: PositiveInt = EncoderSettingsState.accumulate_grad_batches
 
 
 @guiclass
@@ -295,9 +300,7 @@ class TrainPredictionOutputForm:
 
 @guiclass
 class TrainPostprocessingSettingsForm:
-    syllable_postprocessor: Literal["binary_mask", "label_aware_dense"] = (
-        TrainPredictionSectionState.syllable_postprocessor
-    )
+    syllable_postprocessor: Literal["binary_mask", "label_aware_dense"] = TrainPredictionSectionState.syllable_postprocessor
 
 
 @guiclass
@@ -629,16 +632,15 @@ class InitialModelField(QWidget):
 
     @property
     def value(self) -> str:
-        current = self.combo.currentText()
-        if current == LOCAL_INITIAL_MODEL_OPTION:
+        if self.combo.currentIndex() == 0:
             return self.local_field.value
-        return current
+        return self.combo.currentData()
 
     @value.setter
     def value(self, value: str) -> None:
         value = value.strip()
-        index = self.combo.findText(value)
-        if index >= 0:
+        index = self.combo.findData(value) if value in MODEL_OPTIONS else -1
+        if index > 0:
             self.combo.setCurrentIndex(index)
         else:
             self.local_field.value = value
@@ -650,20 +652,18 @@ class InitialModelField(QWidget):
         self._model_class = model_class
         self._populate_options()
 
-    def _hf_options(self) -> list[str]:
-        return []
-
     def _populate_options(self) -> None:
-        hf_options = self._hf_options()
         selected_value = self._selected_by_model_class.get(self._model_class, "")
         self.combo.blockSignals(True)
         self.combo.clear()
         self.combo.addItem(LOCAL_INITIAL_MODEL_OPTION)
-        self.combo.addItems(hf_options)
+        if self._model_class == "whisperseg":
+            for alias, (label, _) in MODEL_OPTIONS.items():
+                self.combo.addItem(label, alias)
         self.combo.blockSignals(False)
 
-        if selected_value in hf_options:
-            _set_combo_value(self.combo, selected_value)
+        if self._model_class == "whisperseg" and selected_value in MODEL_OPTIONS:
+            self.combo.setCurrentIndex(self.combo.findData(selected_value))
         else:
             self.local_field.value = selected_value
             _set_combo_value(self.combo, LOCAL_INITIAL_MODEL_OPTION)
@@ -671,7 +671,7 @@ class InitialModelField(QWidget):
         self._sync_local_field()
 
     def _sync_local_field(self, *_args) -> None:
-        self.local_field.setVisible(self.combo.currentText() == LOCAL_INITIAL_MODEL_OPTION)
+        self.local_field.setVisible(self.combo.currentIndex() == 0)
         self._selected_by_model_class[self._model_class] = self.value
 
 
@@ -683,6 +683,8 @@ class PredictCheckpointField(QWidget):
         self.label = QLabel("Checkpoint")
         self.combo = QComboBox()
         self.combo.addItem(LOCAL_INITIAL_MODEL_OPTION)
+        for alias, (label, _) in MODEL_OPTIONS.items():
+            self.combo.addItem(label, alias)
         self.local_field = PathField(
             label="DAS checkpoint or legacy DAS model",
             selection_mode="file",
@@ -715,16 +717,15 @@ class PredictCheckpointField(QWidget):
 
     @property
     def value(self) -> str:
-        current = self.combo.currentText()
-        if current == LOCAL_INITIAL_MODEL_OPTION:
+        if self.combo.currentIndex() == 0:
             return self.local_field.value
-        return current
+        return self.combo.currentData()
 
     @value.setter
     def value(self, value: str) -> None:
         value = value.strip()
-        index = self.combo.findText(value)
-        if index >= 0:
+        index = self.combo.findData(value) if value in MODEL_OPTIONS else -1
+        if index > 0:
             self.combo.setCurrentIndex(index)
         else:
             self.local_field.value = value
@@ -732,7 +733,7 @@ class PredictCheckpointField(QWidget):
         self._sync_local_field()
 
     def _sync_local_field(self, *_args) -> None:
-        self.local_field.setVisible(self.combo.currentText() == LOCAL_INITIAL_MODEL_OPTION)
+        self.local_field.setVisible(self.combo.currentIndex() == 0)
 
 
 class TrainPathsWidget(QWidget):
@@ -796,9 +797,7 @@ class TrainPathsWidget(QWidget):
     def data_dir(self, path: str) -> None:
         path = path.strip()
         is_hf_dataset = path in TRAIN_DATASET_HF_OPTIONS or (
-            not Path(path).expanduser().is_absolute()
-            and path.count("/") == 1
-            and not path.startswith((".", "~"))
+            not Path(path).expanduser().is_absolute() and path.count("/") == 1 and not path.startswith((".", "~"))
         )
         if is_hf_dataset:
             self.hf_dataset_combo.setCurrentText(path)
@@ -1067,10 +1066,18 @@ class TrainPostprocessingSectionWidget(QWidget):
         )
         _set_form_tooltips(
             self.manual_form,
-            {name: name for name in (
-                "fill_gap_ms", "min_syllable_ms", "segment_threshold_low",
-                "segment_threshold_high", "event_threshold", "event_dist_min_ms", "event_dist_max_ms",
-            )},
+            {
+                name: name
+                for name in (
+                    "fill_gap_ms",
+                    "min_syllable_ms",
+                    "segment_threshold_low",
+                    "segment_threshold_high",
+                    "event_threshold",
+                    "event_dist_min_ms",
+                    "event_dist_max_ms",
+                )
+            },
         )
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -1141,7 +1148,17 @@ class ModelSectionWidget(QWidget):
         _set_config_tooltip(self.frontend_type, "frontend_type")
         _set_config_tooltip(self.encoder_type, "encoder_type")
         _set_config_tooltip(self.decoder_type, "decoder_type")
-        _set_form_tooltips(self.encoder_settings_form, {"freeze_encoder": "freeze_encoder"})
+        _set_form_tooltips(
+            self.encoder_settings_form,
+            {
+                name: name
+                for name in (
+                    "freeze_encoder",
+                    "whisperseg_training_method",
+                    "accumulate_grad_batches",
+                )
+            },
+        )
         _set_form_tooltips(
             self.stft_frontend_form,
             {
@@ -1266,9 +1283,7 @@ class ModelSectionWidget(QWidget):
         self.raw_frontend_placeholder = QWidget()
         raw_frontend_placeholder_layout = QVBoxLayout(self.raw_frontend_placeholder)
         raw_frontend_placeholder_layout.setContentsMargins(0, 0, 0, 0)
-        raw_frontend_message = QLabel(
-            "Raw waveform frontend uses the dataset channel count automatically."
-        )
+        raw_frontend_message = QLabel("Raw waveform frontend uses the dataset channel count automatically.")
         raw_frontend_message.setWordWrap(True)
         raw_frontend_placeholder_layout.addWidget(raw_frontend_message)
         raw_frontend_placeholder_layout.addStretch(1)
@@ -1455,11 +1470,11 @@ class ModelSectionWidget(QWidget):
         self.decoder_stack.setCurrentIndex(DAS_DECODER_OPTIONS.index(self.decoder_type.currentText()))
         whisperseg_training_enabled = self._model_class_value() == "whisperseg"
         _set_magicgui_field_visible(self.encoder_settings_form.gui.freeze_encoder, whisperseg_training_enabled)
-        if (
-            whisperseg_training_enabled
-            and self.hyperparameters_form.reduce_lr
-            and self.hyperparameters_form.linear_lr_schedule
-        ):
+        _set_magicgui_field_visible(self.encoder_settings_form.gui.whisperseg_training_method, whisperseg_training_enabled)
+        _set_magicgui_field_visible(self.encoder_settings_form.gui.accumulate_grad_batches, whisperseg_training_enabled)
+        lora = whisperseg_training_enabled and self.encoder_settings_form.whisperseg_training_method == "lora"
+        _set_magicgui_field_enabled(self.encoder_settings_form.gui.freeze_encoder, not lora)
+        if whisperseg_training_enabled and self.hyperparameters_form.reduce_lr and self.hyperparameters_form.linear_lr_schedule:
             self.hyperparameters_form.reduce_lr = False
         _set_magicgui_field_visible(
             self.hyperparameters_form.gui.cross_entropy_weight,
@@ -1680,11 +1695,14 @@ class TrainCommandWidget(QWidget):
         self.trainer_form = TrainerSectionForm()
         self.prediction_form = TrainPredictionSectionWidget()
         self.evaluation_form = EvaluationSectionForm()
-        self._training_values_model_class = self._model_class_value()
+        self._training_values_model_class = self._training_recipe_key()
         self._training_values_by_model_class = {
             self._training_values_model_class: self._training_values(),
         }
         self.model_class.currentTextChanged.connect(self._sync_model_class_training_values)
+        self.model_section.encoder_settings_form.gui.whisperseg_training_method.changed.connect(
+            self._sync_model_class_training_values
+        )
 
         _set_form_tooltips(
             self.data_form,
@@ -1756,7 +1774,10 @@ class TrainCommandWidget(QWidget):
     def _set_model_class_value(self, value: str) -> None:
         _set_combo_value(self.model_class, MODEL_CLASS_LABELS.get(value, "DAS"))
 
-    def _training_values(self) -> dict[str, int | float]:
+    def _training_recipe_key(self) -> tuple[str, str]:
+        return self._model_class_value(), str(self.model_section.encoder_settings_form.whisperseg_training_method)
+
+    def _training_values(self) -> dict[str, object]:
         return {
             "batch_size": int(self.data_form.batch_size),
             "validation_fraction": float(self.data_form.validation_fraction),
@@ -1766,16 +1787,32 @@ class TrainCommandWidget(QWidget):
             "learning_rate": float(self.model_section.hyperparameters_form.learning_rate),
             "early_stopping_patience": int(self.model_section.hyperparameters_form.early_stopping_patience),
             "num_epochs": int(self.trainer_form.num_epochs),
+            "seed": self.trainer_form.seed,
+            "max_length": int(self.model_section.whisperseg_decoder_form.max_length),
+            "freeze_encoder": bool(self.model_section.encoder_settings_form.freeze_encoder),
+            "accumulate_grad_batches": int(self.model_section.encoder_settings_form.accumulate_grad_batches),
+            **{
+                name: getattr(self.model_section.hyperparameters_form, name)
+                for name in (
+                    "linear_lr_schedule",
+                    "reduce_lr",
+                    "reduce_lr_patience",
+                    "reduce_lr_factor",
+                )
+            },
         }
 
     def _sync_model_class_training_values(self, *_args) -> None:
-        model_class = self._model_class_value()
+        model_class = self._training_recipe_key()
         if model_class == self._training_values_model_class:
             return
         self._training_values_by_model_class[self._training_values_model_class] = self._training_values()
         values = self._training_values_by_model_class.get(model_class)
         if values is None:
-            defaults = Config(encoder_type="whisperseg" if model_class == "whisperseg" else "conformer")
+            defaults = Config(
+                encoder_type="whisperseg" if model_class[0] == "whisperseg" else "conformer",
+                whisperseg_training_method=model_class[1],
+            )
             values = {name: getattr(defaults, name) for name in self._training_values()}
         self.data_form.batch_size = values["batch_size"]
         self.data_form.validation_fraction = values["validation_fraction"]
@@ -1785,7 +1822,14 @@ class TrainCommandWidget(QWidget):
         self.model_section.hyperparameters_form.learning_rate = values["learning_rate"]
         self.model_section.hyperparameters_form.early_stopping_patience = values["early_stopping_patience"]
         self.trainer_form.num_epochs = values["num_epochs"]
+        self.trainer_form.seed = "" if values["seed"] is None else str(values["seed"])
+        self.model_section.whisperseg_decoder_form.max_length = values["max_length"]
+        self.model_section.encoder_settings_form.freeze_encoder = values["freeze_encoder"]
+        self.model_section.encoder_settings_form.accumulate_grad_batches = values["accumulate_grad_batches"]
+        for name in ("linear_lr_schedule", "reduce_lr", "reduce_lr_patience", "reduce_lr_factor"):
+            setattr(self.model_section.hyperparameters_form, name, values[name])
         self._training_values_model_class = model_class
+        self.model_section._sync_stacks()
 
     def _refresh_include_labels(self, *_args, selected_labels: list[str] | None = None) -> None:
         self.include_labels_widget.load_from_data_dir(
@@ -1822,9 +1866,7 @@ class TrainCommandWidget(QWidget):
             whisperseg_decoder=self.model_section.whisperseg_decoder_state(),
             model_hyperparameters=self.model_section.hyperparameter_state(),
             trainer=_copy_from_form(TrainerSectionState, self.trainer_form),
-            prediction=self.model_section.postprocessing_widget.state(
-                output_suffix=self.prediction_form.output_suffix
-            ),
+            prediction=self.model_section.postprocessing_widget.state(output_suffix=self.prediction_form.output_suffix),
             evaluation=_copy_from_form(EvaluationSectionState, self.evaluation_form),
         )
 
@@ -1895,14 +1937,28 @@ class PredictCommandWidget(QWidget):
         )
         _set_form_tooltips(
             self.postprocessing_form,
-            {name: name for name in (
-                "fill_gap_ms", "min_syllable_ms", "syllable_postprocessor", "segment_threshold_low",
-                "segment_threshold_high", "event_threshold", "event_dist_min_ms", "event_dist_max_ms",
-            )},
+            {
+                name: name
+                for name in (
+                    "fill_gap_ms",
+                    "min_syllable_ms",
+                    "syllable_postprocessor",
+                    "segment_threshold_low",
+                    "segment_threshold_high",
+                    "event_threshold",
+                    "event_dist_min_ms",
+                    "event_dist_max_ms",
+                )
+            },
         )
-        _set_form_tooltips(self.evaluation_form, {
-            "evaluate": "evaluate", "split": "split", "syllable_tolerance_ms": "syllable_tolerance_ms",
-        })
+        _set_form_tooltips(
+            self.evaluation_form,
+            {
+                "evaluate": "evaluate",
+                "split": "split",
+                "syllable_tolerance_ms": "syllable_tolerance_ms",
+            },
+        )
         _set_form_tooltips(
             self.whisperseg_decoder_form,
             {
@@ -2002,9 +2058,7 @@ class PredictCommandWidget(QWidget):
     def _sync_model_class(self, *_args) -> None:
         whisperseg = _is_whisperseg_predict_source(self.paths_form.checkpoint)
         self.model_class_label.setText("WhisperSeg" if whisperseg else "DAS")
-        self.model_stack.setCurrentWidget(
-            self.whisperseg_model_panel if whisperseg else self.das_model_panel
-        )
+        self.model_stack.setCurrentWidget(self.whisperseg_model_panel if whisperseg else self.das_model_panel)
 
     def uses_current_audio(self) -> bool:
         return self.source_combo.currentText() == "Current audio"
@@ -2312,7 +2366,11 @@ class JobWorker(QObject):
 
         if payload is not None:
             return payload
-        if self._cancel_requested or self.cancel_event.is_set() or bool(self.stop_event is not None and self.stop_event.is_set()):
+        if (
+            self._cancel_requested
+            or self.cancel_event.is_set()
+            or bool(self.stop_event is not None and self.stop_event.is_set())
+        ):
             return {
                 "ok": True,
                 "command": self.command_name,
@@ -2403,8 +2461,7 @@ class DASConformerWindow(QMainWindow):
         for config_name, label in BUILTIN_CONFIG_OPTIONS:
             self.preset_dropdown.addItem(label, config_name)
         self.preset_dropdown.setToolTip(
-            "Built-in configs loaded like YAML configs: "
-            + ", ".join(config_name for config_name, _ in BUILTIN_CONFIG_OPTIONS)
+            "Built-in configs loaded like YAML configs: " + ", ".join(config_name for config_name, _ in BUILTIN_CONFIG_OPTIONS)
         )
         self.load_button = QPushButton("Load Config")
         self.save_button = QPushButton("Save Config")
@@ -2563,11 +2620,7 @@ class DASConformerWindow(QMainWindow):
         if self.annotated_region_provider is None:
             raise ValueError("No annotated region provider is available.")
         regions = self.annotated_region_provider()
-        if (
-            isinstance(regions, tuple)
-            and len(regions) == 2
-            and all(isinstance(value, (int, float)) for value in regions)
-        ):
+        if isinstance(regions, tuple) and len(regions) == 2 and all(isinstance(value, (int, float)) for value in regions):
             intervals = [regions]
         else:
             intervals = list(regions)

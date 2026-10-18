@@ -2,7 +2,11 @@ from tqdm import tqdm
 
 
 def evaluate(audio_list, label_list, segmenter, batch_size, max_length, num_trials, num_beams=4, target_cluster=None):
-    total_n_true_positive_segment_wise, total_n_positive_in_prediction_segment_wise, total_n_positive_in_label_segment_wise = 0, 0, 0
+    total_n_true_positive_segment_wise, total_n_positive_in_prediction_segment_wise, total_n_positive_in_label_segment_wise = (
+        0,
+        0,
+        0,
+    )
     total_n_true_positive_frame_wise, total_n_positive_in_prediction_frame_wise, total_n_positive_in_label_frame_wise = 0, 0, 0
 
     for audio, label in tqdm(zip(audio_list, label_list), total=len(audio_list)):

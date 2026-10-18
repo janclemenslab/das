@@ -40,14 +40,13 @@ class PredictionResultContext:
         self.min_syllable_seconds = float(self.min_syllable_seconds)
         self.tolerance_seconds = float(self.tolerance_seconds)
         self.event_dist_min_seconds = float(self.event_dist_min_seconds)
-        self.event_dist_max_seconds = (
-            None if self.event_dist_max_seconds is None else float(self.event_dist_max_seconds)
-        )
+        self.event_dist_max_seconds = None if self.event_dist_max_seconds is None else float(self.event_dist_max_seconds)
         self.postprocessor = str(self.postprocessor)
         self.segment_threshold_low = float(self.segment_threshold_low)
         self.segment_threshold_high = float(self.segment_threshold_high)
         self.event_threshold = float(self.event_threshold)
         self.legacy_data_padding = int(self.legacy_data_padding)
+
 
 @dataclass
 class PredictionEvaluation:

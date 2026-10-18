@@ -516,7 +516,7 @@ def test_learning_rate_field_preserves_decimal_precision(qtbot):
     assert window.train_widget.build_config().learning_rate == float(learning_rate)
 
 
-def test_whisperseg_training_uses_only_local_das_checkpoint(qtbot):
+def test_whisperseg_training_offers_published_models_and_local_checkpoint(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
     selector = window.train_widget.model_section.initial_model_field
@@ -532,8 +532,13 @@ def test_whisperseg_training_uses_only_local_das_checkpoint(qtbot):
 
     assert selector.combo.itemText(0) == "Local checkpoint"
     assert not selector.isHidden()
-    assert selector.combo.count() == 1
+    assert selector.combo.count() == 6
     assert selector.combo.currentText() == "Local checkpoint"
+
+    selector.value = "whisperseg-aer:small-ms"
+
+    assert selector.combo.currentText() == "Small multispecies · compact FP16"
+    assert window.train_widget.build_config().initial_model == "whisperseg-aer:small-ms"
 
     selector.value = "/tmp/local.ckpt"
 
@@ -546,13 +551,19 @@ def test_whisperseg_training_uses_only_local_das_checkpoint(qtbot):
     assert selector.combo.currentText() == "Local checkpoint"
 
 
-def test_predict_checkpoint_selector_accepts_local_models(qtbot):
+def test_predict_checkpoint_selector_accepts_published_and_local_models(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
     selector = window.predict_widget.paths_form.checkpoint_field
 
     assert selector.combo.itemText(0) == "Local checkpoint"
-    assert selector.combo.count() == 1
+    assert selector.combo.count() == 6
+
+    selector.value = "whisperseg-aer:base-animal-vad"
+
+    assert selector.combo.currentText() == "Animal VAD Base · compact FP16"
+    assert window.predict_widget.build_config().checkpoint == "whisperseg-aer:base-animal-vad"
+    assert window.predict_widget.model_class_label.text() == "WhisperSeg"
 
     selector.value = "/tmp/model.ckpt"
 
@@ -649,6 +660,8 @@ def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbo
     assert not _magicgui_field_is_hidden(form.gui.weight_decay)
     assert not _magicgui_field_is_hidden(form.gui.warmup_steps)
     assert form.gui.linear_lr_schedule.native.isEnabled()
+    assert not encoder_form.gui.freeze_encoder.native.isEnabled()
+    encoder_form.whisperseg_training_method = "full"
     assert encoder_form.gui.freeze_encoder.native.isEnabled()
     assert form.gui.learning_rate.native.isEnabled()
 
@@ -780,14 +793,14 @@ def test_model_class_switches_between_das_and_whisperseg_sections(qtbot):
     assert hasattr(model_section.whisperseg_decoder_form.gui, "generation_max_length")
     assert model_section.whisperseg_frontend_form.min_frequency == ""
     assert model_section.whisperseg_frontend_form.frequency_scale == "1.0"
-    assert window.train_widget.data_form.batch_size == 4
-    assert window.train_widget.data_form.validation_fraction == 0.1
+    assert window.train_widget.data_form.batch_size == 1
+    assert window.train_widget.data_form.validation_fraction == 0.125
     assert window.train_widget.data_form.test_fraction == 0.0
-    assert window.train_widget.trainer_form.num_epochs == 10
+    assert window.train_widget.trainer_form.num_epochs == 24
     assert model_section.tcn_encoder_form.dropout == 0.0
     assert model_section.whisperseg_decoder_form.decoder_dropout == 0.0
-    assert float(model_section.hyperparameters_form.learning_rate) == 3e-6
-    assert model_section.hyperparameters_form.early_stopping_patience == 3
+    assert float(model_section.hyperparameters_form.learning_rate) == 1e-4
+    assert model_section.hyperparameters_form.early_stopping_patience == 5
 
     model_section.whisperseg_frontend_form.min_frequency = "250"
     model_section.whisperseg_frontend_form.frequency_scale = "0.5"
@@ -1185,3 +1198,31 @@ def test_preset_dropdown_applies_active_tab_presets_and_preserves_paths(qtbot):
     assert "Applied Fly pulse train config." in log_text
     assert "Applied TweetyNet train config." in log_text
     assert "Applied Zebra Finch predict config." in log_text
+
+
+def test_whisperseg_lora_and_full_recipes_survive_gui_switches(qtbot):
+    window = gui.DASConformerWindow()
+    qtbot.addWidget(window)
+    widget = window.train_widget
+    widget.model_class.setCurrentText("WhisperSeg")
+    settings = widget.model_section.encoder_settings_form
+    config = widget.build_config()
+    assert config.whisperseg_training_method == "lora"
+    assert (config.batch_size, config.accumulate_grad_batches, config.max_length) == (1, 4, 128)
+    assert config.validation_fraction == 0.125 and config.seed == 0
+    assert config.reduce_lr and not config.linear_lr_schedule
+    settings.whisperseg_training_method = "full"
+    full = widget.build_config()
+    assert (full.batch_size, full.learning_rate, full.num_epochs) == (4, 3e-6, 10)
+    assert full.accumulate_grad_batches == 1 and not full.freeze_encoder
+    assert full.linear_lr_schedule and not full.reduce_lr
+    assert settings.gui.freeze_encoder.native.isEnabled()
+    widget.model_section.hyperparameters_form.learning_rate = "0.000007"
+    settings.whisperseg_training_method = "lora"
+    assert widget.build_config().learning_rate == 1e-4
+    settings.whisperseg_training_method = "full"
+    assert widget.build_config().learning_rate == 7e-6
+    widget.model_class.setCurrentText("DAS")
+    native = widget.build_config()
+    assert native.batch_size == 8 and not native.freeze_encoder
+    native.copy(data_dir="data", output_dir="run").validate()

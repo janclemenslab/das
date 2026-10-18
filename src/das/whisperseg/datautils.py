@@ -130,8 +130,7 @@ def read_label(label_path, default_config={}, ignore_cluster=False, include_clus
     label["cluster"] = list(map(str, label["cluster"]))
     marker_mask = np.asarray([cluster in _ANNOTATION_BOUNDARY_NAMES for cluster in label["cluster"]], dtype=bool)
     label["_annotation_markers"] = [
-        (str(label["cluster"][idx]), float(label["onset"][idx]))
-        for idx in np.flatnonzero(marker_mask)
+        (str(label["cluster"][idx]), float(label["onset"][idx])) for idx in np.flatnonzero(marker_mask)
     ]
     if np.any(marker_mask):
         _filter_label_rows(label, ~marker_mask)
@@ -592,7 +591,7 @@ def build_vocalseg_clip_records(
 
 
 class VocalSegDataset(Dataset):
-    def __init__(self, records, tokenizer, max_length, total_spec_columns, species_codebook):
+    def __init__(self, records, tokenizer, max_length, total_spec_columns, species_codebook, deterministic=False):
         self.records = list(records)
         self.feature_extractor_bank = self.get_feature_extractor_bank(
             [record.label for record in self.records],
@@ -602,6 +601,7 @@ class VocalSegDataset(Dataset):
         self.max_length = max_length
         self.total_spec_columns = total_spec_columns
         self.species_codebook = species_codebook
+        self.deterministic = deterministic
 
     def get_feature_extractor_bank(self, label_list, total_spec_columns):
         max_clip_duration = max(
@@ -680,7 +680,9 @@ class VocalSegDataset(Dataset):
         num_samples_in_clip = int(np.round(self.total_spec_columns * spec_time_step * sr))
         audio = self._read_record_audio(record, num_samples_in_clip)
 
-        clip_start = np.random.choice(min(num_samples_in_clip + 1, len(audio) - feature_extractor.n_fft + 1))
+        # Validation must reuse crops without consuming the training RNG.
+        rng = np.random.RandomState(idx) if self.deterministic else np.random
+        clip_start = rng.choice(min(num_samples_in_clip + 1, len(audio) - feature_extractor.n_fft + 1))
         audio_clip = audio[clip_start : clip_start + num_samples_in_clip]
 
         actual_clip_duration = len(audio_clip) / sr

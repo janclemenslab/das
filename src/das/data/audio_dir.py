@@ -215,7 +215,9 @@ def _normalized_key(key: object) -> str:
 
 
 def _read_scalar(value) -> float:
-    if isinstance(value, h5py.Dataset) or (hasattr(value, "shape") and hasattr(value, "__getitem__") and not np.isscalar(value)):
+    if isinstance(value, h5py.Dataset) or (
+        hasattr(value, "shape") and hasattr(value, "__getitem__") and not np.isscalar(value)
+    ):
         value = value[()]
     array = np.asarray(value)
     if array.size != 1:
@@ -408,7 +410,9 @@ class NumpyArrayAudio:
 
 
 class NPZAudio(NumpyArrayAudio):
-    def __init__(self, path: str | Path, *, audio_dataset: str | None = None, samplerate: float | None = None, scale: float | None = None):
+    def __init__(
+        self, path: str | Path, *, audio_dataset: str | None = None, samplerate: float | None = None, scale: float | None = None
+    ):
         self.handle = np.load(path)
         try:
             data_key = audio_dataset
@@ -504,7 +508,9 @@ def audio_file_info(path: str | Path, *, audio_dataset: str | None = None, data_
         audio.close()
 
 
-def load_audio_array(path: str | Path, *, audio_dataset: str | None = None, data_samplerate_hz: float | None = None) -> tuple[np.ndarray, int]:
+def load_audio_array(
+    path: str | Path, *, audio_dataset: str | None = None, data_samplerate_hz: float | None = None
+) -> tuple[np.ndarray, int]:
     audio = open_audio_file(path, audio_dataset=audio_dataset, data_samplerate_hz=data_samplerate_hz)
     try:
         return audio.read(0, len(audio)), int(audio.samplerate)
@@ -545,9 +551,7 @@ def resolve_training_data_dir(data_dir: str | Path) -> str:
     from ..config import TRAIN_DATASET_HF_OPTIONS
 
     is_hf_dataset = data_dir_text in TRAIN_DATASET_HF_OPTIONS or (
-        not data_path.is_absolute()
-        and data_dir_text.count("/") == 1
-        and not data_dir_text.startswith((".", "~"))
+        not data_path.is_absolute() and data_dir_text.count("/") == 1 and not data_dir_text.startswith((".", "~"))
     )
     if is_hf_dataset:
         from huggingface_hub import snapshot_download
@@ -720,7 +724,9 @@ def _audio_files_from_filepath_annotations(annotation_tables: dict[Path, pd.Data
     return audio_files
 
 
-def _filter_annotations_for_audio(annotations: pd.DataFrame, annotation_file: str | Path, audio_file: str | Path) -> pd.DataFrame:
+def _filter_annotations_for_audio(
+    annotations: pd.DataFrame, annotation_file: str | Path, audio_file: str | Path
+) -> pd.DataFrame:
     if _FILEPATH_COLUMN not in annotations.columns:
         return annotations.copy()
 
@@ -988,10 +994,7 @@ class AudioDirGenerator(Dataset):
         if chunk_input_lengths is None:
             self.file_chunk_input_lengths = [
                 np.asarray(
-                    [
-                        min(self.num_time_steps, max(int(num_samples) - int(start), 0))
-                        for start in starts
-                    ],
+                    [min(self.num_time_steps, max(int(num_samples) - int(start), 0)) for start in starts],
                     dtype=np.int64,
                 )
                 for num_samples, starts in zip(self.nb_samples_in_file, self.file_chunk_starts, strict=True)
@@ -1374,10 +1377,7 @@ class AudioDirDataModule(L.LightningDataModule):
 
         total_seconds = 0.0
         if chunk_input_lengths is None:
-            chunk_input_lengths = [
-                np.full(len(starts), self.num_time_steps, dtype=np.int64)
-                for starts in chunk_starts
-            ]
+            chunk_input_lengths = [np.full(len(starts), self.num_time_steps, dtype=np.int64) for starts in chunk_starts]
         for audio_file, starts, lengths in zip(audio_files, chunk_starts, chunk_input_lengths, strict=True):
             info = self.audio_file_info_by_path.get(Path(audio_file).expanduser().resolve())
             if info is None:

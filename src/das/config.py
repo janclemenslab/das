@@ -11,6 +11,7 @@ import yaml
 from .models.decoders import serialize_decoder_config
 from .models.encoders import TcnPadding, serialize_encoder_config
 from .models.frontends import PadMode, serialize_frontend_config
+from .whisperseg.catalog import MODEL_OPTIONS
 
 ModeName = Literal["train", "predict", "gui", "convert-legacy"]
 SplitName = Literal["train", "val", "test"]
@@ -21,8 +22,9 @@ ExistingAnnotations = Literal["skip", "overwrite", "merge"]
 
 @dataclass(frozen=True)
 class _BackendDefault:
-    native: int | float
-    whisperseg: int | float
+    native: int | float | bool | None
+    whisperseg: int | float | bool | None
+    lora: object = ...
 
     def __repr__(self) -> str:
         return repr(self.native)
@@ -172,10 +174,12 @@ def _initial_model_parser(value: str) -> str:
     normalized = str(value).strip()
     if not normalized:
         return ""
+    if normalized in MODEL_OPTIONS:
+        return normalized
     local_path = Path(normalized).expanduser()
     if local_path.is_file() and local_path.suffix == ".ckpt":
         return str(local_path)
-    raise ValueError("initial_model must be a local DAS .ckpt file.")
+    raise ValueError("initial_model must be a local DAS .ckpt file or a WhisperSeg AER model name.")
 
 
 def _identity(value):
@@ -204,13 +208,14 @@ def _config_field(
 
 
 def _backend_default_field(
-    native: int | float,
-    whisperseg: int | float,
+    native: int | float | bool | None,
+    whisperseg: int | float | bool | None,
     *,
+    lora=...,
     help: str,
     parser: Callable[[object], object],
 ):
-    return _config_field(_BackendDefault(native, whisperseg), help=help, parser=parser)
+    return _config_field(_BackendDefault(native, whisperseg, lora), help=help, parser=parser)
 
 
 def _config_factory(
@@ -275,11 +280,13 @@ class Config:
     )
     checkpoint: str = _config_field(
         "",
-        help="DAS .ckpt checkpoint or legacy DAS H5/YAML model trunk for inference.",
+        help="DAS .ckpt, legacy H5/YAML trunk, or WhisperSeg AER model name for inference. "
+        f"Available names: {', '.join(MODEL_OPTIONS)}.",
     )
     initial_model: str = _config_field(
         "",
-        help="DAS WhisperSeg .ckpt checkpoint used to start WhisperSeg training.",
+        help="Local DAS WhisperSeg .ckpt or WhisperSeg AER starting model. Training checkpoints resume automatically. "
+        f"Available names: {', '.join(MODEL_OPTIONS)}.",
         parser=_initial_model_parser,
         flags=["--initial-model"],
     )
@@ -300,7 +307,7 @@ class Config:
         parser=_split_parser,
         choices=["train", "val", "test"],
     )
-    batch_size: int = _backend_default_field(8, 4, help="Number of chunks per batch.", parser=int)
+    batch_size: int = _backend_default_field(8, 4, lora=1, help="Number of chunks per batch.", parser=int)
     num_time_steps: int = _config_field(4096, help="Chunk length in samples for training.", parser=int)
     chunk_stride: int | None = _config_field(
         None,
@@ -309,7 +316,7 @@ class Config:
     )
     num_workers: int = _config_field(0, help="Number of dataloader worker processes.", parser=int)
     validation_fraction: float = _backend_default_field(
-        0.2, 0.1, help="Fraction of annotated audio files used for validation.", parser=float
+        0.2, 0.1, lora=0.125, help="Fraction of annotated audio files used for validation.", parser=float
     )
     test_fraction: float = _backend_default_field(
         0.2, 0.0, help="Fraction of annotated audio files held out as test data.", parser=float
@@ -427,9 +434,7 @@ class Config:
     decoder_kernel_size: int = _config_field(8, help="Conv decoder kernel size.", parser=int)
     decoder_num_heads: int = _config_field(4, help="Attention decoder number of heads.", parser=int)
     decoder_num_layers: int = _config_field(2, help="Attention decoder number of layers.", parser=int)
-    decoder_dropout: float = _backend_default_field(
-        0.1, 0.0, help="Decoder dropout for attention or WhisperSeg.", parser=float
-    )
+    decoder_dropout: float = _backend_default_field(0.1, 0.0, help="Decoder dropout for attention or WhisperSeg.", parser=float)
     cross_entropy_weight: float = _config_field(0.9, help="Cross-entropy loss weight.", parser=float)
     positive_class_weight: float = _config_field(
         1.0,
@@ -446,7 +451,7 @@ class Config:
         help="Width on each side of a transition receiving boundary_weight.",
         parser=float,
     )
-    learning_rate: float = _backend_default_field(0.0001, 3e-6, help="Optimizer learning rate.", parser=float)
+    learning_rate: float = _backend_default_field(0.0001, 3e-6, lora=1e-4, help="Optimizer learning rate.", parser=float)
     early_stopping: bool = _config_field(
         True,
         help="Use early stopping during supervised training.",
@@ -456,6 +461,7 @@ class Config:
     early_stopping_patience: int = _backend_default_field(
         10,
         3,
+        lora=5,
         help="Early stopping patience in epochs.",
         parser=int,
     )
@@ -465,19 +471,23 @@ class Config:
         parser=float,
     )
     reduce_lr: bool = _config_field(
-        True,
-        help="Use ReduceLROnPlateau for native supervised training.",
+        _BackendDefault(True, False, True),
+        help="Use ReduceLROnPlateau for supervised training.",
         parser=_bool_parser,
         bool_flag=True,
     )
-    reduce_lr_patience: int = _config_field(
+    reduce_lr_patience: int = _backend_default_field(
         5,
-        help="Native supervised ReduceLROnPlateau patience in epochs.",
+        5,
+        lora=2,
+        help="ReduceLROnPlateau patience in epochs.",
         parser=int,
     )
-    reduce_lr_factor: float = _config_field(
+    reduce_lr_factor: float = _backend_default_field(
         0.1,
-        help="Native supervised ReduceLROnPlateau learning-rate reduction factor.",
+        0.1,
+        lora=0.5,
+        help="ReduceLROnPlateau learning-rate reduction factor.",
         parser=float,
     )
     reduce_lr_min: float = _config_field(
@@ -486,23 +496,42 @@ class Config:
         parser=float,
     )
     linear_lr_schedule: bool = _config_field(
-        True,
+        _BackendDefault(True, True, False),
         help="Use a linear learning-rate scheduler for WhisperSeg.",
         parser=_bool_parser,
         bool_flag=True,
     )
     weight_decay: float = _config_field(0.01, help="WhisperSeg optimizer weight decay.", parser=float)
     warmup_steps: int = _config_field(100, help="WhisperSeg linear scheduler warmup steps.", parser=int)
+    whisperseg_training_method: Literal["lora", "full"] = _config_field(
+        "lora",
+        help="WhisperSeg training method: decoder LoRA or full fine-tuning (FP32).",
+        parser=str,
+        choices=["lora", "full"],
+    )
+    accumulate_grad_batches: int = _backend_default_field(
+        1,
+        1,
+        lora=4,
+        help="WhisperSeg batches accumulated per optimizer update.",
+        parser=int,
+    )
     freeze_encoder: bool = _config_field(
-        False,
+        _BackendDefault(False, False, True),
         help="Freeze the WhisperSeg encoder during training.",
         parser=_bool_parser,
         bool_flag=True,
     )
-    max_length: int = _config_field(100, help="Maximum WhisperSeg decoder token length during training.", parser=int)
-    generation_max_length: int = _config_field(128, help="Maximum WhisperSeg decoder token length during prediction.", parser=int)
+    max_length: int = _backend_default_field(
+        100, 100, lora=128, help="Maximum WhisperSeg decoder token length during training.", parser=int
+    )
+    generation_max_length: int = _config_field(
+        128, help="Maximum WhisperSeg decoder tokens per audio window, including the prefix (not an event count).", parser=int
+    )
     total_spec_columns: int = _config_field(1000, help="WhisperSeg spectrogram time columns per training clip.", parser=int)
-    seed: int | None = _config_field(None, help="Optional random seed. Leave unset for nondeterministic runs.", parser=_optional_int_parser)
+    seed: int | None = _backend_default_field(
+        None, None, lora=0, help="Optional random seed. Leave unset for nondeterministic runs.", parser=_optional_int_parser
+    )
     accelerator: TrainerAccelerator = _config_field(
         "auto",
         help="Lightning accelerator.",
@@ -514,7 +543,7 @@ class Config:
         help="Number of devices to use.",
         parser=_optional_int_parser,
     )
-    num_epochs: int = _backend_default_field(100, 10, help="Maximum number of training epochs.", parser=int)
+    num_epochs: int = _backend_default_field(100, 10, lora=24, help="Maximum number of training epochs.", parser=int)
     max_num_steps_per_epoch: int | None = _config_field(
         None,
         help="Maximum number of training batches per epoch. Leave unset to use the full epoch.",
@@ -608,6 +637,8 @@ class Config:
             if item.name not in default_fields or not isinstance(item.default, _BackendDefault):
                 continue
             value = item.default.whisperseg if self.encoder_type == "whisperseg" else item.default.native
+            if self.encoder_type == "whisperseg" and self.whisperseg_training_method == "lora" and item.default.lora is not ...:
+                value = item.default.lora
             setattr(self, item.name, value)
         if self.encoder_type == "whisperseg":
             self.frontend_type = "whisperseg"
@@ -754,10 +785,19 @@ class Config:
             raise ValueError(f"Unsupported encoder_type: {self.encoder_type}")
         if self.decoder_type not in {"linear", "lstm", "conv", "attention", "legacy_linear_upsample", "whisperseg"}:
             raise ValueError(f"Unsupported decoder_type: {self.decoder_type}")
+        if self.whisperseg_training_method not in {"lora", "full"}:
+            raise ValueError("whisperseg_training_method must be lora or full.")
+        if self.accumulate_grad_batches < 1:
+            raise ValueError("accumulate_grad_batches must be at least 1.")
         if self.mode == "train" and self.encoder_type == "whisperseg" and not self.initial_model:
-            raise ValueError("WhisperSeg training requires a DAS .ckpt initial_model.")
-        if self.mode == "train" and self.encoder_type == "whisperseg" and Path(self.initial_model).suffix != ".ckpt":
-            raise ValueError("WhisperSeg training requires a DAS .ckpt initial_model.")
+            raise ValueError("WhisperSeg training requires a DAS .ckpt or WhisperSeg AER initial_model.")
+        if (
+            self.mode == "train"
+            and self.encoder_type == "whisperseg"
+            and self.initial_model not in MODEL_OPTIONS
+            and Path(self.initial_model).suffix != ".ckpt"
+        ):
+            raise ValueError("WhisperSeg training requires a DAS .ckpt or WhisperSeg AER initial_model.")
         if self.mode == "train" and self.encoder_type != "whisperseg" and self.initial_model:
             raise ValueError("initial_model is only supported for WhisperSeg training in this release.")
         if self.mode == "train" and self.encoder_type != "whisperseg" and self.freeze_encoder:
@@ -815,6 +855,8 @@ class Config:
         if self.mode == "train" and not self.output_dir:
             raise ValueError("Provide output_dir for training.")
         if self.mode == "predict":
+            if self.checkpoint.startswith("whisperseg-aer:") and self.checkpoint not in MODEL_OPTIONS:
+                raise ValueError(f"Unknown WhisperSeg AER model: {self.checkpoint}")
             if not self.checkpoint:
                 raise ValueError("Provide checkpoint for prediction.")
             if Path(self.checkpoint).suffix in {".pt", ".pth"} or self.checkpoint.startswith(("hf://", "nccratliri/")):

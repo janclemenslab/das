@@ -22,6 +22,7 @@ WHISPERSEG_CHECKPOINT_KEY = "whisperseg"
 WHISPERSEG_CHECKPOINT_FORMAT = "das_whisperseg.checkpoint"
 WHISPERSEG_CHECKPOINT_FORMAT_VERSION = 1
 
+
 def _unwrap_model(model):
     try:
         return model.module
@@ -136,23 +137,30 @@ def is_model_checkpoint_path(model_path):
 
 def load_model_checkpoint(model_path, map_location="cpu"):
     payload = _load_checkpoint_payload(model_path, map_location=map_location)
+    return _model_from_payload(payload)
+
+
+def _model_from_payload(payload):
     config = WhisperConfig.from_dict(payload["model_config"])
     with torch.device("meta"):
         model = WhisperForConditionalGeneration(config)
     model.load_state_dict(payload["model_state_dict"], assign=True)
     model.tie_weights()
     if payload.get("generation_config") is not None:
-        model.generation_config = GenerationConfig.from_dict(payload["generation_config"])
+        # The embedded generation settings are already independent of model defaults.
+        model.generation_config = GenerationConfig.from_dict(payload["generation_config"], _from_model_config=False)
     tokenizer = _restore_tokenizer(payload["tokenizer_files"])
     return model, tokenizer
 
 
 def load_inference_model(model_path):
-    return load_model_checkpoint(Path(os.fspath(model_path)).expanduser())
+    model, tokenizer = load_model_checkpoint(Path(os.fspath(model_path)).expanduser())
+    return model.eval(), tokenizer
 
 
 def load_model(initial_model_path, total_spec_columns, encoder_dropout=0.0, decoder_dropout=0.0):
     model, tokenizer = load_model_checkpoint(Path(os.fspath(initial_model_path)).expanduser())
+    model.float()
     model.config.max_source_positions = int(0.5 * total_spec_columns)
     with torch.no_grad():
         model.model.encoder.embed_positions.weight = torch.nn.Parameter(
@@ -185,8 +193,11 @@ def load_model(initial_model_path, total_spec_columns, encoder_dropout=0.0, deco
             "animal": "<|animal|>",
         }
 
-    tokenizer.add_tokens(["<|%d|>" % (i) for i in range(total_spec_columns + 1)], special_tokens=True)
-    tokenizer.add_tokens([v for k, v in model.config.species_codebook.items()], special_tokens=True)
+    model.config.species_codebook.setdefault("unknown", "<|unknown|>")
+    added_timestamps = tokenizer.add_tokens(["<|%d|>" % (i) for i in range(total_spec_columns + 1)], special_tokens=True)
+    added_species = tokenizer.add_tokens([v for k, v in model.config.species_codebook.items()], special_tokens=True)
+    if added_timestamps or added_species:
+        model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
 
     return model, tokenizer
 
@@ -202,9 +213,7 @@ class SegmenterBase:
         self.default_segmentation_config = {}
 
     ### segmentation-related functions:
-    def iter_sliced_audio_features(
-        self, audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=None
-    ):
+    def iter_sliced_audio_features(self, audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=None):
         feature_extractor = WhisperSegFeatureExtractor(
             sr,
             spec_time_step,
@@ -254,13 +263,9 @@ class SegmenterBase:
 
                 yield trial_id, offset_time, input_features, len(audio_clip) / sr
 
-    def get_sliced_audios_features(
-        self, audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=None
-    ):
+    def get_sliced_audios_features(self, audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=None):
         return list(
-            self.iter_sliced_audio_features(
-                audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=max_frequency
-            )
+            self.iter_sliced_audio_features(audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=max_frequency)
         )
 
     ## This is used for WhisperSegmenter and WhisperSegmenterFast, not for WhisperSegmenterForEval
@@ -762,6 +767,7 @@ class WhisperSegmenterForEval(SegmenterBase):
             self.tokenizer = tokenizer
 
         self.device = list(self.model.parameters())[0].device
+        self.model.eval()
 
         self.total_spec_columns = self.model.config.total_spec_columns
         self.cluster_codebook = self.model.config.cluster_codebook
