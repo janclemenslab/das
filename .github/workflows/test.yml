@@ -44,6 +44,7 @@ jobs:
             # Conda FFmpeg's ICU DLLs conflict with PySide6's bundled ICU.
             conda install -c conda-forge uv -y
             choco install ffmpeg -y --no-progress
+            ffmpeg -version
           else
             conda install -c conda-forge ffmpeg uv -y
           fi
