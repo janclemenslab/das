@@ -2130,7 +2130,10 @@ class _TeeWriter:
 
     def write(self, text: str) -> int:
         for stream in self._streams:
-            stream.write(text)
+            try:
+                stream.write(text)
+            except UnicodeEncodeError:
+                stream.write(text.encode(stream.encoding, errors="backslashreplace").decode(stream.encoding))
         return len(text)
 
     def flush(self) -> None:
@@ -2352,11 +2355,11 @@ class JobWorker(QObject):
             exitcode = None
 
         while True:
-            if not parent_connection.poll():
-                break
             try:
+                if not parent_connection.poll():
+                    break
                 message_type, message = parent_connection.recv()
-            except EOFError:
+            except (EOFError, BrokenPipeError):
                 break
             if message_type == "log":
                 self.log.emit(message)

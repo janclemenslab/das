@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import huggingface_hub
 import pytest
 
@@ -8,7 +6,7 @@ from das.config import Config
 from das.whisperseg.catalog import MODEL_OPTIONS, MODEL_REPO, resolve_model_checkpoint
 
 
-def test_published_models_parse_in_cli_and_download_on_use(monkeypatch):
+def test_published_models_parse_in_cli_and_download_on_use(monkeypatch, tmp_path):
     calls = []
 
     def download(**kwargs):
@@ -30,7 +28,8 @@ def test_published_models_parse_in_cli_and_download_on_use(monkeypatch):
         assert len(calls) == index
         assert resolve_model_checkpoint(alias) == "/cache/" + filename
         assert calls[-1] == {"repo_id": MODEL_REPO, "filename": filename}
-    assert resolve_model_checkpoint(str(Path("/tmp/local.ckpt"))) == "/tmp/local.ckpt"
+    local_path = str(tmp_path / "local.ckpt")
+    assert resolve_model_checkpoint(local_path) == local_path
 
     with pytest.raises(ValueError, match="Unknown WhisperSeg AER model"):
         Config(mode="predict", data_dir="data", checkpoint="whisperseg-aer:unknown").validate()

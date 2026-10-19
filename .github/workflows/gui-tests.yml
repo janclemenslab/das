@@ -1,0 +1,65 @@
+name: GUI and full test suite
+
+on:
+  pull_request:
+    branches: [alpha]
+  push:
+    branches: [alpha]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gui:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-15]
+    defaults:
+      run:
+        shell: bash -el {0}
+    env:
+      QT_API: pyside6
+      PYTEST_QT_API: pyside6
+      QT_QPA_PLATFORM: offscreen
+      MPLBACKEND: Agg
+      PYTHONFAULTHANDLER: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux Qt libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          activate-environment: das-conformer
+          python-version: "3.12"
+          channels: conda-forge
+          auto-activate-base: false
+      - name: Install GUI and test dependencies
+        run: |
+          conda install -y uv
+          if [[ "$RUNNER_OS" != "macOS" ]]; then
+            uv pip install --index-url https://download.pytorch.org/whl/cpu torch torchaudio torchvision
+          else
+            uv pip install torch torchaudio torchvision
+          fi
+          # Test alpha's video fix until the next xarray-behave prerelease includes it.
+          uv pip install "xarray-behave @ git+https://github.com/janclemenslab/xarray-behave.git@fab02f7d86ba6c64cb0ac5e31a51d4fb92173156"
+          uv pip install -e ".[gui]" pytest pytest-qt nnAudio
+          uv pip check
+      - name: Require GUI imports
+        run: python -c "from qtpy.QtWidgets import QApplication; import magicgui; import xarray_behave.gui.app"
+      - name: Run full suite including GUI startup, controls, and jobs
+        run: >-
+          python -m pytest tests -q --junitxml=gui-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gui-results-${{ matrix.os }}
+          path: gui-results.xml
