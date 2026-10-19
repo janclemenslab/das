@@ -14,7 +14,7 @@ dependencies = [
     'matplotlib',
     'pandas',
     'matplotlib_scalebar',
-    'xarray-behave>=0.37.7,<0.38',
+    'xarray-behave>=0.37.8,<0.38',
     'tqdm',
     'numpy',
     'keras~=3.0',
