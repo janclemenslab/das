@@ -7,7 +7,7 @@ import sys
 # DAS ships against PyTorch in this repository, so keep that as the default.
 os.environ.setdefault("KERAS_BACKEND", "torch")
 
-__version__ = "0.33.0"
+__version__ = "0.33.1"
 
 # Preserve the import paths exposed by the TensorFlow-backed releases.
 from . import io, models, npy_dir
