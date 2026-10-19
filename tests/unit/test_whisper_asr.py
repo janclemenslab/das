@@ -9,13 +9,11 @@ import transformers.pipelines as pipelines
 
 from das import api, cli
 from das.config import Config
-from das.whisper_asr import WhisperTranscriber, _WhisperWordTimestampPipeline
+from das.whisper_asr import WhisperTranscriber, _WhisperWordTimestampPipeline, _retrieve_word_segments
 
 
-@pytest.mark.parametrize("timestamp_format", ["tensor", "longform_list"])
-def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech_pipeline, timestamp_format):
-    from transformers.models.whisper.tokenization_whisper import _decode_asr
-
+@pytest.fixture
+def word_tokenizer():
     # A tiny vocabulary keeps the real Transformers word decoder offline.
     class Tokenizer:
         eos_token_id = 9
@@ -46,6 +44,13 @@ def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech
         def _strip_prompt(self, ids, *args):
             return ids
 
+    return Tokenizer()
+
+
+@pytest.mark.parametrize("timestamp_format", ["tensor", "longform_list"])
+def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech_pipeline, word_tokenizer, timestamp_format):
+    from transformers.models.whisper.tokenization_whisper import _decode_asr
+
     ids = [10, 11, 12, 15, 0, 1, 2, 3, 4, 5, 6, 75, 1765, 0, 1, 2, 3, 4, 5, 6, 1825, 9]
     onsets = torch.tensor(
         [[0, 0, 0, 0, 0, 0.2, 0.4, 0.5, 0.8, 0.9, 1.1, 1.2, 35, 35, 35.2, 35.4, 35.5, 35.8, 35.9, 36.1, 36.2, 36.2]]
@@ -56,7 +61,9 @@ def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech
     pipeline_class = speech_pipeline["load"]["pipeline_class"]
     pipe = pipeline_class.__new__(pipeline_class)
     forwarded = pipe._forward({}, return_timestamps="word")
-    text, decoded = _decode_asr(Tokenizer(), [forwarded], return_timestamps="word", return_language=False, time_precision=0.02)
+    text, decoded = _decode_asr(
+        word_tokenizer, [forwarded], return_timestamps="word", return_language=False, time_precision=0.02
+    )
     assert text == " This is a speech recording. This is a speech recording."
     assert decoded["chunks"] == [
         {"text": " This", "timestamp": (0.0, 0.2)},
@@ -72,11 +79,63 @@ def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech
     ]
 
 
+@pytest.mark.parametrize("time_offset", [0.0, 60.0])
+@pytest.mark.parametrize("punctuation", [True, False])
+def test_longform_seek_uses_aligned_word_end_instead_of_early_segment_timestamp(word_tokenizer, time_offset, punctuation):
+    from transformers.models.whisper.generation_whisper import WhisperGenerationMixin
+
+    tokens = [15, 0, 1, 2, 3, 4, 5] + ([6] if punctuation else []) + [1337, 1337]
+    onsets = [0, 0, 0, 0, 26, 26.2, 26.3, 26.4, 26.7, 26.9] + ([27.4] if punctuation else []) + [27.98, 29.98]
+    kwargs = dict(
+        seek_sequence=torch.tensor(tokens),
+        seek_outputs=[{"token_timestamps": torch.tensor(onsets)}],
+        time_offset=torch.tensor([time_offset]),
+        timestamp_begin=15,
+        seek_num_frames=torch.tensor([3000]),
+        time_precision=0.02,
+        time_precision_features=0.01,
+        input_stride=2,
+        prev_idx=0,
+        idx=0,
+        return_token_timestamps=True,
+        decoder_input_ids=torch.tensor([[10, 11, 12]]),
+    )
+    retrieve = WhisperGenerationMixin._retrieve_segment
+    original_segments, original_offset = retrieve(**kwargs)
+    segments, offset = _retrieve_word_segments(retrieve, word_tokenizer, **kwargs)
+    assert original_offset == 2644  # This seek replays the final words.
+    assert offset == (2740 if punctuation else 2798)
+    assert torch.equal(segments[-1]["tokens"], original_segments[-1]["tokens"])
+
+    # A completed window must still advance by its full length.
+    kwargs["seek_sequence"] = kwargs["seek_sequence"][:-1]
+    _, offset = _retrieve_word_segments(retrieve, word_tokenizer, **kwargs)
+    assert offset == 3000
+
+
+def test_word_overlaps_trim_the_previous_tail_and_keep_spoken_repetitions(speech_pipeline):
+    transcriber = WhisperTranscriber("openai/whisper-large", device="cpu")
+    transcriber.pipeline = lambda *args, **kwargs: {
+        "chunks": [
+            {"text": " again?", "timestamp": (27.16, 27.98)},
+            {"text": " Hi,", "timestamp": (27.46, 27.78)},
+            {"text": " again", "timestamp": (31, 32)},
+            {"text": " again.", "timestamp": (32, 33)},
+        ]
+    }
+    frame = transcriber.transcribe(np.zeros(40 * 16000), num_beams=4, length_penalty=1.0)
+    assert frame.name.tolist() == ["again?", "Hi,", "again", "again."]
+    assert frame.start_seconds.tolist() == [27.16, 27.46, 31, 32]
+    assert frame.stop_seconds.tolist() == [27.46, 27.78, 32, 33]
+
+
 @pytest.fixture
 def speech_pipeline(monkeypatch):
     calls = {}
 
     class FakePipeline:
+        model = SimpleNamespace(_retrieve_segment=lambda **kwargs: None)
+        tokenizer = SimpleNamespace(eos_token_id=9)
         feature_extractor = SimpleNamespace(sampling_rate=16000)
 
         def __call__(self, audio, **kwargs):

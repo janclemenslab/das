@@ -33,6 +33,11 @@ evaluation is disabled. The model downloads on first use.
 DAS corrects the token-boundary convention used by Transformers 4.57's word
 decoder: each token spans its own onset to the next token's onset. This avoids
 shifting word times one token earlier and producing zero-length first words.
+For long recordings, decoding advances to the last aligned spoken token, ignoring
+trailing punctuation, as in OpenAI Whisper's word-timestamp decoding. This avoids
+replaying a phrase when a predicted segment timestamp falls before its final words.
+If a word's estimated end overlaps the next word, DAS trims its end to the next
+word's onset. Spoken repetitions are retained.
 Word boundaries remain estimates from Whisper's attention alignment.
 
 ## WhisperSeg fine-tuning

@@ -1,8 +1,28 @@
 """Full-vocabulary Whisper speech transcription with word timestamps."""
 
+from functools import partial
+
 import pandas as pd
 import torch
 from transformers.pipelines import AutomaticSpeechRecognitionPipeline
+
+
+def _retrieve_word_segments(retrieve_segment, tokenizer, **kwargs):
+    segments, offset = retrieve_segment(**kwargs)
+    window_frames = int(kwargs["seek_num_frames"][kwargs["prev_idx"]])
+    if kwargs["return_token_timestamps"] and offset < window_frames:
+        segment = segments[-1]
+        text_indices = (segment["tokens"] < tokenizer.eos_token_id).nonzero().flatten().tolist()
+        # Punctuation has no speech duration and can align deep into the following pause.
+        while text_indices and all(
+            char in "\"'.。,，!！?？:：”)]}、" for char in tokenizer.decode([int(segment["tokens"][text_indices[-1]])]).strip()
+        ):
+            text_indices.pop()
+        if text_indices:
+            end = float(segment["token_timestamps"][text_indices[-1] + 1])
+            start = float(kwargs["time_offset"][kwargs["prev_idx"]])
+            offset = min(window_frames, max(1, round((end - start) / kwargs["time_precision_features"])))
+    return segments, offset
 
 
 class _WhisperWordTimestampPipeline(AutomaticSpeechRecognitionPipeline):
@@ -30,6 +50,10 @@ class WhisperTranscriber:
             model_kwargs={"attn_implementation": "eager"},
             pipeline_class=_WhisperWordTimestampPipeline,
         )
+        # Match OpenAI Whisper's word-aligned seek instead of decoding already transcribed speech again.
+        self.pipeline.model._retrieve_segment = partial(
+            _retrieve_word_segments, self.pipeline.model._retrieve_segment, self.pipeline.tokenizer
+        )
         self.samplerate = self.pipeline.feature_extractor.sampling_rate
 
     def transcribe(self, audio, *, num_beams: int, length_penalty: float, filename: str | None = None) -> pd.DataFrame:
@@ -51,6 +75,8 @@ class WhisperTranscriber:
             stop = duration if stop is None else float(stop)
             start = min(max(start, 0.0), duration)
             stop = min(max(stop, start), duration)
+            if rows and rows[-1]["stop_seconds"] > start:
+                rows[-1]["stop_seconds"] = start
             rows.append({"name": word, "start_seconds": start, "stop_seconds": stop})
         frame = pd.DataFrame(rows, columns=["name", "start_seconds", "stop_seconds"])
         if filename is not None:
