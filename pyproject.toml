@@ -33,7 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-xdist", "pytest-qt", "flit>=3.2,<4"]
-gui = ["magicgui", "xarray-behave>=0.38.0a1", "PySide6>=6.10", "qtpy"]
+gui = ["magicgui", "xarray-behave>=0.38.0a2", "PySide6>=6.10", "qtpy"]
 doc = [
        "sphinx", "furo", "ghp-import",
        "myst-nb", "sphinx-panels",
