@@ -43,11 +43,19 @@ jobs:
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             # Conda FFmpeg's ICU DLLs conflict with PySide6's bundled ICU.
             conda install -c conda-forge uv -y
-            choco install ffmpeg -y --no-progress
-            ffmpeg -version
           else
             conda install -c conda-forge ffmpeg uv -y
           fi
+
+      - name: Install standalone FFmpeg on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip -OutFile "$env:RUNNER_TEMP/ffmpeg.zip"
+          Expand-Archive "$env:RUNNER_TEMP/ffmpeg.zip" -DestinationPath "$env:RUNNER_TEMP/ffmpeg"
+          $ffmpegBin = (Get-Item "$env:RUNNER_TEMP/ffmpeg/*/bin").FullName
+          $ffmpegBin >> $env:GITHUB_PATH
+          & "$ffmpegBin/ffmpeg.exe" -version
 
       - name: Build and install DAS
         run: |
