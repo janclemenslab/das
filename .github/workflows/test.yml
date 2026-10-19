@@ -47,6 +47,22 @@ jobs:
           uv pip install "$(find dist -name 'das-*.whl' -print -quit)" pytest --torch-backend=auto
           uv pip check
 
+      - name: Test GUI startup
+        run: |
+          python -X faulthandler - <<'PY'
+          import das
+          from PySide6 import QtCore, QtGui, QtWidgets
+          from xarray_behave.gui.app import main_das
+
+          app = QtWidgets.QApplication([])
+          window = QtWidgets.QWidget()
+          window.show()
+          app.processEvents()
+          assert window.isVisible()
+          window.close()
+          print(f"GUI available with Qt {QtCore.qVersion()}")
+          PY
+
       - name: Run tests
         run: pytest -q
 
