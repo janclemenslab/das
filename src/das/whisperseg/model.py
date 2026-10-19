@@ -17,7 +17,6 @@ from .utils import RATIO_DECODING_TIME_STEP_TO_SPEC_TIME_STEP
 
 import threading
 
-
 WHISPERSEG_CHECKPOINT_KEY = "whisperseg"
 WHISPERSEG_CHECKPOINT_FORMAT = "das_whisperseg.checkpoint"
 WHISPERSEG_CHECKPOINT_FORMAT_VERSION = 1

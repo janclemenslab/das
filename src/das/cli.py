@@ -8,7 +8,6 @@ from . import __version__
 from .api import convert_legacy_checkpoint, predict, train
 from .config import Config, builtin_config_help, format_config_yaml, save_config
 
-
 _COMMAND_CONFIG_FIELDS: dict[str, tuple[str, ...]] = {
     "train": (
         "data_dir",
@@ -137,9 +136,7 @@ _ASCII_ICON = r"""
 | | | | | | | | |
   | | | | | | |
     |   |   |
-""".strip(
-    "\n"
-)
+""".strip("\n")
 
 
 class _HelpOnlyArgumentParser(argparse.ArgumentParser):

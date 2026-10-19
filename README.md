@@ -16,6 +16,15 @@ For development from a source checkout, install the test and docs extras too:
 uv pip install -e ".[dev,gui,doc]"
 ```
 
+When upgrading PyTorch in an environment that also has torchvision installed, upgrade them together:
+
+```shell
+uv pip install --upgrade torch torchvision torchaudio
+uv pip check
+```
+
+Mismatched PyTorch and torchvision binaries can cause an [MPS crash at shutdown](https://github.com/pytorch/pytorch/issues/188812).
+
 The GUI uses xarray-behave. Run `das` or `das gui` to open the single-file annotation view and its Train and Predict dialogs.
 
 ## Usage
