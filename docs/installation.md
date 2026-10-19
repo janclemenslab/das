@@ -6,12 +6,25 @@ Install [Miniforge](https://github.com/conda-forge/miniforge) or another Conda d
 
 ## Install DAS
 
-Create and activate an isolated environment. Conda provides Python, FFmpeg, and `uv`; `uv` installs DAS and its Python dependencies.
+Create an isolated environment. Conda provides Python, Qt, FFmpeg, `numcodecs`, and `uv`; `uv` installs DAS and its remaining Python dependencies. Installing Qt and FFmpeg together through Conda keeps their native libraries compatible.
 
 Users who need the TensorFlow backend should follow the [TensorFlow installation instructions](install_tf.md) for the final TensorFlow-backed release.
 
+On Windows and Linux:
+
 ```shell
-conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
+conda create -n das -c conda-forge --strict-channel-priority python=3.14 pyside6 ffmpeg "numcodecs<0.16" uv -y
+```
+
+On macOS, select the OpenBLAS build that avoids loading a second OpenMP runtime alongside PyTorch:
+
+```shell
+conda create -n das -c conda-forge --strict-channel-priority python=3.14 pyside6 ffmpeg "numcodecs<0.16" "libopenblas=*=*pthreads*" uv -y
+```
+
+Then activate the environment and install DAS:
+
+```shell
 conda activate das
 uv pip install das --torch-backend=auto
 ```

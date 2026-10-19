@@ -4,8 +4,21 @@ _DAS_ automatically annotates animal vocalizations in raw audio recordings using
 
 ## Installation
 
+On Windows and Linux:
+
 ```shell
-conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
+conda create -n das -c conda-forge --strict-channel-priority python=3.14 pyside6 ffmpeg "numcodecs<0.16" uv -y
+```
+
+On macOS, select the OpenBLAS build that avoids an OpenMP conflict with PyTorch:
+
+```shell
+conda create -n das -c conda-forge --strict-channel-priority python=3.14 pyside6 ffmpeg "numcodecs<0.16" "libopenblas=*=*pthreads*" uv -y
+```
+
+Then, on all platforms:
+
+```shell
 conda activate das
 uv pip install das --torch-backend=auto
 das version

@@ -38,14 +38,18 @@ jobs:
           conda-remove-defaults: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Install system dependencies
-        run: conda install -c conda-forge ffmpeg uv -y
+      - name: Install native dependencies
+        run: |
+          conda install -c conda-forge --strict-channel-priority pyside6 ffmpeg "numcodecs<0.16" uv -y
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            conda install -c conda-forge --strict-channel-priority "libopenblas=*=*pthreads*" -y
+          fi
 
+      # Conda Qt packages omit WHEEL metadata, so uv pip check cannot validate them.
       - name: Build and install DAS
         run: |
           uv build --wheel
           uv pip install "$(find dist -name 'das-*.whl' -print -quit)" pytest --torch-backend=auto
-          uv pip check
 
       - name: Run tests
         run: pytest -q
