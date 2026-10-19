@@ -129,7 +129,7 @@ def test_train_and_predict_from_buttons_with_real_processes(qtbot, monkeypatch, 
             if window._cancel_event is not None:
                 window._cancel_event.set()
                 qtbot.waitUntil(lambda: window._thread is None, timeout=10_000)
-        assert not errors, errors
+        assert not errors, "\n\n".join(message for _title, message in errors)
         assert window.run_button.isEnabled()
         assert window._worker is None
 

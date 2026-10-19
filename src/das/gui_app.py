@@ -2130,7 +2130,10 @@ class _TeeWriter:
 
     def write(self, text: str) -> int:
         for stream in self._streams:
-            stream.write(text)
+            try:
+                stream.write(text)
+            except UnicodeEncodeError:
+                stream.write(text.encode(stream.encoding, errors="backslashreplace").decode(stream.encoding))
         return len(text)
 
     def flush(self) -> None:

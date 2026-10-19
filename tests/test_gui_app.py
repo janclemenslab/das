@@ -247,6 +247,22 @@ def test_worker_thread_kills_training_process_after_cancel(qtbot):
     assert process.killed
 
 
+def test_tee_writer_preserves_gui_unicode_with_legacy_console():
+    import io
+
+    buffer = io.BytesIO()
+    console = io.TextIOWrapper(buffer, encoding="cp1252")
+    messages = []
+    writer = gui._TeeWriter(console, gui._SignalWriter(messages.append))
+    text = "Epoch café ─ complete ✓\n"
+
+    assert writer.write(text) == len(text)
+    writer.flush()
+
+    assert messages == [text]
+    assert buffer.getvalue().decode("cp1252") == "Epoch café \\u2500 complete \\u2713\n"
+
+
 def test_worker_keeps_finished_result_when_windows_pipe_closes(qapp, monkeypatch):
     from unittest.mock import Mock
 
