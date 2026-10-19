@@ -38,7 +38,14 @@ trailing punctuation, as in OpenAI Whisper's word-timestamp decoding. This avoid
 replaying a phrase when a predicted segment timestamp falls before its final words.
 If a word's estimated end overlaps the next word, DAS trims its end to the next
 word's onset. Spoken repetitions are retained.
-Word boundaries remain estimates from Whisper's attention alignment.
+Appended punctuation does not extend a word into the following pause. A small
+bundled Silero speech detector also checks the audio for pauses of at least
+200 ms. Word-token alignment selects the matching speech region, keeping the
+detector's 30 ms speech margins so final sounds are retained. This removes silent
+tails without a fixed word-duration limit or changing the transcript. Words with
+no reliable speech overlap retain their original timing. The detector runs locally on the
+CPU and does not require a separate model download.
+Word boundaries remain estimates from Whisper's attention alignment and speech detection.
 
 ## WhisperSeg fine-tuning
 

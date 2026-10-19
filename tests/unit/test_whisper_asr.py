@@ -9,7 +9,7 @@ import transformers.pipelines as pipelines
 
 from das import api, cli
 from das.config import Config
-from das.whisper_asr import WhisperTranscriber, _WhisperWordTimestampPipeline, _retrieve_word_segments
+from das.whisper_asr import WhisperTranscriber, _WhisperWordTimestampPipeline, _refine_word_timestamps, _retrieve_word_segments
 
 
 @pytest.fixture
@@ -44,6 +44,11 @@ def word_tokenizer():
         def _strip_prompt(self, ids, *args):
             return ids
 
+        def _decode_asr(self, *args, **kwargs):
+            from transformers.models.whisper.tokenization_whisper import _decode_asr
+
+            return _decode_asr(self, *args, **kwargs)
+
     return Tokenizer()
 
 
@@ -77,6 +82,16 @@ def test_word_decoder_uses_current_and_next_token_boundaries(monkeypatch, speech
         {"text": " speech", "timestamp": (35.5, 35.8)},
         {"text": " recording.", "timestamp": (35.8, 36.2)},
     ]
+    pipe.framework = "pt"
+    pipe.type = "seq2seq_whisper"
+    pipe.tokenizer = word_tokenizer
+    pipe.feature_extractor = SimpleNamespace(chunk_length=30, sampling_rate=16000)
+    pipe.model = SimpleNamespace(config=SimpleNamespace(max_source_positions=1500))
+    processed = pipe.postprocess([forwarded], return_timestamps="word")
+    assert processed["text"] == text
+    assert processed["chunks"][4]["lexical_end"] == 1.1
+    assert processed["chunks"][5]["timestamp"] == (35.0, 35.2)
+    assert processed["chunks"][9]["lexical_end"] == 36.1
 
 
 @pytest.mark.parametrize("time_offset", [0.0, 60.0])
@@ -129,6 +144,60 @@ def test_word_overlaps_trim_the_previous_tail_and_keep_spoken_repetitions(speech
     assert frame.stop_seconds.tolist() == [27.46, 27.78, 32, 33]
 
 
+def test_pause_refinement_keeps_words_inside_their_speech_without_capping_long_words():
+    rows = [
+        {"name": "marketing", "start_seconds": 33.9, "stop_seconds": 36.18},
+        {"name": "and", "start_seconds": 40.0, "stop_seconds": 43.0},
+        {"name": "prolonged", "start_seconds": 50.0, "stop_seconds": 53.0},
+        {"name": "uncertain", "start_seconds": 60.0, "stop_seconds": 60.1},
+        {"name": "undetected", "start_seconds": 61.0, "stop_seconds": 61.5},
+    ]
+    regions = [(32, 34.59), (35.97, 36.7), (40, 40.2), (42, 43), (49, 54), (60.09, 60.1)]
+    _refine_word_timestamps(rows, regions)
+    assert [(r["start_seconds"], r["stop_seconds"]) for r in rows] == [
+        (33.9, 34.59),
+        (42, 43),
+        (50, 53),
+        (60, 60.1),
+        (61, 61.5),
+    ]
+    assert [r["name"] for r in rows] == ["marketing", "and", "prolonged", "uncertain", "undetected"]
+    _refine_word_timestamps(rows, [])
+    assert rows[0]["stop_seconds"] == 34.59
+
+
+def test_punctuation_anchor_preserves_final_sounds_and_stays_before_the_next_word():
+    rows = [
+        {"name": "right,", "start_seconds": 3.58, "stop_seconds": 6.52, "_lexical_end": 3.76},
+        {"name": "manager.", "start_seconds": 24.12, "stop_seconds": 24.84, "_lexical_end": 24.62},
+        {"name": "quiet.", "start_seconds": 30.0, "stop_seconds": 32.0, "_lexical_end": 30.3},
+    ]
+    _refine_word_timestamps(rows, [(3.586, 4.062), (5.986, 9.502), (21.026, 25.342)])
+    assert [(r["start_seconds"], r["stop_seconds"]) for r in rows] == [(3.586, 4.062), (24.12, 24.62), (30, 30.3)]
+    assert all("_lexical_end" not in r for r in rows)
+
+
+def test_bundled_speech_detector_handles_silence_reuses_model_and_restores_threads():
+    transcriber = WhisperTranscriber.__new__(WhisperTranscriber)
+    transcriber.samplerate = 16000
+    transcriber._vad_model = None
+    threads = torch.get_num_threads()
+    assert transcriber._speech_regions(np.zeros(16000, dtype=np.float32)) == []
+    assert torch.get_num_threads() == threads
+    model = transcriber._vad_model
+    assert transcriber._speech_regions(np.zeros(32000, dtype=np.float32)) == []
+    assert transcriber._vad_model is model
+    assert torch.get_num_threads() == threads
+
+
+def test_prediction_refines_pauses_without_changing_words(monkeypatch, speech_pipeline):
+    monkeypatch.setattr(WhisperTranscriber, "_speech_regions", lambda self, audio: [(0.1, 0.2), (0.5, 0.7)])
+    frame = api.predict(checkpoint="whisper:large", accelerator="cpu", audio=np.zeros(16000), samplerate=16000)
+    assert frame.name.tolist() == ["Hello", "world!"]
+    assert frame.start_seconds.tolist() == [0.1, 0.5]
+    assert frame.stop_seconds.tolist() == [0.2, 0.7]
+
+
 @pytest.fixture
 def speech_pipeline(monkeypatch):
     calls = {}
@@ -155,6 +224,7 @@ def speech_pipeline(monkeypatch):
         return FakePipeline()
 
     monkeypatch.setattr(pipelines, "pipeline", factory)
+    monkeypatch.setattr(WhisperTranscriber, "_speech_regions", lambda self, audio: [(0, len(audio) / self.samplerate)])
     return calls
 
 
