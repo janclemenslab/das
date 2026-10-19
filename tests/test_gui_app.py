@@ -247,6 +247,26 @@ def test_worker_thread_kills_training_process_after_cancel(qtbot):
     assert process.killed
 
 
+def test_worker_keeps_finished_result_when_windows_pipe_closes(qapp, monkeypatch):
+    from unittest.mock import Mock
+
+    payload = {"ok": True, "command": "train", "result": "model.ckpt"}
+    connection = Mock()
+    connection.poll.side_effect = [True, BrokenPipeError(109, "The pipe has been ended")]
+    connection.recv.return_value = ("finished", payload)
+    process = Mock(exitcode=0)
+    process.is_alive.return_value = False
+    context = Mock()
+    context.Pipe.return_value = (connection, Mock())
+    context.Process.return_value = process
+    monkeypatch.setattr(gui.multiprocessing, "get_context", lambda method: context)
+    worker = gui.JobWorker("train", Config(mode="train"))
+
+    assert worker._run_train_in_process() == payload
+    connection.close.assert_called_once()
+    assert worker._train_process is None
+
+
 def test_gui_uses_cli_help_for_tooltips(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)

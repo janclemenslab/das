@@ -207,3 +207,48 @@ def test_loaded_audio_connects_prediction_dialog_to_annotations(qtbot, monkeypat
     assert len(predicted) == 1
     assert predicted.iloc[0]["start_seconds"] == pytest.approx(0.26)
     assert predicted.iloc[0]["stop_seconds"] == pytest.approx(0.27)
+
+
+def test_video_with_tracking_loads_and_seeks(qtbot, tmp_path):
+    import av
+    import xarray as xr
+    from xarray_behave.gui.app import PSV
+    from xarray_behave.gui.gui_config import GuiConfigManager
+    from xarray_behave.gui.modern_video import PyAVVideoReader
+
+    video_path = tmp_path / "clip.mp4"
+    with av.open(str(video_path), mode="w") as container:
+        stream = container.add_stream("mpeg4", rate=10)
+        stream.width, stream.height, stream.pix_fmt = 32, 32, "yuv420p"
+        for index in range(10):
+            frame = av.VideoFrame.from_ndarray(np.full((32, 32, 3), index * 20, dtype=np.uint8), format="rgb24")
+            for packet in stream.encode(frame):
+                container.mux(packet)
+        for packet in stream.encode():
+            container.mux(packet)
+
+    sampletime = np.arange(8_000) / 8_000
+    ds = xr.Dataset(
+        {
+            "song_raw": (("sampletime", "channels"), np.sin(sampletime[:, None] * 100) * 0.25),
+            "body_positions": (("time", "flies", "bodyparts", "coords"), np.full((10, 1, 2, 2), 16.0)),
+        },
+        coords={
+            "sampletime": sampletime, "time": np.arange(10) / 10, "nearest_frame": ("time", np.arange(10)),
+            "channels": [0], "flies": [0], "bodyparts": ["head", "thorax"], "coords": ["y", "x"],
+        },
+        attrs={"target_sampling_rate_Hz": 10},
+    )
+    ds.song_raw.attrs["sampling_rate_Hz"] = 8_000
+    ds.body_positions.attrs.update({"spatial_units": "pixels", "pixel_size_mm": 1.0})
+    reader = PyAVVideoReader(video_path)
+    viewer = PSV(ds, vr=reader, box_size=8, is_das=True, config_manager=GuiConfigManager(home=tmp_path / "home"))
+    qtbot.addWidget(viewer)
+
+    viewer.t0 = 2_400
+    viewer.update_frame()
+
+    assert viewer.movie_view.isVisible()
+    assert viewer.index_other == 3
+    assert viewer.framenumber == 3
+    assert reader[viewer.framenumber].shape == (32, 32, 3)

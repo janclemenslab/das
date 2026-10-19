@@ -2352,11 +2352,11 @@ class JobWorker(QObject):
             exitcode = None
 
         while True:
-            if not parent_connection.poll():
-                break
             try:
+                if not parent_connection.poll():
+                    break
                 message_type, message = parent_connection.recv()
-            except EOFError:
+            except (EOFError, BrokenPipeError):
                 break
             if message_type == "log":
                 self.log.emit(message)

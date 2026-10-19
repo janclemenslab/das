@@ -49,6 +49,8 @@ jobs:
           else
             uv pip install torch torchaudio torchvision
           fi
+          # Test alpha's video fix until the next xarray-behave prerelease includes it.
+          uv pip install "xarray-behave @ git+https://github.com/janclemenslab/xarray-behave.git@fab02f7d86ba6c64cb0ac5e31a51d4fb92173156"
           uv pip install -e ".[gui]" pytest pytest-qt nnAudio
           uv pip check
       - name: Require GUI imports
