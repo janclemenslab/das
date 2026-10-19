@@ -29,6 +29,11 @@ jobs:
       PYTHONFAULTHANDLER: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Install Linux Qt libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libopengl0
       - uses: conda-incubator/setup-miniconda@v3
         with:
           miniforge-version: latest
