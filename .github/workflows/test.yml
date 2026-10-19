@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.12", "3.13", "3.14"]
+        os: [windows-latest]
+        python-version: ["3.13"]
 
     defaults:
       run:
@@ -46,6 +46,47 @@ jobs:
           uv build --wheel
           uv pip install "$(find dist -name 'das-*.whl' -print -quit)" pytest --torch-backend=auto
           uv pip check
+
+      - name: Diagnose Qt DLL imports
+        run: |
+          uv pip install pefile
+          python -u - <<'PYCODE'
+          import subprocess
+          import sys
+          for code in ["from PySide6 import QtCore", "import torch; from PySide6 import QtCore", "from PySide6 import QtCore; import das", "import das; from PySide6 import QtCore"]:
+              print(f"CHECK: {code}", flush=True)
+              result = subprocess.run([sys.executable, "-c", code])
+              print(f"EXIT: {result.returncode}", flush=True)
+          import das
+          import ctypes
+          from pathlib import Path
+          import PySide6
+          import shiboken6
+          import pefile
+          kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+          kernel32.GetProcAddress.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+          kernel32.GetProcAddress.restype = ctypes.c_void_p
+          kernel32.GetModuleFileNameW.argtypes = [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_ulong]
+          for folder in [Path(PySide6.__file__).parent, Path(shiboken6.__file__).parent]:
+              for name in ["QtCore.pyd", "Qt6Core.dll", "pyside6.abi3.dll", "shiboken6.abi3.dll"]:
+                  path = folder / name
+                  if not path.exists():
+                      continue
+                  print(f"IMPORTS: {path}", flush=True)
+                  for entry in pefile.PE(str(path)).DIRECTORY_ENTRY_IMPORT:
+                      name = entry.dll.decode()
+                      try:
+                          dll = ctypes.WinDLL(name)
+                      except OSError as exc:
+                          print(f"CANNOT LOAD: {name}: {exc}", flush=True)
+                          continue
+                      buffer = ctypes.create_unicode_buffer(32768)
+                      kernel32.GetModuleFileNameW(dll._handle, buffer, len(buffer))
+                      print(f"LOADED: {buffer.value}", flush=True)
+                      for imp in entry.imports:
+                          if imp.name and not kernel32.GetProcAddress(dll._handle, imp.name):
+                              print(f"MISSING: {name}: {imp.name.decode()}", flush=True)
+          PYCODE
 
       - name: Test GUI startup
         run: |
