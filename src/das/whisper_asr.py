@@ -2,6 +2,20 @@
 
 import pandas as pd
 import torch
+from transformers.pipelines import AutomaticSpeechRecognitionPipeline
+
+
+class _WhisperWordTimestampPipeline(AutomaticSpeechRecognitionPipeline):
+    def _forward(self, model_inputs, return_timestamps=False, **generate_kwargs):
+        output = super()._forward(model_inputs, return_timestamps=return_timestamps, **generate_kwargs)
+        if return_timestamps == "word":
+            # Transformers 4.57's word decoder expects token ends; Whisper generates token onsets.
+            timestamps = output["token_timestamps"]
+            if isinstance(timestamps, torch.Tensor):
+                output["token_timestamps"] = torch.cat((timestamps[..., 1:], timestamps[..., -1:]), dim=-1)
+            else:
+                output["token_timestamps"] = [torch.cat((row[1:], row[-1:])) for row in timestamps]
+        return output
 
 
 class WhisperTranscriber:
@@ -14,6 +28,7 @@ class WhisperTranscriber:
             device=device,
             dtype=torch.float16,
             model_kwargs={"attn_implementation": "eager"},
+            pipeline_class=_WhisperWordTimestampPipeline,
         )
         self.samplerate = self.pipeline.feature_extractor.sampling_rate
 

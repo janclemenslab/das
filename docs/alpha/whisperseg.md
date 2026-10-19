@@ -30,6 +30,11 @@ decoding. WhisperSeg's frequency scaling, event postprocessing and short decoder
 token limit do not apply. Speech transcription is prediction-only; segmentation
 evaluation is disabled. The model downloads on first use.
 
+DAS corrects the token-boundary convention used by Transformers 4.57's word
+decoder: each token spans its own onset to the next token's onset. This avoids
+shifting word times one token earlier and producing zero-length first words.
+Word boundaries remain estimates from Whisper's attention alignment.
+
 ## WhisperSeg fine-tuning
 
 WhisperSeg fine-tuning defaults to **decoder LoRA**, using the selected adaptation
