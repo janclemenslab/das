@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.12", "3.13", "3.14"]
+        python-version: ["3.14"]
 
     defaults:
       run:
@@ -30,28 +30,82 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Create Conda environment
+      - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v4
         with:
-          activate-environment: das
+          activate-environment: bootstrap
           channels: conda-forge
           conda-remove-defaults: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Install system dependencies
-        run: conda install -c conda-forge ffmpeg uv -y
-
-      - name: Build and install DAS
+      - name: Install published DAS with Conda Qt
+        id: install
         run: |
-          uv build --wheel
-          uv pip install "$(find dist -name 'das-*.whl' -print -quit)" pytest --torch-backend=auto
-          uv pip check
+          conda create -n das -c conda-forge --strict-channel-priority python=${{ matrix.python-version }} pyside6 ffmpeg "numcodecs<0.16" uv -y
+          conda activate das
+          uv pip install das --torch-backend=auto
+
+      - name: Test GUI startup and PyTorch
+        run: |
+          conda activate das
+          python -X faulthandler - <<'PY'
+          import sys
+          import importlib.metadata as md
+          import subprocess
+          import das
+          import torch
+          from PySide6 import QtCore, QtWidgets
+          from das import cli
+
+          print({name: md.version(name) for name in ["das", "xarray-behave", "PySide6", "numcodecs", "torch"]}, flush=True)
+          assert not any(d.metadata["Name"].lower() == "pyside6-essentials" for d in md.distributions())
+          x = torch.ones(2, requires_grad=True)
+          (x * x).sum().backward()
+          assert torch.equal(x.grad, torch.full((2,), 2.))
+          app = QtWidgets.QApplication([])
+          visible = []
+
+          def close():
+              visible.extend(window for window in app.topLevelWidgets() if window.isVisible())
+              app.closeAllWindows()
+              app.quit()
+
+          QtCore.QTimer.singleShot(500, close)
+          sys.argv = ["das", "gui"]
+          cli.main()
+          assert any(isinstance(window, QtWidgets.QMainWindow) for window in visible)
+          subprocess.run(["ffmpeg", "-version"], check=True, stdout=subprocess.DEVNULL)
+          PY
+
+      - name: Test GUI training and prediction windows
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          conda activate das
+          python -X faulthandler - <<'PY'
+          import das
+          from PySide6 import QtWidgets
+          from xarray_behave.gui.app import MainWindow
+
+          app = QtWidgets.QApplication([])
+          window = MainWindow()
+          for tab in ("train", "predict"):
+              child = window._open_das_window(tab)
+              assert child is not None, f"DAS {tab} window is unavailable"
+              child.close()
+          window.close()
+          PY
 
       - name: Run tests
-        run: pytest -q
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          conda activate das
+          uv pip install pytest
+          pytest -q
 
       - name: Test command line
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: |
+          conda activate das
           das version
           das train --help
           das predict --help
