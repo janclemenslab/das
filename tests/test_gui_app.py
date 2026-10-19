@@ -593,7 +593,7 @@ def test_predict_checkpoint_selector_accepts_published_and_local_models(qtbot):
     selector = window.predict_widget.paths_form.checkpoint_field
 
     assert selector.combo.itemText(0) == "Local checkpoint"
-    assert selector.combo.count() == 6
+    assert selector.combo.count() == 7
 
     selector.value = "whisperseg-aer:base-animal-vad"
 
@@ -601,11 +601,26 @@ def test_predict_checkpoint_selector_accepts_published_and_local_models(qtbot):
     assert window.predict_widget.build_config().checkpoint == "whisperseg-aer:base-animal-vad"
     assert window.predict_widget.model_class_label.text() == "WhisperSeg"
 
+    window.predict_widget.evaluation_form.evaluate = True
+    selector.value = "whisper:large"
+
+    assert selector.combo.currentText() == "Whisper Large · speech transcription · FP16"
+    assert window.predict_widget.build_config().checkpoint == "whisper:large"
+    assert window.predict_widget.model_class_label.text() == "Whisper ASR · word timestamps"
+    assert not window.predict_widget.build_config().evaluate
+    assert not window.predict_widget.evaluation_form.gui.native.isEnabled()
+    assert _magicgui_field_row(window.predict_widget.whisperseg_decoder_form.gui.generation_max_length).isHidden()
+    assert not _magicgui_field_row(window.predict_widget.whisperseg_decoder_form.gui.num_beams).isHidden()
+    assert _magicgui_field_row(window.predict_widget.data_form.gui.batch_size).isHidden()
+
     selector.value = "/tmp/model.ckpt"
 
     assert selector.combo.currentText() == "Local checkpoint"
     assert selector.line_edit.text() == "/tmp/model.ckpt"
     assert window.predict_widget.build_config().checkpoint == "/tmp/model.ckpt"
+    assert window.predict_widget.evaluation_form.gui.native.isEnabled()
+    assert window.predict_widget.build_config().evaluate
+    assert not _magicgui_field_row(window.predict_widget.data_form.gui.batch_size).isHidden()
 
 
 def test_predict_model_pane_switches_controls_from_checkpoint(qtbot, tmp_path: Path):

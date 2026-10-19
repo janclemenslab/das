@@ -9,6 +9,29 @@ Large Animal VAD (`whisperseg-aer:animal-vad`) and Large multispecies
 (`whisperseg-aer:large-ms`). Original WhisperSeg and pruned models are not offered.
 Models download on first use. Prediction preserves their FP16 weights.
 
+## Human speech transcription with timestamps
+
+For spoken words, select **Whisper Large · speech transcription · FP16** in the
+prediction checkpoint selector, or run:
+
+```shell
+das predict --data-dir /path/to/speech.wav --checkpoint whisper:large
+```
+
+This uses the original [OpenAI Whisper Large](https://huggingface.co/openai/whisper-large)
+with its full vocabulary and FP16 weights. Language is detected automatically;
+words are transcribed in the source language. Each word, including punctuation,
+is saved as a normal DAS annotation with `name`, `start_seconds` and `stop_seconds`,
+so timestamps and words can be viewed and edited in the GUI. Prediction also
+works on the current audio selection; its annotations use the recording timeline.
+
+Whisper handles recordings longer than 30 seconds using its own long-form
+decoding. WhisperSeg's frequency scaling, event postprocessing and short decoder
+token limit do not apply. Speech transcription is prediction-only; segmentation
+evaluation is disabled. The model downloads on first use.
+
+## WhisperSeg fine-tuning
+
 WhisperSeg fine-tuning defaults to **decoder LoRA**, using the selected adaptation
 recipe from our experiments:
 

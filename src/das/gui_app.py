@@ -82,7 +82,7 @@ from .gui_helpers import (
     train_config_to_gui_state,
     train_gui_state_to_config,
 )
-from .whisperseg.catalog import MODEL_OPTIONS
+from .whisperseg.catalog import ASR_MODEL_OPTIONS, MODEL_OPTIONS
 from .api import _is_whisperseg_predict_source, _load_checkpoint_metadata, predict, train
 
 LineText = Annotated[str, {"widget_type": "LineEdit"}]
@@ -683,7 +683,7 @@ class PredictCheckpointField(QWidget):
         self.label = QLabel("Checkpoint")
         self.combo = QComboBox()
         self.combo.addItem(LOCAL_INITIAL_MODEL_OPTION)
-        for alias, (label, _) in MODEL_OPTIONS.items():
+        for alias, (label, _) in (MODEL_OPTIONS | ASR_MODEL_OPTIONS).items():
             self.combo.addItem(label, alias)
         self.local_field = PathField(
             label="DAS checkpoint or legacy DAS model",
@@ -724,7 +724,7 @@ class PredictCheckpointField(QWidget):
     @value.setter
     def value(self, value: str) -> None:
         value = value.strip()
-        index = self.combo.findData(value) if value in MODEL_OPTIONS else -1
+        index = self.combo.findData(value)
         if index > 0:
             self.combo.setCurrentIndex(index)
         else:
@@ -2056,9 +2056,14 @@ class PredictCommandWidget(QWidget):
         self.paths_form.set_folder_fields_enabled(not current_audio)
 
     def _sync_model_class(self, *_args) -> None:
+        asr = self.paths_form.checkpoint in ASR_MODEL_OPTIONS
         whisperseg = _is_whisperseg_predict_source(self.paths_form.checkpoint)
-        self.model_class_label.setText("WhisperSeg" if whisperseg else "DAS")
-        self.model_stack.setCurrentWidget(self.whisperseg_model_panel if whisperseg else self.das_model_panel)
+        self.model_class_label.setText("Whisper ASR · word timestamps" if asr else "WhisperSeg" if whisperseg else "DAS")
+        self.model_stack.setCurrentWidget(self.whisperseg_model_panel if whisperseg or asr else self.das_model_panel)
+        for name in ("generation_max_length", "num_trials", "top_k", "top_p"):
+            _set_magicgui_field_visible(getattr(self.whisperseg_decoder_form.gui, name), not asr)
+        self.evaluation_form.gui.native.setEnabled(not asr)
+        _set_magicgui_field_visible(self.data_form.gui.batch_size, not asr)
 
     def uses_current_audio(self) -> bool:
         return self.source_combo.currentText() == "Current audio"
@@ -2080,7 +2085,7 @@ class PredictCommandWidget(QWidget):
         prediction_state.event_threshold = float(self.postprocessing_form.event_threshold)
         prediction_state.event_dist_min_ms = float(self.postprocessing_form.event_dist_min_ms)
         prediction_state.event_dist_max_ms = str(self.postprocessing_form.event_dist_max_ms)
-        prediction_state.evaluate = bool(self.evaluation_form.evaluate)
+        prediction_state.evaluate = bool(self.evaluation_form.evaluate) and self.paths_form.checkpoint not in ASR_MODEL_OPTIONS
         prediction_state.split = str(self.evaluation_form.split)
         prediction_state.syllable_tolerance_ms = float(self.evaluation_form.syllable_tolerance_ms)
         return PredictGuiState(

@@ -1,6 +1,11 @@
-"""Published WhisperSeg AER checkpoints available by name in DAS."""
+"""Published WhisperSeg AER checkpoints and Whisper speech models available in DAS."""
 
 MODEL_REPO = "DAS-DeepAudioSegmenter/whisperseg-aer"
+
+# Speech transcription is prediction-only; these are not WhisperSeg starting models.
+ASR_MODEL_OPTIONS = {
+    "whisper:large": ("Whisper Large · speech transcription · FP16", "openai/whisper-large"),
+}
 MODEL_OPTIONS = {
     "whisperseg-aer:tiny-ms": ("Tiny multispecies · compact FP16", "whisperseg-tiny-ms-cmp-fp16.ckpt"),
     "whisperseg-aer:base-animal-vad": ("Animal VAD Base · compact FP16", "whisperseg-base-animal-vad-cmp-fp16.ckpt"),

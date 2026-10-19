@@ -17,7 +17,7 @@ from lightning.pytorch.loggers import CSVLogger
 from torch.utils.data import DataLoader, Dataset, Subset
 from tqdm.auto import tqdm
 
-from .whisperseg.catalog import MODEL_OPTIONS, resolve_model_checkpoint
+from .whisperseg.catalog import ASR_MODEL_OPTIONS, MODEL_OPTIONS, resolve_model_checkpoint
 from .config import Config, SplitName
 from .data import (
     AudioDirDataModule,
@@ -355,7 +355,9 @@ def _whisper_effective_samplerate(samplerate: int, frequency_scale: float) -> in
 
 
 def _whisper_model_samplerate(segmenter) -> int | None:
-    value = getattr(segmenter, "default_segmentation_config", {}).get("sr")
+    value = getattr(segmenter, "samplerate", None)
+    if value is None:
+        value = getattr(segmenter, "default_segmentation_config", {}).get("sr")
     if value is None:
         return None
     return int(round(float(value)))
@@ -414,6 +416,13 @@ def _resolve_whisper_device(accelerator: str) -> str:
 
 
 def _whisper_segmenter(config: Config):
+    if config.checkpoint in ASR_MODEL_OPTIONS:
+        from .whisper_asr import WhisperTranscriber
+
+        return WhisperTranscriber(
+            ASR_MODEL_OPTIONS[config.checkpoint][1], device=_resolve_whisper_device(str(config.accelerator))
+        )
+
     from .whisperseg.model import WhisperSegmenter
 
     return WhisperSegmenter(
@@ -422,6 +431,14 @@ def _whisper_segmenter(config: Config):
 
 
 def _whisper_segment_audio(segmenter, config: Config, audio, samplerate: int, *, filename: str | None = None) -> pd.DataFrame:
+    if config.checkpoint in ASR_MODEL_OPTIONS:
+        normalized_audio = _whisper_normalize_audio_array(audio)
+        if int(samplerate) != segmenter.samplerate:
+            normalized_audio = _resample_raw_audio_array(normalized_audio, int(samplerate), segmenter.samplerate)
+        return segmenter.transcribe(
+            normalized_audio, num_beams=int(config.num_beams), length_penalty=float(config.length_penalty), filename=filename
+        )
+
     frequency_scale = (
         float(config.frequency_scale)
         if config.frequency_scale is not None
@@ -733,8 +750,11 @@ def _predict_whisperseg(
     verbose: bool,
     stop_event: threading.Event | None = None,
 ) -> list[str] | pd.DataFrame:
+    """Shared audio loading and annotation output for WhisperSeg and speech transcription."""
     if not config.checkpoint:
         raise ValueError("Provide checkpoint for prediction.")
+    if config.checkpoint in ASR_MODEL_OPTIONS and config.evaluate:
+        raise ValueError("Segmentation evaluation is not supported for speech transcription.")
 
     _seed_if_requested(config, verbose=verbose)
     segmenter = _whisper_segmenter(config)
@@ -1389,7 +1409,7 @@ def predict(
     **overrides,
 ) -> list[str] | pd.DataFrame | list[pd.DataFrame]:
     config = _api_config(config, mode="predict", overrides=overrides, validate=audio is None)
-    if _is_whisperseg_predict_source(config.checkpoint):
+    if config.checkpoint in ASR_MODEL_OPTIONS or _is_whisperseg_predict_source(config.checkpoint):
         return _predict_whisperseg(
             config,
             audio=audio,

@@ -119,6 +119,8 @@ The converted checkpoint can then be passed to `das predict` like any native che
 
 WhisperSeg offers compact FP16 AER starting models in Tiny, Base, Small and Large sizes. Select one in the GUI or use `--initial-model whisperseg-aer:small-ms`. Training defaults to decoder LoRA; `--whisperseg-training-method full` selects FP32 fine-tuning. Selecting a training checkpoint as the initial model automatically resumes its adapters, optimizer and scheduler. See [WhisperSeg training and prediction](docs/alpha/whisperseg.md).
 
+For human speech, select **Whisper Large · speech transcription · FP16**, or use `das predict --data-dir /path/to/speech.wav --checkpoint whisper:large`. It retains OpenAI Whisper's full vocabulary and produces editable word annotations with start/end timestamps.
+
 For native checkpoints, `das predict` uses the saved chunk length, stride, and class names from the trained model. Legacy DAS models use the saved legacy window size, stride, and class labels from the model params. Evaluation works through `das predict --evaluate`, with optional `--split train|val|test` for split-backed datasets.
 
 Print a starter config for a subcommand:

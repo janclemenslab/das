@@ -11,7 +11,7 @@ import yaml
 from .models.decoders import serialize_decoder_config
 from .models.encoders import TcnPadding, serialize_encoder_config
 from .models.frontends import PadMode, serialize_frontend_config
-from .whisperseg.catalog import MODEL_OPTIONS
+from .whisperseg.catalog import ASR_MODEL_OPTIONS, MODEL_OPTIONS
 
 ModeName = Literal["train", "predict", "gui", "convert-legacy"]
 SplitName = Literal["train", "val", "test"]
@@ -280,8 +280,8 @@ class Config:
     )
     checkpoint: str = _config_field(
         "",
-        help="DAS .ckpt, legacy H5/YAML trunk, or WhisperSeg AER model name for inference. "
-        f"Available names: {', '.join(MODEL_OPTIONS)}.",
+        help="DAS .ckpt, legacy H5/YAML trunk, WhisperSeg AER model, or Whisper speech transcription with word timestamps. "
+        f"Available names: {', '.join(MODEL_OPTIONS)}, {', '.join(ASR_MODEL_OPTIONS)}.",
     )
     initial_model: str = _config_field(
         "",
@@ -855,6 +855,10 @@ class Config:
         if self.mode == "train" and not self.output_dir:
             raise ValueError("Provide output_dir for training.")
         if self.mode == "predict":
+            if self.checkpoint.startswith("whisper:") and self.checkpoint not in ASR_MODEL_OPTIONS:
+                raise ValueError(f"Unknown Whisper speech model: {self.checkpoint}")
+            if self.checkpoint in ASR_MODEL_OPTIONS and self.evaluate:
+                raise ValueError("Segmentation evaluation is not supported for speech transcription.")
             if self.checkpoint.startswith("whisperseg-aer:") and self.checkpoint not in MODEL_OPTIONS:
                 raise ValueError(f"Unknown WhisperSeg AER model: {self.checkpoint}")
             if not self.checkpoint:
