@@ -1,41 +1,77 @@
 name: Test install
 
 on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 
 jobs:
   test:
-    runs-on: windows-latest
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        python-version: ["3.12", "3.13", "3.14"]
+
     defaults:
       run:
         shell: bash -el {0}
+
     env:
+      MPLBACKEND: Agg
       QT_QPA_PLATFORM: offscreen
-      QT_API: pyside6
+
     steps:
       - uses: actions/checkout@v7
-      - uses: conda-incubator/setup-miniconda@v4
+
+      - name: Create Conda environment
+        uses: conda-incubator/setup-miniconda@v4
         with:
           activate-environment: das
           channels: conda-forge
           conda-remove-defaults: true
-          python-version: "3.13"
-      - name: Install Conda Qt and FFmpeg
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: conda install -c conda-forge --strict-channel-priority ffmpeg uv "pyside6=6.10.*" qt6-multimedia -y
+
+      - name: Build and install DAS
         run: |
-          conda install -c conda-forge --strict-channel-priority ffmpeg uv "pyside6=6.10.*" qt6-multimedia -y
-          uv pip install qtpy
-          ffmpeg -version
-      - name: Test native Qt
+          uv build --wheel
+          uv pip install "$(find dist -name 'das-*.whl' -print -quit)" "xarray-behave @ git+https://github.com/janclemenslab/xarray-behave.git@7996e112a00a2ff3f70d14eddb921ef79a8ee0c3" pytest --torch-backend=auto
+          uv pip check
+
+      - name: Test GUI startup
         run: |
-          python - <<'PYCODE'
-          import importlib.metadata as metadata
-          from qtpy import QtCore, QtWidgets, QtMultimedia
+          python -X faulthandler - <<'PY'
+          import das
+          from importlib.metadata import distributions, version
+          from PySide6 import QtCore, QtGui, QtWidgets
+          from xarray_behave.gui.app import main_das
+
+          assert not any(dist.metadata['Name'].lower() == 'pyside6-essentials' for dist in distributions())
+          print(f"xarray-behave {version('xarray-behave')}, PySide6 {version('PySide6')}")
           app = QtWidgets.QApplication([])
           window = QtWidgets.QWidget()
           window.show()
           app.processEvents()
           assert window.isVisible()
           window.close()
-          print(f"Conda Qt works: {QtCore.qVersion()}")
-          print(f"PySide6 metadata: {metadata.version('PySide6')}")
-          PYCODE
+          print(f"GUI available with Qt {QtCore.qVersion()}")
+          PY
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Test command line
+        run: |
+          das version
+          das train --help
+          das predict --help
+          das gui --help
