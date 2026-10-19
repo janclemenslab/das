@@ -4,6 +4,8 @@ _DAS_ automatically annotates animal vocalizations in raw audio recordings using
 
 ## Installation
 
+On Windows, omit `ffmpeg` from the Conda command below. Install a [standalone Windows FFmpeg build](https://ffmpeg.org/download.html#build-windows) and add its `bin` folder to `PATH`; Conda's FFmpeg installs ICU DLLs that conflict with Qt.
+
 ```shell
 conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
 conda activate das

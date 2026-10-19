@@ -6,12 +6,25 @@ Install [Miniforge](https://github.com/conda-forge/miniforge) or another Conda d
 
 ## Install DAS
 
-Create and activate an isolated environment. Conda provides Python, FFmpeg, and `uv`; `uv` installs DAS and its Python dependencies.
+Create an isolated environment. Conda provides Python and `uv`; `uv` installs DAS and its Python dependencies.
 
 Users who need the TensorFlow backend should follow the [TensorFlow installation instructions](install_tf.md) for the final TensorFlow-backed release.
 
+On macOS and Linux, install FFmpeg in the same Conda environment:
+
 ```shell
 conda create -n das -c conda-forge python=3.14 ffmpeg uv -y
+```
+
+On Windows, install a [standalone FFmpeg build](https://ffmpeg.org/download.html#build-windows) and add its `bin` folder to `PATH`. Create the Conda environment without FFmpeg: its ICU DLLs conflict with PySide6 and cause "No Qt bindings could be found" errors.
+
+```shell
+conda create -n das -c conda-forge python=3.14 uv -y
+```
+
+Then activate the environment and install DAS:
+
+```shell
 conda activate das
 uv pip install das --torch-backend=auto
 ```
