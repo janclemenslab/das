@@ -43,7 +43,11 @@ jobs:
         run: |
           conda create -n das -c conda-forge --strict-channel-priority python=${{ matrix.python-version }} pyside6 ffmpeg "numcodecs<0.16" uv -y
           conda activate das
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            conda install -c conda-forge --strict-channel-priority "libopenblas=*=*pthreads*" -y
+          fi
           uv pip install das --torch-backend=auto
+          uv pip install "xarray-behave @ git+https://github.com/janclemenslab/xarray-behave.git@671030b011a6dab978281c7c48e569fb3cc77e4a"
 
       - name: Test GUI startup and PyTorch
         run: |
@@ -82,16 +86,31 @@ jobs:
         run: |
           conda activate das
           python -X faulthandler - <<'PY'
+          import tempfile
+          from pathlib import Path
+          from unittest.mock import patch
           import das
           from PySide6 import QtWidgets
           from xarray_behave.gui.app import MainWindow
+          from xarray_behave.gui.formbuilder import YamlDialog
 
           app = QtWidgets.QApplication([])
           window = MainWindow()
-          for tab in ("train", "predict"):
-              child = window._open_das_window(tab)
-              assert child is not None, f"DAS {tab} window is unavailable"
-              child.close()
+          dialogs = []
+
+          def reject(dialog):
+              dialogs.append(dialog)
+              return QtWidgets.QDialog.Rejected
+
+          with tempfile.TemporaryDirectory() as directory:
+              model = str(Path(directory) / "test_model.h5")
+              (Path(directory) / "test_params.yaml").write_text("{}")
+              with patch.object(QtWidgets.QFileDialog, "getExistingDirectory", return_value=directory), patch.object(QtWidgets.QFileDialog, "getOpenFileName", return_value=(model, "")), patch.object(YamlDialog, "exec_", reject):
+                  for tab, field in (("train", "data_dir"), ("predict", "model_path")):
+                      window._open_das_window(tab)
+                      assert len(dialogs) == 1, f"DAS {tab} window is unavailable"
+                      assert field in dialogs[0].form.fields
+                      dialogs.pop().close()
           window.close()
           PY
 
