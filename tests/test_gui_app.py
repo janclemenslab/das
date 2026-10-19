@@ -251,7 +251,7 @@ def test_tee_writer_preserves_gui_unicode_with_legacy_console():
     import io
 
     buffer = io.BytesIO()
-    console = io.TextIOWrapper(buffer, encoding="cp1252")
+    console = io.TextIOWrapper(buffer, encoding="cp1252", newline="")
     messages = []
     writer = gui._TeeWriter(console, gui._SignalWriter(messages.append))
     text = "Epoch café ─ complete ✓\n"
