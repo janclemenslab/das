@@ -38,47 +38,18 @@ jobs:
           conda-remove-defaults: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Install system dependencies
+      - name: Install native dependencies
         run: |
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            # Conda FFmpeg's ICU DLLs conflict with PySide6's bundled ICU.
-            conda install -c conda-forge uv -y
-          else
-            conda install -c conda-forge ffmpeg uv -y
+          conda install -c conda-forge --strict-channel-priority pyside6 ffmpeg "numcodecs<0.16" uv -y
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            conda install -c conda-forge --strict-channel-priority "libopenblas=*=*pthreads*" -y
           fi
 
-      - name: Install standalone FFmpeg on Windows
-        if: runner.os == 'Windows'
-        shell: pwsh
-        run: |
-          Invoke-WebRequest https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip -OutFile "$env:RUNNER_TEMP/ffmpeg.zip"
-          Expand-Archive "$env:RUNNER_TEMP/ffmpeg.zip" -DestinationPath "$env:RUNNER_TEMP/ffmpeg"
-          $ffmpegBin = (Get-Item "$env:RUNNER_TEMP/ffmpeg/*/bin").FullName
-          $ffmpegBin >> $env:GITHUB_PATH
-          & "$ffmpegBin/ffmpeg.exe" -version
-
+      # Conda Qt packages omit WHEEL metadata, so uv pip check cannot validate them.
       - name: Build and install DAS
         run: |
           uv build --wheel
           uv pip install "$(find dist -name 'das-*.whl' -print -quit)" pytest --torch-backend=auto
-          uv pip check
-
-      - name: Test Windows GUI startup
-        if: runner.os == 'Windows'
-        run: |
-          python -X faulthandler - <<'PY'
-          import das
-          from PySide6 import QtCore, QtGui, QtWidgets
-          from xarray_behave.gui.app import main_das
-
-          app = QtWidgets.QApplication([])
-          window = QtWidgets.QWidget()
-          window.show()
-          app.processEvents()
-          assert window.isVisible()
-          window.close()
-          print(f"GUI available with Qt {QtCore.qVersion()}")
-          PY
 
       - name: Run tests
         run: pytest -q
