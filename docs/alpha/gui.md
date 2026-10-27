@@ -2,6 +2,10 @@
 
 Run `das` or `das gui` to open the xarray-behave annotation window. Open one audio file and its annotation CSV at a time. The DAS GUI has no recording-folder or project navigation; training can still read a folder of WAV files.
 
+Pass an audio file or ethodrome dataset folder directly with `das gui /path/to/source`. Add `--skip-dialog` to open it without the loading dialog.
+
+Use **File → Import annotations** to load a CSV or other delimited text table with a header row. The import wizard previews the first 10 rows and lets you select the name, start, and stop columns. Choose seconds or samples for both time columns; samples are zero-based and use the active audio's sample rate. Confirm the mapping, then choose whether to merge with or replace the current annotations.
+
 Use **DAS → Train** to select a WAV folder or an existing DAS training dataset, choose the model, and set training options. The dialog includes the segment hysteresis thresholds, event threshold and spacing, and manual postprocessing controls. WhisperSeg accepts a local DAS `.ckpt` or a named AER starting model. Training checkpoints resume automatically through the same Initial model field.
 
 Use **DAS → Predict** to select a DAS `.ckpt` or a legacy DAS H5/YAML model. The dialog exposes the same detection and postprocessing controls, plus evaluation options. Predictions appear in the current annotation view for review and can be saved as CSV.

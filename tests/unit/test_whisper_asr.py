@@ -228,13 +228,15 @@ def speech_pipeline(monkeypatch):
     return calls
 
 
-def test_speech_cli_is_prediction_only():
+def test_speech_cli_supports_prediction_and_training():
     config = cli.parse_command_config(["predict", "--data-dir", "data", "--checkpoint", "whisper:large"])
     assert config.checkpoint == "whisper:large"
     with pytest.raises(ValueError, match="Unknown Whisper speech model"):
         Config(mode="predict", data_dir="data", checkpoint="whisper:unknown").validate()
-    with pytest.raises(ValueError, match="initial_model"):
-        Config.from_mapping({"encoder_type": "whisperseg", "initial_model": "whisper:large"})
+    train = cli.parse_command_config([
+        "train", "--data-dir", "data", "--output-dir", "run", "--encoder", "whisperseg", "--initial-model", "whisper:large",
+    ])
+    assert train.initial_model == "whisper:large"
 
 
 def test_transcription_loads_original_fp16_model_and_preserves_words(speech_pipeline):

@@ -872,7 +872,32 @@ def test_gui_launch_opens_dialog_only_for_explicit_config(monkeypatch: pytest.Mo
     cli._launch_gui(["das", "gui"], startup_config=config)
     cli._launch_gui(["das", "gui", "--config", "fly"], startup_config=config)
 
-    assert seen == [{"das_startup_config": None}, {"das_startup_config": config}]
+    assert [call["das_startup_config"] for call in seen] == [None, config]
+
+
+@pytest.mark.parametrize("source", ["recording.wav", "/Volumes/agauneu/#Data/chainingmic/dat/localhost-20260401_162045"])
+def test_gui_cli_passes_source_and_viewer_options(monkeypatch: pytest.MonkeyPatch, source: str):
+    import sys
+    from types import ModuleType
+
+    seen = []
+    app = ModuleType("xarray_behave.gui.app")
+    app.main_das = lambda **kwargs: seen.append(kwargs)
+    monkeypatch.setitem(sys.modules, "xarray_behave.gui.app", app)
+
+    cli.cli_main([
+        "gui", source, "--skip-dialog", "--song-types-string", "pulse,event;sine,segment",
+        "--spec-freq-min", "100", "--spec-freq-max", "2000",
+    ])
+
+    assert seen == [{
+        "source": source,
+        "skip_dialog": True,
+        "song_types_string": "pulse,event;sine,segment",
+        "spec_freq_min": 100.0,
+        "spec_freq_max": 2000.0,
+        "das_startup_config": None,
+    }]
 
 
 def test_trainer_devices_maps_none_to_auto():
@@ -968,7 +993,7 @@ def test_predict_whisperseg_raw_audio_prints_prediction_summary(monkeypatch: pyt
     monkeypatch.setattr(
         api,
         "_whisper_segment_audio",
-        lambda segmenter, config, audio, samplerate, filename=None: pd.DataFrame(
+        lambda segmenter, config, audio, samplerate, filename=None, verbose=False: pd.DataFrame(
             [{"name": "song", "start_seconds": 0.1, "stop_seconds": 0.2}]
         ),
     )
@@ -987,7 +1012,8 @@ def test_predict_whisperseg_raw_audio_prints_prediction_summary(monkeypatch: pyt
     assert "song: 1" in output
 
 
-def test_whisperseg_segment_audio_passes_generation_settings():
+@pytest.mark.parametrize("verbose", [False, True])
+def test_whisperseg_segment_audio_passes_generation_settings(verbose):
     calls = {}
 
     class FakeSegmenter:
@@ -1016,6 +1042,7 @@ def test_whisperseg_segment_audio_passes_generation_settings():
         ),
         np.zeros(10, dtype=np.float32),
         100,
+        verbose=verbose,
     )
 
     assert frame.empty
@@ -1029,6 +1056,7 @@ def test_whisperseg_segment_audio_passes_generation_settings():
     assert calls["top_k"] == 2
     assert calls["top_p"] == 0.9
     assert calls["length_penalty"] == 0.8
+    assert calls["show_progress"] is verbose
 
 
 def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.MonkeyPatch):
@@ -1094,6 +1122,7 @@ def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.Monk
     assert train_calls["num_epochs"] == 20
     assert train_calls["training_method"] == "lora"
     assert train_calls["accumulate_grad_batches"] == 4
+    assert train_calls["unfreeze_encoder_after"] == 3
     assert train_calls["encoder_dropout"] == 0.2
     assert train_calls["decoder_dropout"] == 0.3
     assert train_calls["min_frequency"] == 200
@@ -1105,6 +1134,7 @@ def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.Monk
     assert train_calls["early_stopping"] is True
     assert train_calls["early_stopping_patience"] == 5
     assert train_calls["checkpoint_filename"] == "zf_20260423_203741_model"
+    assert train_calls["save_resumable_checkpoint"] is False
     assert train_calls["checkpoint_metadata"] == {
         "version": 1,
         "backend": "whisperseg",
@@ -1113,6 +1143,7 @@ def test_train_whisperseg_uses_shared_evaluation_report(monkeypatch: pytest.Monk
             "checkpoint_prefix": "zf",
             "initial_model": "model.ckpt",
             "freeze_encoder": True,
+            "unfreeze_encoder_after": 3,
             "whisperseg_training_method": "lora",
             "accumulate_grad_batches": 4,
             "linear_lr_schedule": False,
@@ -1191,6 +1222,7 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
         num_epochs=1,
         checkpoint_filename="zf_20260423_203741_model",
         checkpoint_metadata={"version": 1, "backend": "whisperseg"},
+        save_resumable_checkpoint=True,
     )
 
     assert result == str(tmp_path / "run" / "checkpoints" / "zf_20260423_203741_model.ckpt")
@@ -1200,6 +1232,7 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
     assert checkpoint_kwargs["save_top_k"] == 1
     assert checkpoint_kwargs["save_last"] is False
     assert checkpoint_kwargs["enable_version_counter"] is False
+    assert checkpoint_kwargs["save_weights_only"] is False
     assert trainer_kwargs["logger"] == ("logger", {"save_dir": str(tmp_path / "run"), "name": "logs"})
     assert early_stopping_kwargs["monitor"] == "train_loss_epoch"
     assert early_stopping_kwargs["patience"] == 5
@@ -1219,6 +1252,8 @@ def test_whisperseg_train_uses_regular_checkpoint_callback(tmp_path: Path, monke
     )
 
     assert early_stopping_kwargs == {}
+    assert checkpoint_kwargs["dirpath"] == str(tmp_path / "run")
+    assert checkpoint_kwargs["save_weights_only"] is True
     assert all(not (isinstance(callback, tuple) and callback[0] == "early") for callback in trainer_kwargs["callbacks"])
 
 
@@ -1323,7 +1358,7 @@ def test_whisperseg_evaluation_uses_shared_report_printer(monkeypatch: pytest.Mo
     monkeypatch.setattr(
         api,
         "_whisper_segment_audio",
-        lambda segmenter, config, audio, samplerate, filename=None: pd.DataFrame(
+        lambda segmenter, config, audio, samplerate, filename=None, verbose=False: pd.DataFrame(
             [{"filename": filename, "name": "song", "start_seconds": 0.0, "stop_seconds": 0.5}]
         ),
     )
@@ -1356,7 +1391,7 @@ def test_predict_whisperseg_evaluate_prints_report_not_predictions(monkeypatch: 
     monkeypatch.setattr(
         api,
         "_whisper_segment_audio",
-        lambda segmenter, config, audio, samplerate, filename=None: pd.DataFrame(
+        lambda segmenter, config, audio, samplerate, filename=None, verbose=False: pd.DataFrame(
             [{"filename": filename, "name": "song", "start_seconds": 0.0, "stop_seconds": 0.5}]
         ),
     )
@@ -1406,7 +1441,7 @@ def test_predict_whisperseg_passes_merge_to_annotation_writer(
     monkeypatch.setattr(
         api,
         "_whisper_segment_audio",
-        lambda segmenter, config, audio, samplerate, filename=None: pd.DataFrame(
+        lambda segmenter, config, audio, samplerate, filename=None, verbose=False: pd.DataFrame(
             [{"filename": filename, "name": "song", "start_seconds": 0.0, "stop_seconds": 0.5}]
         ),
     )
@@ -1475,13 +1510,21 @@ def test_predict_whisperseg_skips_existing_outputs(tmp_path: Path, monkeypatch: 
     assert pd.read_csv(existing_path).to_dict("records") == [{"name": "old"}]
 
 
-def test_predict_whisperseg_shows_file_progress_for_multiple_files(monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize("verbose", [False, True])
+@pytest.mark.parametrize("num_files", [1, 2])
+def test_predict_whisperseg_passes_progress_settings(monkeypatch: pytest.MonkeyPatch, verbose, num_files):
     progress_kwargs = {}
+    chunk_progress = []
 
     monkeypatch.setattr(api, "_whisper_segmenter", lambda config: object())
-    monkeypatch.setattr(api, "_whisper_audio_paths_for_config", lambda config: [Path("one.wav"), Path("two.wav")])
+    monkeypatch.setattr(api, "_whisper_audio_paths_for_config", lambda config: [Path(f"{index}.wav") for index in range(num_files)])
     monkeypatch.setattr(api, "load_audio_array", lambda audio_file, **kwargs: (np.zeros(4, dtype=np.float32), 4))
-    monkeypatch.setattr(api, "_whisper_segment_audio", lambda *args, **kwargs: pd.DataFrame())
+
+    def fake_segment(*args, verbose, **kwargs):
+        chunk_progress.append(verbose)
+        return pd.DataFrame()
+
+    monkeypatch.setattr(api, "_whisper_segment_audio", fake_segment)
 
     def fake_tqdm(iterable, **kwargs):
         progress_kwargs.update(kwargs)
@@ -1493,10 +1536,11 @@ def test_predict_whisperseg_shows_file_progress_for_multiple_files(monkeypatch: 
         Config(mode="predict", data_dir="data", checkpoint="model.ckpt", output_dir=""),
         audio=None,
         samplerate=None,
-        verbose=True,
+        verbose=verbose,
     )
 
-    assert progress_kwargs == {"desc": "Predicting files", "unit": "file", "disable": False}
+    assert progress_kwargs == {"desc": "Predicting files", "unit": "file", "disable": not verbose or num_files < 2}
+    assert chunk_progress == [verbose] * num_files
 
 
 def test_predict_whisperseg_stop_event_finishes_current_file(monkeypatch: pytest.MonkeyPatch):

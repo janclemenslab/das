@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import threading
+from types import SimpleNamespace
 
 import numpy as np
 import pandas as pd
@@ -16,7 +17,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 pytest.importorskip("qtpy")
 pytest.importorskip("magicgui")
 
-from qtpy.QtCore import QPoint, Qt
+from qtpy.QtCore import QEvent, QObject, QPoint, Qt
 from qtpy.QtGui import QFontDatabase
 from qtpy.QtWidgets import QDialog, QGroupBox, QLabel, QLineEdit, QPlainTextEdit, QScrollArea, QTabWidget
 
@@ -348,6 +349,40 @@ def test_initial_tab_and_predict_source_defaults(qtbot):
     assert predict_window.predict_widget.uses_current_audio()
 
 
+@pytest.mark.parametrize("current_audio_available", [False, True])
+def test_predict_source_shows_matching_controls(qtbot, current_audio_available):
+    widget = gui.PredictCommandWidget(current_audio_available=current_audio_available)
+    qtbot.addWidget(widget)
+    widget.show()
+    source_group = next(group for group in widget.findChildren(QGroupBox) if group.title() == "Source")
+    audio_path = widget.paths_form.data_dir_field
+
+    assert source_group.isAncestorOf(audio_path)
+    assert not widget.paths_form.isAncestorOf(audio_path)
+    assert audio_path.isVisible() == (not current_audio_available)
+    assert widget.current_audio_widget.isVisible() == current_audio_available
+
+    widget.source_combo.setCurrentText("File or folder")
+    widget.paths_form.data_dir = "/tmp/clip.wav"
+    assert audio_path.isVisible()
+    assert audio_path.isEnabled()
+    assert not widget.current_audio_widget.isVisible()
+    assert widget.build_config().data_dir == "/tmp/clip.wav"
+
+    if current_audio_available:
+        widget.source_combo.setCurrentText("Current audio")
+        assert not audio_path.isVisible()
+        assert widget.current_audio_widget.isVisible()
+        widget.current_audio_widget.start_seconds_field.setText("1.5")
+        widget.current_audio_widget.stop_seconds_field.setText("3.0")
+        assert widget.current_audio_request() == (1.5, 3.0)
+
+        widget.source_combo.setCurrentText("File or folder")
+        assert audio_path.isVisible()
+        assert not widget.current_audio_widget.isVisible()
+        assert widget.build_config().data_dir == "/tmp/clip.wav"
+
+
 def test_tab_layout_uses_expected_section_names(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
@@ -487,6 +522,33 @@ def test_train_include_labels_dropdown_populates_from_data_dir(qtbot, tmp_path: 
     assert window.train_widget.build_config().include_labels == ["pulse"]
 
 
+@pytest.mark.parametrize("data_dir", ["", "/unused/training-audio"])
+def test_train_include_labels_uses_current_annotations(qtbot, data_dir):
+    annotations = pd.DataFrame({"name": ["sine", "pulse", "pulse", "noise", "annotation_start", "annotation_end"]})
+    window = gui.DASConformerWindow(current_annotations_provider=lambda: annotations)
+    qtbot.addWidget(window)
+    window.train_widget.paths_form.data_dir = data_dir
+    widget = window.train_widget.include_labels_widget
+
+    assert widget.available_labels == ["pulse", "sine"]
+    assert widget.combo.lineEdit().text() == "All labels"
+    assert window.train_widget.build_config().include_labels == []
+
+    widget.combo._toggle_activated_index(1)
+
+    assert window.train_widget.build_config().include_labels == ["pulse"]
+
+
+def test_train_include_labels_handles_empty_current_annotations(qtbot):
+    window = gui.DASConformerWindow(current_annotations_provider=pd.DataFrame)
+    qtbot.addWidget(window)
+    widget = window.train_widget.include_labels_widget
+
+    assert widget.combo.count() == 0
+    assert widget.combo.lineEdit().text() == "No annotation labels"
+    assert window.train_widget.build_config().include_labels == []
+
+
 def test_include_labels_dropdown_toggles_on_activation(qtbot):
     widget = gui.IncludeLabelsWidget()
     qtbot.addWidget(widget)
@@ -552,29 +614,89 @@ def test_learning_rate_field_preserves_decimal_precision(qtbot):
     assert window.train_widget.build_config().learning_rate == float(learning_rate)
 
 
+def test_model_switch_keeps_sections_inside_the_dialog(qtbot):
+    exposed = []
+
+    class SectionEvents(QObject):
+        def eventFilter(self, obj, event):
+            if event.type() == QEvent.Type.Show and obj.isWindow():
+                exposed.append(obj)
+            return False
+
+    parent = gui.QMainWindow()
+    qtbot.addWidget(parent)
+    parent.show()
+    window = gui.DASConformerWindow(parent=parent)
+    qtbot.addWidget(window)
+    window.show()
+    watcher = SectionEvents(window)
+    sections = window.train_widget.model_section.model_sections
+    for section in sections:
+        section.installEventFilter(watcher)
+
+    for model_class in ("DAS", "whisperseg-aer", "DAS"):
+        window.train_widget.model_class.setCurrentText(model_class)
+
+    assert not exposed
+    assert all(window.isAncestorOf(section) for section in sections)
+
+
+def test_dialogs_inherit_the_das_icon(qtbot):
+    window = gui.DASConformerWindow()
+    qtbot.addWidget(window)
+    dialog = QDialog(window)
+    assert not window.windowIcon().isNull()
+    assert not gui.QApplication.windowIcon().isNull()
+    assert dialog.windowIcon().cacheKey() == window.windowIcon().cacheKey()
+
+
+@pytest.mark.parametrize("argv", [[], ["gui"]])
+def test_empty_startup_does_not_open_a_loading_dialog(qtbot, monkeypatch, argv):
+    from das.cli import cli_main
+    from xarray_behave.gui import app as viewer
+
+    def unexpected_dialog(*args, **kwargs):
+        pytest.fail("Empty startup must not open a loading dialog")
+
+    monkeypatch.setattr(viewer.QtWidgets.QFileDialog, "getOpenFileName", unexpected_dialog)
+    monkeypatch.setattr(viewer.QtWidgets.QFileDialog, "getExistingDirectory", unexpected_dialog)
+    monkeypatch.setattr(viewer.QtWidgets.QApplication, "exec_", lambda self: 0)
+    cli_main(argv)
+    window = viewer.QtWidgets.QApplication.instance()._xarray_behave_mainwin
+    qtbot.addWidget(window)
+    assert isinstance(window, viewer.PSV)
+    assert not window.ds.data_vars and window.tmax == 0
+    assert hasattr(window, "slice_view") and hasattr(window, "spec_view")
+    assert window.isVisible()
+    assert viewer.QtWidgets.QApplication.activeModalWidget() is None
+
+
 def test_whisperseg_training_offers_published_models_and_local_checkpoint(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
     selector = window.train_widget.model_section.initial_model_field
 
-    assert window.train_widget.model_class.currentText() == "DAS"
+    assert window.train_widget.model_class.currentText() == "whisperseg-aer"
     assert window.train_widget.model_section.isAncestorOf(selector)
     assert not window.train_widget.paths_form.isAncestorOf(selector)
-    assert selector.combo.itemText(0) == "Local checkpoint"
-    assert selector.isHidden()
-    assert window.train_widget.build_config().initial_model == ""
-
-    window.train_widget.model_class.setCurrentText("WhisperSeg")
+    config = window.train_widget.build_config()
+    assert config.frontend_type == config.encoder_type == config.decoder_type == "whisperseg"
+    assert (config.batch_size, config.learning_rate, config.num_epochs) == (1, 1e-4, 24)
+    assert config.initial_model == ""
 
     assert selector.combo.itemText(0) == "Local checkpoint"
     assert not selector.isHidden()
-    assert selector.combo.count() == 6
+    assert selector.combo.count() == 5
     assert selector.combo.currentText() == "Local checkpoint"
 
     selector.value = "whisperseg-aer:small-ms"
 
-    assert selector.combo.currentText() == "Small multispecies · compact FP16"
+    assert selector.combo.currentText() == "WhisperSeg-AER · Small"
     assert window.train_widget.build_config().initial_model == "whisperseg-aer:small-ms"
+
+    selector.value = "whisper:large"
+    assert "Whisper Large" in selector.combo.currentText()
+    assert window.train_widget.build_config().initial_model == "whisper:large"
 
     selector.value = "/tmp/local.ckpt"
 
@@ -593,12 +715,12 @@ def test_predict_checkpoint_selector_accepts_published_and_local_models(qtbot):
     selector = window.predict_widget.paths_form.checkpoint_field
 
     assert selector.combo.itemText(0) == "Local checkpoint"
-    assert selector.combo.count() == 7
+    assert selector.combo.count() == 5
 
-    selector.value = "whisperseg-aer:base-animal-vad"
+    selector.value = "whisperseg-aer:small-ms"
 
-    assert selector.combo.currentText() == "Animal VAD Base · compact FP16"
-    assert window.predict_widget.build_config().checkpoint == "whisperseg-aer:base-animal-vad"
+    assert selector.combo.currentText() == "WhisperSeg-AER · Small"
+    assert window.predict_widget.build_config().checkpoint == "whisperseg-aer:small-ms"
     assert window.predict_widget.model_class_label.text() == "WhisperSeg"
 
     window.predict_widget.evaluation_form.evaluate = True
@@ -677,6 +799,7 @@ def _magicgui_field_is_hidden(widget):
 def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
+    window.train_widget.model_class.setCurrentText("DAS")
     model_section = window.train_widget.model_section
     form = model_section.hyperparameters_form
     encoder_form = model_section.encoder_settings_form
@@ -703,7 +826,7 @@ def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbo
     assert config.reduce_lr_patience == 3
     assert config.reduce_lr_factor == 0.25
 
-    window.train_widget.model_class.setCurrentText("WhisperSeg")
+    window.train_widget.model_class.setCurrentText("whisperseg-aer")
 
     assert form.gui.early_stopping.native.isEnabled()
     assert _magicgui_field_is_hidden(form.gui.reduce_lr_min)
@@ -711,9 +834,14 @@ def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbo
     assert not _magicgui_field_is_hidden(form.gui.weight_decay)
     assert not _magicgui_field_is_hidden(form.gui.warmup_steps)
     assert form.gui.linear_lr_schedule.native.isEnabled()
-    assert not encoder_form.gui.freeze_encoder.native.isEnabled()
+    assert encoder_form.gui.freeze_encoder.native.isEnabled()
     encoder_form.whisperseg_training_method = "full"
     assert encoder_form.gui.freeze_encoder.native.isEnabled()
+    assert encoder_form.gui.unfreeze_encoder_after.native.isEnabled()
+    assert encoder_form.unfreeze_encoder_after == 3
+    encoder_form.whisperseg_training_method = "full"
+    assert encoder_form.gui.freeze_encoder.native.isEnabled()
+    assert encoder_form.gui.unfreeze_encoder_after.native.isEnabled()
     assert form.gui.learning_rate.native.isEnabled()
 
     form.linear_lr_schedule = True
@@ -721,11 +849,16 @@ def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbo
     form.warmup_steps = 12
     form.reduce_lr = False
     encoder_form.freeze_encoder = True
+    assert encoder_form.gui.unfreeze_encoder_after.native.isEnabled()
+    encoder_form.unfreeze_encoder_after = 3
     config = window.train_widget.build_config()
     assert config.linear_lr_schedule is True
     assert config.weight_decay == 0.02
     assert config.warmup_steps == 12
     assert config.freeze_encoder is True
+    assert config.unfreeze_encoder_after == 3
+    encoder_form.freeze_encoder = False
+    assert not encoder_form.gui.unfreeze_encoder_after.native.isEnabled()
 
 
 @pytest.mark.parametrize(
@@ -740,6 +873,7 @@ def test_training_control_fields_build_config_and_expose_whisperseg_options(qtbo
 def test_frontend_hop_seconds_fields_preserve_decimal_precision(qtbot, frontend_type, form_name):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
+    window.train_widget.model_class.setCurrentText("DAS")
 
     hop_seconds = "0.000123456789"
     model_section = window.train_widget.model_section
@@ -758,6 +892,7 @@ def test_frontend_hop_seconds_fields_preserve_decimal_precision(qtbot, frontend_
 def test_stft_frontend_exposes_frequency_bounds(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
+    window.train_widget.model_class.setCurrentText("DAS")
 
     model_section = window.train_widget.model_section
     model_section.frontend_type.setCurrentText("stft")
@@ -799,6 +934,7 @@ def _model_section_column_titles(model_section) -> list[list[str]]:
 def test_model_class_switches_between_das_and_whisperseg_sections(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
+    window.train_widget.model_class.setCurrentText("DAS")
 
     model_section = window.train_widget.model_section
     assert window.train_widget.model_class.currentText() == "DAS"
@@ -826,7 +962,7 @@ def test_model_class_switches_between_das_and_whisperseg_sections(qtbot):
     model_section.postprocessing_widget.manual_form.fill_gap_ms = 6.5
     model_section.frontend_type.setCurrentText("mel")
     model_section.decoder_type.setCurrentText("linear")
-    window.train_widget.model_class.setCurrentText("WhisperSeg")
+    window.train_widget.model_class.setCurrentText("whisperseg-aer")
 
     assert _visible_model_section_titles(model_section) == [
         "Frontend",
@@ -893,13 +1029,14 @@ def test_loading_whisperseg_state_selects_whisperseg_model_class(qtbot):
     state.model_selection.decoder_type = "whisperseg"
     window.train_widget.load_state(state)
 
-    assert window.train_widget.model_class.currentText() == "WhisperSeg"
+    assert window.train_widget.model_class.currentText() == "whisperseg-aer"
     assert window.train_widget.build_config().encoder_type == "whisperseg"
 
 
 def test_save_and_load_use_flat_yaml(qtbot, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
+    window.train_widget.model_class.setCurrentText("DAS")
     window.show()
 
     train_path = tmp_path / "train.yaml"
@@ -1072,6 +1209,33 @@ def test_predict_worker_passes_audio_only_for_current_audio(qtbot, monkeypatch: 
     assert folder_payloads[0]["result"] == ["/tmp/predictions/file_annotations.csv"]
     assert calls[1]["audio"] is None
     assert calls[1]["samplerate"] is None
+
+
+@pytest.mark.parametrize("has_result", [True, False])
+@pytest.mark.parametrize("closed_error", [EOFError, BrokenPipeError])
+def test_process_worker_handles_closed_output_pipe(qtbot, monkeypatch, has_result, closed_error):
+    payload = {"ok": True, "command": "predict", "result": []}
+    messages = [("finished", payload)] if has_result else []
+
+    def poll(*_):
+        if not messages:
+            raise closed_error()
+        return True
+
+    parent = SimpleNamespace(poll=poll, recv=lambda: messages.pop(0), close=lambda: None)
+    child = SimpleNamespace(close=lambda: None)
+    process = SimpleNamespace(start=lambda: None, join=lambda **_: None, is_alive=lambda: False, exitcode=0)
+    context = SimpleNamespace(Pipe=lambda **_: (parent, child), Process=lambda **_: process)
+    monkeypatch.setattr(gui.multiprocessing, "get_context", lambda _: context)
+    worker = gui.JobWorker("predict", Config(mode="predict", checkpoint="whisper:large"))
+
+    result = worker._run_train_in_process()
+
+    if has_result:
+        assert result == payload
+    else:
+        assert not result["ok"]
+        assert "process exited" in result["error"]
 
 
 def test_train_worker_predicts_after_successful_training(qtbot, monkeypatch: pytest.MonkeyPatch):
@@ -1255,25 +1419,38 @@ def test_whisperseg_lora_and_full_recipes_survive_gui_switches(qtbot):
     window = gui.DASConformerWindow()
     qtbot.addWidget(window)
     widget = window.train_widget
-    widget.model_class.setCurrentText("WhisperSeg")
+    widget.model_class.setCurrentText("whisperseg-aer")
     settings = widget.model_section.encoder_settings_form
     config = widget.build_config()
     assert config.whisperseg_training_method == "lora"
     assert (config.batch_size, config.accumulate_grad_batches, config.max_length) == (1, 4, 128)
     assert config.validation_fraction == 0.125 and config.seed == 0
     assert config.reduce_lr and not config.linear_lr_schedule
+    assert not widget.trainer_form.save_resumable_checkpoint
+    assert widget.trainer_form.gui.save_resumable_checkpoint.label == "Save resumable checkpoint"
+    widget.trainer_form.save_resumable_checkpoint = True
+    assert widget.build_config().save_resumable_checkpoint
     settings.whisperseg_training_method = "full"
     full = widget.build_config()
     assert (full.batch_size, full.learning_rate, full.num_epochs) == (4, 3e-6, 10)
-    assert full.accumulate_grad_batches == 1 and not full.freeze_encoder
+    assert full.accumulate_grad_batches == 1 and full.freeze_encoder
     assert full.linear_lr_schedule and not full.reduce_lr
     assert settings.gui.freeze_encoder.native.isEnabled()
     widget.model_section.hyperparameters_form.learning_rate = "0.000007"
+    settings.freeze_encoder = True
+    settings.unfreeze_encoder_after = 5
     settings.whisperseg_training_method = "lora"
     assert widget.build_config().learning_rate == 1e-4
+    assert widget.build_config().freeze_encoder
+    assert widget.build_config().unfreeze_encoder_after == 5
+    settings.freeze_encoder = False
     settings.whisperseg_training_method = "full"
     assert widget.build_config().learning_rate == 7e-6
+    assert not widget.build_config().freeze_encoder
+    assert widget.build_config().unfreeze_encoder_after == 5
     widget.model_class.setCurrentText("DAS")
     native = widget.build_config()
     assert native.batch_size == 8 and not native.freeze_encoder
+    assert native.unfreeze_encoder_after == 3
+    assert _magicgui_field_is_hidden(settings.gui.unfreeze_encoder_after)
     native.copy(data_dir="data", output_dir="run").validate()

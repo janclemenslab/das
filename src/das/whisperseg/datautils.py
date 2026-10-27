@@ -348,6 +348,8 @@ def build_vocalseg_interval_records(
             ignore_cluster=ignore_cluster,
             include_clusters=include_clusters,
         )
+        if default_config.get("speech"):
+            label.update(default_config, input_sr=16000)
         frequency_scale = float(label.get("frequency_scale", 1.0))
         input_sr = int(label.get("input_sr", label["sr"]))
         label["sr"] = int(round(input_sr * frequency_scale))
@@ -355,7 +357,7 @@ def build_vocalseg_interval_records(
         num_audio_samples = _audio_num_samples_at_input_rate(info, input_sr)
 
         n_fft = get_n_fft_given_sr(label["sr"])
-        time_delta = n_fft / 2 / label["sr"]
+        time_delta = 0.0 if label.get("speech") else n_fft / 2 / label["sr"]
         audio_dur = num_audio_samples / label["sr"]
         intervals = _annotation_intervals_from_markers(
             label.get("_annotation_markers", []),
@@ -591,8 +593,9 @@ def build_vocalseg_clip_records(
 
 
 class VocalSegDataset(Dataset):
-    def __init__(self, records, tokenizer, max_length, total_spec_columns, species_codebook, deterministic=False):
+    def __init__(self, records, tokenizer, max_length, total_spec_columns, species_codebook, deterministic=False, speech=False):
         self.records = list(records)
+        self.speech = speech
         self.feature_extractor_bank = self.get_feature_extractor_bank(
             [record.label for record in self.records],
             total_spec_columns,
@@ -602,6 +605,8 @@ class VocalSegDataset(Dataset):
         self.total_spec_columns = total_spec_columns
         self.species_codebook = species_codebook
         self.deterministic = deterministic
+        if speech:
+            self.tokenizer.set_prefix_tokens(language="english", task="transcribe", predict_timestamps=True)
 
     def get_feature_extractor_bank(self, label_list, total_spec_columns):
         max_clip_duration = max(
@@ -619,6 +624,11 @@ class VocalSegDataset(Dataset):
                 label.get("max_frequency"),
             )
             if key not in feature_extractor_bank:
+                if self.speech:
+                    from transformers import WhisperFeatureExtractor
+
+                    feature_extractor_bank[key] = WhisperFeatureExtractor()
+                    continue
                 feature_extractor_bank[key] = WhisperSegFeatureExtractor(
                     label["sr"],
                     label["spec_time_step"],
@@ -712,6 +722,12 @@ class VocalSegDataset(Dataset):
                 )
             )
         label_text = "".join(label_text)
+        if self.speech:
+            clusters = np.asarray(label["cluster"])[intersected_indices]
+            label_text = "".join(
+                f"<|{round(onset / 0.02) * 0.02:.2f}|> {cluster}<|{round(offset / 0.02) * 0.02:.2f}|>"
+                for onset, offset, cluster in zip(onset_in_clip, offset_in_clip, clusters)
+            )
 
         audio_clip = np.concatenate([audio_clip, np.zeros(num_samples_in_clip - len(audio_clip))], axis=0).astype(np.float32)
         input_features = feature_extractor(audio_clip, sampling_rate=sr, padding="do_not_pad")["input_features"][0]

@@ -283,6 +283,20 @@ def test_whisperseg_decoder_config_preserves_dummy_settings():
         build_decoder(WhisperSegDecoderConfig(), input_dim=8, num_classes=4)
 
 
+def test_whisperseg_generation_default_is_128():
+    from inspect import signature
+
+    from das.config import Config
+    from das.models.decoders import normalize_decoder_config
+    from das.whisperseg.model import WhisperSegmenter
+
+    assert Config(mode="predict", checkpoint="model.ckpt").generation_max_length == 128
+    assert DecoderConfig(type="whisperseg").generation_max_length == 128
+    assert WhisperSegDecoderConfig().generation_max_length == 128
+    assert normalize_decoder_config({"type": "whisperseg"}).generation_max_length == 128
+    assert signature(WhisperSegmenter.segment).parameters["max_length"].default == 128
+
+
 def test_stft_frontend_frequency_bounds_limit_output_bins():
     pytest.importorskip("nnAudio")
 

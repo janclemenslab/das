@@ -18,8 +18,8 @@ class DecoderConfig:
         num_layers: Number of attention layers in the attention decoder.
         dropout: Dropout rate for the attention or WhisperSeg decoder.
         max_length: Maximum WhisperSeg decoder token length during training.
-        generation_max_length: Maximum WhisperSeg decoder token length during prediction.
-        num_trials: Number of WhisperSeg prediction trials.
+        generation_max_length: Maximum WhisperSeg decoder tokens per audio window, including the prefix, not an event count.
+        num_trials: Number of shifted WhisperSeg prediction passes.
         num_beams: Number of WhisperSeg generation beams.
         top_k: WhisperSeg generation top-k value.
         top_p: WhisperSeg generation top-p value.
@@ -34,7 +34,7 @@ class DecoderConfig:
     dropout: float = 0.1
     max_length: int = 100
     generation_max_length: int = 128
-    num_trials: int = 1
+    num_trials: int = 3
     num_beams: int = 4
     top_k: int = 1
     top_p: float = 1.0
@@ -78,7 +78,7 @@ class WhisperSegDecoderConfig:
     dropout: float = 0.1
     max_length: int = 100
     generation_max_length: int = 128
-    num_trials: int = 1
+    num_trials: int = 3
     num_beams: int = 4
     top_k: int = 1
     top_p: float = 1.0
@@ -205,7 +205,7 @@ def normalize_decoder_config(config: DecoderConfig | ResolvedDecoderConfig | Map
             dropout=float(config.get("dropout", 0.1)),
             max_length=int(config.get("max_length", 100)),
             generation_max_length=int(config.get("generation_max_length", 128)),
-            num_trials=int(config.get("num_trials", 1)),
+            num_trials=int(config.get("num_trials", 3)),
             num_beams=int(config.get("num_beams", 4)),
             top_k=int(config.get("top_k", 1)),
             top_p=float(config.get("top_p", 1.0)),

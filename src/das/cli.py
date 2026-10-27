@@ -66,7 +66,9 @@ _COMMAND_CONFIG_FIELDS: dict[str, tuple[str, ...]] = {
         "linear_lr_schedule",
         "weight_decay",
         "warmup_steps",
+        "save_resumable_checkpoint",
         "freeze_encoder",
+        "unfreeze_encoder_after",
         "whisperseg_training_method",
         "accumulate_grad_batches",
         "max_length",
@@ -199,6 +201,12 @@ def build_parser() -> argparse.ArgumentParser:
         subparser = subcommands.add_parser(command, description=description, help=description, allow_abbrev=False)
         if command == "version":
             continue
+        if command == "gui":
+            subparser.add_argument("source", nargs="?", default="", help="Audio file or dataset directory to open.")
+            subparser.add_argument("--skip-dialog", action="store_true", help="Open the source without the loading dialog.")
+            subparser.add_argument("--song-types-string", default="", help="Initial annotation names and categories.")
+            subparser.add_argument("--spec-freq-min", type=float, help="Lowest spectrogram frequency in Hz.")
+            subparser.add_argument("--spec-freq-max", type=float, help="Highest spectrogram frequency in Hz.")
         subparser.add_argument(
             "--config",
             action="append",
@@ -308,8 +316,15 @@ def _launch_gui(argv: list[str] | None = None, *, startup_config: Config | None 
         from xarray_behave.gui.app import main_das
     except ImportError as exc:
         raise RuntimeError("The GUI requires xarray-behave. Install the package with `.[gui]`.") from exc
-    open_config = bool(argv and any(arg == "--config" or arg.startswith("--config=") for arg in argv))
-    return main_das(das_startup_config=startup_config if open_config else None)
+    parsed = build_parser().parse_args(argv[1:] if argv and len(argv) > 1 else ["gui"])
+    return main_das(
+        source=parsed.source,
+        skip_dialog=parsed.skip_dialog,
+        song_types_string=parsed.song_types_string,
+        spec_freq_min=parsed.spec_freq_min,
+        spec_freq_max=parsed.spec_freq_max,
+        das_startup_config=startup_config if parsed.config else None,
+    )
 
 
 def cli_main(argv: list[str] | None = None):

@@ -1,0 +1,9 @@
+encoder_type: perch2
+encoder_hop_seconds: 1.0
+encoder_cache_dir: ./embeddings/perch2
+decoder_type: linear
+# 20 seconds at 32 kHz. Set this for the sample rate of your input recordings.
+num_time_steps: 640000
+chunk_stride: 320000
+cross_entropy_weight: 1.0
+accelerator: auto

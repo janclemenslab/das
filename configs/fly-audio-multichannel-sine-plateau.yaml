@@ -1,0 +1,48 @@
+mode: train
+data_dir: /Users/janc/data/fly_audio/chainingmic_dawn_npy
+data_samplerate_hz: 10000
+output_dir: ./runs/fly-audio-multichannel-sine-plateau
+checkpoint_prefix: fly-audio-multichannel-sine-plateau
+initial_model: ./runs/stern2017-all-sine/checkpoints/stern2017-all-sine_20260906_095352_model.ckpt
+
+batch_size: 4
+num_time_steps: 10240
+chunk_stride: 5120
+num_workers: 0
+validation_fraction: 0.25
+test_fraction: 0.25
+split_within_files: false
+include_labels: [sine]
+
+frontend_type: conv_resnet
+frontend_num_channels: 64
+frontend_kernel_size: 9
+frontend_hop_seconds: 0.001
+frontend_pad_mode: reflect
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: linear
+cross_entropy_weight: 1.0
+learning_rate: 0.0001
+early_stopping: true
+early_stopping_patience: 6
+reduce_lr: true
+reduce_lr_patience: 2
+reduce_lr_factor: 0.5
+reduce_lr_min: 0.000001
+num_epochs: 1000
+max_num_steps_per_epoch: 250
+seed: 15
+accelerator: mps
+
+fill_gap_ms: 20.0
+min_syllable_ms: 100.0
+segment_threshold_low: 0.2
+segment_threshold_high: 0.9
+syllable_tolerance_ms: 30.0
+tune_postprocessing: false

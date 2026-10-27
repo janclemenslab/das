@@ -416,22 +416,23 @@ def _resolve_whisper_device(accelerator: str) -> str:
 
 
 def _whisper_segmenter(config: Config):
-    if config.checkpoint in ASR_MODEL_OPTIONS:
+    if _is_whisper_asr_predict_source(config.checkpoint):
         from .whisper_asr import WhisperTranscriber
 
         return WhisperTranscriber(
-            ASR_MODEL_OPTIONS[config.checkpoint][1], device=_resolve_whisper_device(str(config.accelerator))
+            ASR_MODEL_OPTIONS[config.checkpoint][1] if config.checkpoint in ASR_MODEL_OPTIONS else config.checkpoint,
+            device=_resolve_whisper_device(str(config.accelerator)),
         )
 
     from .whisperseg.model import WhisperSegmenter
 
-    return WhisperSegmenter(
-        resolve_model_checkpoint(config.checkpoint), device=_resolve_whisper_device(str(config.accelerator))
-    )
+    return WhisperSegmenter(resolve_model_checkpoint(config.checkpoint), device=_resolve_whisper_device(str(config.accelerator)))
 
 
-def _whisper_segment_audio(segmenter, config: Config, audio, samplerate: int, *, filename: str | None = None) -> pd.DataFrame:
-    if config.checkpoint in ASR_MODEL_OPTIONS:
+def _whisper_segment_audio(
+    segmenter, config: Config, audio, samplerate: int, *, filename: str | None = None, verbose: bool = False
+) -> pd.DataFrame:
+    if hasattr(segmenter, "transcribe"):
         normalized_audio = _whisper_normalize_audio_array(audio)
         if int(samplerate) != segmenter.samplerate:
             normalized_audio = _resample_raw_audio_array(normalized_audio, int(samplerate), segmenter.samplerate)
@@ -470,6 +471,7 @@ def _whisper_segment_audio(segmenter, config: Config, audio, samplerate: int, *,
         top_k=int(config.top_k),
         top_p=float(config.top_p),
         length_penalty=float(config.length_penalty),
+        show_progress=verbose,
     )
     frame = _whisper_prediction_to_dataframe(prediction, filename=filename)
     return _whisper_scale_prediction_time(frame, time_scale)
@@ -700,6 +702,7 @@ def _train_whisperseg(
         batch_size=int(config.batch_size),
         learning_rate=float(config.learning_rate),
         training_method=config.whisperseg_training_method,
+        save_resumable_checkpoint=bool(config.save_resumable_checkpoint),
         accumulate_grad_batches=int(config.accumulate_grad_batches),
         linear_lr_schedule=bool(config.linear_lr_schedule),
         reduce_lr=bool(config.reduce_lr),
@@ -712,6 +715,7 @@ def _train_whisperseg(
         weight_decay=float(config.weight_decay),
         warmup_steps=int(config.warmup_steps),
         freeze_encoder=bool(config.freeze_encoder),
+        unfreeze_encoder_after=int(config.unfreeze_encoder_after),
         encoder_dropout=float(config.encoder_dropout),
         decoder_dropout=float(config.decoder_dropout),
         num_workers=int(config.num_workers),
@@ -753,7 +757,7 @@ def _predict_whisperseg(
     """Shared audio loading and annotation output for WhisperSeg and speech transcription."""
     if not config.checkpoint:
         raise ValueError("Provide checkpoint for prediction.")
-    if config.checkpoint in ASR_MODEL_OPTIONS and config.evaluate:
+    if _is_whisper_asr_predict_source(config.checkpoint) and config.evaluate:
         raise ValueError("Segmentation evaluation is not supported for speech transcription.")
 
     _seed_if_requested(config, verbose=verbose)
@@ -766,7 +770,7 @@ def _predict_whisperseg(
             raise ValueError("samplerate is required when predicting from raw audio.")
         if verbose:
             _log_prediction_samplerates([int(samplerate)], model_samplerate or int(samplerate))
-        frame = _whisper_segment_audio(segmenter, config, audio, int(samplerate))
+        frame = _whisper_segment_audio(segmenter, config, audio, int(samplerate), verbose=verbose)
         if verbose:
             _print_prediction_summary(frame)
         return frame
@@ -797,7 +801,7 @@ def _predict_whisperseg(
         )
         audio_data = _whisper_normalize_audio_array(audio_data)
         source_samplerates.append(int(sr))
-        frame = _whisper_segment_audio(segmenter, config, audio_data, int(sr), filename=audio_path.name)
+        frame = _whisper_segment_audio(segmenter, config, audio_data, int(sr), filename=audio_path.name, verbose=verbose)
         frames.append(frame)
         if write_outputs:
             output_path = prediction_results.prediction_output_path(
@@ -849,7 +853,7 @@ def _is_whisperseg_predict_checkpoint(source: str) -> bool:
         metadata = _load_checkpoint_metadata(str(path))
     except Exception:
         return False
-    if metadata.get("backend") != "whisperseg":
+    if metadata.get("backend") not in {"whisperseg", "whisper_asr"}:
         return False
 
     from .whisperseg.model import is_model_checkpoint_path
@@ -859,6 +863,18 @@ def _is_whisperseg_predict_checkpoint(source: str) -> bool:
 
 def _is_whisperseg_predict_source(source: str) -> bool:
     return source in MODEL_OPTIONS or _is_whisperseg_predict_checkpoint(source)
+
+
+def _is_whisper_asr_predict_source(source: str) -> bool:
+    if source in ASR_MODEL_OPTIONS:
+        return True
+    path = Path(source).expanduser()
+    if path.suffix != ".ckpt" or not path.is_file():
+        return False
+    try:
+        return _load_checkpoint_metadata(str(path)).get("backend") == "whisper_asr"
+    except Exception:
+        return False
 
 
 def _predict_checkpoint_metadata(
@@ -907,6 +923,7 @@ def _whisperseg_checkpoint_metadata(
             "whisperseg_training_method": config.whisperseg_training_method,
             "accumulate_grad_batches": config.accumulate_grad_batches,
             "freeze_encoder": bool(config.freeze_encoder),
+            "unfreeze_encoder_after": int(config.unfreeze_encoder_after),
             "linear_lr_schedule": bool(config.linear_lr_schedule),
             "reduce_lr": bool(config.reduce_lr),
             "reduce_lr_patience": int(config.reduce_lr_patience),
@@ -921,7 +938,7 @@ def _whisperseg_checkpoint_metadata(
 
 
 def _load_checkpoint_metadata(source: str) -> dict[str, object]:
-    checkpoint = torch.load(source, map_location="cpu")
+    checkpoint = torch.load(source, map_location="cpu", mmap=True)
     metadata = checkpoint.get("das")
     return metadata if isinstance(metadata, dict) else {}
 
@@ -1127,6 +1144,7 @@ def _checkpoint_callback(
         mode="min",
         save_top_k=1,
         save_last=False,
+        save_weights_only=not config.save_resumable_checkpoint,
         filename=_checkpoint_filename(config.checkpoint_prefix, timestamp),
         enable_version_counter=False,
         verbose=verbose,

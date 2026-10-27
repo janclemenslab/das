@@ -1,6 +1,8 @@
 # DAS
 DAS 1.0a4 segments and annotates audio with Conformer, TCN, TweetyNet, and WhisperSeg models.
 
+For AI agents using DAS, see the [DAS 1.0 agent guide](DAS_AGENT_GUIDE.md).
+
 
 ## Installation
 
@@ -117,9 +119,19 @@ das convert-legacy \
 
 The converted checkpoint can then be passed to `das predict` like any native checkpoint.
 
-WhisperSeg offers compact FP16 AER starting models in Tiny, Base, Small and Large sizes. Select one in the GUI or use `--initial-model whisperseg-aer:small-ms`. Training defaults to decoder LoRA; `--whisperseg-training-method full` selects FP32 fine-tuning. Selecting a training checkpoint as the initial model automatically resumes its adapters, optimizer and scheduler. See [WhisperSeg training and prediction](docs/alpha/whisperseg.md).
+WhisperSeg uses DAS `.ckpt` checkpoints for training and prediction. The GUI's **Initial model** and **Checkpoint** selectors include the Tiny, Small and Large multispecies [WhisperSeg-AER models](https://huggingface.co/DAS-DeepAudioSegmenter/whisperseg-aer). The CLI accepts the same model names with `--initial-model` and `--checkpoint`. DAS downloads the selected checkpoint on first use and keeps it in the Hugging Face cache:
+
+```shell
+das predict --data-dir /path/to/audio --checkpoint whisperseg-aer:small-ms
+das train --data-dir /path/to/annotated-audio --encoder whisperseg \
+  --initial-model whisperseg-aer:small-ms --output-dir /path/to/run
+```
+
+WhisperSeg training defaults to LoRA on a frozen FP16 backbone with the encoder adapters initially frozen. Use `--whisperseg-training-method full` for FP32 fine-tuning. Predictions use the FP16 AER weights. See the [training recipe](docs/alpha/whisperseg.md). Run `das predict --help` to see all model names. Local DAS `.ckpt` files remain supported; WhisperSeg `.pt` bundles and raw Hugging Face model IDs are unsupported.
 
 For human speech, select **Whisper Large · speech transcription · FP16**, or use `das predict --data-dir /path/to/speech.wav --checkpoint whisper:large`. It retains OpenAI Whisper's full vocabulary and produces editable word annotations with start/end timestamps.
+
+Whisper Large is also a training starting model: `--encoder whisperseg --initial-model whisper:large` retains its full vocabulary and adds tokens for your DAS annotation labels.
 
 For native checkpoints, `das predict` uses the saved chunk length, stride, and class names from the trained model. Legacy DAS models use the saved legacy window size, stride, and class labels from the model params. Evaluation works through `das predict --evaluate`, with optional `--split train|val|test` for split-backed datasets.
 

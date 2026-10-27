@@ -1,0 +1,40 @@
+# Experimental Conformer encoder + Whisper-style timestamp decoder.
+mode: train
+data_dir: /Users/janc/Library/CloudStorage/Dropbox/Stern2017/dat.annotated
+output_dir: ./runs/stern2017-conformer-timestamp
+checkpoint_prefix: stern2017-timestamp
+
+batch_size: 2
+num_time_steps: 40960
+chunk_stride: 20480
+num_workers: 0
+validation_fraction: 0.15
+test_fraction: 0.0
+split_within_files: true
+include_labels: [pulse, sine]
+
+frontend_type: conv
+frontend_num_channels: 64
+frontend_kernel_size: 64
+frontend_hop_seconds: 0.004
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: timestamp
+decoder_num_heads: 4
+decoder_num_layers: 2
+decoder_dropout: 0.1
+# Four-second chunks contain at most 66 annotations in the marker-bounded data.
+max_length: 200
+
+learning_rate: 0.0003
+early_stopping: true
+early_stopping_patience: 10
+reduce_lr: true
+num_epochs: 100
+max_num_steps_per_epoch: 100
+seed: 0

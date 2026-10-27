@@ -2,12 +2,10 @@
 
 ## Starting models and fine-tuning
 
-The model selectors offer the compact FP16, reduced-vocabulary WhisperSeg AER
-checkpoints: Tiny multispecies (`whisperseg-aer:tiny-ms`), Base Animal VAD
-(`whisperseg-aer:base-animal-vad`), Small multispecies (`whisperseg-aer:small-ms`),
-Large Animal VAD (`whisperseg-aer:animal-vad`) and Large multispecies
-(`whisperseg-aer:large-ms`). Original WhisperSeg and pruned models are not offered.
-Models download on first use. Prediction preserves their FP16 weights.
+The model selectors offer the multispecies WhisperSeg-AER checkpoints in Tiny
+(`whisperseg-aer:tiny-ms`), Small (`whisperseg-aer:small-ms`) and Large
+(`whisperseg-aer:large-ms`) sizes. VAD variants are not included.
+Models download on first use.
 
 ## Human speech transcription with timestamps
 
@@ -27,8 +25,8 @@ works on the current audio selection; its annotations use the recording timeline
 
 Whisper handles recordings longer than 30 seconds using its own long-form
 decoding. WhisperSeg's frequency scaling, event postprocessing and short decoder
-token limit do not apply. Speech transcription is prediction-only; segmentation
-evaluation is disabled. The model downloads on first use.
+token limit do not apply. Segmentation evaluation is disabled for speech
+transcription. The model downloads on first use.
 
 DAS corrects the token-boundary convention used by Transformers 4.57's word
 decoder: each token spans its own onset to the next token's onset. This avoids
@@ -47,14 +45,31 @@ no reliable speech overlap retain their original timing. The detector runs local
 CPU and does not require a separate model download.
 Word boundaries remain estimates from Whisper's attention alignment and speech detection.
 
+Original Whisper Large is also available in the training initial-model selector:
+
+```shell
+das train --data-dir /path/to/annotated-speech --encoder whisperseg \
+  --initial-model whisper:large --output-dir /path/to/run
+```
+
+Training uses the words or labels in the DAS annotation CSV files as timestamped
+transcription targets. It retains the full speech vocabulary and adds tokens for
+annotation labels that are not already vocabulary entries. Speech and timestamp
+tokens keep their meaning. LoRA also trains the new label embeddings;
+full fine-tuning is available through the existing training-method selector.
+The exported DAS checkpoint can be selected for speech prediction, and training
+checkpoints can be selected to resume fitting. Speech training uses standard
+Whisper audio features at 16 kHz with 30-second windows.
+
 ## WhisperSeg fine-tuning
 
-WhisperSeg fine-tuning defaults to **decoder LoRA**, using the selected adaptation
-recipe from our experiments:
+WhisperSeg fine-tuning defaults to **LoRA** with the encoder frozen for the first
+three epochs. The decoder trains throughout; encoder adapters start in epoch 4.
 
 - Frozen FP16 backbone; FP32 adapters and AdamW state.
-- Rank 16, alpha 32, no adapter dropout or bias adaptation. Adapters cover decoder
-  self- and cross-attention q/k/v/out projections and both feed-forward layers.
+- Rank 16, alpha 32, no adapter dropout or bias adaptation. Adapters cover encoder
+  self-attention, decoder self- and cross-attention q/k/v/out projections, and
+  both feed-forward layers in each encoder and decoder block.
 - Learning rate `1e-4`, AdamW epsilon `1e-4`, weight decay `0.01`, gradient norm clip 1.
 - Microbatch 1, accumulation 4, target length 128, seed 0, validation fraction 0.125.
 - Non-reentrant decoder gradient checkpointing and no generation cache during fitting.
@@ -67,27 +82,20 @@ das train --data-dir /path/to/annotated-audio --encoder whisperseg \
 ```
 
 Choose `full` in the GUI or add `--whisperseg-training-method full` to use ordinary
-FP32 fine-tuning with the previous full-training defaults. `--freeze-encoder`
-restricts full training to the decoder. `--accumulate-grad-batches` sets accumulation.
-Explicit training settings override defaults.
+FP32 fine-tuning. **Freeze encoder** is independent of the training method.
+When checked, **Unfreeze encoder after N epochs** defaults to 3: it activates
+encoder adapters in LoRA mode or encoder weights in full mode after three
+completed epochs. Set it to 0 to keep the encoder frozen, or uncheck
+**Freeze encoder** to train it from the start. The CLI equivalents are
+`--freeze-encoder`, `--unfreeze-encoder-after 3`, and `--no-freeze-encoder`.
+`--accumulate-grad-batches` sets accumulation. Explicit settings override defaults.
 
-LoRA training checkpoints live under `checkpoints/` and retain the base, adapter
-and optimizer state. The best model is also exported into the run folder as a
+By default, only the prediction model is kept. Enable **Save resumable checkpoint**
+in the GUI or pass `--save-resumable-checkpoint` to retain the training checkpoint
+under `checkpoints/`, including the base, adapter and optimizer state for LoRA.
+The best LoRA model is always exported into the run folder as a
 merged FP16 DAS `.ckpt`, usable for prediction or another fine-tuning run without
 an adapter loader. Merging retains the original inference architecture and size.
-Select a training checkpoint in the GUI's **Initial model** field or pass it as
-`--initial-model` in the CLI to resume automatically. DAS restores the existing
-adapters, optimizer moments, learning-rate scheduler, epoch/step counters and
-saved training settings, including preprocessing and class IDs. New training
-checkpoints embed the tokenizer and backbone, so the original downloaded model
-is not needed for resuming. A merged prediction checkpoint starts a fresh
-fine-tuning run instead.
-
-`num_epochs` remains the total epoch limit, including epochs already completed.
-Increase it beyond the saved epoch when continuing a completed run. Use the same
-training data to preserve the original split. Resume preserves training state;
-it does not promise an identical random crop or shuffle sequence.
-
 The selected recipe was developed on Large; quality on other sizes and new
 recordings should be checked against representative held-out annotations.
 
@@ -104,11 +112,15 @@ event of one window to the first event of the next when their class matches and
 the preceding offset exactly equals the following onset. A predicted gap or
 class mismatch can still leave fragments.
 
-DAS defaults to one prediction pass (`num_trials=1`). Set `--num-trials 3` for
-three shifted passes that place window boundaries at different times. Matching
-predictions are consolidated across passes, reducing boundary artifacts at the
-cost of repeating inference. Separate files and prediction calls are processed
-independently; events are not joined across them.
+DAS defaults to **three shifted passes** (`num_trials=3`). Each pass places the
+window boundaries at different times, so a syllable cut in one pass can lie
+inside a window in another. Matching predictions are then consolidated across
+passes. This follows the boundary-handling approach in the
+[original WhisperSeg implementation](https://github.com/nianlonggu/WhisperSeg/blob/master/model.py).
+It reduces boundary artifacts but does not guarantee their removal. The passes
+repeat inference, so three passes require more processing than one. Set
+`--num-trials 1` for a single pass. Separate input files or prediction calls are
+processed independently; events are not joined across them.
 
 ## Decoder token budget
 

@@ -81,7 +81,13 @@ def test_cli_opens_annotation_window_and_das_menu(argv, tmp_path):
                 app.closeAllWindows()
                 app.quit()
 
-        QTimer.singleShot(0, check_windows)
+        exec_loop = QApplication.exec_
+
+        def checked_exec(self):
+            QTimer.singleShot(0, check_windows)
+            return exec_loop(self)
+
+        QApplication.exec_ = checked_exec
         cli_main(sys.argv[1:])
         assert checked == [True], "GUI startup or menu checks failed"
         """)

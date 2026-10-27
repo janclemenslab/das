@@ -15,8 +15,11 @@ from das.cli import parse_command_config
 from das.gui_helpers import train_config_to_gui_state, train_gui_state_to_config
 
 
-@pytest.mark.parametrize("method,device", [("lora", "cpu"), ("lora", "mps"), ("full", "cpu")])
-def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device):
+@pytest.mark.parametrize("method,device,save_resumable", [
+    ("lora", "cpu", True), ("lora", "mps", True), ("full", "cpu", True),
+    ("lora", "cpu", False), ("full", "cpu", False),
+])
+def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device, save_resumable):
     if device == "mps" and not torch.backends.mps.is_available():
         pytest.skip("MPS is unavailable")
     torch.manual_seed(0)
@@ -63,8 +66,22 @@ def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device):
         str(run), str(tmp_path), initial_model_path=str(source_path), training_method=method,
         device=device, total_spec_columns=16, num_epochs=1, max_length=16,
         batch_size=1, accumulate_grad_batches=2, freeze_encoder=True,
-        linear_lr_schedule=method == "full", reduce_lr=method != "full", warmup_steps=1,
+        **({"save_resumable_checkpoint": True} if save_resumable else {}),
     ))
+    if not save_resumable:
+        assert exported.parent == run
+        assert list(run.rglob("*.ckpt")) == [exported]
+        assert updates == [0, 1, 2]
+        checkpoint = modeling._torch_load(exported)
+        assert "optimizer_states" not in checkpoint and "lr_schedulers" not in checkpoint
+        loaded, _ = modeling.load_inference_model(exported)
+        assert loaded.config.cluster_codebook == {"custom label": 0, "another": 12}
+        assert not any("lora_" in name for name in loaded.state_dict())
+        segmenter = modeling.WhisperSegmenter(str(exported), device=device)
+        prediction = segmenter.segment(np.zeros(640, dtype=np.float32), 16000,
+                                      num_trials=1, num_beams=1, max_length=12, batch_size=1)
+        assert set(prediction) == {"onset", "offset", "cluster"}
+        return
     best = next((run / "checkpoints").glob("*.ckpt"))
     checkpoint = modeling._torch_load(best)
     assert checkpoint["global_step"] == 3  # Five microbatches, including the final partial update.
@@ -77,13 +94,15 @@ def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device):
         assert exported.parent == run and exported != best
         assert "whisperseg" not in checkpoint
         assert restored.model.get_base_model().model.decoder.is_gradient_checkpointing
-        frozen = {n: p for n, p in restored.model.named_parameters() if not p.requires_grad}
-        adapters = {n: p for n, p in restored.model.named_parameters() if p.requires_grad}
+        frozen = {n: p for n, p in restored.model.named_parameters() if "lora_" not in n}
+        adapters = {n: p for n, p in restored.model.named_parameters() if "lora_" in n}
+        assert all(not p.requires_grad for p in frozen.values())
         assert all(p.dtype == torch.float16 for p in frozen.values())
         assert all(torch.equal(p, original_weights[n.removeprefix("base_model.model.").replace(".base_layer", "")])
                    for n, p in frozen.items())
-        assert adapters and all("decoder" in n and "lora_" in n and p.dtype == torch.float32
-                                for n, p in adapters.items())
+        assert adapters and all(p.dtype == torch.float32 for p in adapters.values())
+        assert any("encoder" in n for n in adapters)
+        assert all(p.requires_grad == ("decoder" in n) for n, p in adapters.items())
         assert any("fc1" in n for n in adapters) and any("k_proj" in n for n in adapters)
         assert any("lora_B" in n and torch.count_nonzero(p) for n, p in adapters.items())
         expected = restored.model.merge_and_unload(safe_merge=True).half()
@@ -108,8 +127,7 @@ def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device):
     for group in checkpoint["optimizer_states"][0]["param_groups"]:
         group["lr"] = 2e-5
     checkpoint["lr_schedulers"][0]["_last_lr"] = [2e-5, 2e-5]
-    if method == "lora":
-        checkpoint["lr_schedulers"][0]["num_bad_epochs"] = 1
+    checkpoint["lr_schedulers"][0]["num_bad_epochs"] = 1
     portable = tmp_path / "portable.ckpt"
     torch.save(checkpoint, portable)
     original_checkpoint = portable.read_bytes()
@@ -139,6 +157,7 @@ def test_fit_restore_and_predict(tmp_path, monkeypatch, method, device):
         "train", "--data-dir", str(tmp_path), "--output-dir", str(resume_dir),
         "--encoder", "whisperseg", "--initial-model", str(portable),
         "--num-epochs", "2", "--accelerator", device,
+        "--save-resumable-checkpoint",
     ])
     if device == "mps":
         config = train_gui_state_to_config(train_config_to_gui_state(config))

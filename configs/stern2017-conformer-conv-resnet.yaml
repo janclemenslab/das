@@ -1,0 +1,44 @@
+# SongExplorer-style raw waveform ResNet + Conformer experiment.
+mode: train
+data_dir: /Users/janc/data/Stern2017/dat.annotated
+output_dir: ./runs/stern2017-conformer-conv-resnet
+checkpoint_prefix: stern2017-conv-resnet
+
+batch_size: 8
+num_time_steps: 4096
+chunk_stride: 2048
+num_workers: 0
+validation_fraction: 0.3333333333333333
+test_fraction: 0.3333333333333333
+split_within_files: false
+include_labels: [pulse, sine]
+
+# Three residual Conv1d blocks use dilations 1, 2, and 4 before learned
+# downsampling. At 10 kHz this retains a 1 ms output grid and covers the local
+# waveform of a fly pulse before the Conformer models longer context.
+frontend_type: conv_resnet
+frontend_num_channels: 64
+frontend_kernel_size: 9
+frontend_hop_seconds: 0.001
+frontend_pad_mode: reflect
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: linear
+cross_entropy_weight: 1.0
+learning_rate: 0.0003
+early_stopping: false
+early_stopping_patience: 5
+reduce_lr: true
+num_epochs: 5
+max_num_steps_per_epoch: 200
+seed: 0
+
+fill_gap_ms: 2.0
+min_syllable_ms: 2.0
+syllable_tolerance_ms: 10.0
+tune_postprocessing: false

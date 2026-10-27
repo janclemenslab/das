@@ -1,0 +1,44 @@
+# Animal2vec-style Sinc filterbank + Conv1d stack + Conformer.
+mode: train
+data_dir: /Users/janc/Library/CloudStorage/Dropbox/Stern2017/dat.annotated
+output_dir: ./runs/stern2017-conformer-sinc
+checkpoint_prefix: stern2017-sinc
+
+batch_size: 8
+num_time_steps: 4096
+chunk_stride: 2048
+num_workers: 0
+validation_fraction: 0.3333333333333333
+test_fraction: 0.3333333333333333
+split_within_files: false
+include_labels: [pulse, sine]
+
+# Animal2vec uses a stride-1 Sinc filterbank followed by strided Conv1d blocks.
+# At 10 kHz, strides 5 x 2 retain 1 ms output frames for fly pulses.
+frontend_type: sinc
+frontend_num_channels: 64
+frontend_kernel_size: 79
+frontend_hop_seconds: 0.001
+frontend_pad_mode: reflect
+frontend_fmin: 50.0
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: linear
+cross_entropy_weight: 1.0
+learning_rate: 0.0003
+early_stopping: true
+early_stopping_patience: 5
+reduce_lr: true
+num_epochs: 50
+max_num_steps_per_epoch: 200
+seed: 0
+
+fill_gap_ms: 2.0
+min_syllable_ms: 2.0
+syllable_tolerance_ms: 10.0
+tune_postprocessing: false

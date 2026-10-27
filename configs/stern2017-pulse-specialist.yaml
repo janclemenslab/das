@@ -1,0 +1,45 @@
+# Local raw-waveform pulse specialist.
+mode: train
+data_dir: /Users/janc/data/Stern2017/dat.annotated
+output_dir: ./runs/stern2017-pulse-specialist
+checkpoint_prefix: stern2017-pulse-specialist
+initial_model: ./runs/stern2017-conformer-conv-resnet-1k/checkpoints/stern2017-conv-resnet_20260905_145838_model.ckpt
+
+batch_size: 8
+num_time_steps: 4096
+chunk_stride: 2048
+num_workers: 0
+validation_fraction: 0.3333333333333333
+test_fraction: 0.3333333333333333
+split_within_files: false
+include_labels: [pulse]
+min_annotation_duration_ms: 4.0
+
+frontend_type: conv_resnet
+frontend_num_channels: 64
+frontend_kernel_size: 9
+frontend_hop_seconds: 0.001
+frontend_pad_mode: reflect
+
+# Local convolutional context is sufficient for pulse shape and IPI structure.
+encoder_type: tcn
+encoder_hidden_size: 64
+encoder_num_layers: 1
+encoder_kernel_size: 3
+encoder_dilations: [1, 2, 4, 8, 16]
+encoder_dropout: 0.1
+encoder_use_skip_connections: true
+
+decoder_type: linear
+cross_entropy_weight: 1.0
+learning_rate: 0.0003
+early_stopping: false
+reduce_lr: true
+num_epochs: 5
+max_num_steps_per_epoch: 200
+seed: 0
+
+fill_gap_ms: 0.0
+min_syllable_ms: 0.0
+syllable_tolerance_ms: 10.0
+tune_postprocessing: false

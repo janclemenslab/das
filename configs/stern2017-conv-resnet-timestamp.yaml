@@ -1,0 +1,40 @@
+# Activity-gated timestamp decoder warm-started from the dense raw ConvResNet.
+mode: train
+data_dir: /Users/janc/data/Stern2017/dat.annotated
+output_dir: ./runs/stern2017-conv-resnet-timestamp
+checkpoint_prefix: stern2017-conv-resnet-timestamp
+initial_model: ./runs/stern2017-conformer-conv-resnet-1k/checkpoints/stern2017-conv-resnet_20260905_145838_model.ckpt
+
+batch_size: 2
+num_time_steps: 40960
+chunk_stride: 20480
+num_workers: 0
+validation_fraction: 0.15
+test_fraction: 0.0
+split_within_files: true
+include_labels: [pulse, sine]
+
+frontend_type: conv_resnet
+frontend_num_channels: 64
+frontend_kernel_size: 9
+frontend_hop_seconds: 0.004
+frontend_pad_mode: reflect
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: timestamp
+decoder_num_heads: 4
+decoder_num_layers: 2
+decoder_dropout: 0.1
+max_length: 200
+
+learning_rate: 0.0003
+early_stopping: false
+reduce_lr: true
+num_epochs: 5
+max_num_steps_per_epoch: 100
+seed: 0

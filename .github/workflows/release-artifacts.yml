@@ -1,0 +1,114 @@
+name: Build distributable artifacts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.artifact_suffix }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash -el {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            artifact_suffix: linux-x86_64
+            archive_extension: tar.gz
+            executable: dist/das/das
+            build_args: ""
+          - os: windows-2022
+            artifact_suffix: windows-x86_64
+            archive_extension: zip
+            executable: dist/das/das.exe
+            build_args: ""
+          - os: macos-15
+            artifact_suffix: macos-arm64
+            archive_extension: zip
+            executable: dist/DAS.app/Contents/MacOS/DAS
+            build_args: --app
+
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || format('run-{0}', github.run_number) }}
+      MPLCONFIGDIR: ${{ runner.temp }}/matplotlib
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          miniforge-version: latest
+          activate-environment: das-release
+          python-version: "3.12"
+          channels: conda-forge
+          channel-priority: strict
+          auto-activate-base: false
+
+      - name: Install build dependencies
+        run: |
+          conda install -y -n das-release uv
+
+          if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "Windows" ]]; then
+            conda run -n das-release uv pip install --index-url https://download.pytorch.org/whl/cpu torch torchaudio torchvision
+          fi
+
+          conda run -n das-release uv pip install -e ".[gui]"
+          conda run -n das-release uv pip install "xarray-behave @ git+https://github.com/janclemenslab/xarray-behave.git@ede3fc0b688abcaaf4dc011ef2d2ea0b2d199430"
+          conda run -n das-release uv pip install pyinstaller
+
+      - name: Build executable
+        run: conda run -n das-release python scripts/build_executable.py ${{ matrix.build_args }}
+
+      - name: Smoke-test executable
+        run: |
+          "${{ matrix.executable }}" --help
+          "${{ matrix.executable }}" train --config fly --print-config > smoke-config.yaml
+
+      - name: Package artifact
+        id: package
+        run: |
+          safe_tag="${RELEASE_TAG//\//-}"
+          artifact_name="das-${safe_tag}-${{ matrix.artifact_suffix }}"
+          archive="${artifact_name}.${{ matrix.archive_extension }}"
+
+          case "$RUNNER_OS" in
+            Linux)
+              tar -czf "$archive" -C dist das
+              ;;
+            macOS)
+              ditto -c -k --sequesterRsrc --keepParent dist/DAS.app "$archive"
+              ;;
+            Windows)
+              powershell.exe -NoProfile -Command "Compress-Archive -Path 'dist/das' -DestinationPath '$archive' -Force"
+              ;;
+            *)
+              echo "Unsupported runner OS: $RUNNER_OS" >&2
+              exit 1
+              ;;
+          esac
+
+          echo "artifact_name=$artifact_name" >> "$GITHUB_OUTPUT"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.package.outputs.artifact_name }}
+          path: ${{ steps.package.outputs.archive }}
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+      - name: Upload release asset
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" "${{ steps.package.outputs.archive }}" --repo "$GITHUB_REPOSITORY" --clobber

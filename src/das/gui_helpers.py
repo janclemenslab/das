@@ -187,8 +187,10 @@ class ModelSelectionState:
 @dataclass
 class EncoderSettingsState:
     freeze_encoder: bool = _DEFAULT_CONFIG.freeze_encoder
+    unfreeze_encoder_after: int = _DEFAULT_CONFIG.unfreeze_encoder_after
     whisperseg_training_method: Literal["lora", "full"] = "lora"
     accumulate_grad_batches: int = _DEFAULT_CONFIG.accumulate_grad_batches
+
 
 
 @dataclass
@@ -300,6 +302,7 @@ class ModelHyperparametersState:
 
 @dataclass
 class TrainerSectionState:
+    save_resumable_checkpoint: bool = _DEFAULT_CONFIG.save_resumable_checkpoint
     seed: str = ""
     accelerator: Literal["auto", "cpu", "cuda", "mps", "tpu"] = "auto"
     num_devices: str = ""
@@ -518,9 +521,11 @@ def train_gui_state_to_config(state: TrainGuiState) -> Config:
         weight_decay=float(state.model_hyperparameters.weight_decay),
         warmup_steps=int(state.model_hyperparameters.warmup_steps),
         freeze_encoder=bool(state.encoder_settings.freeze_encoder),
+        unfreeze_encoder_after=int(state.encoder_settings.unfreeze_encoder_after),
         whisperseg_training_method=str(state.encoder_settings.whisperseg_training_method),
         accumulate_grad_batches=int(state.encoder_settings.accumulate_grad_batches),
         seed=_optional_int(state.trainer.seed),
+        save_resumable_checkpoint=bool(state.trainer.save_resumable_checkpoint),
         accelerator=str(state.trainer.accelerator),
         num_devices=_optional_int(state.trainer.num_devices),
         num_epochs=int(state.trainer.num_epochs),
@@ -594,6 +599,7 @@ def train_config_to_gui_state(config: Config) -> TrainGuiState:
         state.model_selection.model_class = "whisperseg"
     state.model_selection.frontend_type = str(frontend["type"])
     state.encoder_settings.freeze_encoder = bool(config.freeze_encoder)
+    state.encoder_settings.unfreeze_encoder_after = int(config.unfreeze_encoder_after)
     state.encoder_settings.whisperseg_training_method = config.whisperseg_training_method
     state.encoder_settings.accumulate_grad_batches = int(config.accumulate_grad_batches)
     if frontend["type"] == "raw":
@@ -674,6 +680,7 @@ def train_config_to_gui_state(config: Config) -> TrainGuiState:
     state.model_hyperparameters.weight_decay = float(config.weight_decay)
     state.model_hyperparameters.warmup_steps = int(config.warmup_steps)
     state.trainer.seed = _format_optional_number(config.seed)
+    state.trainer.save_resumable_checkpoint = bool(config.save_resumable_checkpoint)
     state.trainer.accelerator = str(config.accelerator)
     state.trainer.num_devices = _format_optional_number(config.num_devices)
     state.trainer.num_epochs = int(config.num_epochs)

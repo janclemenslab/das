@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import huggingface_hub
 import pytest
 
@@ -6,7 +8,8 @@ from das.config import Config
 from das.whisperseg.catalog import MODEL_OPTIONS, MODEL_REPO, resolve_model_checkpoint
 
 
-def test_published_models_parse_in_cli_and_download_on_use(monkeypatch, tmp_path):
+def test_published_models_parse_in_cli_and_download_on_use(monkeypatch):
+    monkeypatch.setenv("HF_TOKEN", "expired-token")
     calls = []
 
     def download(**kwargs):
@@ -16,7 +19,7 @@ def test_published_models_parse_in_cli_and_download_on_use(monkeypatch, tmp_path
     monkeypatch.setattr(huggingface_hub, "hf_hub_download", download)
     assert set(MODEL_OPTIONS) == {
         "whisperseg-aer:tiny-ms", "whisperseg-aer:small-ms",
-        "whisperseg-aer:base-animal-vad", "whisperseg-aer:animal-vad", "whisperseg-aer:large-ms",
+        "whisperseg-aer:large-ms",
     }
     for index, (alias, (_, filename)) in enumerate(MODEL_OPTIONS.items()):
         train = cli.parse_command_config(
@@ -27,9 +30,8 @@ def test_published_models_parse_in_cli_and_download_on_use(monkeypatch, tmp_path
         assert predict.checkpoint == alias
         assert len(calls) == index
         assert resolve_model_checkpoint(alias) == "/cache/" + filename
-        assert calls[-1] == {"repo_id": MODEL_REPO, "filename": filename}
-    local_path = str(tmp_path / "local.ckpt")
-    assert resolve_model_checkpoint(local_path) == local_path
+        assert calls[-1] == {"repo_id": MODEL_REPO, "filename": filename, "token": False}
+    assert resolve_model_checkpoint(str(Path("/tmp/local.ckpt"))) == str(Path("/tmp/local.ckpt"))
 
     with pytest.raises(ValueError, match="Unknown WhisperSeg AER model"):
         Config(mode="predict", data_dir="data", checkpoint="whisperseg-aer:unknown").validate()

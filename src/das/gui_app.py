@@ -1,9 +1,11 @@
 import contextlib
 from dataclasses import fields
+from importlib.resources import files
 import logging
 import multiprocessing
 from pathlib import Path
 import sys
+import tempfile
 import threading
 import traceback
 from typing import Annotated, Callable, Literal, Sequence
@@ -11,8 +13,9 @@ from typing import Annotated, Callable, Literal, Sequence
 from magicgui.experimental import guiclass
 import numpy as np
 import pandas as pd
+import soundfile
 from qtpy.QtCore import QObject, QThread, QTimer, Signal, Qt
-from qtpy.QtGui import QFontDatabase, QTextCursor
+from qtpy.QtGui import QFontDatabase, QIcon, QTextCursor
 from qtpy.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -39,6 +42,7 @@ from .config import (
     BUILTIN_CONFIG_OPTIONS,
     TRAIN_DATASET_HF_OPTIONS,
 )
+from .whisperseg.catalog import ASR_MODEL_OPTIONS, MODEL_OPTIONS
 from .gui_helpers import (
     AttentionDecoderState,
     DAS_DECODER_OPTIONS,
@@ -82,8 +86,8 @@ from .gui_helpers import (
     train_config_to_gui_state,
     train_gui_state_to_config,
 )
-from .whisperseg.catalog import ASR_MODEL_OPTIONS, MODEL_OPTIONS
-from .api import _is_whisperseg_predict_source, _load_checkpoint_metadata, predict, train
+from .api import _is_whisper_asr_predict_source, _is_whisperseg_predict_source, _load_checkpoint_metadata, predict, train
+from .data.audio_dir import _drop_annotation_boundary_rows
 
 LineText = Annotated[str, {"widget_type": "LineEdit"}]
 PositiveInt = Annotated[int, {"widget_type": "SpinBox", "min": 1, "max": 1_000_000}]
@@ -93,9 +97,10 @@ BoolValue = Annotated[bool, {"widget_type": "CheckBox"}]
 CurrentAudioProvider = Callable[[float, float | None], tuple[np.ndarray, int, float]]
 CurrentDurationProvider = Callable[[], float]
 AnnotatedRegionProvider = Callable[[], tuple[float, float] | Sequence[tuple[float, float]]]
+CurrentAnnotationsProvider = Callable[[], pd.DataFrame]
 PredictionCallback = Callable[[pd.DataFrame, float], None]
 
-MODEL_CLASS_LABELS = {"das": "DAS", "whisperseg": "WhisperSeg"}
+MODEL_CLASS_LABELS = {"das": "DAS", "whisperseg": "whisperseg-aer"}
 MODEL_CLASS_VALUES = {label: value for value, label in MODEL_CLASS_LABELS.items()}
 
 PREDICT_AFTER_TRAIN_NONE = "Do not predict"
@@ -143,6 +148,7 @@ class PredictRuntimeSectionForm:
 class EncoderSettingsForm:
     freeze_encoder: BoolValue = EncoderSettingsState.freeze_encoder
     whisperseg_training_method: Literal["lora", "full"] = EncoderSettingsState.whisperseg_training_method
+    unfreeze_encoder_after: NonNegativeInt = EncoderSettingsState.unfreeze_encoder_after
     accumulate_grad_batches: PositiveInt = EncoderSettingsState.accumulate_grad_batches
 
 
@@ -255,6 +261,7 @@ class ModelHyperparametersForm:
 
 @guiclass
 class TrainerSectionForm:
+    save_resumable_checkpoint: BoolValue = TrainerSectionState.save_resumable_checkpoint
     seed: LineText = ""
     accelerator: Literal["auto", "cpu", "cuda", "mps", "tpu"] = "auto"
     num_devices: LineText = ""
@@ -271,7 +278,7 @@ class PredictTrainerSectionForm:
 @guiclass
 class PredictionSectionForm:
     output_suffix: LineText = PredictionSectionState.output_suffix
-    existing_annotations: Literal["skip", "overwrite", "merge"] = PredictionSectionState.existing_annotations
+    existing_annotations: Annotated[str, {"choices": [("skip", "skip"), ("replace", "overwrite"), ("merge", "merge")]}] = PredictionSectionState.existing_annotations
 
 
 @guiclass
@@ -639,7 +646,7 @@ class InitialModelField(QWidget):
     @value.setter
     def value(self, value: str) -> None:
         value = value.strip()
-        index = self.combo.findData(value) if value in MODEL_OPTIONS else -1
+        index = self.combo.findData(value)
         if index > 0:
             self.combo.setCurrentIndex(index)
         else:
@@ -658,11 +665,11 @@ class InitialModelField(QWidget):
         self.combo.clear()
         self.combo.addItem(LOCAL_INITIAL_MODEL_OPTION)
         if self._model_class == "whisperseg":
-            for alias, (label, _) in MODEL_OPTIONS.items():
+            for alias, (label, _) in (MODEL_OPTIONS | ASR_MODEL_OPTIONS).items():
                 self.combo.addItem(label, alias)
         self.combo.blockSignals(False)
 
-        if self._model_class == "whisperseg" and selected_value in MODEL_OPTIONS:
+        if self._model_class == "whisperseg" and selected_value in MODEL_OPTIONS | ASR_MODEL_OPTIONS:
             self.combo.setCurrentIndex(self.combo.findData(selected_value))
         else:
             self.local_field.value = selected_value
@@ -737,10 +744,12 @@ class PredictCheckpointField(QWidget):
 
 
 class TrainPathsWidget(QWidget):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(self, parent: QWidget | None = None, *, current_audio_available: bool = False):
         super().__init__(parent)
         self.data_source_label = QLabel("Data source")
         self.data_source_combo = QComboBox()
+        if current_audio_available:
+            self.data_source_combo.addItem("Current audio")
         self.data_source_combo.addItems((LOCAL_DATA_SOURCE, HF_DATA_SOURCE))
         self.data_dir_field = PathField(
             label="Local data directory",
@@ -785,10 +794,14 @@ class TrainPathsWidget(QWidget):
         layout.addStretch(1)
 
         self.data_source_combo.currentTextChanged.connect(self._sync_data_source)
+        self.data_dir_field.path_selected.connect(self._set_default_output_dir)
+        self.data_dir_field.line_edit.editingFinished.connect(self._set_default_output_dir)
         self._sync_data_source()
 
     @property
     def data_dir(self) -> str:
+        if self.uses_current_audio():
+            return ""
         if self.data_source_combo.currentText() == HF_DATA_SOURCE:
             return self.hf_dataset_combo.currentText().strip()
         return self.data_dir_field.value
@@ -796,6 +809,8 @@ class TrainPathsWidget(QWidget):
     @data_dir.setter
     def data_dir(self, path: str) -> None:
         path = path.strip()
+        if not path and self.uses_current_audio():
+            return
         is_hf_dataset = path in TRAIN_DATASET_HF_OPTIONS or (
             not Path(path).expanduser().is_absolute() and path.count("/") == 1 and not path.startswith((".", "~"))
         )
@@ -806,11 +821,19 @@ class TrainPathsWidget(QWidget):
             self.data_dir_field.value = path
             _set_combo_value(self.data_source_combo, LOCAL_DATA_SOURCE)
         self._sync_data_source()
+        self._set_default_output_dir()
+
+    def _set_default_output_dir(self, *_args) -> None:
+        if self.data_source_combo.currentText() == LOCAL_DATA_SOURCE and self.data_dir and not self.output_dir:
+            self.output_dir = str(Path(self.data_dir) / "models")
 
     def _sync_data_source(self, *_args) -> None:
         local = self.data_source_combo.currentText() == LOCAL_DATA_SOURCE
         self.data_dir_field.setVisible(local)
-        self.hf_dataset_combo.setVisible(not local)
+        self.hf_dataset_combo.setVisible(self.data_source_combo.currentText() == HF_DATA_SOURCE)
+
+    def uses_current_audio(self) -> bool:
+        return self.data_source_combo.currentText() == "Current audio"
 
     @property
     def output_dir(self) -> str:
@@ -907,7 +930,7 @@ class CheckableLabelsComboBox(QComboBox):
     def _refresh_text(self) -> None:
         checked = self.checked_items()
         if self.count() == 0:
-            text = "Set data directory"
+            text = "No annotation labels"
         elif len(checked) == self.count():
             text = "All labels"
         elif not checked:
@@ -1148,17 +1171,10 @@ class ModelSectionWidget(QWidget):
         _set_config_tooltip(self.frontend_type, "frontend_type")
         _set_config_tooltip(self.encoder_type, "encoder_type")
         _set_config_tooltip(self.decoder_type, "decoder_type")
-        _set_form_tooltips(
-            self.encoder_settings_form,
-            {
-                name: name
-                for name in (
-                    "freeze_encoder",
-                    "whisperseg_training_method",
-                    "accumulate_grad_batches",
-                )
-            },
-        )
+        _set_form_tooltips(self.encoder_settings_form, {name: name for name in (
+            "freeze_encoder", "unfreeze_encoder_after", "whisperseg_training_method", "accumulate_grad_batches",
+        )})
+        self.encoder_settings_form.gui.unfreeze_encoder_after.label = "Unfreeze encoder after N epochs"
         _set_form_tooltips(
             self.stft_frontend_form,
             {
@@ -1400,6 +1416,7 @@ class ModelSectionWidget(QWidget):
         self.frontend_type.currentTextChanged.connect(self._sync_stacks)
         self.encoder_type.currentTextChanged.connect(self._sync_stacks)
         self.decoder_type.currentTextChanged.connect(self._sync_stacks)
+        self.encoder_settings_form.gui.freeze_encoder.changed.connect(self._sync_stacks)
         _set_combo_value(self.frontend_type, ModelSelectionState.frontend_type)
         _set_combo_value(self.encoder_type, ModelSelectionState.encoder_type)
         _set_combo_value(self.decoder_type, ModelSelectionState.decoder_type)
@@ -1421,13 +1438,13 @@ class ModelSectionWidget(QWidget):
                 item = column_layout.takeAt(0)
                 widget = item.widget()
                 if widget is not None:
-                    widget.setParent(None)
+                    widget.hide()
         for section in self.model_sections:
             section.hide()
         for column_layout, sections in zip(self.model_column_layouts, columns):
             for section in sections:
-                section.show()
                 column_layout.addWidget(section)
+                section.show()
             column_layout.addStretch(1)
 
     def _sync_model_class(self, *_args) -> None:
@@ -1470,11 +1487,18 @@ class ModelSectionWidget(QWidget):
         self.decoder_stack.setCurrentIndex(DAS_DECODER_OPTIONS.index(self.decoder_type.currentText()))
         whisperseg_training_enabled = self._model_class_value() == "whisperseg"
         _set_magicgui_field_visible(self.encoder_settings_form.gui.freeze_encoder, whisperseg_training_enabled)
+        _set_magicgui_field_visible(self.encoder_settings_form.gui.unfreeze_encoder_after, whisperseg_training_enabled)
         _set_magicgui_field_visible(self.encoder_settings_form.gui.whisperseg_training_method, whisperseg_training_enabled)
         _set_magicgui_field_visible(self.encoder_settings_form.gui.accumulate_grad_batches, whisperseg_training_enabled)
-        lora = whisperseg_training_enabled and self.encoder_settings_form.whisperseg_training_method == "lora"
-        _set_magicgui_field_enabled(self.encoder_settings_form.gui.freeze_encoder, not lora)
-        if whisperseg_training_enabled and self.hyperparameters_form.reduce_lr and self.hyperparameters_form.linear_lr_schedule:
+        _set_magicgui_field_enabled(
+            self.encoder_settings_form.gui.unfreeze_encoder_after,
+            whisperseg_training_enabled and self.encoder_settings_form.freeze_encoder,
+        )
+        if (
+            whisperseg_training_enabled
+            and self.hyperparameters_form.reduce_lr
+            and self.hyperparameters_form.linear_lr_schedule
+        ):
             self.hyperparameters_form.reduce_lr = False
         _set_magicgui_field_visible(
             self.hyperparameters_form.gui.cross_entropy_weight,
@@ -1685,9 +1709,13 @@ class TrainPredictionSectionWidget(QWidget):
 
 
 class TrainCommandWidget(QWidget):
-    def __init__(self, parent: QWidget | None = None):
+    def __init__(
+        self, parent: QWidget | None = None, *, current_audio_available: bool = False,
+        current_annotations_provider: CurrentAnnotationsProvider | None = None,
+    ):
         super().__init__(parent)
-        self.paths_form = TrainPathsWidget()
+        self.current_annotations_provider = current_annotations_provider
+        self.paths_form = TrainPathsWidget(current_audio_available=current_audio_available)
         self.data_form = DataSectionForm()
         self.include_labels_widget = IncludeLabelsWidget()
         self.model_section = ModelSectionWidget()
@@ -1722,9 +1750,11 @@ class TrainCommandWidget(QWidget):
                 "num_devices": "num_devices",
                 "num_epochs": "num_epochs",
                 "max_num_steps_per_epoch": "max_num_steps_per_epoch",
+                "save_resumable_checkpoint": "save_resumable_checkpoint",
             },
         )
         _set_form_tooltips(self.evaluation_form, {"syllable_tolerance_ms": "syllable_tolerance_ms"})
+        self.trainer_form.gui.save_resumable_checkpoint.label = "Save resumable checkpoint"
 
         _hide_magicgui_field(self.trainer_form.gui.seed)
         _hide_magicgui_field(self.trainer_form.gui.num_devices)
@@ -1768,6 +1798,8 @@ class TrainCommandWidget(QWidget):
         layout = QVBoxLayout(self)
         layout.addWidget(self.tabs)
 
+        self._set_model_class_value("whisperseg")
+
     def _model_class_value(self) -> str:
         return MODEL_CLASS_VALUES.get(self.model_class.currentText(), "das")
 
@@ -1790,16 +1822,11 @@ class TrainCommandWidget(QWidget):
             "seed": self.trainer_form.seed,
             "max_length": int(self.model_section.whisperseg_decoder_form.max_length),
             "freeze_encoder": bool(self.model_section.encoder_settings_form.freeze_encoder),
+            "unfreeze_encoder_after": int(self.model_section.encoder_settings_form.unfreeze_encoder_after),
             "accumulate_grad_batches": int(self.model_section.encoder_settings_form.accumulate_grad_batches),
-            **{
-                name: getattr(self.model_section.hyperparameters_form, name)
-                for name in (
-                    "linear_lr_schedule",
-                    "reduce_lr",
-                    "reduce_lr_patience",
-                    "reduce_lr_factor",
-                )
-            },
+            **{name: getattr(self.model_section.hyperparameters_form, name) for name in (
+                "linear_lr_schedule", "reduce_lr", "reduce_lr_patience", "reduce_lr_factor",
+            )},
         }
 
     def _sync_model_class_training_values(self, *_args) -> None:
@@ -1814,6 +1841,9 @@ class TrainCommandWidget(QWidget):
                 whisperseg_training_method=model_class[1],
             )
             values = {name: getattr(defaults, name) for name in self._training_values()}
+        if model_class[0] == self._training_values_model_class[0]:
+            for name in ("freeze_encoder", "unfreeze_encoder_after"):
+                values[name] = getattr(self.model_section.encoder_settings_form, name)
         self.data_form.batch_size = values["batch_size"]
         self.data_form.validation_fraction = values["validation_fraction"]
         self.data_form.test_fraction = values["test_fraction"]
@@ -1825,6 +1855,7 @@ class TrainCommandWidget(QWidget):
         self.trainer_form.seed = "" if values["seed"] is None else str(values["seed"])
         self.model_section.whisperseg_decoder_form.max_length = values["max_length"]
         self.model_section.encoder_settings_form.freeze_encoder = values["freeze_encoder"]
+        self.model_section.encoder_settings_form.unfreeze_encoder_after = values["unfreeze_encoder_after"]
         self.model_section.encoder_settings_form.accumulate_grad_batches = values["accumulate_grad_batches"]
         for name in ("linear_lr_schedule", "reduce_lr", "reduce_lr_patience", "reduce_lr_factor"):
             setattr(self.model_section.hyperparameters_form, name, values[name])
@@ -1832,6 +1863,11 @@ class TrainCommandWidget(QWidget):
         self.model_section._sync_stacks()
 
     def _refresh_include_labels(self, *_args, selected_labels: list[str] | None = None) -> None:
+        if self.current_annotations_provider is not None:
+            annotations = _drop_annotation_boundary_rows(self.current_annotations_provider())
+            labels = [] if annotations.empty else sorted(annotations["name"].dropna().astype(str).unique())
+            self.include_labels_widget.set_labels(labels, selected_labels=selected_labels)
+            return
         self.include_labels_widget.load_from_data_dir(
             self.paths_form.data_dir,
             selected_labels=selected_labels,
@@ -1847,6 +1883,8 @@ class TrainCommandWidget(QWidget):
         data_state.split_within_files = bool(self.model_section.chunking_form.split_within_files)
         data_state.include_labels = self.include_labels_widget.include_labels()
         paths_state = _copy_from_form(TrainPathsState, self.paths_form)
+        if self.paths_form.uses_current_audio():
+            data_state.split_within_files = True
         paths_state.initial_model = self.model_section.initial_model
         return TrainGuiState(
             paths=paths_state,
@@ -2047,16 +2085,18 @@ class PredictCommandWidget(QWidget):
         layout = QVBoxLayout(container)
         layout.addWidget(self.source_combo)
         layout.addWidget(self.current_audio_widget)
+        layout.addWidget(self.paths_form.data_dir_field)
         layout.addStretch(1)
         return container
 
     def _sync_prediction_source(self, *_args) -> None:
         current_audio = self.uses_current_audio()
         self.current_audio_widget.setVisible(current_audio)
+        self.paths_form.data_dir_field.setVisible(not current_audio)
         self.paths_form.set_folder_fields_enabled(not current_audio)
 
     def _sync_model_class(self, *_args) -> None:
-        asr = self.paths_form.checkpoint in ASR_MODEL_OPTIONS
+        asr = _is_whisper_asr_predict_source(self.paths_form.checkpoint)
         whisperseg = _is_whisperseg_predict_source(self.paths_form.checkpoint)
         self.model_class_label.setText("Whisper ASR · word timestamps" if asr else "WhisperSeg" if whisperseg else "DAS")
         self.model_stack.setCurrentWidget(self.whisperseg_model_panel if whisperseg or asr else self.das_model_panel)
@@ -2085,7 +2125,7 @@ class PredictCommandWidget(QWidget):
         prediction_state.event_threshold = float(self.postprocessing_form.event_threshold)
         prediction_state.event_dist_min_ms = float(self.postprocessing_form.event_dist_min_ms)
         prediction_state.event_dist_max_ms = str(self.postprocessing_form.event_dist_max_ms)
-        prediction_state.evaluate = bool(self.evaluation_form.evaluate) and self.paths_form.checkpoint not in ASR_MODEL_OPTIONS
+        prediction_state.evaluate = bool(self.evaluation_form.evaluate) and not _is_whisper_asr_predict_source(self.paths_form.checkpoint)
         prediction_state.split = str(self.evaluation_form.split)
         prediction_state.syllable_tolerance_ms = float(self.evaluation_form.syllable_tolerance_ms)
         return PredictGuiState(
@@ -2275,6 +2315,7 @@ class JobWorker(QObject):
         *,
         audio: np.ndarray | None = None,
         samplerate: int | None = None,
+        annotations: pd.DataFrame | None = None,
         time_offset_seconds: float = 0.0,
         predict_after_train: dict[str, object] | None = None,
         stop_event: threading.Event | None = None,
@@ -2286,6 +2327,7 @@ class JobWorker(QObject):
         self.config = config
         self.audio = audio
         self.samplerate = samplerate
+        self.annotations = annotations
         self.time_offset_seconds = time_offset_seconds
         self.predict_after_train = predict_after_train
         self.stop_event = stop_event
@@ -2319,7 +2361,7 @@ class JobWorker(QObject):
                 self.command_name,
                 self.config,
                 self.predict_after_train,
-                self.audio,
+                None if self.command_name == "train" else self.audio,
                 self.samplerate,
                 self.time_offset_seconds,
                 self.stop_event,
@@ -2336,10 +2378,14 @@ class JobWorker(QObject):
             if self.cancel_event.is_set():
                 self._cancel_requested = True
                 self._kill_training_process()
-            if parent_connection.poll(0.1):
+            try:
+                ready = parent_connection.poll(0.1)
+            except (EOFError, BrokenPipeError):
+                break
+            if ready:
                 try:
                     message_type, message = parent_connection.recv()
-                except EOFError:
+                except (EOFError, BrokenPipeError):
                     break
                 if message_type == "log":
                     self.log.emit(message)
@@ -2400,7 +2446,12 @@ class JobWorker(QObject):
         gui_log_handler = _SignalLogHandler(self.log.emit)
         root_logger.addHandler(gui_log_handler)
         try:
-            with contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_tee):
+            with contextlib.ExitStack() as stack, contextlib.redirect_stdout(stdout_tee), contextlib.redirect_stderr(stderr_tee):
+                if self.command_name == "train" and self.audio is not None:
+                    data_dir = Path(stack.enter_context(tempfile.TemporaryDirectory(prefix="das-current-audio-")))
+                    soundfile.write(data_dir / "current.wav", self.audio, self.samplerate, subtype="FLOAT")
+                    self.annotations.to_csv(data_dir / "current_annotations.csv", index=False)
+                    self.config = self.config.copy(data_dir=str(data_dir), split_within_files=True)
                 if self.run_train_in_process and self.command_name in {"train", "predict"}:
                     payload = self._run_train_in_process()
                 elif self.command_name == "train":
@@ -2443,19 +2494,27 @@ class DASConformerWindow(QMainWindow):
         current_audio_provider: CurrentAudioProvider | None = None,
         current_duration_provider: CurrentDurationProvider | None = None,
         annotated_region_provider: AnnotatedRegionProvider | None = None,
+        current_annotations_provider: CurrentAnnotationsProvider | None = None,
         on_predictions: PredictionCallback | None = None,
         parent: QWidget | None = None,
     ):
         super().__init__(parent)
+        icon = QIcon(str(files("xarray_behave").joinpath("gui", "icon.png")))
+        QApplication.instance().setWindowIcon(icon)
+        self.setWindowIcon(icon)
         self.current_audio_provider = current_audio_provider
         self.current_duration_provider = current_duration_provider
         self.annotated_region_provider = annotated_region_provider
+        self.current_annotations_provider = current_annotations_provider
         self.on_predictions = on_predictions
         self.setWindowTitle("DAS")
         self.resize(1100, 850)
 
         self.command_tabs = QTabWidget()
-        self.train_widget = TrainCommandWidget()
+        self.train_widget = TrainCommandWidget(
+            current_audio_available=current_audio_provider is not None,
+            current_annotations_provider=current_annotations_provider,
+        )
         self.predict_widget = PredictCommandWidget(current_audio_available=current_audio_provider is not None)
         self.command_tabs.addTab(self.train_widget, "Train")
         self.command_tabs.addTab(self.predict_widget, "Predict")
@@ -2799,9 +2858,40 @@ class DASConformerWindow(QMainWindow):
         self._append_log_line(f"Saved config to {path}")
         self._append_log_line(yaml_text)
 
+    def _current_label_annotations(
+        self,
+        *,
+        start_seconds: float,
+        stop_seconds: float | None,
+        time_offset_seconds: float,
+    ) -> pd.DataFrame:
+        if self.current_annotations_provider is None:
+            raise ValueError("No current annotations provider is available.")
+        annotations = self.current_annotations_provider().copy()
+        if annotations.empty:
+            return annotations
+        if not {"name", "start_seconds", "stop_seconds"}.issubset(annotations.columns):
+            raise ValueError("Current annotations must contain name, start_seconds, and stop_seconds columns.")
+        if stop_seconds is None:
+            stop_seconds = float("inf")
+        mask = np.logical_and(
+            annotations["stop_seconds"].astype(float) >= float(start_seconds),
+            annotations["start_seconds"].astype(float) <= float(stop_seconds),
+        )
+        clipped = annotations.loc[mask].copy()
+        if clipped.empty:
+            return clipped
+        clipped["start_seconds"] = np.maximum(clipped["start_seconds"].astype(float), float(start_seconds))
+        clipped["stop_seconds"] = np.minimum(clipped["stop_seconds"].astype(float), float(stop_seconds))
+        clipped["start_seconds"] = clipped["start_seconds"] - float(time_offset_seconds)
+        clipped["stop_seconds"] = clipped["stop_seconds"] - float(time_offset_seconds)
+        return clipped
+
+
     def run_active_command(self) -> None:
         audio = None
         samplerate = None
+        annotations = None
         time_offset_seconds = 0.0
         predict_after_train = None
         try:
@@ -2813,6 +2903,15 @@ class DASConformerWindow(QMainWindow):
                 start_seconds, stop_seconds = self.predict_widget.current_audio_request()
                 audio, samplerate, time_offset_seconds = self.current_audio_provider(start_seconds, stop_seconds)
             elif command_name == "train":
+                if self.train_widget.paths_form.uses_current_audio():
+                    audio, samplerate, time_offset_seconds = self.current_audio_provider(0.0, None)
+                    annotations = self._current_label_annotations(
+                        start_seconds=time_offset_seconds,
+                        stop_seconds=time_offset_seconds + len(audio) / samplerate,
+                        time_offset_seconds=time_offset_seconds,
+                    )
+                    if _drop_annotation_boundary_rows(annotations).empty:
+                        raise ValueError("Annotate the current audio before training.")
                 predict_after_train = self._build_predict_after_train_request(config)
         except Exception:
             self._show_error("Invalid Configuration", traceback.format_exc())
@@ -2831,6 +2930,7 @@ class DASConformerWindow(QMainWindow):
             config,
             audio=audio,
             samplerate=samplerate,
+            annotations=annotations,
             time_offset_seconds=time_offset_seconds,
             predict_after_train=predict_after_train,
             stop_event=self._stop_event,

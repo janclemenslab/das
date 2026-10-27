@@ -1,0 +1,13 @@
+class_names:
+- noise
+- song
+dilations:
+- 1
+kernel_size: 3
+model_name: tcn
+nb_classes: 2
+nb_conv: 1
+nb_filters: 4
+nb_freq: 1
+nb_hist: 32
+samplerate_x_Hz: 10000

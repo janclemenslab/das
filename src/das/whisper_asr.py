@@ -2,10 +2,76 @@
 
 from bisect import bisect_right
 from functools import partial
+import json
+from pathlib import Path
+import tempfile
 
 import pandas as pd
 import torch
 from transformers.pipelines import AutomaticSpeechRecognitionPipeline
+
+
+def add_label_vocabulary(model, tokenizer, labels):
+    """Insert annotation tokens before Whisper's special/timestamp token range."""
+    from transformers import WhisperTokenizer
+
+    tokenizer.pad_token = tokenizer.eos_token
+    labels = [str(label) for label in labels if str(label) not in tokenizer.get_vocab()]
+    if not labels:
+        return tokenizer
+    boundary, count = tokenizer.eos_token_id, len(labels)
+
+    def shift(value):
+        if isinstance(value, list):
+            return [shift(item) for item in value]
+        return value + count if isinstance(value, int) and value >= boundary else value
+
+    original = model.get_input_embeddings().weight.detach().clone()
+    label_weights = [original[tokenizer.encode(label, add_special_tokens=False)].mean(0) for label in labels]
+    with tempfile.TemporaryDirectory() as directory:
+        directory = Path(directory)
+        tokenizer.save_pretrained(directory)
+        for name in ("vocab.json", "added_tokens.json"):
+            path = directory / name
+            if path.exists():
+                mapping = json.loads(path.read_text())
+                mapping = {token: shift(index) for token, index in mapping.items()}
+                if name == "vocab.json":
+                    mapping.update({label: boundary + index for index, label in enumerate(labels)})
+                path.write_text(json.dumps(mapping))
+        path = directory / "tokenizer_config.json"
+        config = json.loads(path.read_text())
+        config["added_tokens_decoder"] = {
+            str(shift(int(index))): value for index, value in config["added_tokens_decoder"].items()
+        }
+        config["added_tokens_decoder"].update({
+            str(boundary + index): {
+                "content": label, "single_word": False, "lstrip": False, "rstrip": False,
+                "normalized": False, "special": False,
+            } for index, label in enumerate(labels)
+        })
+        path.write_text(json.dumps(config))
+        tokenizer = WhisperTokenizer.from_pretrained(directory)
+
+    model.resize_token_embeddings(len(tokenizer), mean_resizing=False)
+    with torch.no_grad():
+        weights = model.get_input_embeddings().weight
+        weights[:boundary].copy_(original[:boundary])
+        weights[boundary:boundary + count].copy_(torch.stack(label_weights))
+        weights[boundary + count:].copy_(original[boundary:])
+    model.tie_weights()
+    for config in (model.config, model.generation_config):
+        for name, value in list(vars(config).items()):
+            if name.endswith("_token_id") or name in {"suppress_tokens", "begin_suppress_tokens"}:
+                setattr(config, name, shift(value))
+            elif name in {"lang_to_id", "task_to_id"} and value is not None:
+                setattr(config, name, {key: shift(index) for key, index in value.items()})
+            elif name == "forced_decoder_ids" and value is not None:
+                setattr(config, name, [[position, shift(index)] for position, index in value])
+    model.get_input_embeddings().padding_idx = tokenizer.pad_token_id
+    model.model.decoder.padding_idx = tokenizer.pad_token_id
+    model.config.das_annotation_token_ids = getattr(model.config, "das_annotation_token_ids", []) + list(range(boundary, boundary + count))
+    return tokenizer
 
 
 def _is_punctuation(tokenizer, token):
@@ -86,7 +152,17 @@ class _WhisperWordTimestampPipeline(AutomaticSpeechRecognitionPipeline):
 
 class WhisperTranscriber:
     def __init__(self, model: str, *, device: str):
+        from transformers import WhisperFeatureExtractor
         from transformers.pipelines import pipeline
+
+        pipeline_options = {}
+        if Path(model).suffix == ".ckpt":
+            from .whisperseg.model import load_inference_model
+
+            model, tokenizer = load_inference_model(model)
+            model.half()
+            model.set_attn_implementation("eager")
+            pipeline_options = {"tokenizer": tokenizer, "feature_extractor": WhisperFeatureExtractor()}
 
         self.pipeline = pipeline(
             "automatic-speech-recognition",
@@ -95,6 +171,7 @@ class WhisperTranscriber:
             dtype=torch.float16,
             model_kwargs={"attn_implementation": "eager"},
             pipeline_class=_WhisperWordTimestampPipeline,
+            **pipeline_options,
         )
         # Match OpenAI Whisper's word-aligned seek instead of decoding already transcribed speech again.
         self.pipeline.model._retrieve_segment = partial(

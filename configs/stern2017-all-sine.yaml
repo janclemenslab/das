@@ -1,0 +1,46 @@
+# Sine specialist trained on every file in Stern2017/dat.raw.
+mode: train
+data_dir: /Users/janc/data/Stern2017/dat.raw
+output_dir: ./runs/stern2017-all-sine
+checkpoint_prefix: stern2017-all-sine
+initial_model: ./runs/stern2017-sine-convresnet-long/checkpoints/stern2017-sine-convresnet-long_20260905_203027_model.ckpt
+
+batch_size: 2
+num_time_steps: 40960
+chunk_stride: 20480
+num_workers: 0
+validation_fraction: 0.15
+test_fraction: 0.15
+split_within_files: false
+include_labels: [sine]
+
+frontend_type: conv_resnet
+frontend_num_channels: 64
+frontend_kernel_size: 9
+frontend_hop_seconds: 0.001
+frontend_pad_mode: reflect
+
+encoder_type: conformer
+encoder_num_heads: 4
+encoder_hidden_size: 64
+encoder_num_layers: 2
+encoder_kernel_size: 31
+
+decoder_type: linear
+cross_entropy_weight: 1.0
+learning_rate: 0.0002
+early_stopping: false
+reduce_lr: false
+num_epochs: 1
+max_num_steps_per_epoch: 2000
+seed: 0
+
+fill_gap_ms: 20.0
+min_syllable_ms: 100.0
+segment_threshold_low: 0.2
+segment_threshold_high: 0.9
+syllable_tolerance_ms: 30.0
+tune_postprocessing: false
+postprocessing_tuning_step_ms: 10.0
+postprocessing_tuning_max_fill_gap_ms: 120.0
+postprocessing_tuning_max_min_syllable_ms: 160.0

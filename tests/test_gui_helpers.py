@@ -147,6 +147,7 @@ def test_train_gui_native_training_controls_round_trip(tmp_path: Path):
     state.model_hyperparameters.weight_decay = 0.02
     state.model_hyperparameters.warmup_steps = 12
     state.encoder_settings.freeze_encoder = True
+    state.encoder_settings.unfreeze_encoder_after = 3
 
     config = train_gui_state_to_config(state)
     path = tmp_path / "train.yaml"
@@ -163,6 +164,7 @@ def test_train_gui_native_training_controls_round_trip(tmp_path: Path):
     assert loaded.weight_decay == 0.02
     assert loaded.warmup_steps == 12
     assert loaded.freeze_encoder is True
+    assert loaded.unfreeze_encoder_after == 3
     assert yaml.safe_load(format_train_config_yaml(loaded)) == yaml.safe_load(format_train_config_yaml(config))
 
 

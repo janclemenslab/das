@@ -174,12 +174,12 @@ def _initial_model_parser(value: str) -> str:
     normalized = str(value).strip()
     if not normalized:
         return ""
-    if normalized in MODEL_OPTIONS:
+    if normalized in MODEL_OPTIONS or normalized in ASR_MODEL_OPTIONS:
         return normalized
     local_path = Path(normalized).expanduser()
     if local_path.is_file() and local_path.suffix == ".ckpt":
         return str(local_path)
-    raise ValueError("initial_model must be a local DAS .ckpt file or a WhisperSeg AER model name.")
+    raise ValueError("initial_model must be a local DAS .ckpt, WhisperSeg-AER model, or Whisper speech model.")
 
 
 def _identity(value):
@@ -285,8 +285,8 @@ class Config:
     )
     initial_model: str = _config_field(
         "",
-        help="Local DAS WhisperSeg .ckpt or WhisperSeg AER starting model. Training checkpoints resume automatically. "
-        f"Available names: {', '.join(MODEL_OPTIONS)}.",
+        help="Local DAS WhisperSeg .ckpt, WhisperSeg-AER model, or original Whisper with added annotation vocabulary. "
+        f"Available names: {', '.join(MODEL_OPTIONS)}, {', '.join(ASR_MODEL_OPTIONS)}.",
         parser=_initial_model_parser,
         flags=["--initial-model"],
     )
@@ -503,35 +503,34 @@ class Config:
     )
     weight_decay: float = _config_field(0.01, help="WhisperSeg optimizer weight decay.", parser=float)
     warmup_steps: int = _config_field(100, help="WhisperSeg linear scheduler warmup steps.", parser=int)
-    whisperseg_training_method: Literal["lora", "full"] = _config_field(
-        "lora",
-        help="WhisperSeg training method: decoder LoRA or full fine-tuning (FP32).",
-        parser=str,
-        choices=["lora", "full"],
-    )
-    accumulate_grad_batches: int = _backend_default_field(
-        1,
-        1,
-        lora=4,
-        help="WhisperSeg batches accumulated per optimizer update.",
-        parser=int,
-    )
-    freeze_encoder: bool = _config_field(
-        _BackendDefault(False, False, True),
-        help="Freeze the WhisperSeg encoder during training.",
+    save_resumable_checkpoint: bool = _config_field(
+        False,
+        help="Save optimizer and scheduler state for resuming training. The prediction model is always saved.",
         parser=_bool_parser,
         bool_flag=True,
     )
-    max_length: int = _backend_default_field(
-        100, 100, lora=128, help="Maximum WhisperSeg decoder token length during training.", parser=int
+    whisperseg_training_method: Literal["lora", "full"] = _config_field(
+        "lora", help="WhisperSeg training method: LoRA adapters or full fine-tuning (FP32). The decoder always trains.",
+        parser=str, choices=["lora", "full"],
     )
-    generation_max_length: int = _config_field(
-        128, help="Maximum WhisperSeg decoder tokens per audio window, including the prefix (not an event count).", parser=int
+    accumulate_grad_batches: int = _backend_default_field(
+        1, 1, lora=4, help="WhisperSeg batches accumulated per optimizer update.", parser=int,
     )
+    freeze_encoder: bool = _config_field(
+        _BackendDefault(False, False, True),
+        help="Initially freeze the WhisperSeg encoder weights or LoRA adapters. The decoder always trains.",
+        parser=_bool_parser,
+        bool_flag=True,
+    )
+    unfreeze_encoder_after: int = _config_field(
+        3,
+        help="Unfreeze encoder adapters (LoRA) or encoder weights (full fine-tuning) after N completed epochs when freeze_encoder is enabled. 0 keeps the encoder frozen.",
+        parser=int,
+    )
+    max_length: int = _backend_default_field(100, 100, lora=128, help="Maximum timestamp or WhisperSeg decoder token length during training.", parser=int)
+    generation_max_length: int = _config_field(128, help="Maximum WhisperSeg decoder tokens per audio window, including the prefix (not an event count).", parser=int)
     total_spec_columns: int = _config_field(1000, help="WhisperSeg spectrogram time columns per training clip.", parser=int)
-    seed: int | None = _backend_default_field(
-        None, None, lora=0, help="Optional random seed. Leave unset for nondeterministic runs.", parser=_optional_int_parser
-    )
+    seed: int | None = _backend_default_field(None, None, lora=0, help="Optional random seed. Leave unset for nondeterministic runs.", parser=_optional_int_parser)
     accelerator: TrainerAccelerator = _config_field(
         "auto",
         help="Lightning accelerator.",
@@ -615,7 +614,7 @@ class Config:
         help="WhisperSeg spectrogram time step. Leave unset to use model defaults.",
         parser=_optional_float_parser,
     )
-    num_trials: int = _config_field(1, help="Number of WhisperSeg prediction trials.", parser=int)
+    num_trials: int = _config_field(3, help="Number of shifted WhisperSeg prediction passes.", parser=int)
     num_beams: int = _config_field(4, help="Number of WhisperSeg generation beams.", parser=int)
     top_k: int = _config_field(1, help="WhisperSeg generation top-k value.", parser=int)
     top_p: float = _config_field(1.0, help="WhisperSeg generation top-p value.", parser=float)
@@ -789,12 +788,15 @@ class Config:
             raise ValueError("whisperseg_training_method must be lora or full.")
         if self.accumulate_grad_batches < 1:
             raise ValueError("accumulate_grad_batches must be at least 1.")
+        if self.unfreeze_encoder_after < 0:
+            raise ValueError("unfreeze_encoder_after must be non-negative.")
         if self.mode == "train" and self.encoder_type == "whisperseg" and not self.initial_model:
             raise ValueError("WhisperSeg training requires a DAS .ckpt or WhisperSeg AER initial_model.")
         if (
             self.mode == "train"
             and self.encoder_type == "whisperseg"
             and self.initial_model not in MODEL_OPTIONS
+            and self.initial_model not in ASR_MODEL_OPTIONS
             and Path(self.initial_model).suffix != ".ckpt"
         ):
             raise ValueError("WhisperSeg training requires a DAS .ckpt or WhisperSeg AER initial_model.")

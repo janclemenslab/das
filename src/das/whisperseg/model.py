@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from tqdm.auto import tqdm
 from transformers import GenerationConfig, WhisperConfig, WhisperTokenizer, WhisperForConditionalGeneration
 import re
 from sklearn.metrics import pairwise_distances
@@ -159,12 +160,26 @@ def load_inference_model(model_path):
 
 
 def load_model(initial_model_path, total_spec_columns, encoder_dropout=0.0, decoder_dropout=0.0):
-    model, tokenizer = load_model_checkpoint(Path(os.fspath(initial_model_path)).expanduser())
+    from .catalog import ASR_MODEL_OPTIONS
+
+    if initial_model_path in ASR_MODEL_OPTIONS:
+        source = ASR_MODEL_OPTIONS[initial_model_path][1]
+        model = WhisperForConditionalGeneration.from_pretrained(source, dtype=torch.float16)
+        tokenizer = WhisperTokenizer.from_pretrained(source, language="english", task="transcribe", predict_timestamps=True)
+        model.config.das_whisper_asr = True
+        model.config.cluster_codebook = {}
+        model.config.species_codebook = {}
+    else:
+        model, tokenizer = load_model_checkpoint(Path(os.fspath(initial_model_path)).expanduser())
+    speech = getattr(model.config, "das_whisper_asr", False)
+    if speech:
+        total_spec_columns = model.config.max_source_positions * 2
     model.float()
     model.config.max_source_positions = int(0.5 * total_spec_columns)
     with torch.no_grad():
         model.model.encoder.embed_positions.weight = torch.nn.Parameter(
-            model.model.encoder.embed_positions.weight[: model.config.max_source_positions, :]
+            model.model.encoder.embed_positions.weight[: model.config.max_source_positions, :],
+            requires_grad=model.model.encoder.embed_positions.weight.requires_grad,
         )
         model.model.encoder.embed_positions.num_embeddings = model.config.max_source_positions
 
@@ -177,6 +192,9 @@ def load_model(initial_model_path, total_spec_columns, encoder_dropout=0.0, deco
     model.model.decoder.dropout = decoder_dropout
     for layer in model.model.decoder.layers:
         layer.dropout = decoder_dropout
+
+    if speech:
+        return model, tokenizer
 
     if not hasattr(model.config, "cluster_codebook"):
         model.config.cluster_codebook = {}
@@ -523,6 +541,7 @@ class SegmenterBase:
         length_penalty,
         status_monitor,
         max_frequency=None,
+        show_progress=False,
     ):
         sliced_audios_features = self.get_sliced_audios_features(
             audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=max_frequency
@@ -553,12 +572,13 @@ class SegmenterBase:
         consolidation_method="clustering",
         max_length=128,
         batch_size=4,
-        num_trials=1,
+        num_trials=3,
         num_beams=4,
         top_k=1,
         top_p=1.0,
         length_penalty=1.0,
         status_monitor=None,
+        show_progress=False,
     ):
         defaults = self.default_segmentation_config
         rate_defaults = defaults.get("sample_rate_configs", {}).get(str(sr), {})
@@ -588,6 +608,7 @@ class SegmenterBase:
             length_penalty,
             status_monitor,
             max_frequency=max_frequency,
+            show_progress=show_progress,
         )
         final_prediction = self.parse_generation(
             generated_text_list,
@@ -791,36 +812,47 @@ class WhisperSegmenterForEval(SegmenterBase):
         length_penalty,
         status_monitor,
         max_frequency=None,
+        show_progress=False,
     ):
         generated_text_list = []
         sliced_audio_metadata = []
         batch = []
+        clip_duration = self.total_spec_columns * spec_time_step
+        audio_clip_length = int(clip_duration * sr)
+        total_chunks = 0
+        for trial_id in range(num_trials):
+            padding_time = np.round(clip_duration * trial_id / num_trials / spec_time_step) * spec_time_step
+            num_samples = max(len(audio) + int(padding_time * sr), 1)
+            total_chunks += len(range(0, num_samples, audio_clip_length))
 
-        for item in self.iter_sliced_audio_features(
-            audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=max_frequency
-        ):
-            batch.append(item)
-            if len(batch) < batch_size:
-                continue
-            generated_text_list.extend(
-                self.generate_segment_text(
-                    batch, batch_size, max_length, num_beams, top_k, top_p, length_penalty, status_monitor
+        with tqdm(total=total_chunks, desc="Predicting chunks", unit="chunk", disable=not show_progress) as progress:
+            for item in self.iter_sliced_audio_features(
+                audio, sr, min_frequency, spec_time_step, num_trials, max_frequency=max_frequency
+            ):
+                batch.append(item)
+                if len(batch) < batch_size:
+                    continue
+                generated_text_list.extend(
+                    self.generate_segment_text(
+                        batch, batch_size, max_length, num_beams, top_k, top_p, length_penalty, status_monitor
+                    )
                 )
-            )
-            sliced_audio_metadata.extend(
-                (trial_id, offset_time, None, duration) for trial_id, offset_time, _, duration in batch
-            )
-            batch.clear()
+                sliced_audio_metadata.extend(
+                    (trial_id, offset_time, None, duration) for trial_id, offset_time, _, duration in batch
+                )
+                progress.update(len(batch))
+                batch.clear()
 
-        if batch:
-            generated_text_list.extend(
-                self.generate_segment_text(
-                    batch, batch_size, max_length, num_beams, top_k, top_p, length_penalty, status_monitor
+            if batch:
+                generated_text_list.extend(
+                    self.generate_segment_text(
+                        batch, batch_size, max_length, num_beams, top_k, top_p, length_penalty, status_monitor
+                    )
                 )
-            )
-            sliced_audio_metadata.extend(
-                (trial_id, offset_time, None, duration) for trial_id, offset_time, _, duration in batch
-            )
+                sliced_audio_metadata.extend(
+                    (trial_id, offset_time, None, duration) for trial_id, offset_time, _, duration in batch
+                )
+                progress.update(len(batch))
 
         return generated_text_list, sliced_audio_metadata
 
