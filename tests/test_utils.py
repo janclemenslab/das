@@ -1,4 +1,4 @@
-from unittest.mock import Mock, call
+from unittest.mock import Mock
 
 import flammkuchen
 import numpy as np
@@ -8,6 +8,9 @@ from das.models import loading
 
 
 def test_load_model_from_params_retries_loose_with_fresh_model(monkeypatch, caplog):
+    # pytest 9.2 follows call's synthetic __wrapped__ chain during fixture discovery.
+    from unittest.mock import call
+
     strict_model = Mock()
     strict_model.load_weights.side_effect = ValueError("mismatch")
     legacy_model = Mock()
